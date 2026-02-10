@@ -1,5 +1,8 @@
 const pbMail = require('paubox-node');
-const service = pbMail.emailService();
+const service = pbMail.emailService({
+  apiKey: process.env.PAUBOX_API_KEY,
+  apiUsername: process.env.PAUBOX_API_USER,
+});
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {

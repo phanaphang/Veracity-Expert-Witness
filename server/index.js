@@ -11,7 +11,10 @@ app.use(express.json());
 
 // API Routes
 const pbMail = require('paubox-node');
-const emailService = pbMail.emailService();
+const emailService = pbMail.emailService({
+  apiKey: process.env.PAUBOX_API_KEY,
+  apiUsername: process.env.PAUBOX_API_USER,
+});
 
 app.post('/api/contact', async (req, res) => {
   const { name, firm, email, phone, expertise, details } = req.body;
