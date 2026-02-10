@@ -10,28 +10,51 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
-app.post('/api/contact', (req, res) => {
+const pbMail = require('paubox-node');
+const emailService = pbMail.emailService();
+
+app.post('/api/contact', async (req, res) => {
   const { name, firm, email, phone, expertise, details } = req.body;
 
-  // Validate required fields
   if (!name || !firm || !email || !phone || !expertise || !details) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
 
-  // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'Invalid email address.' });
   }
 
-  // In production, you would save to a database or send an email here
-  console.log('Contact form submission received:');
-  console.log({ name, firm, email, phone, expertise, details });
+  const htmlContent = `
+    <h2>New Expert Witness Request</h2>
+    <table style="border-collapse:collapse;width:100%;max-width:600px;">
+      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Name</td><td style="padding:8px;border-bottom:1px solid #eee;">${name}</td></tr>
+      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Firm</td><td style="padding:8px;border-bottom:1px solid #eee;">${firm}</td></tr>
+      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Email</td><td style="padding:8px;border-bottom:1px solid #eee;">${email}</td></tr>
+      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Phone</td><td style="padding:8px;border-bottom:1px solid #eee;">${phone}</td></tr>
+      <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Expertise</td><td style="padding:8px;border-bottom:1px solid #eee;">${expertise}</td></tr>
+      <tr><td style="padding:8px;font-weight:bold;vertical-align:top;">Case Details</td><td style="padding:8px;">${details}</td></tr>
+    </table>
+  `;
 
-  res.json({
-    success: true,
-    message: 'Your request has been submitted successfully. We will be in touch within 24 hours.',
+  const message = pbMail.message({
+    from: 'noreply@veracityexpertwitness.com',
+    to: ['info@veracityexpertwitness.com'],
+    replyTo: email,
+    subject: `New Expert Witness Request: ${expertise} - ${name}`,
+    html_content: htmlContent,
   });
+
+  try {
+    await emailService.sendMessage(message);
+    res.json({
+      success: true,
+      message: 'Your request has been submitted successfully. We will be in touch within 24 hours.',
+    });
+  } catch (error) {
+    console.error('Email send error:', error);
+    res.status(500).json({ error: 'Failed to send your request. Please try again.' });
+  }
 });
 
 // Serve React build in production
