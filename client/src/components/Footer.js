@@ -21,7 +21,7 @@ function Footer() {
               <span>Veracity</span>
             </a>
             <p className="footer__brand-text">
-              Expert witness management for legal professionals &mdash; from sourcing and engagement to scheduling, logistics, and compliance.
+              Expert witness solutions for legal professionals &mdash; from sourcing and engagement to scheduling, logistics, and compliance.
             </p>
           </div>
 

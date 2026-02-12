@@ -64,10 +64,10 @@ function Services() {
         <div className="section__header">
           <span className="section__badge">Our Services</span>
           <h2 className="section__title">
-            Expert Witness <span className="text--accent">Management</span>
+            Expert Witness <span className="text--accent">Solutions</span>
           </h2>
           <p className="section__subtitle">
-            From initial case assessment to courtroom testimony, we manage every detail &mdash; engagement, logistics, scheduling, and compliance &mdash; so you don&rsquo;t have to.
+            From initial case assessment to courtroom testimony, we handle every detail &mdash; engagement, logistics, scheduling, and compliance &mdash; so you don&rsquo;t have to.
           </p>
         </div>
         <div className="services__grid">

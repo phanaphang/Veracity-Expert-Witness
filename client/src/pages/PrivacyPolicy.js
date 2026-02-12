@@ -10,7 +10,7 @@ function PrivacyPolicy() {
           Veracity Expert Witness (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is committed to
           protecting your privacy. This Privacy Policy explains how we collect, use, and
           safeguard your information when you visit veracityexpertwitness.com (the &ldquo;Site&rdquo;) or
-          use our expert witness management services (the &ldquo;Services&rdquo;).
+          use our expert witness services (the &ldquo;Services&rdquo;).
         </p>
         <p>
           We comply with the California Consumer Privacy Act as amended by the California
@@ -18,7 +18,7 @@ function PrivacyPolicy() {
           Act (CMIA), and all other applicable privacy laws.
         </p>
         <p>
-          Veracity Expert Witness is an expert witness management agency operating
+          Veracity Expert Witness is an expert witness agency operating
           in Los Angeles, California. We handle the sourcing, engagement, scheduling, logistics,
           and compliance needs for expert witness testimony. We are not a lawyer referral service
           and are not certified by the State Bar of California.
@@ -57,7 +57,7 @@ function PrivacyPolicy() {
         <h2>3. How We Use Your Information</h2>
         <p>We use your information to:</p>
         <ul>
-          <li>Provide and manage our expert witness services, including sourcing, engagement, scheduling, and logistics</li>
+          <li>Provide our expert witness services, including sourcing, engagement, scheduling, and logistics</li>
           <li>Respond to your inquiries and fulfill your requests</li>
           <li>Match you with qualified expert witnesses based on your case needs</li>
           <li>Screen for conflicts of interest before making introductions</li>
@@ -147,7 +147,7 @@ function PrivacyPolicy() {
       <section className="legal-section">
         <h2>7. Medical and Health-Related Information</h2>
         <p>
-          In managing expert witness engagements, we may receive case details that include
+          In the course of providing expert witness solutions, we may receive case details that include
           medical or health-related information. We treat all such information as strictly
           confidential.
         </p>

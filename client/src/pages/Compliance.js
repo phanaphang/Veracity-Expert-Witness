@@ -9,11 +9,11 @@ function Compliance() {
         <p>
           Veracity Expert Witness is committed to operating in full compliance with all
           applicable laws and industry standards. This page outlines how we approach
-          compliance across the key areas of our expert witness management services,
+          compliance across the key areas of our expert witness services,
           operating in Los Angeles, California.
         </p>
         <p>
-          We are an expert witness management agency &mdash; not a lawyer referral
+          We are an expert witness agency &mdash; not a lawyer referral
           service. We handle the sourcing, engagement, scheduling, logistics, and compliance
           requirements for expert witness testimony. We are not certified by the State Bar of
           California and do not provide legal advice.
@@ -39,7 +39,7 @@ function Compliance() {
 
         <h3>Our Data Principles</h3>
         <ul>
-          <li><strong>Collect only what we need:</strong> We do not gather more information than necessary to manage your engagement</li>
+          <li><strong>Collect only what we need:</strong> We do not gather more information than necessary to support your engagement</li>
           <li><strong>Use it for what we said:</strong> We only use your data for the purposes we described</li>
           <li><strong>Don&rsquo;t keep it forever:</strong> We have clear retention periods and securely delete data when it is no longer needed</li>
           <li><strong>Keep it safe:</strong> We use encryption, access controls, and secure infrastructure to protect your information</li>
@@ -51,7 +51,7 @@ function Compliance() {
 
         <h3>HIPAA</h3>
         <p>
-          While we are not a HIPAA-covered entity, we often manage engagements that involve
+          While we are not a HIPAA-covered entity, we often handle engagements that involve
           medical case details. When protected health information is involved, we:
         </p>
         <ul>
@@ -103,7 +103,7 @@ function Compliance() {
           Our fee practices are designed to be straightforward and independent:
         </p>
         <ul>
-          <li>Our management fees are separate from legal fees &mdash; we do not take a share of fees paid in the context of legal representation</li>
+          <li>Our service fees are separate from legal fees &mdash; we do not take a share of fees paid in the context of legal representation</li>
           <li>We provide clear fee schedules for our services</li>
           <li>We do not receive compensation tied to case outcomes</li>
           <li>We disclose any financial relationships between our agency and referred experts</li>
@@ -137,7 +137,7 @@ function Compliance() {
         <ul>
           <li>Encryption of data during transmission</li>
           <li>Access limited to authorized personnel</li>
-          <li>Secure, professionally managed infrastructure</li>
+          <li>Secure, professionally maintained infrastructure</li>
           <li>Procedures for identifying and responding to security incidents</li>
           <li>Vetting of third-party service providers</li>
           <li>Secure disposal of data that is no longer needed</li>
@@ -149,7 +149,7 @@ function Compliance() {
         <p>
           We do not discriminate on the basis of race, color, national origin, religion,
           sex, gender identity, sexual orientation, age, disability, or any other protected
-          characteristic. This applies to how we serve clients, select and manage experts,
+          characteristic. This applies to how we serve clients, select and engage experts,
           and conduct our business, in compliance with California and federal
           anti-discrimination laws.
         </p>

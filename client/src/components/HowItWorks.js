@@ -9,17 +9,17 @@ const steps = [
   {
     number: '02',
     title: 'Review Matched Experts',
-    description: 'We identify the most qualified experts from our managed network. Review their credentials, experience, and prior testimony history.',
+    description: 'We identify the most qualified experts from our network. Review their credentials, experience, and prior testimony history.',
   },
   {
     number: '03',
     title: 'We Handle the Engagement',
-    description: 'Once you select your expert, we manage all the logistics &mdash; contracts, scheduling, compliance, and coordination between all parties.',
+    description: 'Once you select your expert, we handle all the logistics &mdash; contracts, scheduling, compliance, and coordination between all parties.',
   },
   {
     number: '04',
     title: 'Expert Delivers Results',
-    description: 'Your expert provides reports, depositions, and trial testimony. We manage the entire process from preparation through courtroom delivery.',
+    description: 'Your expert provides reports, depositions, and trial testimony. We support the entire process from preparation through courtroom delivery.',
   },
 ];
 

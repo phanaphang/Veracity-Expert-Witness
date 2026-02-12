@@ -77,7 +77,7 @@ function Categories() {
             Find Experts Across <span className="text--accent">Every Field</span>
           </h2>
           <p className="section__subtitle">
-            Our managed network spans dozens of industries and specializations. We source,
+            Our network spans dozens of industries and specializations. We source,
             engage, and coordinate the right expert for any case.
           </p>
         </div>

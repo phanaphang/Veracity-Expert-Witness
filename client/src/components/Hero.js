@@ -15,7 +15,7 @@ function Hero() {
             <span className="hero__title--accent">When You Need Them</span>
           </h1>
           <p className="hero__subtitle">
-            Veracity manages every aspect of your expert witness needs &mdash; from sourcing
+            Veracity provides end-to-end expert witness solutions &mdash; from sourcing
             and vetting to scheduling, logistics, and compliance. We handle the details
             so you can focus on winning your case.
           </p>

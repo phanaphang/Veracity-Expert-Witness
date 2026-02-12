@@ -7,7 +7,7 @@ function TermsOfService() {
       <section className="legal-section">
         <h2>1. Agreement to Terms</h2>
         <p>
-          By using veracityexpertwitness.com (the &ldquo;Site&rdquo;) or the expert witness management
+          By using veracityexpertwitness.com (the &ldquo;Site&rdquo;) or the expert witness
           services provided by Veracity Expert Witness (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;),
           you agree to these Terms of Service. If you do not agree, please do not use the Site
           or Services.
@@ -17,7 +17,7 @@ function TermsOfService() {
       <section className="legal-section">
         <h2>2. What We Do</h2>
         <p>
-          Veracity Expert Witness is an expert witness management agency. We handle
+          Veracity Expert Witness is an expert witness agency. We handle
           the sourcing, vetting, engagement, scheduling, logistics, and compliance requirements
           for expert witness testimony on behalf of legal professionals. Our Services include
           coordinating all aspects of expert witness engagements from initial case assessment
@@ -30,7 +30,7 @@ function TermsOfService() {
           advice.
         </p>
         <p>
-          Our fees are independent service fees for expert witness management. They are not a
+          Our fees are independent service fees for expert witness solutions. They are not a
           share of legal fees or any fees paid in the context of legal representation.
         </p>
       </section>
@@ -58,7 +58,7 @@ function TermsOfService() {
       </section>
 
       <section className="legal-section">
-        <h2>5. How We Manage Expert Witness Engagements</h2>
+        <h2>5. How We Handle Expert Witness Engagements</h2>
 
         <h3>5.1 Finding the Right Expert</h3>
         <p>
@@ -76,9 +76,9 @@ function TermsOfService() {
           consistent with your professional obligations.
         </p>
 
-        <h3>5.3 Engagement Management</h3>
+        <h3>5.3 Engagement Coordination</h3>
         <p>
-          Once you select an expert, we manage the engagement logistics &mdash; including contracts,
+          Once you select an expert, we handle the engagement logistics &mdash; including contracts,
           scheduling, coordination between parties, and compliance with applicable requirements.
           We coordinate deposition preparation, report timelines, and trial scheduling so that
           all parties stay aligned.
@@ -93,7 +93,7 @@ function TermsOfService() {
 
         <h3>5.5 Your Relationship with the Expert</h3>
         <p>
-          While we manage the logistics and coordination, the professional relationship between
+          While we handle the logistics and coordination, the professional relationship between
           you and your expert witness is independent of Veracity. We are not a party to the
           engagement agreement between you and the expert and are not responsible for the
           expert&rsquo;s performance or the outcome of your case.
@@ -142,7 +142,7 @@ function TermsOfService() {
           <li>The performance or conduct of any expert witness</li>
           <li>Errors or omissions in expert credentials</li>
           <li>Loss of data, profits, or business opportunities</li>
-          <li>The outcome of any legal proceeding involving a managed expert</li>
+          <li>The outcome of any legal proceeding involving a referred expert</li>
         </ul>
         <p>
           Our total liability for any claim is limited to the fees you paid us in the 12 months
