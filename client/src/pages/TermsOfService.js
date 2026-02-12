@@ -13,16 +13,36 @@ function TermsOfService() {
           Service (&ldquo;Terms&rdquo;). If you do not agree to these Terms, you may not access or use
           the Site or Services.
         </p>
+        <p>
+          These Terms are governed by and shall be construed in accordance with the laws of the
+          State of California, including but not limited to the California Consumer Legal Remedies
+          Act (Civil Code &sect; 1750 et seq.), the California Unfair Competition Law (Business and
+          Professions Code &sect; 17200 et seq.), and the California False Advertising Law (Business
+          and Professions Code &sect; 17500 et seq.).
+        </p>
       </section>
 
       <section className="legal-section">
-        <h2>2. Description of Services</h2>
+        <h2>2. Nature of Services</h2>
         <p>
           Veracity Expert Witness provides expert witness referral and matching services for
           legal professionals. Our Services include connecting attorneys and law firms with
           qualified expert witnesses across various fields and specializations. We facilitate
           introductions and provide coordination support but do not provide legal advice or
           expert testimony directly.
+        </p>
+        <p>
+          <strong>Important Disclaimer:</strong> Veracity Expert Witness is an expert witness
+          referral service. We are not a lawyer referral service and are not certified by the
+          State Bar of California under Business and Professions Code Section 6155. We do not
+          provide legal advice, legal representation, or legal opinions. Nothing on this Site or
+          in our communications should be construed as legal advice.
+        </p>
+        <p>
+          Our fee structure consists of independent service fees for expert witness referral and
+          matching services. Our fees are not a share of legal fees, expert witness fees, or any
+          fees paid in the context of legal representation, consistent with California Rules of
+          Professional Conduct, Rule 5.4 (Financial and Similar Arrangements with Nonlawyers).
         </p>
       </section>
 
@@ -31,7 +51,9 @@ function TermsOfService() {
         <p>
           You must be at least 18 years of age and have the legal authority to enter into
           these Terms to use our Services. By using the Site, you represent and warrant that
-          you meet these eligibility requirements.
+          you meet these eligibility requirements. If you are using the Services on behalf of
+          a law firm or other organization, you represent and warrant that you have the authority
+          to bind that organization to these Terms.
         </p>
       </section>
 
@@ -41,21 +63,47 @@ function TermsOfService() {
         <ul>
           <li>Provide accurate, current, and complete information in any forms or communications</li>
           <li>Use the Services only for lawful purposes and in accordance with these Terms</li>
-          <li>Not misrepresent your identity, credentials, or professional affiliations</li>
+          <li>Not misrepresent your identity, credentials, professional affiliations, or bar membership status</li>
           <li>Not use the Services to transmit any harmful, threatening, or objectionable content</li>
           <li>Not attempt to interfere with the proper functioning of the Site or Services</li>
           <li>Maintain the confidentiality of any case-related information shared through our platform</li>
+          <li>Comply with all applicable federal, state, and local laws and regulations, including California Rules of Professional Conduct</li>
+          <li>Not use our Services in any manner that constitutes false advertising under Business and Professions Code &sect; 17500</li>
         </ul>
       </section>
 
       <section className="legal-section">
         <h2>5. Expert Witness Referrals</h2>
+
+        <h3>5.1 Qualification Standards</h3>
         <p>
-          We exercise professional judgment in matching expert witnesses with client needs.
-          However, we do not guarantee the availability, qualifications, or performance of
-          any expert witness. You are responsible for independently verifying the credentials,
-          expertise, and suitability of any expert witness referred through our Services.
+          We endeavor to refer expert witnesses who meet the qualification standards set forth in
+          California Evidence Code Section 720, which provides that a person is qualified to
+          testify as an expert if they have &ldquo;special knowledge, skill, experience, training, or
+          education sufficient to qualify&rdquo; on the subject matter. However, we do not guarantee
+          the availability, qualifications, or performance of any expert witness.
         </p>
+
+        <h3>5.2 Conflict of Interest Screening</h3>
+        <p>
+          We conduct reasonable conflict of interest screening prior to making referrals,
+          including screening for involvement in the same or related matters and prior
+          relationships with adverse parties. However, you are responsible for independently
+          verifying the credentials, expertise, suitability, and potential conflicts of interest
+          of any expert witness referred through our Services, consistent with your obligations
+          under California Rules of Professional Conduct, Rule 1.7.
+        </p>
+
+        <h3>5.3 Compensation Disclosure</h3>
+        <p>
+          You acknowledge that expert witness compensation is subject to disclosure under
+          California Evidence Code Section 722(b), which provides that compensation paid or to
+          be paid to an expert is a proper subject of inquiry by any adverse party. You are
+          responsible for ensuring compliance with all applicable disclosure requirements,
+          including those under California Code of Civil Procedure Sections 2034.210&ndash;2034.310.
+        </p>
+
+        <h3>5.4 Independent Relationship</h3>
         <p>
           The relationship between you and any expert witness is independent of Veracity
           Expert Witness. We are not a party to any engagement agreement between you and
@@ -65,7 +113,7 @@ function TermsOfService() {
       </section>
 
       <section className="legal-section">
-        <h2>6. Confidentiality</h2>
+        <h2>6. Confidentiality &amp; Medical Information</h2>
         <p>
           We understand the sensitive nature of legal matters and treat all information
           shared with us as confidential. We will not disclose your case details, client
@@ -75,6 +123,16 @@ function TermsOfService() {
         <p>
           You acknowledge that sharing case information with potential expert witnesses is
           necessary for the matching process and consent to such limited disclosure.
+        </p>
+
+        <h3>6.1 Medical Information</h3>
+        <p>
+          Where case details include medical information or protected health information (PHI),
+          we handle such information in accordance with the Health Insurance Portability and
+          Accountability Act (HIPAA) and the California Confidentiality of Medical Information
+          Act (Civil Code &sect; 56 et seq.). We are prepared to enter into Business Associate
+          Agreements (BAAs) where required. You are responsible for ensuring that any medical
+          information you share with us is disclosed in compliance with applicable law.
         </p>
       </section>
 
@@ -102,6 +160,7 @@ function TermsOfService() {
           <li>Any errors or omissions in expert witness credentials or qualifications</li>
           <li>Any loss of data, profits, or business opportunities</li>
           <li>Any unauthorized access to or alteration of your transmissions or data</li>
+          <li>The outcome of any legal proceeding in which a referred expert witness participates</li>
         </ul>
         <p>
           Our total liability for any claims arising under these Terms shall not exceed the
@@ -129,15 +188,34 @@ function TermsOfService() {
           not warrant that the Site will be uninterrupted, error-free, or free of viruses or
           other harmful components.
         </p>
+        <p>
+          <strong>Preservation of Consumer Rights:</strong> Nothing in these Terms is intended to
+          waive or limit any rights you may have under the California Consumer Legal Remedies Act
+          (Civil Code &sect; 1750 et seq.). To the extent any provision of these Terms conflicts
+          with the CLRA, the CLRA shall prevail, as provided by Civil Code &sect; 1751.
+        </p>
       </section>
 
       <section className="legal-section">
-        <h2>11. Governing Law</h2>
+        <h2>11. Dispute Resolution</h2>
+
+        <h3>11.1 Pre-Suit Notice Requirement</h3>
+        <p>
+          Before initiating any legal action arising out of or relating to these Terms, you
+          agree to provide us with written notice of the dispute via certified mail, describing
+          the nature of the claim and the specific relief sought. We will have thirty (30) days
+          from receipt of such notice to attempt to resolve the dispute. This provision is
+          consistent with and does not limit the pre-suit notice requirements under the
+          California Consumer Legal Remedies Act (Civil Code &sect; 1782).
+        </p>
+
+        <h3>11.2 Governing Law and Venue</h3>
         <p>
           These Terms shall be governed by and construed in accordance with the laws of the
           State of California, without regard to its conflict of law provisions. Any disputes
-          arising under these Terms shall be resolved in the state or federal courts located
-          in California, and you consent to the personal jurisdiction of such courts.
+          arising under these Terms shall be resolved exclusively in the state or federal courts
+          located in Los Angeles County, California, and you consent to the personal jurisdiction
+          and venue of such courts.
         </p>
       </section>
 
@@ -147,17 +225,29 @@ function TermsOfService() {
           We reserve the right to modify these Terms at any time. We will notify you of any
           material changes by posting the updated Terms on this page and updating the
           &ldquo;Effective Date.&rdquo; Your continued use of the Site or Services after any changes
-          constitutes your acceptance of the revised Terms.
+          constitutes your acceptance of the revised Terms. If you do not agree to the revised
+          Terms, you must discontinue use of the Site and Services.
         </p>
       </section>
 
       <section className="legal-section">
-        <h2>13. Contact Us</h2>
+        <h2>13. Severability</h2>
+        <p>
+          If any provision of these Terms is held to be invalid, illegal, or unenforceable by a
+          court of competent jurisdiction in Los Angeles County, California, such provision shall
+          be modified to the minimum extent necessary to make it enforceable, and the remaining
+          provisions shall continue in full force and effect.
+        </p>
+      </section>
+
+      <section className="legal-section">
+        <h2>14. Contact Us</h2>
         <p>
           If you have any questions about these Terms of Service, please contact us at:
         </p>
         <div className="contact-info-box">
           <p><strong>Veracity Expert Witness</strong></p>
+          <p>Los Angeles, California</p>
           <p>Email: <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a></p>
           <p>Website: veracityexpertwitness.com</p>
         </div>
