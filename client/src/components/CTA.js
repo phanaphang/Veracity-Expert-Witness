@@ -11,8 +11,8 @@ function CTA() {
         <div className="cta__content">
           <h2 className="cta__title">Ready to Find Your Expert Witness?</h2>
           <p className="cta__subtitle">
-            Join hundreds of law firms that trust Veracity to connect them with the
-            right expert witnesses. Get started today and see the difference.
+            Join hundreds of law firms that trust Veracity to manage their expert witness
+            needs from start to finish. Get started today and see the difference.
           </p>
           <div className="cta__actions">
             <a href="#contact" className="btn btn--white" onClick={(e) => {

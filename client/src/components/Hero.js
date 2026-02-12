@@ -15,9 +15,9 @@ function Hero() {
             <span className="hero__title--accent">When You Need Them</span>
           </h1>
           <p className="hero__subtitle">
-            Connect with highly qualified expert witnesses across every industry and
-            specialization. Veracity streamlines the process of finding, vetting, and
-            retaining the right expert for your case.
+            Veracity manages every aspect of your expert witness needs &mdash; from sourcing
+            and vetting to scheduling, logistics, and compliance. We handle the details
+            so you can focus on winning your case.
           </p>
           <div className="hero__actions">
             <a href="#contact" className="btn btn--primary" onClick={(e) => {

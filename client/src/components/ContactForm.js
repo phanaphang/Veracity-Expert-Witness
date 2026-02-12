@@ -90,7 +90,7 @@ function ContactForm() {
             Get Started <span className="text--accent">Today</span>
           </h2>
           <p className="section__subtitle">
-            Fill out the form below and our team will connect you with the right expert witness for your case.
+            Fill out the form below and our team will find, engage, and manage the right expert witness for your case.
           </p>
         </div>
 

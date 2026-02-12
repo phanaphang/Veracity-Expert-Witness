@@ -8,7 +8,7 @@ const services = [
       </svg>
     ),
     title: 'Expert Search & Matching',
-    description: 'Our AI-powered platform matches your case requirements with the most qualified expert witnesses from our extensive network.',
+    description: 'We identify and match the most qualified expert witnesses from our extensive network to your specific case requirements and timeline.',
   },
   {
     icon: (
@@ -64,10 +64,10 @@ function Services() {
         <div className="section__header">
           <span className="section__badge">Our Services</span>
           <h2 className="section__title">
-            Comprehensive Expert Witness <span className="text--accent">Solutions</span>
+            Full-Service Expert Witness <span className="text--accent">Management</span>
           </h2>
           <p className="section__subtitle">
-            From initial case assessment to courtroom testimony, we provide end-to-end expert witness services tailored to your needs.
+            From initial case assessment to courtroom testimony, we manage every detail &mdash; engagement, logistics, scheduling, and compliance &mdash; so you don&rsquo;t have to.
           </p>
         </div>
         <div className="services__grid">
