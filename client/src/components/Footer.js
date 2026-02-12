@@ -48,7 +48,7 @@ function Footer() {
           <div className="footer__col">
             <h4 className="footer__col-title">Legal</h4>
             <ul className="footer__links">
-              <li><a href="/privacy-policy">Privacy Policy</a></li>
+              <li><a href="/privacy-policy.html">Privacy Policy</a></li>
               <li><a href="#hero">Terms of Service</a></li>
               <li><a href="#hero">Cookie Policy</a></li>
               <li><a href="#hero">Compliance</a></li>
