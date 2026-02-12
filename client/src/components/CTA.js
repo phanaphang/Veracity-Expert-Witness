@@ -24,12 +24,6 @@ function CTA() {
                 <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </a>
-            <a href="#how-it-works" className="btn btn--outline-white" onClick={(e) => {
-              e.preventDefault();
-              document.querySelector('#how-it-works')?.scrollIntoView({ behavior: 'smooth' });
-            }}>
-              Learn More
-            </a>
           </div>
         </div>
       </div>
