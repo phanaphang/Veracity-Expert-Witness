@@ -1,13 +1,6 @@
 import React from 'react';
 
 function Hero() {
-  const stats = [
-    { value: '500+', label: 'Expert Witnesses' },
-    { value: '98%', label: 'Client Satisfaction' },
-    { value: '24h', label: 'Average Response' },
-    { value: '1,000+', label: 'Cases Supported' },
-  ];
-
   return (
     <section className="hero" id="hero">
       <div className="hero__bg">
@@ -43,14 +36,6 @@ function Hero() {
               How It Works
             </a>
           </div>
-        </div>
-        <div className="hero__stats">
-          {stats.map((stat) => (
-            <div key={stat.label} className="hero__stat-card">
-              <div className="hero__stat-value">{stat.value}</div>
-              <div className="hero__stat-label">{stat.label}</div>
-            </div>
-          ))}
         </div>
       </div>
     </section>
