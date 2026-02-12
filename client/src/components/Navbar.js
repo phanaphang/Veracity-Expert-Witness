@@ -22,7 +22,6 @@ function Navbar() {
     { label: 'Services', href: '#services' },
     { label: 'Expert Categories', href: '#categories' },
     { label: 'How It Works', href: '#how-it-works' },
-    { label: 'Testimonials', href: '#testimonials' },
   ];
 
   const handleNavClick = (e, href) => {

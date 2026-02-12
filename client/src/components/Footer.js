@@ -40,7 +40,6 @@ function Footer() {
             <ul className="footer__links">
               <li><a href="#hero">About Us</a></li>
               <li><a href="#categories">Expert Network</a></li>
-              <li><a href="#testimonials">Case Studies</a></li>
               <li><a href="#contact">Careers</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>
