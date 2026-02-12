@@ -10,12 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 // API Routes
-const pbMail = require('paubox-node');
-const emailService = pbMail.emailService({
-  apiKey: process.env.PAUBOX_API_KEY,
-  apiUsername: process.env.PAUBOX_API_USER,
-});
-
 app.post('/api/contact', async (req, res) => {
   const { name, firm, email, phone, expertise, details } = req.body;
 
@@ -40,22 +34,45 @@ app.post('/api/contact', async (req, res) => {
     </table>
   `;
 
-  const message = pbMail.message({
-    from: 'noreply@veracityexpertwitness.com',
-    to: ['info@veracityexpertwitness.com'],
-    replyTo: email,
-    subject: `New Expert Witness Request: ${expertise} - ${name}`,
-    html_content: htmlContent,
-  });
+  const apiUser = (process.env.PAUBOX_API_USER || '').trim();
+  const apiKey = (process.env.PAUBOX_API_KEY || '').trim();
 
   try {
-    await emailService.sendMessage(message);
+    const response = await fetch(`https://api.paubox.net/v1/${apiUser}/messages`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Token token=${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        data: {
+          message: {
+            recipients: ['info@veracityexpertwitness.com'],
+            headers: {
+              subject: `New Expert Witness Request: ${expertise} - ${name}`,
+              from: 'noreply@veracityexpertwitness.com',
+              'reply-to': email,
+            },
+            content: {
+              'text/html': htmlContent,
+            },
+          },
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Paubox API error:', response.status, errorText);
+      return res.status(500).json({ error: 'Failed to send your request. Please try again.' });
+    }
+
     res.json({
       success: true,
       message: 'Your request has been submitted successfully. We will be in touch within 24 hours.',
     });
   } catch (error) {
-    console.error('Email send error:', error);
+    console.error('Email send error:', error.message);
     res.status(500).json({ error: 'Failed to send your request. Please try again.' });
   }
 });
