@@ -8,7 +8,6 @@ const categories = [
       </svg>
     ),
     title: 'Medical & Healthcare',
-    count: '120+ Experts',
   },
   {
     icon: (
@@ -17,7 +16,6 @@ const categories = [
       </svg>
     ),
     title: 'Financial & Accounting',
-    count: '85+ Experts',
   },
   {
     icon: (
@@ -26,7 +24,6 @@ const categories = [
       </svg>
     ),
     title: 'Technology & Cyber',
-    count: '95+ Experts',
   },
   {
     icon: (
@@ -35,7 +32,6 @@ const categories = [
       </svg>
     ),
     title: 'Construction & Engineering',
-    count: '70+ Experts',
   },
   {
     icon: (
@@ -44,7 +40,6 @@ const categories = [
       </svg>
     ),
     title: 'Environmental Science',
-    count: '45+ Experts',
   },
   {
     icon: (
@@ -53,7 +48,6 @@ const categories = [
       </svg>
     ),
     title: 'Intellectual Property',
-    count: '60+ Experts',
   },
   {
     icon: (
@@ -62,7 +56,6 @@ const categories = [
       </svg>
     ),
     title: 'Accident Reconstruction',
-    count: '40+ Experts',
   },
   {
     icon: (
@@ -71,7 +64,6 @@ const categories = [
       </svg>
     ),
     title: 'Forensic Analysis',
-    count: '55+ Experts',
   },
 ];
 
@@ -94,7 +86,6 @@ function Categories() {
             <div key={cat.title} className="categories__card">
               <div className="categories__icon">{cat.icon}</div>
               <h3 className="categories__title">{cat.title}</h3>
-              <p className="categories__count">{cat.count}</p>
             </div>
           ))}
         </div>
