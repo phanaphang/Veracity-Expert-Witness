@@ -58,7 +58,6 @@ function Navbar() {
         </div>
 
         <div className="navbar__actions">
-          <button className="navbar__btn navbar__btn--signin">Sign In</button>
           <a
             href="#contact"
             className="navbar__btn navbar__btn--cta"
@@ -92,7 +91,6 @@ function Navbar() {
             </a>
           ))}
           <div className="navbar__mobile-actions">
-            <button className="navbar__btn navbar__btn--signin">Sign In</button>
             <a
               href="#contact"
               className="navbar__btn navbar__btn--cta"
