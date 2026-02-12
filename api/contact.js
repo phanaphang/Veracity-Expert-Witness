@@ -53,10 +53,9 @@ module.exports = async (req, res) => {
       }),
     });
 
-    const responseText = await response.text();
-    console.log('Paubox response:', response.status, responseText);
-
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Paubox API error:', response.status, errorText);
       return res.status(500).json({ error: 'Failed to send your request. Please try again.' });
     }
 
