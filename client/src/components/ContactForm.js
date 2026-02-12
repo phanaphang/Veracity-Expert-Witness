@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 const expertiseOptions = [
   'Medical & Healthcare',
@@ -22,8 +22,10 @@ function ContactForm() {
     details: '',
   });
 
+  const [website, setWebsite] = useState('');
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(null); // null | 'sending' | 'success' | 'error'
+  const renderTime = useRef(Date.now());
 
   const validate = () => {
     const newErrors = {};
@@ -62,7 +64,11 @@ function ContactForm() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+        ...formData,
+        website,
+        _elapsed: (Date.now() - renderTime.current) / 1000,
+      }),
       });
       if (res.ok) {
         setStatus('success');
@@ -99,6 +105,19 @@ function ContactForm() {
               Something went wrong. Please try again or email us directly.
             </div>
           )}
+
+          <div className="contact__honeypot" aria-hidden="true">
+            <label htmlFor="website">Website</label>
+            <input
+              type="text"
+              id="website"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
+          </div>
 
           <div className="contact__row">
             <div className="contact__field">

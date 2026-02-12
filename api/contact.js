@@ -3,7 +3,17 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, firm, email, phone, expertise, details } = req.body;
+  const { name, firm, email, phone, expertise, details, website, _elapsed } = req.body;
+
+  // Anti-bot: honeypot field filled
+  if (website) {
+    return res.json({ success: true, message: 'Your request has been submitted successfully.' });
+  }
+
+  // Anti-bot: form submitted too quickly (< 3 seconds)
+  if (typeof _elapsed === 'number' && _elapsed < 3) {
+    return res.json({ success: true, message: 'Your request has been submitted successfully.' });
+  }
 
   if (!name || !firm || !email || !phone || !expertise || !details) {
     return res.status(400).json({ error: 'All fields are required.' });

@@ -1,288 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#1a1a2e" />
-    <meta name="robots" content="index, follow" />
-    <meta name="description" content="Privacy Policy for Veracity Expert Witness. CCPA/CPRA compliant. Learn how we collect, use, and protect your personal information." />
-    <link rel="canonical" href="https://veracityexpertwitness.com/privacy-policy" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+import React from 'react';
+import LegalPage from '../components/LegalPage';
 
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://veracityexpertwitness.com/privacy-policy" />
-    <meta property="og:title" content="Privacy Policy | Veracity Expert Witness" />
-    <meta property="og:description" content="Privacy Policy for Veracity Expert Witness. CCPA/CPRA compliant." />
-    <meta property="og:site_name" content="Veracity Expert Witness" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-    <title>Privacy Policy | Veracity Expert Witness</title>
-
-    <style>
-      :root {
-        --color-primary: #094074;
-        --color-accent: #d36622;
-        --color-accent-light: #e07a3a;
-        --color-accent-dark: #b8561b;
-        --color-navy: #3e442b;
-        --color-navy-light: #4e5538;
-        --color-white: #ffffff;
-        --color-gray-50: #f7f5f0;
-        --color-gray-200: #e8dab2;
-        --color-gray-500: #676d5f;
-        --color-gray-600: #4e5538;
-        --color-gray-700: #3e442b;
-        --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        --radius-md: 10px;
-        --transition: 0.3s ease;
-      }
-
-      *, *::before, *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      body {
-        font-family: var(--font-family);
-        color: var(--color-gray-700);
-        background: var(--color-white);
-        line-height: 1.6;
-      }
-
-      a {
-        text-decoration: none;
-        color: inherit;
-      }
-
-      ul { list-style: none; }
-
-      .container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 24px;
-      }
-
-      /* Navbar */
-      .navbar {
-        background: rgba(62, 68, 43, 0.95);
-        backdrop-filter: blur(20px);
-        padding: 14px 0;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1000;
-        box-shadow: 0 4px 30px rgba(0,0,0,0.15);
-      }
-
-      .navbar .container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .navbar__logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 1.4rem;
-        font-weight: 800;
-        color: var(--color-white);
-        letter-spacing: -0.5px;
-      }
-
-      .navbar__btn {
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        font-weight: 600;
-        background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
-        color: var(--color-white);
-        box-shadow: 0 2px 10px rgba(211, 102, 34, 0.3);
-        transition: all var(--transition);
-      }
-
-      .navbar__btn:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 4px 14px rgba(211, 102, 34, 0.4);
-      }
-
-      /* Header */
-      .privacy-header {
-        background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-primary) 50%, var(--color-navy-light) 100%);
-        padding: 140px 0 60px;
-        text-align: center;
-      }
-
-      .privacy-header__back {
-        display: inline-block;
-        color: rgba(255,255,255,0.7);
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-bottom: 24px;
-        transition: color var(--transition);
-      }
-
-      .privacy-header__back:hover {
-        color: var(--color-accent);
-      }
-
-      .privacy-header__title {
-        font-size: clamp(2rem, 5vw, 3rem);
-        font-weight: 800;
-        color: var(--color-white);
-        margin-bottom: 12px;
-      }
-
-      .privacy-header__date {
-        color: rgba(255,255,255,0.5);
-        font-size: 0.95rem;
-      }
-
-      /* Content */
-      .privacy-content {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 60px 24px 100px;
-      }
-
-      .privacy-section {
-        margin-bottom: 40px;
-      }
-
-      .privacy-section h2 {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: var(--color-navy);
-        margin-bottom: 16px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid var(--color-gray-200);
-      }
-
-      .privacy-section h3 {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--color-navy);
-        margin-top: 20px;
-        margin-bottom: 10px;
-      }
-
-      .privacy-section p {
-        font-size: 0.95rem;
-        color: var(--color-gray-600);
-        line-height: 1.8;
-        margin-bottom: 12px;
-      }
-
-      .privacy-section ul {
-        list-style: disc;
-        padding-left: 24px;
-        margin-bottom: 16px;
-      }
-
-      .privacy-section ul li {
-        font-size: 0.95rem;
-        color: var(--color-gray-600);
-        line-height: 1.8;
-        margin-bottom: 6px;
-      }
-
-      .privacy-section a {
-        color: var(--color-accent);
-        text-decoration: underline;
-        transition: color var(--transition);
-      }
-
-      .privacy-section a:hover {
-        color: var(--color-accent-dark);
-      }
-
-      .contact-info-box {
-        background: var(--color-gray-50);
-        border: 1px solid var(--color-gray-200);
-        border-radius: var(--radius-md);
-        padding: 24px;
-        margin-top: 12px;
-      }
-
-      .contact-info-box p {
-        margin-bottom: 4px;
-      }
-
-      /* Footer */
-      .footer {
-        background: var(--color-navy);
-        padding: 40px 0 24px;
-        color: rgba(255,255,255,0.7);
-      }
-
-      .footer__inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        font-size: 0.85rem;
-        color: rgba(255,255,255,0.4);
-      }
-
-      .footer__inner a {
-        color: rgba(255,255,255,0.5);
-        transition: color var(--transition);
-      }
-
-      .footer__inner a:hover {
-        color: var(--color-accent);
-      }
-
-      @media (max-width: 768px) {
-        .privacy-header {
-          padding: 120px 0 40px;
-        }
-        .privacy-content {
-          padding: 40px 24px 60px;
-        }
-        .footer__inner {
-          flex-direction: column;
-          gap: 12px;
-          text-align: center;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <nav class="navbar">
-      <div class="container">
-        <a href="/" class="navbar__logo">
-          <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
-            <path d="M12 2L2 7l10 5 10-5-10-5z" fill="#d36622" />
-            <path d="M2 17l10 5 10-5" stroke="#d36622" stroke-width="2" fill="none" />
-            <path d="M2 12l10 5 10-5" stroke="#d36622" stroke-width="2" fill="none" />
-          </svg>
-          <span>Veracity</span>
-        </a>
-        <a href="/" class="navbar__btn">Back to Home</a>
-      </div>
-    </nav>
-
-    <header class="privacy-header">
-      <div class="container">
-        <a href="/" class="privacy-header__back">&larr; Back to Home</a>
-        <h1 class="privacy-header__title">Privacy Policy</h1>
-        <p class="privacy-header__date">Effective Date: February 11, 2026</p>
-      </div>
-    </header>
-
-    <main class="privacy-content">
-
-      <section class="privacy-section">
+function PrivacyPolicy() {
+  return (
+    <LegalPage title="Privacy Policy" effectiveDate="February 11, 2026">
+      <section className="legal-section">
         <h2>1. Introduction</h2>
         <p>
           Veracity Expert Witness (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is committed to protecting
@@ -299,7 +21,7 @@
         </p>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>2. Information We Collect</h2>
 
         <h3>2.1 Information You Provide Directly</h3>
@@ -329,7 +51,7 @@
         </ul>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>3. How We Use Your Information</h2>
         <p>We use the information we collect for the following business purposes:</p>
         <ul>
@@ -343,7 +65,7 @@
         </ul>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>4. How We Share Your Information</h2>
         <p>We do not sell your personal information. We may share your information in the following circumstances:</p>
         <ul>
@@ -354,7 +76,7 @@
         </ul>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>5. Data Retention</h2>
         <p>
           We retain your personal information for as long as necessary to fulfill the purposes
@@ -369,7 +91,7 @@
         </p>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>6. Data Security</h2>
         <p>
           We implement commercially reasonable administrative, technical, and physical safeguards
@@ -384,7 +106,7 @@
         </p>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>7. Sensitive Information &amp; HIPAA Compliance</h2>
         <p>
           In the course of providing expert witness referral services, we may receive case
@@ -400,7 +122,7 @@
         </p>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>8. Your California Privacy Rights (CCPA/CPRA)</h2>
         <p>
           If you are a California resident, you have the following rights under the CCPA as
@@ -465,7 +187,7 @@
         </p>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>9. Cookies and Tracking Technologies</h2>
         <p>
           Our Site may use cookies and similar tracking technologies to enhance your experience.
@@ -474,7 +196,7 @@
         </p>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>10. Third-Party Links</h2>
         <p>
           Our Site may contain links to third-party websites or services that are not operated
@@ -484,7 +206,7 @@
         </p>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>11. Children&rsquo;s Privacy</h2>
         <p>
           Our Services are not directed to individuals under the age of 18. We do not knowingly
@@ -494,7 +216,7 @@
         </p>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>12. Changes to This Privacy Policy</h2>
         <p>
           We may update this Privacy Policy from time to time. We will notify you of any material
@@ -504,29 +226,21 @@
         </p>
       </section>
 
-      <section class="privacy-section">
+      <section className="legal-section">
         <h2>13. Contact Us</h2>
         <p>
           If you have any questions about this Privacy Policy, wish to exercise your privacy
           rights, or have concerns about how we handle your personal information, please
           contact us at:
         </p>
-        <div class="contact-info-box">
+        <div className="contact-info-box">
           <p><strong>Veracity Expert Witness</strong></p>
           <p>Email: <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a></p>
           <p>Website: veracityexpertwitness.com</p>
         </div>
       </section>
+    </LegalPage>
+  );
+}
 
-    </main>
-
-    <footer class="footer">
-      <div class="container">
-        <div class="footer__inner">
-          <p>&copy; 2026 Veracity Expert Witness. All rights reserved.</p>
-          <a href="/">Back to Home</a>
-        </div>
-      </div>
-    </footer>
-  </body>
-</html>
+export default PrivacyPolicy;

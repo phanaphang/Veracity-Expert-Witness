@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -24,12 +27,31 @@ function Navbar() {
     { label: 'How It Works', href: '#how-it-works' },
   ];
 
+  const scrollToElement = (hash) => {
+    const el = document.querySelector(hash);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const handleNavClick = (e, href) => {
     e.preventDefault();
     setMobileOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
+
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: href } });
+    } else {
+      scrollToElement(href);
+    }
   };
+
+  // Handle scroll-to after navigating back to homepage
+  useEffect(() => {
+    if (location.pathname === '/' && location.state?.scrollTo) {
+      // Small delay to let the homepage render
+      setTimeout(() => {
+        scrollToElement(location.state.scrollTo);
+      }, 100);
+    }
+  }, [location]);
 
   return (
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
