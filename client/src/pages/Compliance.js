@@ -13,7 +13,7 @@ function Compliance() {
           operating in Los Angeles, California.
         </p>
         <p>
-          We are a full-service expert witness management agency &mdash; not a lawyer referral
+          We are an expert witness management agency &mdash; not a lawyer referral
           service. We handle the sourcing, engagement, scheduling, logistics, and compliance
           requirements for expert witness testimony. We are not certified by the State Bar of
           California and do not provide legal advice.

@@ -18,7 +18,7 @@ function PrivacyPolicy() {
           Act (CMIA), and all other applicable privacy laws.
         </p>
         <p>
-          Veracity Expert Witness is a full-service expert witness management agency operating
+          Veracity Expert Witness is an expert witness management agency operating
           in Los Angeles, California. We handle the sourcing, engagement, scheduling, logistics,
           and compliance needs for expert witness testimony. We are not a lawyer referral service
           and are not certified by the State Bar of California.

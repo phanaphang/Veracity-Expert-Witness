@@ -17,7 +17,7 @@ function TermsOfService() {
       <section className="legal-section">
         <h2>2. What We Do</h2>
         <p>
-          Veracity Expert Witness is a full-service expert witness management agency. We handle
+          Veracity Expert Witness is an expert witness management agency. We handle
           the sourcing, vetting, engagement, scheduling, logistics, and compliance requirements
           for expert witness testimony on behalf of legal professionals. Our Services include
           coordinating all aspects of expert witness engagements from initial case assessment
