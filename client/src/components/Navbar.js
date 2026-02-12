@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-function Navbar({ onNavigateHome, isSubpage }) {
+function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -27,29 +27,14 @@ function Navbar({ onNavigateHome, isSubpage }) {
   const handleNavClick = (e, href) => {
     e.preventDefault();
     setMobileOpen(false);
-    if (isSubpage) {
-      onNavigateHome();
-      setTimeout(() => {
-        const el = document.querySelector(href);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
-      const el = document.querySelector(href);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
+    const el = document.querySelector(href);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__container">
-        <a href="/" className="navbar__logo" onClick={(e) => {
-          e.preventDefault();
-          if (isSubpage) {
-            onNavigateHome();
-          } else {
-            document.querySelector('#hero')?.scrollIntoView({ behavior: 'smooth' });
-          }
-        }}>
+        <a href="#hero" className="navbar__logo" onClick={(e) => handleNavClick(e, '#hero')}>
           <svg className="navbar__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28">
             <path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--color-accent)" />
             <path d="M2 17l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
