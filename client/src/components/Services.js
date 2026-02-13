@@ -40,15 +40,6 @@ const services = [
   {
     icon: (
       <svg viewBox="0 0 24 24" fill="none" width="32" height="32">
-        <path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-      </svg>
-    ),
-    title: 'Case Strategy Consulting',
-    description: 'Leverage our experts\' deep industry knowledge to strengthen your case strategy and identify critical technical arguments.',
-  },
-  {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" width="32" height="32">
         <path d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
       </svg>
     ),
