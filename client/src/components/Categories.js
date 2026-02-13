@@ -18,6 +18,7 @@ const categories = [
       </svg>
     ),
     title: 'Financial & Accounting',
+    link: '/financial-accounting',
   },
   {
     icon: (
@@ -26,6 +27,7 @@ const categories = [
       </svg>
     ),
     title: 'Technology & Cyber',
+    link: '/technology-cyber',
   },
   {
     icon: (
@@ -34,6 +36,7 @@ const categories = [
       </svg>
     ),
     title: 'Construction & Engineering',
+    link: '/construction-engineering',
   },
   {
     icon: (
@@ -42,6 +45,7 @@ const categories = [
       </svg>
     ),
     title: 'Environmental Science',
+    link: '/environmental-science',
   },
   {
     icon: (
@@ -50,6 +54,7 @@ const categories = [
       </svg>
     ),
     title: 'Intellectual Property',
+    link: '/intellectual-property',
   },
   {
     icon: (
@@ -58,6 +63,7 @@ const categories = [
       </svg>
     ),
     title: 'Accident Reconstruction',
+    link: '/accident-reconstruction',
   },
   {
     icon: (
@@ -66,6 +72,7 @@ const categories = [
       </svg>
     ),
     title: 'Forensic Analysis',
+    link: '/forensic-analysis',
   },
 ];
 
