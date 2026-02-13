@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../lib/supabase';
 
 export const AuthContext = createContext(null);
@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const initialized = useRef(false);
 
   const fetchProfile = useCallback(async (userId) => {
     try {
@@ -24,8 +25,48 @@ export function AuthProvider({ children }) {
   }, []);
 
   useEffect(() => {
+    // Primary: get session on mount
+    supabase.auth.getSession().then(({ data: { session: s } }) => {
+      if (initialized.current) return;
+      initialized.current = true;
+      setUser(s?.user ?? null);
+      setSession(s ?? null);
+      if (s?.user) {
+        fetchProfile(s.user.id);
+      } else {
+        setLoading(false);
+      }
+    }).catch(() => {
+      if (!initialized.current) {
+        initialized.current = true;
+        setLoading(false);
+      }
+    });
+
+    // Fallback: if getSession hangs, stop loading after 3 seconds
+    const timeout = setTimeout(() => {
+      if (!initialized.current) {
+        initialized.current = true;
+        setLoading(false);
+      }
+    }, 3000);
+
+    // Listen for future auth changes (login, logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, s) => {
+      async (event, s) => {
+        if (event === 'INITIAL_SESSION') {
+          if (!initialized.current) {
+            initialized.current = true;
+            setUser(s?.user ?? null);
+            setSession(s ?? null);
+            if (s?.user) {
+              await fetchProfile(s.user.id);
+            } else {
+              setLoading(false);
+            }
+          }
+          return;
+        }
         setUser(s?.user ?? null);
         setSession(s ?? null);
         if (s?.user) {
@@ -37,7 +78,10 @@ export function AuthProvider({ children }) {
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, [fetchProfile]);
 
   const signIn = (email, password) =>
