@@ -26,27 +26,6 @@ function Footer() {
           </div>
 
           <div className="footer__col">
-            <h4 className="footer__col-title">Services</h4>
-            <ul className="footer__links">
-              <li><a href="#services">Expert Search</a></li>
-              <li><a href="#services">Credential Verification</a></li>
-              <li><a href="#services">Deposition Prep</a></li>
-              <li><a href="#services">Report Writing</a></li>
-              <li><a href="#services">Trial Support</a></li>
-            </ul>
-          </div>
-
-          <div className="footer__col">
-            <h4 className="footer__col-title">Company</h4>
-            <ul className="footer__links">
-              <li><a href="#hero">About Us</a></li>
-              <li><a href="#categories">Expert Network</a></li>
-              <li><a href="#contact">Careers</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
-          </div>
-
-          <div className="footer__col">
             <h4 className="footer__col-title">Legal</h4>
             <ul className="footer__links">
               <li><Link to="/privacy-policy">Privacy Policy</Link></li>
