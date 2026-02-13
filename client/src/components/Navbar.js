@@ -25,6 +25,7 @@ function Navbar() {
     { label: 'Services', href: '#services' },
     { label: 'Expert Categories', href: '#categories' },
     { label: 'How It Works', href: '#how-it-works' },
+    { label: 'Expert Portal', href: '/portal/login', isRoute: true },
   ];
 
   const scrollToElement = (hash) => {
@@ -71,7 +72,14 @@ function Navbar() {
               key={link.href}
               href={link.href}
               className="navbar__link"
-              onClick={(e) => handleNavClick(e, link.href)}
+              onClick={(e) => {
+                if (link.isRoute) {
+                  e.preventDefault();
+                  navigate(link.href);
+                } else {
+                  handleNavClick(e, link.href);
+                }
+              }}
             >
               {link.label}
             </a>
@@ -106,7 +114,15 @@ function Navbar() {
               key={link.href}
               href={link.href}
               className="navbar__mobile-link"
-              onClick={(e) => handleNavClick(e, link.href)}
+              onClick={(e) => {
+                if (link.isRoute) {
+                  e.preventDefault();
+                  setMobileOpen(false);
+                  navigate(link.href);
+                } else {
+                  handleNavClick(e, link.href);
+                }
+              }}
             >
               {link.label}
             </a>
