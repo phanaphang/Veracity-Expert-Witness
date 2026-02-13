@@ -1074,6 +1074,107 @@ img {
 }
 
 /* ============================================
+   SPECIALTY PAGES
+   ============================================ */
+.legal-header__subtitle {
+  color: rgba(255,255,255,0.6);
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 600px;
+  margin: 12px auto 0;
+}
+
+.specialty-content {
+  max-width: 1000px;
+}
+
+.specialty-intro {
+  font-size: 1.05rem;
+  color: var(--color-gray-600);
+  line-height: 1.8;
+  margin-bottom: 48px;
+  text-align: center;
+}
+
+.specialty-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 60px;
+}
+
+.specialty-card {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 28px 24px;
+  transition: all var(--transition);
+}
+
+.specialty-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-accent);
+}
+
+.specialty-card__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--color-gray-200);
+}
+
+.specialty-card__list {
+  list-style: none;
+  padding: 0;
+}
+
+.specialty-card__list li {
+  font-size: 0.9rem;
+  color: var(--color-gray-600);
+  line-height: 1.6;
+  padding: 5px 0 5px 18px;
+  position: relative;
+}
+
+.specialty-card__list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent);
+}
+
+.specialty-cta {
+  text-align: center;
+  padding: 48px 32px;
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-primary) 100%);
+  border-radius: var(--radius-xl);
+}
+
+.specialty-cta h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-white);
+  margin-bottom: 12px;
+}
+
+.specialty-cta p {
+  color: rgba(255,255,255,0.7);
+  font-size: 1rem;
+  margin-bottom: 24px;
+}
+
+.categories__card--link {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ============================================
    FOOTER
    ============================================ */
 .footer {
@@ -1176,6 +1277,10 @@ img {
     grid-template-columns: 1fr 1fr;
     gap: 32px;
   }
+
+  .specialty-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 768px) {
@@ -1226,6 +1331,18 @@ img {
 
   .categories__grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .specialty-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .specialty-cta {
+    padding: 36px 24px;
+  }
+
+  .specialty-cta h2 {
+    font-size: 1.3rem;
   }
 
   .how-it-works__grid {

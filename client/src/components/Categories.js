@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const categories = [
   {
@@ -8,6 +9,7 @@ const categories = [
       </svg>
     ),
     title: 'Medical & Healthcare',
+    link: '/medical-healthcare',
   },
   {
     icon: (
@@ -82,12 +84,23 @@ function Categories() {
           </p>
         </div>
         <div className="categories__grid">
-          {categories.map((cat) => (
-            <div key={cat.title} className="categories__card">
-              <div className="categories__icon">{cat.icon}</div>
-              <h3 className="categories__title">{cat.title}</h3>
-            </div>
-          ))}
+          {categories.map((cat) => {
+            const content = (
+              <>
+                <div className="categories__icon">{cat.icon}</div>
+                <h3 className="categories__title">{cat.title}</h3>
+              </>
+            );
+            return cat.link ? (
+              <Link key={cat.title} to={cat.link} className="categories__card categories__card--link">
+                {content}
+              </Link>
+            ) : (
+              <div key={cat.title} className="categories__card">
+                {content}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

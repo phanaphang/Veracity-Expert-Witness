@@ -12,6 +12,7 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import CookiePolicy from './pages/CookiePolicy';
 import Compliance from './pages/Compliance';
+import MedicalHealthcare from './pages/MedicalHealthcare';
 
 function HomePage() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/cookie-policy" element={<CookiePolicy />} />
         <Route path="/compliance" element={<Compliance />} />
+        <Route path="/medical-healthcare" element={<MedicalHealthcare />} />
       </Routes>
     </div>
   );
