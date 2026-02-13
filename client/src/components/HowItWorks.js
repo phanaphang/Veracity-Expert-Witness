@@ -14,7 +14,7 @@ const steps = [
   {
     number: '03',
     title: 'We Handle the Engagement',
-    description: 'Once you select your expert, we handle all the logistics &mdash; contracts, scheduling, compliance, and coordination between all parties.',
+    description: 'Once you select your expert, we handle all the logistics — contracts, scheduling, compliance, and coordination between all parties.',
   },
   {
     number: '04',
