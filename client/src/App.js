@@ -22,6 +22,7 @@ import IntellectualProperty from './pages/IntellectualProperty';
 import AccidentReconstruction from './pages/AccidentReconstruction';
 import ForensicAnalysis from './pages/ForensicAnalysis';
 import FAQ from './pages/FAQ';
+import JoinOurPanel from './pages/JoinOurPanel';
 
 // Portal - Auth
 import Login from './portal/pages/Login';
@@ -84,6 +85,7 @@ function App() {
           <Route path="/accident-reconstruction" element={<AccidentReconstruction />} />
           <Route path="/forensic-analysis" element={<ForensicAnalysis />} />
           <Route path="/faq" element={<FAQ />} />
+          <Route path="/join-our-panel" element={<JoinOurPanel />} />
 
           {/* Portal - Auth (public) */}
           <Route path="/portal/login" element={<Login />} />

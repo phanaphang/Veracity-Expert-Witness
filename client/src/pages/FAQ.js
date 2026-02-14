@@ -66,6 +66,23 @@ const faqData = [
     ],
   },
   {
+    category: 'Join Our Panel',
+    items: [
+      {
+        question: 'How can I join the Veracity expert witness network?',
+        answer: <>We are always looking for qualified professionals to join our panel. Visit our <Link to="/join-our-panel">Join Our Panel</Link> page to learn about the benefits and submit your application. Our team will review your credentials and be in touch within a few business days.</>,
+      },
+      {
+        question: 'What are the benefits of joining the panel?',
+        answer: <>Panel members receive steady case referrals, full administrative and logistics support, scheduling and compliance coordination, access to our secure Expert Portal, and the flexibility to choose cases that match their expertise. Learn more and apply on our <Link to="/join-our-panel">Join Our Panel</Link> page.</>,
+      },
+      {
+        question: 'What qualifications do I need to apply?',
+        answer: <>We work with professionals across a wide range of specialties who have strong credentials and relevant experience. Prior expert witness experience is helpful but not required. Visit our <Link to="/join-our-panel">Join Our Panel</Link> page to submit your application and our team will evaluate your background.</>,
+      },
+    ],
+  },
+  {
     category: 'Expert Portal',
     items: [
       {
