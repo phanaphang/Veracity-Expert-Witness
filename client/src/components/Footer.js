@@ -34,6 +34,13 @@ function Footer() {
               <li><Link to="/compliance">Compliance</Link></li>
             </ul>
           </div>
+
+          <div className="footer__col">
+            <h4 className="footer__col-title">Resources</h4>
+            <ul className="footer__links">
+              <li><Link to="/faq">FAQ</Link></li>
+            </ul>
+          </div>
         </div>
 
         <div className="footer__bottom">
