@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const expertiseAreas = [
   {
@@ -103,6 +104,11 @@ function ForensicAnalysis() {
 
   return (
     <div className="legal-page">
+      <SEO
+        title="Forensic Analysis Expert Witnesses"
+        description="Connect with forensic specialists who apply scientific rigor to uncover facts in criminal and civil cases including DNA, digital forensics, documents, and fire investigation."
+        path="/forensic-analysis"
+      />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">

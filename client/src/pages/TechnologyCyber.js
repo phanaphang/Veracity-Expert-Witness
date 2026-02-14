@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const expertiseAreas = [
   {
@@ -103,6 +104,11 @@ function TechnologyCyber() {
 
   return (
     <div className="legal-page">
+      <SEO
+        title="Technology & Cyber Expert Witnesses"
+        description="Connect with leading technology professionals who explain complex digital issues including cybersecurity breaches, software disputes, data privacy, and IT standards of care."
+        path="/technology-cyber"
+      />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">

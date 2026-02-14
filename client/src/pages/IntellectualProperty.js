@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const expertiseAreas = [
   {
@@ -93,6 +94,11 @@ function IntellectualProperty() {
 
   return (
     <div className="legal-page">
+      <SEO
+        title="Intellectual Property Expert Witnesses"
+        description="Connect with IP professionals for patent, trademark, copyright, and trade secret disputes. Deep technical and industry knowledge for infringement and valuation cases."
+        path="/intellectual-property"
+      />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">

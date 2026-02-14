@@ -3,7 +3,7 @@ import LegalPage from '../components/LegalPage';
 
 function TermsOfService() {
   return (
-    <LegalPage title="Terms of Service" effectiveDate="February 11, 2026">
+    <LegalPage title="Terms of Service" effectiveDate="February 11, 2026" description="Review the terms of service for Veracity Expert Witness. Understand the terms and conditions governing use of our expert witness services and website." path="/terms-of-service">
       <section className="legal-section">
         <h2>1. Agreement to Terms</h2>
         <p>

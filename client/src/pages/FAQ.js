@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const faqData = [
   {
@@ -120,6 +121,11 @@ function FAQ() {
 
   return (
     <div className="legal-page">
+      <SEO
+        title="Frequently Asked Questions"
+        description="Find answers to common questions about Veracity Expert Witness services, how expert matching works, pricing, confidentiality, and our Expert Portal."
+        path="/faq"
+      />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">

@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from './SEO';
 
-function LegalPage({ title, effectiveDate, children }) {
+function LegalPage({ title, effectiveDate, description, path, children }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -10,6 +11,9 @@ function LegalPage({ title, effectiveDate, children }) {
 
   return (
     <div className="legal-page">
+      {description && path && (
+        <SEO title={title} description={description} path={path} />
+      )}
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">

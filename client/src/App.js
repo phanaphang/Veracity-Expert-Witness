@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import SEO from './components/SEO';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
@@ -53,6 +54,10 @@ import AdminMessages from './portal/admin/AdminMessages';
 function HomePage() {
   return (
     <>
+      <SEO
+        description="Veracity Expert Witness connects legal professionals with qualified expert witnesses across medical, financial, technology, engineering, and more. HIPAA-compliant. Fast response."
+        path="/"
+      />
       <Navbar />
       <Hero />
       <Services />

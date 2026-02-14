@@ -3,7 +3,7 @@ import LegalPage from '../components/LegalPage';
 
 function PrivacyPolicy() {
   return (
-    <LegalPage title="Privacy Policy" effectiveDate="February 11, 2026">
+    <LegalPage title="Privacy Policy" effectiveDate="February 11, 2026" description="Read the Veracity Expert Witness privacy policy. Learn how we collect, use, and protect your personal information, including HIPAA compliance for medical data." path="/privacy-policy">
       <section className="legal-section">
         <h2>1. Introduction</h2>
         <p>

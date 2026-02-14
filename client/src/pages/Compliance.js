@@ -3,7 +3,7 @@ import LegalPage from '../components/LegalPage';
 
 function Compliance() {
   return (
-    <LegalPage title="Compliance" effectiveDate="February 11, 2026">
+    <LegalPage title="Compliance" effectiveDate="February 11, 2026" description="Veracity Expert Witness compliance policies including HIPAA, data protection, ethical standards, and regulatory requirements for expert witness services." path="/compliance">
       <section className="legal-section">
         <h2>1. Our Commitment</h2>
         <p>

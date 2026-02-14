@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const expertiseAreas = [
   {
@@ -103,6 +104,11 @@ function FinancialAccounting() {
 
   return (
     <div className="legal-page">
+      <SEO
+        title="Financial & Accounting Expert Witnesses"
+        description="Connect with experienced financial professionals who bring clarity to complex financial disputes including fraud, valuation, tax, banking, and insurance matters."
+        path="/financial-accounting"
+      />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">

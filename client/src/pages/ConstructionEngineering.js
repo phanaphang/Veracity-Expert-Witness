@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const expertiseAreas = [
   {
@@ -103,6 +104,11 @@ function ConstructionEngineering() {
 
   return (
     <div className="legal-page">
+      <SEO
+        title="Construction & Engineering Expert Witnesses"
+        description="Connect with seasoned construction and engineering professionals for cases involving structural failures, building defects, project delays, and safety compliance."
+        path="/construction-engineering"
+      />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">

@@ -3,7 +3,7 @@ import LegalPage from '../components/LegalPage';
 
 function CookiePolicy() {
   return (
-    <LegalPage title="Cookie Policy" effectiveDate="February 11, 2026">
+    <LegalPage title="Cookie Policy" effectiveDate="February 11, 2026" description="Learn how Veracity Expert Witness uses cookies and similar technologies on our website, and how you can manage your cookie preferences." path="/cookie-policy">
       <section className="legal-section">
         <h2>1. About This Policy</h2>
         <p>

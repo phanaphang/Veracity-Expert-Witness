@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const expertiseAreas = [
   {
@@ -131,6 +132,11 @@ function MedicalHealthcare() {
 
   return (
     <div className="legal-page">
+      <SEO
+        title="Medical & Healthcare Expert Witnesses"
+        description="Connect with leading medical professionals who provide clear, credible expert witness testimony across every healthcare specialty including malpractice, orthopedics, neurology, and more."
+        path="/medical-healthcare"
+      />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">

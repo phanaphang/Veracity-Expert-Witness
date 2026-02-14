@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const specialtyOptions = [
   'Medical & Healthcare',
@@ -121,6 +122,11 @@ function JoinOurPanel() {
 
   return (
     <div className="legal-page">
+      <SEO
+        title="Join Our Expert Panel"
+        description="Join the Veracity expert witness network. Receive steady case referrals, full administrative support, and access to a secure Expert Portal. Apply today."
+        path="/join-our-panel"
+      />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">
