@@ -280,6 +280,28 @@
   color: var(--color-accent);
 }
 
+/* --- Action Buttons --- */
+.portal-btn-action {
+  display: inline-block;
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: var(--color-accent);
+  background: transparent;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-decoration: none;
+  text-align: center;
+}
+
+.portal-btn-action:hover {
+  background: var(--color-accent);
+  color: var(--color-white);
+}
+
 /* --- Form Fields --- */
 .portal-field {
   margin-bottom: 16px;

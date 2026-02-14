@@ -66,10 +66,10 @@ export default function CaseInvitations() {
                 <button className="btn btn--primary" onClick={() => respond(inv.id, 'accepted')} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
                   Accept
                 </button>
-                <button className="btn btn--outline" onClick={() => respond(inv.id, 'declined')} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
+                <button className="portal-btn-action" onClick={() => respond(inv.id, 'declined')}>
                   Decline
                 </button>
-                <button className="btn btn--outline" onClick={() => respond(inv.id, 'info_requested')} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
+                <button className="portal-btn-action" onClick={() => respond(inv.id, 'info_requested')}>
                   Request More Info
                 </button>
               </div>

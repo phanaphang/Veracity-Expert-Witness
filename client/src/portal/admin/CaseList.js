@@ -71,7 +71,7 @@ export default function CaseList() {
                   <td>{c.case_invitations?.[0]?.count || 0}</td>
                   <td>{new Date(c.created_at).toLocaleDateString()}</td>
                   <td>
-                    <Link to={`/admin/cases/${c.id}`} className="btn btn--outline" style={{ padding: '6px 14px', fontSize: '0.8rem', textDecoration: 'none' }}>
+                    <Link to={`/admin/cases/${c.id}`} className="portal-btn-action">
                       View
                     </Link>
                   </td>
