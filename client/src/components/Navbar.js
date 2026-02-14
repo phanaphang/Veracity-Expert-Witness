@@ -86,16 +86,6 @@ function Navbar() {
           ))}
         </div>
 
-        <div className="navbar__actions">
-          <a
-            href="#contact"
-            className="navbar__btn navbar__btn--cta"
-            onClick={(e) => handleNavClick(e, '#contact')}
-          >
-            Get Started
-          </a>
-        </div>
-
         <button
           className={`navbar__hamburger ${mobileOpen ? 'navbar__hamburger--open' : ''}`}
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -127,15 +117,6 @@ function Navbar() {
               {link.label}
             </a>
           ))}
-          <div className="navbar__mobile-actions">
-            <a
-              href="#contact"
-              className="navbar__btn navbar__btn--cta"
-              onClick={(e) => handleNavClick(e, '#contact')}
-            >
-              Get Started
-            </a>
-          </div>
         </div>
       )}
     </nav>
