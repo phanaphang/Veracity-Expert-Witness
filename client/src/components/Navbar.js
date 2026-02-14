@@ -45,10 +45,14 @@ function Navbar() {
 
   const handleNavClick = (e, href) => {
     e.preventDefault();
+    const wasMobileOpen = mobileOpen;
     setMobileOpen(false);
 
     if (location.pathname !== '/') {
       navigate('/', { state: { scrollTo: href } });
+    } else if (wasMobileOpen) {
+      // Delay scroll until after mobile menu closes and overflow is restored
+      setTimeout(() => scrollToElement(href), 50);
     } else {
       scrollToElement(href);
     }

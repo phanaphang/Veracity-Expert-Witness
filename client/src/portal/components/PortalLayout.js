@@ -9,7 +9,7 @@ export default function PortalLayout({ children }) {
     <div className="portal">
       <div className={`portal-overlay ${sidebarOpen ? 'portal-overlay--visible' : ''}`} onClick={() => setSidebarOpen(false)} />
       <div className={`portal-sidebar-wrapper ${sidebarOpen ? 'portal-sidebar-wrapper--open' : ''}`}>
-        <PortalSidebar />
+        <PortalSidebar onNavigate={() => setSidebarOpen(false)} />
       </div>
       <main className="portal-main">
         <header className="portal-topbar">

@@ -3,7 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useUnreadCount } from '../../hooks/useUnreadCount';
 
-export default function PortalSidebar({ isAdmin }) {
+export default function PortalSidebar({ isAdmin, onNavigate }) {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
   const unreadCount = useUnreadCount();
@@ -48,6 +48,7 @@ export default function PortalSidebar({ isAdmin }) {
             className={({ isActive }) =>
               `portal-sidebar__link ${isActive ? 'portal-sidebar__link--active' : ''}`
             }
+            onClick={onNavigate}
           >
             <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
               <path d={link.icon} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
