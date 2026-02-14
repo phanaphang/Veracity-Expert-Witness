@@ -16,14 +16,6 @@ export default function ProtectedRoute({ children, requiredRole }) {
 
   if (!user) return <Navigate to="/portal/login" replace />;
 
-  if (requiredRole && !profile) {
-    return (
-      <div className="portal-loading">
-        <div className="portal-loading__spinner"></div>
-      </div>
-    );
-  }
-
   if (requiredRole && profile?.role !== requiredRole) {
     return <Navigate to="/portal/dashboard" replace />;
   }
