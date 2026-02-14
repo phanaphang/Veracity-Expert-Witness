@@ -11,6 +11,7 @@ export default function Login() {
   const [submitting, setSubmitting] = useState(false);
 
   if (loading) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
+  if (user && !profile) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
   if (user && profile?.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
   if (user) return <Navigate to="/portal/dashboard" replace />;
 
