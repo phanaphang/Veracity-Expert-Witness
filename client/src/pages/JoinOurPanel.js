@@ -153,7 +153,7 @@ function JoinOurPanel() {
 
       <main className="legal-content">
         <section className="join-panel-section">
-          <h2 className="join-panel-section__title">Why Join Veracity?</h2>
+          <h2 className="join-panel-section__title">Why join Veracity?</h2>
           <div className="join-panel-benefits">
             {benefits.map((benefit) => (
               <div key={benefit.title} className="join-panel-benefit">
