@@ -44,6 +44,13 @@ function Footer() {
           </div>
         </div>
 
+        <button
+          className="footer__back-to-top"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        >
+          Back to top
+        </button>
+
         <div className="footer__bottom">
           <p>&copy; {currentYear} Veracity Expert Witness. All rights reserved.</p>
         </div>

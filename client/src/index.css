@@ -1224,6 +1224,10 @@ img {
   color: var(--color-accent);
 }
 
+.footer__back-to-top {
+  display: none;
+}
+
 .footer__bottom {
   display: flex;
   align-items: center;
@@ -1373,6 +1377,26 @@ img {
   .footer__grid {
     grid-template-columns: 1fr;
     gap: 32px;
+  }
+
+  .footer__back-to-top {
+    display: block;
+    margin: 0 auto 24px;
+    padding: 12px 32px;
+    background: transparent;
+    color: var(--color-accent);
+    border: 2px solid var(--color-accent);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+
+  .footer__back-to-top:active {
+    background: var(--color-accent);
+    color: var(--color-white);
   }
 
   .footer__bottom {
