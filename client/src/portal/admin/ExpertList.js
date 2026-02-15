@@ -102,7 +102,7 @@ export default function ExpertList() {
                     </span>
                   </td>
                   <td>
-                    <Link to={`/admin/experts/${exp.id}`} className="btn btn--outline" style={{ padding: '6px 14px', fontSize: '0.8rem', textDecoration: 'none' }}>
+                    <Link to={`/admin/experts/${exp.id}`} className="portal-btn-action">
                       View
                     </Link>
                   </td>

@@ -59,7 +59,7 @@ export default function ExpertDetail() {
           <button className="btn btn--primary" onClick={() => updateStatus('approved')} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
             Approve
           </button>
-          <button className="btn btn--outline" onClick={() => updateStatus('rejected')} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+          <button className="portal-btn-action" onClick={() => updateStatus('rejected')}>
             Reject
           </button>
         </div>

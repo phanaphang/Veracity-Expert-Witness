@@ -67,7 +67,7 @@ export default function CaseDetail() {
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           {caseData.status !== 'closed' && (
-            <button className="btn btn--outline" onClick={() => updateStatus('closed')} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+            <button className="portal-btn-action" onClick={() => updateStatus('closed')}>
               Close Case
             </button>
           )}

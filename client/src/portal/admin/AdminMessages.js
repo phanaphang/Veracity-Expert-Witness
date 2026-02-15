@@ -120,7 +120,7 @@ export default function AdminMessages() {
               {experts.map(exp => (
                 <div key={exp.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--color-gray-100)' }}>
                   <span>{formatName(exp)} <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)' }}>{exp.email}</span></span>
-                  <button className="btn btn--outline" onClick={() => startNewChat(exp.id)} style={{ padding: '6px 14px', fontSize: '0.8rem' }}>
+                  <button className="portal-btn-action" onClick={() => startNewChat(exp.id)}>
                     Message
                   </button>
                 </div>
