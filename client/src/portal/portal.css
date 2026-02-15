@@ -425,8 +425,22 @@
 }
 
 /* --- Tables --- */
+.portal-table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  background: var(--color-white);
+}
+
+.portal-table-wrap .portal-table {
+  border: none;
+  border-radius: 0;
+}
+
 .portal-table {
   width: 100%;
+  min-width: 600px;
   border-collapse: collapse;
   background: var(--color-white);
   border: 1px solid var(--color-gray-200);
