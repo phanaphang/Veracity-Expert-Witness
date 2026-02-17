@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://veracityexpertwitness.com/sitemap.xml
