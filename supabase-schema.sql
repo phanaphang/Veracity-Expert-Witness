@@ -158,7 +158,7 @@ RETURNS boolean AS $$
     SELECT 1 FROM profiles
     WHERE id = auth.uid() AND role = 'admin'
   );
-$$ LANGUAGE sql SECURITY DEFINER;
+$$ LANGUAGE sql SECURITY DEFINER SET search_path = public;
 
 -- Auto-update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_updated_at()
@@ -167,7 +167,7 @@ BEGIN
   NEW.updated_at = now();
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql SET search_path = public;
 
 -- Auto-create profile when a new user signs up
 CREATE OR REPLACE FUNCTION handle_new_user()
@@ -183,7 +183,7 @@ BEGIN
   );
   RETURN NEW;
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- ============================================================
 -- 3. TRIGGERS
