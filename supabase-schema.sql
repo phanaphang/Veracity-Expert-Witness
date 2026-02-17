@@ -80,6 +80,19 @@ CREATE TABLE credentials (
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
+-- Prior Expert Testimony
+CREATE TABLE prior_testimony (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  expert_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  case_name TEXT NOT NULL DEFAULT '',
+  court TEXT DEFAULT '',
+  jurisdiction TEXT DEFAULT '',
+  date_of_testimony DATE,
+  topic TEXT DEFAULT '',
+  retained_by TEXT DEFAULT '' CHECK (retained_by IN ('plaintiff', 'defendant', 'other', '')),
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
 -- Documents (metadata for uploaded files)
 CREATE TABLE documents (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -216,6 +229,7 @@ ALTER TABLE expert_specialties ENABLE ROW LEVEL SECURITY;
 ALTER TABLE education ENABLE ROW LEVEL SECURITY;
 ALTER TABLE work_experience ENABLE ROW LEVEL SECURITY;
 ALTER TABLE credentials ENABLE ROW LEVEL SECURITY;
+ALTER TABLE prior_testimony ENABLE ROW LEVEL SECURITY;
 ALTER TABLE documents ENABLE ROW LEVEL SECURITY;
 ALTER TABLE cases ENABLE ROW LEVEL SECURITY;
 ALTER TABLE case_invitations ENABLE ROW LEVEL SECURITY;
@@ -260,6 +274,13 @@ CREATE POLICY "Admins can view all credentials" ON credentials FOR SELECT USING 
 CREATE POLICY "Experts can manage own credentials" ON credentials FOR INSERT WITH CHECK (auth.uid() = expert_id);
 CREATE POLICY "Experts can update own credentials" ON credentials FOR UPDATE USING (auth.uid() = expert_id);
 CREATE POLICY "Experts can delete own credentials" ON credentials FOR DELETE USING (auth.uid() = expert_id);
+
+-- PRIOR_TESTIMONY
+CREATE POLICY "Experts can view own testimony" ON prior_testimony FOR SELECT USING (auth.uid() = expert_id);
+CREATE POLICY "Admins can view all testimony" ON prior_testimony FOR SELECT USING (is_admin());
+CREATE POLICY "Experts can manage own testimony" ON prior_testimony FOR INSERT WITH CHECK (auth.uid() = expert_id);
+CREATE POLICY "Experts can update own testimony" ON prior_testimony FOR UPDATE USING (auth.uid() = expert_id);
+CREATE POLICY "Experts can delete own testimony" ON prior_testimony FOR DELETE USING (auth.uid() = expert_id);
 
 -- DOCUMENTS
 CREATE POLICY "Experts can view own documents" ON documents FOR SELECT USING (auth.uid() = expert_id);

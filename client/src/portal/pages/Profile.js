@@ -10,23 +10,26 @@ export default function Profile() {
   const [education, setEducation] = useState([]);
   const [experience, setExperience] = useState([]);
   const [credentials, setCredentials] = useState([]);
+  const [testimony, setTestimony] = useState([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
 
   const loadData = useCallback(async () => {
     if (!user) return;
-    const [specRes, selRes, eduRes, expRes, credRes] = await Promise.all([
+    const [specRes, selRes, eduRes, expRes, credRes, testRes] = await Promise.all([
       supabase.from('specialties').select('*').order('name'),
       supabase.from('expert_specialties').select('specialty_id').eq('expert_id', user.id),
       supabase.from('education').select('*').eq('expert_id', user.id).order('end_year', { ascending: false }),
       supabase.from('work_experience').select('*').eq('expert_id', user.id).order('start_date', { ascending: false }),
       supabase.from('credentials').select('*').eq('expert_id', user.id),
+      supabase.from('prior_testimony').select('*').eq('expert_id', user.id).order('date_of_testimony', { ascending: false }),
     ]);
     setAllSpecialties(specRes.data || []);
     setSelectedSpecialties(selRes.data?.map(s => s.specialty_id) || []);
     setEducation(eduRes.data || []);
     setExperience(expRes.data || []);
     setCredentials(credRes.data || []);
+    setTestimony(testRes.data || []);
   }, [user]);
 
   useEffect(() => {
@@ -56,6 +59,7 @@ export default function Profile() {
   const addEducation = () => setEducation(prev => [...prev, { institution: '', degree: '', field_of_study: '', start_year: '', end_year: '', _new: true }]);
   const addExperience = () => setExperience(prev => [...prev, { organization: '', title: '', description: '', start_date: '', end_date: '', is_current: false, _new: true }]);
   const addCredential = () => setCredentials(prev => [...prev, { credential_type: 'certification', name: '', issuing_body: '', issue_date: '', expiry_date: '', credential_number: '', _new: true }]);
+  const addTestimony = () => setTestimony(prev => [...prev, { case_name: '', court: '', jurisdiction: '', date_of_testimony: '', topic: '', retained_by: '', _new: true }]);
 
   const removeItem = (list, setList, index, table) => {
     const item = list[index];
@@ -112,6 +116,16 @@ export default function Profile() {
         await supabase.from('credentials').update(data).eq('id', cred.id);
       } else {
         await supabase.from('credentials').insert(data);
+      }
+    }
+
+    // Prior Testimony
+    for (const test of testimony) {
+      const data = { expert_id: user.id, case_name: test.case_name, court: test.court, jurisdiction: test.jurisdiction, date_of_testimony: test.date_of_testimony || null, topic: test.topic, retained_by: test.retained_by };
+      if (test.id && !test._new) {
+        await supabase.from('prior_testimony').update(data).eq('id', test.id);
+      } else {
+        await supabase.from('prior_testimony').insert(data);
       }
     }
 
@@ -263,6 +277,52 @@ export default function Profile() {
             </div>
           ))}
           <button type="button" className="portal-add-btn" onClick={addExperience}>+ Add Experience</button>
+        </div>
+
+        {/* Prior Expert Testimony */}
+        <div className="portal-card">
+          <h2 className="portal-card__title">Prior Expert Testimony</h2>
+          {testimony.map((test, i) => (
+            <div key={i} className="portal-list-item">
+              <button type="button" className="portal-list-item__remove" onClick={() => removeItem(testimony, setTestimony, i, 'prior_testimony')}>Remove</button>
+              <div className="portal-list-item__row">
+                <div className="portal-field">
+                  <label className="portal-field__label">Case Name</label>
+                  <input className="portal-field__input" value={test.case_name} onChange={(e) => { const t = [...testimony]; t[i].case_name = e.target.value; setTestimony(t); }} maxLength={500} />
+                </div>
+                <div className="portal-field">
+                  <label className="portal-field__label">Court</label>
+                  <input className="portal-field__input" value={test.court || ''} onChange={(e) => { const t = [...testimony]; t[i].court = e.target.value; setTestimony(t); }} maxLength={500} />
+                </div>
+              </div>
+              <div className="portal-list-item__row">
+                <div className="portal-field">
+                  <label className="portal-field__label">Jurisdiction</label>
+                  <input className="portal-field__input" value={test.jurisdiction || ''} onChange={(e) => { const t = [...testimony]; t[i].jurisdiction = e.target.value; setTestimony(t); }} maxLength={500} />
+                </div>
+                <div className="portal-field">
+                  <label className="portal-field__label">Date of Testimony</label>
+                  <input className="portal-field__input" type="date" value={test.date_of_testimony || ''} onChange={(e) => { const t = [...testimony]; t[i].date_of_testimony = e.target.value; setTestimony(t); }} />
+                </div>
+              </div>
+              <div className="portal-list-item__row">
+                <div className="portal-field">
+                  <label className="portal-field__label">Topic</label>
+                  <input className="portal-field__input" value={test.topic || ''} onChange={(e) => { const t = [...testimony]; t[i].topic = e.target.value; setTestimony(t); }} maxLength={500} />
+                </div>
+                <div className="portal-field">
+                  <label className="portal-field__label">Retained By</label>
+                  <select className="portal-field__select" value={test.retained_by || ''} onChange={(e) => { const t = [...testimony]; t[i].retained_by = e.target.value; setTestimony(t); }}>
+                    <option value="">-- Select --</option>
+                    <option value="plaintiff">Plaintiff</option>
+                    <option value="defendant">Defendant</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          ))}
+          <button type="button" className="portal-add-btn" onClick={addTestimony}>+ Add Testimony</button>
         </div>
 
         {/* Rate & Availability */}
