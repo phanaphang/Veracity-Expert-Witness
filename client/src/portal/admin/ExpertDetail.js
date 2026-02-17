@@ -9,6 +9,7 @@ export default function ExpertDetail() {
   const [education, setEducation] = useState([]);
   const [experience, setExperience] = useState([]);
   const [credentials, setCredentials] = useState([]);
+  const [testimony, setTestimony] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -19,13 +20,15 @@ export default function ExpertDetail() {
       supabase.from('education').select('*').eq('expert_id', id).order('end_year', { ascending: false }),
       supabase.from('work_experience').select('*').eq('expert_id', id).order('start_date', { ascending: false }),
       supabase.from('credentials').select('*').eq('expert_id', id),
+      supabase.from('prior_testimony').select('*').eq('expert_id', id).order('date_of_testimony', { ascending: false }),
       supabase.from('documents').select('*').eq('expert_id', id).order('uploaded_at', { ascending: false }),
-    ]).then(([prof, specs, edu, exp, creds, docs]) => {
+    ]).then(([prof, specs, edu, exp, creds, test, docs]) => {
       setExpert(prof.data);
       setSpecialties(specs.data?.map(s => s.specialties?.name).filter(Boolean) || []);
       setEducation(edu.data || []);
       setExperience(exp.data || []);
       setCredentials(creds.data || []);
+      setTestimony(test.data || []);
       setDocuments(docs.data || []);
       setLoading(false);
     });
@@ -142,6 +145,23 @@ export default function ExpertDetail() {
               <strong>{exp.title}</strong> at {exp.organization}
               {exp.is_current && <span className="portal-badge portal-badge--accepted" style={{ marginLeft: 8 }}>Current</span>}
               {exp.description && <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 4 }}>{exp.description}</p>}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Prior Expert Testimony */}
+      {testimony.length > 0 && (
+        <div className="portal-card">
+          <h2 className="portal-card__title">Prior Expert Testimony</h2>
+          {testimony.map(test => (
+            <div key={test.id} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid var(--color-gray-200)' }}>
+              <strong>{test.case_name}</strong>
+              {test.retained_by && <span className="portal-badge portal-badge--open" style={{ marginLeft: 8 }}>{test.retained_by}</span>}
+              {test.court && <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>{test.court}{test.jurisdiction && ` — ${test.jurisdiction}`}</p>}
+              {!test.court && test.jurisdiction && <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>{test.jurisdiction}</p>}
+              {test.topic && <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>Topic: {test.topic}</p>}
+              {test.date_of_testimony && <p style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)' }}>{new Date(test.date_of_testimony).toLocaleDateString()}</p>}
             </div>
           ))}
         </div>
