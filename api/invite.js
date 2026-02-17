@@ -62,7 +62,11 @@ module.exports = async (req, res) => {
 
     if (inviteError) {
       console.error('Invite error:', inviteError.message);
-      return res.status(400).json({ error: 'Failed to send invitation. The email may already be registered.' });
+      const msg = inviteError.message?.toLowerCase() || '';
+      if (msg.includes('already registered') || msg.includes('already been registered') || msg.includes('duplicate') || msg.includes('already exists')) {
+        return res.status(409).json({ error: 'This email is already registered. If the expert needs a new invite, delete their account from Supabase Auth first.' });
+      }
+      return res.status(400).json({ error: `Failed to send invitation: ${inviteError.message}` });
     }
 
     // Record invitation
