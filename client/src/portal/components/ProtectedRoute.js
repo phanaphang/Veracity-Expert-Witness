@@ -16,6 +16,11 @@ export default function ProtectedRoute({ children, requiredRole }) {
 
   if (!user) return <Navigate to="/portal/login" replace />;
 
+  // Experts who haven't onboarded must set a password first
+  if (profile && profile.role !== 'admin' && !profile.onboarded_at) {
+    return <Navigate to="/portal/accept-invite" replace />;
+  }
+
   if (requiredRole && profile?.role !== requiredRole) {
     return <Navigate to="/portal/dashboard" replace />;
   }

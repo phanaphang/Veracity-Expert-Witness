@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../hooks/useAuth';
 import '../portal.css';
 
 export default function AcceptInvite() {
   const navigate = useNavigate();
+  const { user, fetchProfile } = useAuth();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -33,6 +35,11 @@ export default function AcceptInvite() {
       setError('Unable to set password. Please try again or request a new invitation.');
       setSubmitting(false);
     } else {
+      // Mark as onboarded so ProtectedRoute stops redirecting here
+      if (user) {
+        await supabase.from('profiles').update({ onboarded_at: new Date().toISOString() }).eq('id', user.id);
+        await fetchProfile(user.id);
+      }
       navigate('/portal/profile', { replace: true });
     }
   };
