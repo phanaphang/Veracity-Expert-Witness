@@ -28,6 +28,7 @@ export function AuthProvider({ children }) {
       setUser(s?.user ?? null);
       setSession(s ?? null);
       if (s?.user) {
+        setLoading(true);
         fetchProfile(s.user.id);
       } else {
         setProfile(null);
