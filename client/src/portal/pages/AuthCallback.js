@@ -1,31 +1,49 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import '../portal.css';
 
 export default function AuthCallback() {
   const navigate = useNavigate();
+  const handled = useRef(false);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        supabase.from('profiles')
+    // Handle PKCE flow (code in query params)
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    if (code) {
+      supabase.auth.exchangeCodeForSession(code).catch(() => {});
+    }
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (handled.current) return;
+        if (!session) {
+          // Only redirect to login if not still processing
+          if (event === 'SIGNED_OUT' || event === 'INITIAL_SESSION') {
+            handled.current = true;
+            navigate('/portal/login', { replace: true });
+          }
+          return;
+        }
+
+        handled.current = true;
+        const { data } = await supabase.from('profiles')
           .select('onboarded_at, role')
           .eq('id', session.user.id)
-          .single()
-          .then(({ data }) => {
-            if (data?.role === 'admin') {
-              navigate('/admin/dashboard', { replace: true });
-            } else if (!data?.onboarded_at) {
-              navigate('/portal/accept-invite', { replace: true });
-            } else {
-              navigate('/portal/dashboard', { replace: true });
-            }
-          });
-      } else {
-        navigate('/portal/login', { replace: true });
+          .single();
+
+        if (data?.role === 'admin') {
+          navigate('/admin/dashboard', { replace: true });
+        } else if (!data?.onboarded_at) {
+          navigate('/portal/accept-invite', { replace: true });
+        } else {
+          navigate('/portal/dashboard', { replace: true });
+        }
       }
-    });
+    );
+
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   return (
