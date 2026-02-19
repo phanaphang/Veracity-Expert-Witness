@@ -151,10 +151,12 @@ export default function ExpertDetail() {
       )}
 
       {/* Prior Expert Testimony */}
-      {testimony.length > 0 && (
-        <div className="portal-card">
-          <h2 className="portal-card__title">Prior Expert Testimony</h2>
-          {testimony.map(test => (
+      <div className="portal-card">
+        <h2 className="portal-card__title">Prior Expert Testimony ({testimony.length})</h2>
+        {testimony.length === 0 ? (
+          <p style={{ color: 'var(--color-gray-400)', fontSize: '0.85rem' }}>No prior testimony on record</p>
+        ) : (
+          testimony.map(test => (
             <div key={test.id} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid var(--color-gray-200)' }}>
               <strong>{test.case_name}</strong>
               {test.retained_by && <span className="portal-badge portal-badge--open" style={{ marginLeft: 8 }}>{test.retained_by}</span>}
@@ -163,9 +165,9 @@ export default function ExpertDetail() {
               {test.topic && <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>Topic: {test.topic}</p>}
               {test.date_of_testimony && <p style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)' }}>{new Date(test.date_of_testimony).toLocaleDateString()}</p>}
             </div>
-          ))}
-        </div>
-      )}
+          ))
+        )}
+      </div>
 
       {/* Documents */}
       <div className="portal-card">
