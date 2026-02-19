@@ -3,7 +3,7 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 
 export default function CaseInvitations() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [invitations, setInvitations] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,10 +22,25 @@ export default function CaseInvitations() {
   }, [user]); // eslint-disable-line
 
   const respond = async (invitationId, status, notes) => {
+    const inv = invitations.find(i => i.id === invitationId);
     await supabase
       .from('case_invitations')
       .update({ status, expert_notes: notes || null, responded_at: new Date().toISOString() })
       .eq('id', invitationId);
+
+    // Send notification email (fire-and-forget)
+    const expertName = profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : user.email;
+    fetch('/api/case-response', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        expertName: expertName || user.email,
+        expertEmail: user.email,
+        caseTitle: inv?.cases?.title || 'Untitled Case',
+        action: status,
+      }),
+    }).catch(() => {});
+
     await loadInvitations();
   };
 
