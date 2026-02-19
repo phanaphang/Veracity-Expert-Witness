@@ -61,7 +61,7 @@ export default function Profile() {
   const addEducation = () => setEducation(prev => [...prev, { institution: '', degree: '', field_of_study: '', start_year: '', end_year: '', _new: true }]);
   const addExperience = () => setExperience(prev => [...prev, { organization: '', title: '', description: '', start_date: '', end_date: '', is_current: false, _new: true }]);
   const addCredential = () => setCredentials(prev => [...prev, { credential_type: 'certification', name: '', issuing_body: '', issue_date: '', expiry_date: '', credential_number: '', _new: true }]);
-  const addTestimony = () => setTestimony(prev => [...prev, { case_name: '', court: '', jurisdiction: '', date_of_testimony: '', topic: '', retained_by: '', _new: true }]);
+  const addTestimony = () => setTestimony(prev => [...prev, { case_name: '', court: '', jurisdiction: '', date_of_testimony: '', topic: '', retained_by: '', outcome: '', _new: true }]);
 
   const removeItem = (list, setList, index, table) => {
     const item = list[index];
@@ -135,7 +135,7 @@ export default function Profile() {
 
       // Prior Testimony
       for (const item of testimony) {
-        const data = { expert_id: user.id, case_name: item.case_name || '', court: item.court || '', jurisdiction: item.jurisdiction || '', date_of_testimony: item.date_of_testimony || null, topic: item.topic || '', retained_by: item.retained_by || '' };
+        const data = { expert_id: user.id, case_name: item.case_name || '', court: item.court || '', jurisdiction: item.jurisdiction || '', date_of_testimony: item.date_of_testimony || null, topic: item.topic || '', retained_by: item.retained_by || '', outcome: item.outcome || '' };
         if (item.id && !item._new) {
           const { error } = await supabase.from('prior_testimony').update(data).eq('id', item.id);
           if (error) errors.push('Testimony: ' + error.message);
@@ -350,6 +350,16 @@ export default function Profile() {
                     <option value="plaintiff">Plaintiff</option>
                     <option value="defendant">Defendant</option>
                     <option value="other">Other</option>
+                  </select>
+                </div>
+              </div>
+              <div className="portal-list-item__row">
+                <div className="portal-field">
+                  <label className="portal-field__label">Testimony Outcome</label>
+                  <select className="portal-field__select" value={test.outcome || ''} onChange={(e) => { const t = [...testimony]; t[i].outcome = e.target.value; setTestimony(t); }}>
+                    <option value="">-- Select --</option>
+                    <option value="accepted">Accepted</option>
+                    <option value="rejected">Rejected</option>
                   </select>
                 </div>
               </div>

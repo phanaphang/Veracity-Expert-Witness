@@ -177,7 +177,15 @@ function buildProfilePdf(expert, specialties, education, experience, credentials
   }
 
   // Prior Testimony
-  y = sectionHeader(doc, y, `Prior Expert Testimony (${testimony.length})`);
+  const retainedTotal = testimony.filter(t => t.retained_by && t.retained_by !== '').length;
+  let testimonyTitle = `Prior Expert Testimony (${testimony.length})`;
+  if (retainedTotal > 0) {
+    const rc = { plaintiff: 0, defendant: 0, other: 0 };
+    testimony.forEach(t => { if (t.retained_by && rc[t.retained_by] !== undefined) rc[t.retained_by]++; });
+    const pct = (n) => Math.round((n / retainedTotal) * 100);
+    testimonyTitle += `  —  Plaintiff ${pct(rc.plaintiff)}% | Defendant ${pct(rc.defendant)}% | Other ${pct(rc.other)}%`;
+  }
+  y = sectionHeader(doc, y, testimonyTitle);
   if (testimony.length === 0) {
     doc.setTextColor(120);
     doc.text('No prior testimony on record', MARGIN, y);

@@ -92,6 +92,7 @@ CREATE TABLE prior_testimony (
   date_of_testimony DATE,
   topic TEXT DEFAULT '',
   retained_by TEXT DEFAULT '' CHECK (retained_by IN ('plaintiff', 'defendant', 'other', '')),
+  outcome TEXT DEFAULT '' CHECK (outcome IN ('accepted', 'rejected', '')),
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
