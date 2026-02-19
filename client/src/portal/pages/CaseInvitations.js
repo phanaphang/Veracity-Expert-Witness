@@ -67,7 +67,7 @@ export default function CaseInvitations() {
                   <span className="portal-badge portal-badge--open">{inv.cases.specialties.name}</span>
                 )}
               </div>
-              <span className={`portal-badge portal-badge--${inv.status}`}>{inv.status.replace('_', ' ')}</span>
+              <span className={`portal-badge portal-badge--${inv.status}`}>{inv.status === 'accepted' ? 'interested' : inv.status.replace('_', ' ')}</span>
             </div>
             <p style={{ fontSize: '0.9rem', color: 'var(--color-gray-600)', marginBottom: 16, lineHeight: 1.6 }}>
               {inv.cases?.description || 'No description provided.'}

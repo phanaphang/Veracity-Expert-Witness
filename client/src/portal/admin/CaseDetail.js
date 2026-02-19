@@ -155,7 +155,7 @@ export default function CaseDetail() {
                     </td>
                     <td>
                       <span className={`portal-badge portal-badge--${inv.status}`}>
-                        {inv.status?.replace('_', ' ')}
+                        {inv.status === 'accepted' ? 'interested' : inv.status?.replace('_', ' ')}
                       </span>
                     </td>
                     <td>{new Date(inv.invited_at).toLocaleDateString()}</td>

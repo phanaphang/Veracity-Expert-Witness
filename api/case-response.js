@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   }
 
   const actionLabels = {
-    accepted: 'Accepted',
+    accepted: 'Interested',
     declined: 'Declined',
     info_requested: 'Requested More Info',
   };

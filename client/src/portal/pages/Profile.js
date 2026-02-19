@@ -358,7 +358,7 @@ export default function Profile() {
                   <label className="portal-field__label">Testimony Outcome</label>
                   <select className="portal-field__select" value={test.outcome || ''} onChange={(e) => { const t = [...testimony]; t[i].outcome = e.target.value; setTestimony(t); }}>
                     <option value="">-- Select --</option>
-                    <option value="accepted">Accepted</option>
+                    <option value="accepted">Interested</option>
                     <option value="rejected">Rejected</option>
                   </select>
                 </div>
