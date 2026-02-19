@@ -121,7 +121,7 @@ export default function Profile() {
 
     // Prior Testimony
     for (const test of testimony) {
-      const data = { expert_id: user.id, case_name: test.case_name, court: test.court, jurisdiction: test.jurisdiction, date_of_testimony: test.date_of_testimony || null, topic: test.topic, retained_by: test.retained_by };
+      const data = { expert_id: user.id, case_name: test.case_name || null, court: test.court || null, jurisdiction: test.jurisdiction || null, date_of_testimony: test.date_of_testimony || null, topic: test.topic || null, retained_by: test.retained_by || null };
       if (test.id && !test._new) {
         await supabase.from('prior_testimony').update(data).eq('id', test.id);
       } else {
