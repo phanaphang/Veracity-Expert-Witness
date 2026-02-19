@@ -215,7 +215,7 @@ function buildProfilePdf(expert, specialties, education, experience, credentials
 
   // Documents list
   if (documents.length > 0) {
-    y = sectionHeader(doc, y, `Uploaded Documents (${documents.length})`);
+    y = sectionHeader(doc, y, `Attached Documents (${documents.length})`);
     for (const d of documents) {
       y = addPageIfNeeded(doc, y);
       doc.text(`  •  ${d.file_name}`, MARGIN, y);
