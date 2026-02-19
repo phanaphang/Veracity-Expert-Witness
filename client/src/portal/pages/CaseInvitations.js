@@ -75,6 +75,17 @@ export default function CaseInvitations() {
               </div>
             )}
 
+            {inv.status === 'info_requested' && (
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button className="btn btn--primary" onClick={() => respond(inv.id, 'accepted')} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
+                  Accept Case
+                </button>
+                <button className="portal-btn-action" onClick={() => respond(inv.id, 'declined')}>
+                  Decline
+                </button>
+              </div>
+            )}
+
             {inv.expert_notes && (
               <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 12, fontStyle: 'italic' }}>
                 Your note: {inv.expert_notes}
