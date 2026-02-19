@@ -75,67 +75,87 @@ export default function Profile() {
     e.preventDefault();
     setSaving(true);
     setMessage('');
+    const errors = [];
 
-    const updates = { ...form };
-    for (const key of ['rate_review_report', 'rate_deposition', 'rate_trial_testimony']) {
-      if (updates[key]) updates[key] = parseFloat(updates[key]);
-      else updates[key] = null;
-    }
-    if (!profile?.onboarded_at) updates.onboarded_at = new Date().toISOString();
-
-    await supabase.from('profiles').update(updates).eq('id', user.id);
-
-    // Specialties
-    await supabase.from('expert_specialties').delete().eq('expert_id', user.id);
-    if (selectedSpecialties.length > 0) {
-      await supabase.from('expert_specialties').insert(
-        selectedSpecialties.map(id => ({ expert_id: user.id, specialty_id: id }))
-      );
-    }
-
-    // Education
-    for (const edu of education) {
-      const data = { expert_id: user.id, institution: edu.institution, degree: edu.degree, field_of_study: edu.field_of_study, start_year: edu.start_year ? parseInt(edu.start_year) : null, end_year: edu.end_year ? parseInt(edu.end_year) : null };
-      if (edu.id && !edu._new) {
-        await supabase.from('education').update(data).eq('id', edu.id);
-      } else {
-        await supabase.from('education').insert(data);
+    try {
+      const updates = { ...form };
+      for (const key of ['rate_review_report', 'rate_deposition', 'rate_trial_testimony']) {
+        if (updates[key]) updates[key] = parseFloat(updates[key]);
+        else updates[key] = null;
       }
-    }
+      if (!profile?.onboarded_at) updates.onboarded_at = new Date().toISOString();
 
-    // Experience
-    for (const exp of experience) {
-      const data = { expert_id: user.id, organization: exp.organization, title: exp.title, description: exp.description, start_date: exp.start_date || null, end_date: exp.end_date || null, is_current: exp.is_current };
-      if (exp.id && !exp._new) {
-        await supabase.from('work_experience').update(data).eq('id', exp.id);
-      } else {
-        await supabase.from('work_experience').insert(data);
+      const { error: profileErr } = await supabase.from('profiles').update(updates).eq('id', user.id);
+      if (profileErr) errors.push('Profile: ' + profileErr.message);
+
+      // Specialties
+      await supabase.from('expert_specialties').delete().eq('expert_id', user.id);
+      if (selectedSpecialties.length > 0) {
+        const { error: specErr } = await supabase.from('expert_specialties').insert(
+          selectedSpecialties.map(id => ({ expert_id: user.id, specialty_id: id }))
+        );
+        if (specErr) errors.push('Specialties: ' + specErr.message);
       }
-    }
 
-    // Credentials
-    for (const cred of credentials) {
-      const data = { expert_id: user.id, credential_type: cred.credential_type, name: cred.name, issuing_body: cred.issuing_body, issue_date: cred.issue_date || null, expiry_date: cred.expiry_date || null, credential_number: cred.credential_number };
-      if (cred.id && !cred._new) {
-        await supabase.from('credentials').update(data).eq('id', cred.id);
-      } else {
-        await supabase.from('credentials').insert(data);
+      // Education
+      for (const edu of education) {
+        const data = { expert_id: user.id, institution: edu.institution, degree: edu.degree, field_of_study: edu.field_of_study, start_year: edu.start_year ? parseInt(edu.start_year) : null, end_year: edu.end_year ? parseInt(edu.end_year) : null };
+        if (edu.id && !edu._new) {
+          const { error } = await supabase.from('education').update(data).eq('id', edu.id);
+          if (error) errors.push('Education: ' + error.message);
+        } else {
+          const { error } = await supabase.from('education').insert(data);
+          if (error) errors.push('Education: ' + error.message);
+        }
       }
-    }
 
-    // Prior Testimony
-    for (const test of testimony) {
-      const data = { expert_id: user.id, case_name: test.case_name || '', court: test.court || '', jurisdiction: test.jurisdiction || '', date_of_testimony: test.date_of_testimony || null, topic: test.topic || '', retained_by: test.retained_by || '' };
-      if (test.id && !test._new) {
-        await supabase.from('prior_testimony').update(data).eq('id', test.id);
-      } else {
-        await supabase.from('prior_testimony').insert(data);
+      // Experience
+      for (const exp of experience) {
+        const data = { expert_id: user.id, organization: exp.organization, title: exp.title, description: exp.description, start_date: exp.start_date || null, end_date: exp.end_date || null, is_current: exp.is_current };
+        if (exp.id && !exp._new) {
+          const { error } = await supabase.from('work_experience').update(data).eq('id', exp.id);
+          if (error) errors.push('Experience: ' + error.message);
+        } else {
+          const { error } = await supabase.from('work_experience').insert(data);
+          if (error) errors.push('Experience: ' + error.message);
+        }
       }
+
+      // Credentials
+      for (const cred of credentials) {
+        const data = { expert_id: user.id, credential_type: cred.credential_type, name: cred.name, issuing_body: cred.issuing_body, issue_date: cred.issue_date || null, expiry_date: cred.expiry_date || null, credential_number: cred.credential_number };
+        if (cred.id && !cred._new) {
+          const { error } = await supabase.from('credentials').update(data).eq('id', cred.id);
+          if (error) errors.push('Credentials: ' + error.message);
+        } else {
+          const { error } = await supabase.from('credentials').insert(data);
+          if (error) errors.push('Credentials: ' + error.message);
+        }
+      }
+
+      // Prior Testimony
+      for (const item of testimony) {
+        const data = { expert_id: user.id, case_name: item.case_name || '', court: item.court || '', jurisdiction: item.jurisdiction || '', date_of_testimony: item.date_of_testimony || null, topic: item.topic || '', retained_by: item.retained_by || '' };
+        if (item.id && !item._new) {
+          const { error } = await supabase.from('prior_testimony').update(data).eq('id', item.id);
+          if (error) errors.push('Testimony: ' + error.message);
+        } else {
+          const { error } = await supabase.from('prior_testimony').insert(data);
+          if (error) errors.push('Testimony: ' + error.message);
+        }
+      }
+
+      await fetchProfile(user.id);
+      await loadData();
+    } catch (err) {
+      errors.push(err.message);
     }
 
-    await fetchProfile(user.id);
-    await loadData();
-    setMessage('Profile saved successfully');
+    if (errors.length > 0) {
+      setMessage('Errors: ' + errors.join('; '));
+    } else {
+      setMessage('Profile saved successfully');
+    }
     setSaving(false);
   };
 
@@ -145,7 +165,7 @@ export default function Profile() {
         <h1 className="portal-page__title">Edit Profile</h1>
       </div>
 
-      {message && <div className="portal-alert portal-alert--success">{message}</div>}
+      {message && <div className={`portal-alert ${message.startsWith('Errors') ? 'portal-alert--error' : 'portal-alert--success'}`}>{message}</div>}
 
       <form onSubmit={handleSubmit}>
         {/* Basic Info */}
