@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '../../lib/supabase';
 
 export default function InviteExpert() {
   const { session } = useAuth();
@@ -19,11 +20,15 @@ export default function InviteExpert() {
     setError('');
 
     try {
+      // Get a fresh access token (the stored session token may have expired)
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      const token = currentSession?.access_token || session?.access_token;
+
       const res = await fetch('/api/invite', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(form),
       });
