@@ -85,7 +85,16 @@ export default function ExpertDetail() {
           <div><strong>Email:</strong> {expert.email}</div>
           <div><strong>Phone:</strong> {expert.phone || '—'}</div>
         </div>
-        {expert.hourly_rate && <p><strong>Hourly Rate:</strong> ${expert.hourly_rate}</p>}
+        {(expert.rate_review_report || expert.rate_deposition || expert.rate_trial_testimony) && (
+          <div style={{ marginTop: 8 }}>
+            <strong>Hourly Rates:</strong>
+            <div style={{ display: 'flex', gap: 16, marginTop: 4, fontSize: '0.9rem', color: 'var(--color-gray-600)' }}>
+              {expert.rate_review_report && <span>Review & Report: ${expert.rate_review_report}/hr</span>}
+              {expert.rate_deposition && <span>Deposition: ${expert.rate_deposition}/hr</span>}
+              {expert.rate_trial_testimony && <span>Trial Testimony: ${expert.rate_trial_testimony}/hr</span>}
+            </div>
+          </div>
+        )}
         {expert.bio && (
           <div style={{ marginTop: 12 }}>
             <strong>Bio:</strong>

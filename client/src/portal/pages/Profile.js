@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 export default function Profile() {
   const { user, profile, fetchProfile } = useAuth();
-  const [form, setForm] = useState({ first_name: '', last_name: '', phone: '', bio: '', hourly_rate: '', availability: 'available' });
+  const [form, setForm] = useState({ first_name: '', last_name: '', phone: '', bio: '', rate_review_report: '', rate_deposition: '', rate_trial_testimony: '', availability: 'available' });
   const [allSpecialties, setAllSpecialties] = useState([]);
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
   const [education, setEducation] = useState([]);
@@ -39,7 +39,9 @@ export default function Profile() {
         last_name: profile.last_name || '',
         phone: profile.phone || '',
         bio: profile.bio || '',
-        hourly_rate: profile.hourly_rate || '',
+        rate_review_report: profile.rate_review_report || '',
+        rate_deposition: profile.rate_deposition || '',
+        rate_trial_testimony: profile.rate_trial_testimony || '',
         availability: profile.availability || 'available',
       });
     }
@@ -75,8 +77,10 @@ export default function Profile() {
     setMessage('');
 
     const updates = { ...form };
-    if (updates.hourly_rate) updates.hourly_rate = parseFloat(updates.hourly_rate);
-    else updates.hourly_rate = null;
+    for (const key of ['rate_review_report', 'rate_deposition', 'rate_trial_testimony']) {
+      if (updates[key]) updates[key] = parseFloat(updates[key]);
+      else updates[key] = null;
+    }
     if (!profile?.onboarded_at) updates.onboarded_at = new Date().toISOString();
 
     await supabase.from('profiles').update(updates).eq('id', user.id);
@@ -330,17 +334,25 @@ export default function Profile() {
           <h2 className="portal-card__title">Rate & Availability</h2>
           <div className="portal-list-item__row">
             <div className="portal-field">
-              <label className="portal-field__label">Hourly Rate ($)</label>
-              <input className="portal-field__input" name="hourly_rate" type="number" value={form.hourly_rate} onChange={handleChange} placeholder="e.g. 500" />
+              <label className="portal-field__label">Review & Report Rate ($/hr)</label>
+              <input className="portal-field__input" name="rate_review_report" type="number" value={form.rate_review_report} onChange={handleChange} placeholder="e.g. 500" />
             </div>
             <div className="portal-field">
-              <label className="portal-field__label">Availability</label>
-              <select className="portal-field__select" name="availability" value={form.availability} onChange={handleChange}>
-                <option value="available">Available</option>
-                <option value="limited">Limited</option>
-                <option value="unavailable">Unavailable</option>
-              </select>
+              <label className="portal-field__label">Deposition Rate ($/hr)</label>
+              <input className="portal-field__input" name="rate_deposition" type="number" value={form.rate_deposition} onChange={handleChange} placeholder="e.g. 600" />
             </div>
+            <div className="portal-field">
+              <label className="portal-field__label">Trial Testimony Rate ($/hr)</label>
+              <input className="portal-field__input" name="rate_trial_testimony" type="number" value={form.rate_trial_testimony} onChange={handleChange} placeholder="e.g. 750" />
+            </div>
+          </div>
+          <div className="portal-field" style={{ marginTop: 12 }}>
+            <label className="portal-field__label">Availability</label>
+            <select className="portal-field__select" name="availability" value={form.availability} onChange={handleChange}>
+              <option value="available">Available</option>
+              <option value="limited">Limited</option>
+              <option value="unavailable">Unavailable</option>
+            </select>
           </div>
         </div>
 
