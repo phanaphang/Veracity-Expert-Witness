@@ -38,6 +38,7 @@ import Profile from './portal/pages/Profile';
 import Documents from './portal/pages/Documents';
 import CaseInvitations from './portal/pages/CaseInvitations';
 import Messages from './portal/pages/Messages';
+import ChangePassword from './portal/pages/ChangePassword';
 
 // Admin
 import AdminLayout from './portal/admin/AdminLayout';
@@ -102,6 +103,7 @@ function App() {
           <Route path="/portal/documents" element={<ProtectedRoute><PortalLayout><Documents /></PortalLayout></ProtectedRoute>} />
           <Route path="/portal/cases" element={<ProtectedRoute><PortalLayout><CaseInvitations /></PortalLayout></ProtectedRoute>} />
           <Route path="/portal/messages" element={<ProtectedRoute><PortalLayout><Messages /></PortalLayout></ProtectedRoute>} />
+          <Route path="/portal/change-password" element={<ProtectedRoute><PortalLayout><ChangePassword /></PortalLayout></ProtectedRoute>} />
 
           {/* Admin (protected, admin only) */}
           <Route path="/admin/dashboard" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
@@ -112,6 +114,7 @@ function App() {
           <Route path="/admin/cases/new" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseCreate /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/cases/:id" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseDetail /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/messages" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminMessages /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/change-password" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ChangePassword /></AdminLayout></ProtectedRoute>} />
         </Routes>
       </div>
     </AuthProvider>
