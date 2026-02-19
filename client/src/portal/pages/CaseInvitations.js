@@ -75,7 +75,7 @@ export default function CaseInvitations() {
               </div>
             )}
 
-            {inv.status === 'info_requested' && (
+            {(inv.status === 'info_requested' || inv.status === 'declined') && (
               <div style={{ display: 'flex', gap: 8 }}>
                 <button className="btn btn--primary" onClick={() => respond(inv.id, 'accepted')} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
                   Accept Case
