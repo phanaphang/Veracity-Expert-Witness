@@ -8,42 +8,46 @@ export default function AuthCallback() {
   const handled = useRef(false);
 
   useEffect(() => {
-    // Handle PKCE flow (code in query params)
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    if (code) {
-      supabase.auth.exchangeCodeForSession(code).catch(() => {});
-    }
+    const handleAuth = async () => {
+      if (handled.current) return;
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        if (handled.current) return;
-        if (!session) {
-          // Only redirect to login if not still processing
-          if (event === 'SIGNED_OUT' || event === 'INITIAL_SESSION') {
-            handled.current = true;
-            navigate('/portal/login', { replace: true });
-          }
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+
+      // Exchange PKCE code for session (must await before checking session)
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (error) {
+          handled.current = true;
+          navigate('/portal/login', { replace: true });
           return;
         }
-
-        handled.current = true;
-        const { data } = await supabase.from('profiles')
-          .select('onboarded_at, role')
-          .eq('id', session.user.id)
-          .single();
-
-        if (data?.role === 'admin') {
-          navigate('/admin/dashboard', { replace: true });
-        } else if (!data?.onboarded_at) {
-          navigate('/portal/accept-invite', { replace: true });
-        } else {
-          navigate('/portal/dashboard', { replace: true });
-        }
       }
-    );
 
-    return () => subscription.unsubscribe();
+      // Get the current session (either from code exchange or existing)
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        handled.current = true;
+        navigate('/portal/login', { replace: true });
+        return;
+      }
+
+      handled.current = true;
+      const { data } = await supabase.from('profiles')
+        .select('onboarded_at, role')
+        .eq('id', session.user.id)
+        .single();
+
+      if (data?.role === 'admin') {
+        navigate('/admin/dashboard', { replace: true });
+      } else if (!data?.onboarded_at) {
+        navigate('/portal/accept-invite', { replace: true });
+      } else {
+        navigate('/portal/dashboard', { replace: true });
+      }
+    };
+
+    handleAuth();
   }, [navigate]);
 
   return (
