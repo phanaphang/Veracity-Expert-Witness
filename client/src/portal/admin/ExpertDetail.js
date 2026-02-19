@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { generateExpertPdf } from './generateExpertPdf';
 
 export default function ExpertDetail() {
   const { id } = useParams();
@@ -12,6 +13,7 @@ export default function ExpertDetail() {
   const [testimony, setTestimony] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -39,6 +41,18 @@ export default function ExpertDetail() {
     if (data?.signedUrl) window.open(data.signedUrl, '_blank');
   };
 
+  const handleGeneratePdf = async () => {
+    setGenerating(true);
+    try {
+      await generateExpertPdf(expert, specialties, education, experience, credentials, testimony, documents, supabase);
+    } catch (e) {
+      console.error('PDF generation failed', e);
+      alert('Failed to generate PDF. See console for details.');
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const updateStatus = async (status) => {
     await supabase.from('profiles').update({ profile_status: status }).eq('id', id);
     setExpert(prev => ({ ...prev, profile_status: status }));
@@ -64,6 +78,9 @@ export default function ExpertDetail() {
           </button>
           <button className="portal-btn-action" onClick={() => updateStatus('rejected')}>
             Reject
+          </button>
+          <button className="portal-btn-action" onClick={handleGeneratePdf} disabled={generating}>
+            {generating ? 'Generating…' : 'Generate File'}
           </button>
         </div>
       </div>
