@@ -178,7 +178,16 @@ export default function ExpertDetail() {
 
       {/* Prior Expert Testimony */}
       <div className="portal-card">
-        <h2 className="portal-card__title">Prior Expert Testimony ({testimony.length})</h2>
+        <h2 className="portal-card__title">Prior Expert Testimony ({testimony.length}){testimony.length > 0 && (() => {
+            const total = testimony.filter(t => t.retained_by && t.retained_by !== '').length;
+            if (total === 0) return null;
+            const counts = { plaintiff: 0, defendant: 0, other: 0 };
+            testimony.forEach(t => { if (t.retained_by && counts[t.retained_by] !== undefined) counts[t.retained_by]++; });
+            const pct = (n) => Math.round((n / total) * 100);
+            return <span style={{ fontSize: '0.75em', fontWeight: 'normal', marginLeft: 12, color: '#6b7280' }}>
+              Plaintiff {pct(counts.plaintiff)}% | Defendant {pct(counts.defendant)}% | Other {pct(counts.other)}%
+            </span>;
+          })()}</h2>
         {testimony.length === 0 ? (
           <p style={{ color: 'var(--color-gray-400)', fontSize: '0.85rem' }}>No prior testimony on record</p>
         ) : (
