@@ -79,7 +79,7 @@ export default function CaseInvitations() {
             {inv.status === 'pending' && (
               <div style={{ display: 'flex', gap: 8 }}>
                 <button className="btn btn--primary" onClick={() => respond(inv.id, 'accepted')} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
-                  Accept
+                  Interested
                 </button>
                 <button className="portal-btn-action" onClick={() => respond(inv.id, 'declined')}>
                   Decline
@@ -93,7 +93,7 @@ export default function CaseInvitations() {
             {(inv.status === 'info_requested' || inv.status === 'declined' || inv.status === 'accepted') && (
               <div style={{ display: 'flex', gap: 8 }}>
                 <button className="btn btn--primary" onClick={() => respond(inv.id, 'accepted')} style={{ padding: '8px 20px', fontSize: '0.85rem' }}>
-                  Accept Case
+                  Interested
                 </button>
                 <button className="portal-btn-action" onClick={() => respond(inv.id, 'declined')}>
                   Decline
