@@ -5,6 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 export default function CaseInvitations() {
   const { user, profile } = useAuth();
   const [invitations, setInvitations] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
   const loadInvitations = async () => {
@@ -52,13 +53,25 @@ export default function CaseInvitations() {
         <h1 className="portal-page__title">Case Invitations</h1>
       </div>
 
+      {invitations.length > 0 && (
+        <div className="portal-search-bar" style={{ marginBottom: 16 }}>
+          <input
+            className="portal-field__input"
+            placeholder="Search by case title..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            style={{ maxWidth: 300 }}
+          />
+        </div>
+      )}
+
       {invitations.length === 0 ? (
         <div className="portal-empty">
           <p className="portal-empty__text">No case invitations yet</p>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-400)' }}>When you're invited to a case, it will appear here.</p>
         </div>
       ) : (
-        invitations.map(inv => (
+        invitations.filter(inv => !searchTerm || (inv.cases?.title || '').toLowerCase().includes(searchTerm.toLowerCase())).map(inv => (
           <div key={inv.id} className="portal-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
               <div>

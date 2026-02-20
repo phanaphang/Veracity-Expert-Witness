@@ -11,6 +11,7 @@ export default function CaseList() {
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
@@ -25,7 +26,11 @@ export default function CaseList() {
       });
   }, []);
 
-  const filtered = filterStatus ? cases.filter(c => c.status === filterStatus) : cases;
+  const filtered = cases.filter(c => {
+    if (filterStatus && c.status !== filterStatus) return false;
+    if (searchTerm && !c.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    return true;
+  });
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -51,7 +56,14 @@ export default function CaseList() {
         )}
       </div>
 
-      <div className="portal-search-bar">
+      <div className="portal-search-bar" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <input
+          className="portal-field__input"
+          placeholder="Search by case title..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          style={{ maxWidth: 300 }}
+        />
         <select className="portal-field__select" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
           <option value="">All Statuses</option>
           <option value="open">Open</option>
