@@ -18,12 +18,12 @@ export default function CaseDetail() {
   const [assignConfirmTarget, setAssignConfirmTarget] = useState(null);
   const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
   const [removeExpertConfirm, setRemoveExpertConfirm] = useState(false);
-  const [notesEditing, setNotesEditing] = useState(false);
-  const [notesValue, setNotesValue] = useState('');
-  const [clientEditing, setClientEditing] = useState(false);
-  const [clientValue, setClientValue] = useState('');
-  const [descEditing, setDescEditing] = useState(false);
+  const [detailsEditing, setDetailsEditing] = useState(false);
   const [descValue, setDescValue] = useState('');
+  const [clientValue, setClientValue] = useState('');
+  const [caseTypeValue, setCaseTypeValue] = useState('');
+  const [jurisdictionValue, setJurisdictionValue] = useState('');
+  const [notesValue, setNotesValue] = useState('');
   const [loading, setLoading] = useState(true);
 
   const loadCase = async () => {
@@ -35,6 +35,8 @@ export default function CaseDetail() {
     setCaseData(caseRes.data);
     setDescValue(caseRes.data?.description || '');
     setClientValue(caseRes.data?.client || '');
+    setCaseTypeValue(caseRes.data?.case_type || '');
+    setJurisdictionValue(caseRes.data?.jurisdiction || '');
     setNotesValue(caseRes.data?.additional_notes || '');
     setInvitations(invRes.data || []);
     setManagers(mgrRes.data || []);
@@ -149,82 +151,83 @@ export default function CaseDetail() {
       </div>
 
       <div className="portal-card">
-        <h2 className="portal-card__title">Case Details</h2>
-        <div style={{ marginBottom: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-            <strong>Description:</strong>
-            {(isAdmin || profile?.role === 'staff') && (
-              descEditing ? (
-                <button
-                  className="btn btn--primary"
-                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
-                  onClick={async () => {
-                    await supabase.from('cases').update({ description: descValue }).eq('id', id);
-                    setCaseData(prev => ({ ...prev, description: descValue }));
-                    setDescEditing(false);
-                  }}
-                >
-                  Save
-                </button>
-              ) : (
-                <button
-                  className="portal-btn-action"
-                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
-                  onClick={() => setDescEditing(true)}
-                >
-                  Edit
-                </button>
-              )
-            )}
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 className="portal-card__title" style={{ margin: 0 }}>Case Details</h2>
+          {(isAdmin || profile?.role === 'staff') && (
+            detailsEditing ? (
+              <button
+                className="btn btn--primary"
+                style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                onClick={async () => {
+                  await supabase.from('cases').update({
+                    description: descValue,
+                    client: clientValue,
+                    case_type: caseTypeValue,
+                    jurisdiction: jurisdictionValue,
+                    additional_notes: notesValue,
+                  }).eq('id', id);
+                  setCaseData(prev => ({ ...prev, description: descValue, client: clientValue, case_type: caseTypeValue, jurisdiction: jurisdictionValue, additional_notes: notesValue }));
+                  setDetailsEditing(false);
+                }}
+              >
+                Save
+              </button>
+            ) : (
+              <button
+                className="portal-btn-action"
+                style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                onClick={() => setDetailsEditing(true)}
+              >
+                Edit
+              </button>
+            )
+          )}
+        </div>
+        <div style={{ marginTop: 12, marginBottom: 12 }}>
+          <strong>Description:</strong>
           <textarea
             className="portal-field__input"
-            style={{ width: '100%', minHeight: 80, resize: 'vertical', lineHeight: 1.6, background: descEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)', color: 'var(--color-gray-600)' }}
+            style={{ width: '100%', minHeight: 80, resize: 'vertical', lineHeight: 1.6, marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)', color: 'var(--color-gray-600)' }}
             value={descValue}
             onChange={(e) => setDescValue(e.target.value)}
-            readOnly={!descEditing}
-            placeholder={descEditing ? 'Enter description...' : 'No description'}
+            readOnly={!detailsEditing}
+            placeholder={detailsEditing ? 'Enter description...' : 'No description'}
           />
         </div>
         <div style={{ marginBottom: 12 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <strong>Client:</strong>
-            {(isAdmin || profile?.role === 'staff') && (
-              clientEditing ? (
-                <button
-                  className="btn btn--primary"
-                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
-                  onClick={async () => {
-                    await supabase.from('cases').update({ client: clientValue }).eq('id', id);
-                    setCaseData(prev => ({ ...prev, client: clientValue }));
-                    setClientEditing(false);
-                  }}
-                >
-                  Save
-                </button>
-              ) : (
-                <button
-                  className="portal-btn-action"
-                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
-                  onClick={() => setClientEditing(true)}
-                >
-                  Edit
-                </button>
-              )
-            )}
-          </div>
+          <strong>Client:</strong>
           <input
             className="portal-field__input"
-            style={{ marginTop: 4, background: clientEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)' }}
+            style={{ marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)' }}
             value={clientValue}
             onChange={(e) => setClientValue(e.target.value)}
-            readOnly={!clientEditing}
-            placeholder={clientEditing ? 'Enter client name...' : 'No client specified'}
+            readOnly={!detailsEditing}
+            placeholder={detailsEditing ? 'Enter client name...' : 'No client specified'}
           />
         </div>
-        <div className="portal-list-item__row">
-          {caseData.case_type && <div><strong>Type:</strong> {caseData.case_type}</div>}
-          {caseData.jurisdiction && <div><strong>Jurisdiction:</strong> {caseData.jurisdiction}</div>}
+        <div className="portal-list-item__row" style={{ marginBottom: 12 }}>
+          <div>
+            <strong>Type:</strong>
+            <input
+              className="portal-field__input"
+              style={{ marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)' }}
+              value={caseTypeValue}
+              onChange={(e) => setCaseTypeValue(e.target.value)}
+              readOnly={!detailsEditing}
+              placeholder={detailsEditing ? 'Enter case type...' : 'No type specified'}
+            />
+          </div>
+          <div>
+            <strong>Jurisdiction:</strong>
+            <input
+              className="portal-field__input"
+              style={{ marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)' }}
+              value={jurisdictionValue}
+              onChange={(e) => setJurisdictionValue(e.target.value)}
+              readOnly={!detailsEditing}
+              placeholder={detailsEditing ? 'Enter jurisdiction...' : 'No jurisdiction specified'}
+            />
+          </div>
         </div>
         <div style={{ marginTop: 12 }}>
           <strong>Case Manager:</strong>{' '}
@@ -305,39 +308,14 @@ export default function CaseDetail() {
           Created: {new Date(caseData.created_at).toLocaleDateString()}
         </p>
         <div style={{ marginTop: 16 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-            <strong>Additional Notes:</strong>
-            {(isAdmin || profile?.role === 'staff') && (
-              notesEditing ? (
-                <button
-                  className="btn btn--primary"
-                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
-                  onClick={async () => {
-                    await supabase.from('cases').update({ additional_notes: notesValue }).eq('id', id);
-                    setCaseData(prev => ({ ...prev, additional_notes: notesValue }));
-                    setNotesEditing(false);
-                  }}
-                >
-                  Save
-                </button>
-              ) : (
-                <button
-                  className="portal-btn-action"
-                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
-                  onClick={() => setNotesEditing(true)}
-                >
-                  Edit
-                </button>
-              )
-            )}
-          </div>
+          <strong>Additional Notes:</strong>
           <textarea
             className="portal-field__input"
-            style={{ width: '100%', minHeight: 100, resize: 'vertical', background: notesEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)', color: 'var(--color-gray-600)' }}
+            style={{ width: '100%', minHeight: 100, resize: 'vertical', marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)', color: 'var(--color-gray-600)' }}
             value={notesValue}
             onChange={(e) => setNotesValue(e.target.value)}
-            readOnly={!notesEditing}
-            placeholder={notesEditing ? 'Enter additional notes...' : 'No additional notes'}
+            readOnly={!detailsEditing}
+            placeholder={detailsEditing ? 'Enter additional notes...' : 'No additional notes'}
           />
         </div>
       </div>
