@@ -70,7 +70,6 @@ export default function CaseList() {
         <select className="portal-field__select" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
           <option value="">All Statuses</option>
           <option value="open">Open</option>
-          <option value="in_progress">In Progress</option>
           <option value="closed">Closed</option>
         </select>
       </div>
