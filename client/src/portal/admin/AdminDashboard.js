@@ -81,7 +81,7 @@ export default function AdminDashboard() {
         <Link to="/admin/cases" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
           <h3 className="portal-card__title">Cases</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
-            Create and manage case opportunities
+            {isStaff ? 'Manage cases' : 'Create and manage case opportunities'}
           </p>
         </Link>
         <Link to="/admin/messages" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
