@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function ExpertList() {
+  const { profile } = useAuth();
   const [experts, setExperts] = useState([]);
   const [specialties, setSpecialties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -38,9 +40,11 @@ export default function ExpertList() {
     <div>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Experts</h1>
-        <Link to="/admin/invite" className="btn btn--primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>
-          Invite Expert
-        </Link>
+        {profile?.role !== 'staff' && (
+          <Link to="/admin/invite" className="btn btn--primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>
+            Invite Expert
+          </Link>
+        )}
       </div>
 
       <div className="portal-search-bar">
