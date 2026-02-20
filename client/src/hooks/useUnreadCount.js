@@ -30,6 +30,14 @@ export function useUnreadCount() {
       }, () => {
         fetchCount();
       })
+      .on('postgres_changes', {
+        event: 'UPDATE',
+        schema: 'public',
+        table: 'messages',
+        filter: `recipient_id=eq.${user.id}`,
+      }, () => {
+        fetchCount();
+      })
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
