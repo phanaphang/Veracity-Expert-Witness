@@ -15,6 +15,7 @@ export default function CaseDetail() {
   const [searchTerm, setSearchTerm] = useState('');
   const [assignExpertTerm, setAssignExpertTerm] = useState('');
   const [assignExpertResults, setAssignExpertResults] = useState([]);
+  const [assignConfirmTarget, setAssignConfirmTarget] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const loadCase = async () => {
@@ -299,10 +300,19 @@ export default function CaseDetail() {
                     </td>
                     <td>{new Date(inv.invited_at).toLocaleDateString()}</td>
                     <td>{inv.responded_at ? new Date(inv.responded_at).toLocaleDateString() : '—'}</td>
-                    <td>
+                    <td style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                       <Link to={`/admin/experts/${inv.expert_id}`} style={{ color: 'var(--color-accent)', fontSize: '0.85rem' }}>
                         View Profile
                       </Link>
+                      {(isAdmin || profile?.role === 'staff') && (
+                        <button
+                          className="btn btn--primary"
+                          style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                          onClick={() => setAssignConfirmTarget(inv)}
+                        >
+                          Assign
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -314,6 +324,35 @@ export default function CaseDetail() {
           );
         })()}
       </div>
+
+      {assignConfirmTarget && (
+        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
+            <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>Assign Expert</h3>
+            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
+              Are you sure you want to assign{' '}
+              <strong>
+                {assignConfirmTarget.profiles?.first_name
+                  ? `${assignConfirmTarget.profiles.first_name} ${assignConfirmTarget.profiles.last_name || ''}`.trim()
+                  : assignConfirmTarget.profiles?.email || 'this expert'}
+              </strong>{' '}
+              as the assigned expert for this case?
+            </p>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn--secondary" onClick={() => setAssignConfirmTarget(null)}>Cancel</button>
+              <button
+                className="btn btn--primary"
+                onClick={async () => {
+                  await assignExpert(assignConfirmTarget.expert_id);
+                  setAssignConfirmTarget(null);
+                }}
+              >
+                Assign Expert
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
