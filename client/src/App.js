@@ -50,6 +50,7 @@ import CaseList from './portal/admin/CaseList';
 import CaseCreate from './portal/admin/CaseCreate';
 import CaseDetail from './portal/admin/CaseDetail';
 import AdminMessages from './portal/admin/AdminMessages';
+import AdminProfile from './portal/admin/AdminProfile';
 
 function HomePage() {
   return (
@@ -107,6 +108,7 @@ function App() {
 
           {/* Admin (protected, admin only) */}
           <Route path="/admin/dashboard" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/profile" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminProfile /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/experts" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ExpertList /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/experts/:id" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ExpertDetail /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/invite" element={<ProtectedRoute requiredRole="admin"><AdminLayout><InviteExpert /></AdminLayout></ProtectedRoute>} />
