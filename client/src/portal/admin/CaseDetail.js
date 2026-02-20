@@ -17,6 +17,7 @@ export default function CaseDetail() {
   const [assignExpertResults, setAssignExpertResults] = useState([]);
   const [assignConfirmTarget, setAssignConfirmTarget] = useState(null);
   const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
+  const [removeExpertConfirm, setRemoveExpertConfirm] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const loadCase = async () => {
@@ -185,7 +186,7 @@ export default function CaseDetail() {
                 <button
                   className="portal-btn-action"
                   style={{ marginLeft: 8, padding: '4px 10px', fontSize: '0.8rem' }}
-                  onClick={removeAssignedExpert}
+                  onClick={() => setRemoveExpertConfirm(true)}
                 >
                   Remove
                 </button>
@@ -333,6 +334,30 @@ export default function CaseDetail() {
                 }}
               >
                 Assign Expert
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {removeExpertConfirm && caseData.assignedExpert && (
+        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
+            <h3 style={{ margin: '0 0 8px', color: 'var(--color-error, #e53e3e)' }}>Remove Assigned Expert</h3>
+            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
+              Are you sure you want to remove <strong>{formatName(caseData.assignedExpert)}</strong> as the assigned expert? They will be returned to the Invited Experts list.
+            </p>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn--secondary" onClick={() => setRemoveExpertConfirm(false)}>Cancel</button>
+              <button
+                className="btn"
+                style={{ background: 'var(--color-error, #e53e3e)', color: '#fff', border: 'none' }}
+                onClick={async () => {
+                  setRemoveExpertConfirm(false);
+                  await removeAssignedExpert();
+                }}
+              >
+                Remove Expert
               </button>
             </div>
           </div>
