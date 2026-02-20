@@ -179,7 +179,7 @@ export default function CaseDetail() {
           {caseData.assignedExpert ? (
             <span>
               {formatName(caseData.assignedExpert)}
-              <Link to={`/admin/experts/${caseData.assignedExpert.id}`} style={{ color: 'var(--color-accent)', fontSize: '0.8rem', marginLeft: 8 }}>
+              <Link to={`/admin/experts/${caseData.assignedExpert.id}?from=case&caseId=${id}`} style={{ color: 'var(--color-accent)', fontSize: '0.8rem', marginLeft: 8 }}>
                 View Profile
               </Link>
               {(isAdmin || profile?.role === 'staff') && (
@@ -291,7 +291,7 @@ export default function CaseDetail() {
                     <td>{new Date(inv.invited_at).toLocaleDateString()}</td>
                     <td>{inv.responded_at ? new Date(inv.responded_at).toLocaleDateString() : '—'}</td>
                     <td style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                      <Link to={`/admin/experts/${inv.expert_id}`} style={{ color: 'var(--color-accent)', fontSize: '0.85rem' }}>
+                      <Link to={`/admin/experts/${inv.expert_id}?from=case&caseId=${id}`} style={{ color: 'var(--color-accent)', fontSize: '0.85rem' }}>
                         View Profile
                       </Link>
                       {(isAdmin || profile?.role === 'staff') && (

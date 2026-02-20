@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { generateExpertPdf } from './generateExpertPdf';
 
 export default function ExpertDetail() {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const fromCase = searchParams.get('from') === 'case';
+  const caseId = searchParams.get('caseId');
   const [expert, setExpert] = useState(null);
   const [specialties, setSpecialties] = useState([]);
   const [education, setEducation] = useState([]);
@@ -65,9 +68,15 @@ export default function ExpertDetail() {
     <div>
       <div className="portal-page__header">
         <div>
-          <Link to="/admin/experts" style={{ fontSize: '0.85rem', color: 'var(--color-accent)', textDecoration: 'none', marginBottom: 8, display: 'inline-block' }}>
-            &larr; Back to Experts
-          </Link>
+          {fromCase && caseId ? (
+            <Link to={`/admin/cases/${caseId}`} style={{ fontSize: '0.85rem', color: 'var(--color-accent)', textDecoration: 'none', marginBottom: 8, display: 'inline-block' }}>
+              &larr; Back to Case
+            </Link>
+          ) : (
+            <Link to="/admin/experts" style={{ fontSize: '0.85rem', color: 'var(--color-accent)', textDecoration: 'none', marginBottom: 8, display: 'inline-block' }}>
+              &larr; Back to Experts
+            </Link>
+          )}
           <h1 className="portal-page__title">
             {expert.first_name ? `${expert.first_name} ${expert.last_name || ''}`.trim() : expert.email}
           </h1>
