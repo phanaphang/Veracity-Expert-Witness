@@ -119,6 +119,7 @@ CREATE TABLE cases (
   jurisdiction TEXT DEFAULT '',
   case_manager UUID REFERENCES profiles(id),
   assigned_expert UUID REFERENCES profiles(id),
+  additional_notes TEXT DEFAULT '',
   status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'closed')),
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()

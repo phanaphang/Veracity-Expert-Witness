@@ -18,6 +18,8 @@ export default function CaseDetail() {
   const [assignConfirmTarget, setAssignConfirmTarget] = useState(null);
   const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
   const [removeExpertConfirm, setRemoveExpertConfirm] = useState(false);
+  const [notesEditing, setNotesEditing] = useState(false);
+  const [notesValue, setNotesValue] = useState('');
   const [loading, setLoading] = useState(true);
 
   const loadCase = async () => {
@@ -27,6 +29,7 @@ export default function CaseDetail() {
       supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
     ]);
     setCaseData(caseRes.data);
+    setNotesValue(caseRes.data?.additional_notes || '');
     setInvitations(invRes.data || []);
     setManagers(mgrRes.data || []);
     setLoading(false);
@@ -224,6 +227,42 @@ export default function CaseDetail() {
         <p style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginTop: 8 }}>
           Created: {new Date(caseData.created_at).toLocaleDateString()}
         </p>
+        <div style={{ marginTop: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+            <strong>Additional Notes:</strong>
+            {(isAdmin || profile?.role === 'staff') && (
+              notesEditing ? (
+                <button
+                  className="btn btn--primary"
+                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                  onClick={async () => {
+                    await supabase.from('cases').update({ additional_notes: notesValue }).eq('id', id);
+                    setCaseData(prev => ({ ...prev, additional_notes: notesValue }));
+                    setNotesEditing(false);
+                  }}
+                >
+                  Save
+                </button>
+              ) : (
+                <button
+                  className="portal-btn-action"
+                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                  onClick={() => setNotesEditing(true)}
+                >
+                  Edit
+                </button>
+              )
+            )}
+          </div>
+          <textarea
+            className="portal-field__input"
+            style={{ width: '100%', minHeight: 100, resize: 'vertical', background: notesEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)', color: 'var(--color-gray-600)' }}
+            value={notesValue}
+            onChange={(e) => setNotesValue(e.target.value)}
+            readOnly={!notesEditing}
+            placeholder={notesEditing ? 'Enter additional notes...' : 'No additional notes'}
+          />
+        </div>
       </div>
 
       {/* Invite Experts */}
