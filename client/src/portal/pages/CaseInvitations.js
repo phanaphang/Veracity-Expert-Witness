@@ -10,7 +10,7 @@ export default function CaseInvitations() {
   const loadInvitations = async () => {
     const { data } = await supabase
       .from('case_invitations')
-      .select('*, cases(title, description, status, specialties(name))')
+      .select('*, cases(case_number, title, description, status, specialties(name))')
       .eq('expert_id', user.id)
       .order('invited_at', { ascending: false });
     setInvitations(data || []);
@@ -62,7 +62,7 @@ export default function CaseInvitations() {
           <div key={inv.id} className="portal-card">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
               <div>
-                <h3 className="portal-card__title" style={{ marginBottom: 4 }}>{inv.cases?.title || 'Untitled Case'}</h3>
+                <h3 className="portal-card__title" style={{ marginBottom: 4 }}>{inv.cases?.case_number ? `#${inv.cases.case_number} — ` : ''}{inv.cases?.title || 'Untitled Case'}</h3>
                 {inv.cases?.specialties?.name && (
                   <span className="portal-badge portal-badge--open">{inv.cases.specialties.name}</span>
                 )}

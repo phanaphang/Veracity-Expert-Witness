@@ -74,7 +74,7 @@ export default function CaseDetail() {
           <Link to="/admin/cases" style={{ fontSize: '0.85rem', color: 'var(--color-accent)', textDecoration: 'none', marginBottom: 8, display: 'inline-block' }}>
             &larr; Back to Cases
           </Link>
-          <h1 className="portal-page__title">{caseData.title}</h1>
+          <h1 className="portal-page__title">#{caseData.case_number} — {caseData.title}</h1>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           {caseData.status !== 'closed' && (

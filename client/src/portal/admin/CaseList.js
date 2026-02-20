@@ -82,7 +82,7 @@ export default function CaseList() {
             <tbody>
               {filtered.map(c => (
                 <tr key={c.id}>
-                  <td><strong>{c.title}</strong></td>
+                  <td><strong>#{c.case_number} — {c.title}</strong></td>
                   <td>{c.specialties?.name || '—'}</td>
                   <td>
                     <span className={`portal-badge portal-badge--${c.status}`}>

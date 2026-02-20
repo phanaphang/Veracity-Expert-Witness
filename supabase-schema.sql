@@ -111,6 +111,7 @@ CREATE TABLE documents (
 -- Cases
 CREATE TABLE cases (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  case_number INTEGER UNIQUE NOT NULL,
   title TEXT NOT NULL,
   description TEXT DEFAULT '',
   specialty_id UUID REFERENCES specialties(id),
@@ -186,6 +187,20 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SET search_path = public;
 
+-- Generate a unique random 5-digit case number on INSERT
+CREATE OR REPLACE FUNCTION generate_case_number()
+RETURNS trigger AS $$
+DECLARE new_number INTEGER;
+BEGIN
+  LOOP
+    new_number := floor(random() * 90000 + 10000)::INTEGER;
+    EXIT WHEN NOT EXISTS (SELECT 1 FROM cases WHERE case_number = new_number);
+  END LOOP;
+  NEW.case_number := new_number;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SET search_path = public;
+
 -- Auto-create profile when a new user signs up
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS trigger AS $$
@@ -211,6 +226,11 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW
   EXECUTE FUNCTION handle_new_user();
+
+-- Auto-generate case number on insert
+CREATE TRIGGER cases_generate_number
+  BEFORE INSERT ON cases FOR EACH ROW
+  EXECUTE FUNCTION generate_case_number();
 
 -- Auto-update updated_at
 CREATE TRIGGER profiles_updated_at
