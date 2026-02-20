@@ -28,7 +28,10 @@ export default function CaseList() {
 
   const filtered = cases.filter(c => {
     if (filterStatus && c.status !== filterStatus) return false;
-    if (searchTerm && !c.title.toLowerCase().includes(searchTerm.toLowerCase())) return false;
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      if (!c.title.toLowerCase().includes(term) && !(c.case_number || '').toLowerCase().includes(term)) return false;
+    }
     return true;
   });
 
@@ -59,7 +62,7 @@ export default function CaseList() {
       <div className="portal-search-bar" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
         <input
           className="portal-field__input"
-          placeholder="Search by case title..."
+          placeholder="Search by title or case number..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ maxWidth: 300 }}
