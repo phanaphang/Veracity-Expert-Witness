@@ -22,6 +22,8 @@ export default function CaseDetail() {
   const [notesValue, setNotesValue] = useState('');
   const [clientEditing, setClientEditing] = useState(false);
   const [clientValue, setClientValue] = useState('');
+  const [descEditing, setDescEditing] = useState(false);
+  const [descValue, setDescValue] = useState('');
   const [loading, setLoading] = useState(true);
 
   const loadCase = async () => {
@@ -31,6 +33,7 @@ export default function CaseDetail() {
       supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
     ]);
     setCaseData(caseRes.data);
+    setDescValue(caseRes.data?.description || '');
     setClientValue(caseRes.data?.client || '');
     setNotesValue(caseRes.data?.additional_notes || '');
     setInvitations(invRes.data || []);
@@ -147,7 +150,42 @@ export default function CaseDetail() {
 
       <div className="portal-card">
         <h2 className="portal-card__title">Case Details</h2>
-        <p style={{ lineHeight: 1.6, color: 'var(--color-gray-600)', marginBottom: 12 }}>{caseData.description}</p>
+        <div style={{ marginBottom: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+            <strong>Description:</strong>
+            {(isAdmin || profile?.role === 'staff') && (
+              descEditing ? (
+                <button
+                  className="btn btn--primary"
+                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                  onClick={async () => {
+                    await supabase.from('cases').update({ description: descValue }).eq('id', id);
+                    setCaseData(prev => ({ ...prev, description: descValue }));
+                    setDescEditing(false);
+                  }}
+                >
+                  Save
+                </button>
+              ) : (
+                <button
+                  className="portal-btn-action"
+                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                  onClick={() => setDescEditing(true)}
+                >
+                  Edit
+                </button>
+              )
+            )}
+          </div>
+          <textarea
+            className="portal-field__input"
+            style={{ width: '100%', minHeight: 80, resize: 'vertical', lineHeight: 1.6, background: descEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)', color: 'var(--color-gray-600)' }}
+            value={descValue}
+            onChange={(e) => setDescValue(e.target.value)}
+            readOnly={!descEditing}
+            placeholder={descEditing ? 'Enter description...' : 'No description'}
+          />
+        </div>
         <div style={{ marginBottom: 12 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <strong>Client:</strong>
