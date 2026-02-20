@@ -111,7 +111,7 @@ CREATE TABLE documents (
 -- Cases
 CREATE TABLE cases (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  case_number INTEGER UNIQUE NOT NULL,
+  case_number TEXT UNIQUE NOT NULL,
   title TEXT NOT NULL,
   description TEXT DEFAULT '',
   specialty_id UUID REFERENCES specialties(id),
@@ -187,13 +187,16 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SET search_path = public;
 
--- Generate a unique random 5-digit case number on INSERT
+-- Generate a unique case number as YY-MM-DD-XXXXX on INSERT
 CREATE OR REPLACE FUNCTION generate_case_number()
 RETURNS trigger AS $$
-DECLARE new_number INTEGER;
+DECLARE
+  date_prefix TEXT;
+  new_number TEXT;
 BEGIN
+  date_prefix := to_char(now(), 'YY-MM-DD');
   LOOP
-    new_number := floor(random() * 90000 + 10000)::INTEGER;
+    new_number := date_prefix || '-' || lpad(floor(random() * 90000 + 10000)::INTEGER::TEXT, 5, '0');
     EXIT WHEN NOT EXISTS (SELECT 1 FROM cases WHERE case_number = new_number);
   END LOOP;
   NEW.case_number := new_number;
