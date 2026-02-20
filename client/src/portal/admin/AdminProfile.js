@@ -7,6 +7,7 @@ export default function AdminProfile() {
   const [form, setForm] = useState({ first_name: '', last_name: '', phone: '' });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     if (profile) {
@@ -34,6 +35,7 @@ export default function AdminProfile() {
       } else {
         await fetchProfile(user.id);
         setMessage('Profile saved successfully');
+        setEditing(false);
       }
     } catch (err) {
       setMessage('Error: ' + err.message);
@@ -45,27 +47,34 @@ export default function AdminProfile() {
   return (
     <div>
       <div className="portal-page__header">
-        <h1 className="portal-page__title">Edit Profile</h1>
+        <h1 className="portal-page__title">My Profile</h1>
+        {!editing ? (
+          <button className="portal-btn-action" style={{ padding: '8px 16px', fontSize: '0.85rem' }} onClick={() => setEditing(true)}>Edit</button>
+        ) : (
+          <button type="submit" form="admin-profile-form" className="btn btn--primary" disabled={saving} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+            {saving ? 'Saving...' : 'Save'}
+          </button>
+        )}
       </div>
 
       {message && <div className={`portal-alert ${message.startsWith('Error') ? 'portal-alert--error' : 'portal-alert--success'}`}>{message}</div>}
 
-      <form onSubmit={handleSubmit}>
+      <form id="admin-profile-form" onSubmit={handleSubmit}>
         <div className="portal-card">
           <h2 className="portal-card__title">Basic Information</h2>
           <div className="portal-list-item__row">
             <div className="portal-field">
               <label className="portal-field__label">First Name</label>
-              <input className="portal-field__input" name="first_name" value={form.first_name} onChange={handleChange} required maxLength={200} />
+              <input className="portal-field__input" name="first_name" value={form.first_name} onChange={handleChange} required maxLength={200} readOnly={!editing} />
             </div>
             <div className="portal-field">
               <label className="portal-field__label">Last Name</label>
-              <input className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required maxLength={200} />
+              <input className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required maxLength={200} readOnly={!editing} />
             </div>
           </div>
           <div className="portal-field">
             <label className="portal-field__label">Phone</label>
-            <input className="portal-field__input" name="phone" type="tel" value={form.phone} onChange={handleChange} maxLength={30} />
+            <input className="portal-field__input" name="phone" type="tel" value={form.phone} onChange={handleChange} maxLength={30} readOnly={!editing} />
           </div>
           <div className="portal-field">
             <label className="portal-field__label">Email</label>
@@ -73,9 +82,6 @@ export default function AdminProfile() {
           </div>
         </div>
 
-        <button type="submit" className="btn btn--primary" disabled={saving} style={{ marginTop: 8 }}>
-          {saving ? 'Saving...' : 'Save Profile'}
-        </button>
       </form>
     </div>
   );
