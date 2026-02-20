@@ -13,11 +13,13 @@ export default function CaseDetail() {
   const [experts, setExperts] = useState([]);
   const [managers, setManagers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
+  const [assignExpertTerm, setAssignExpertTerm] = useState('');
+  const [assignExpertResults, setAssignExpertResults] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const loadCase = async () => {
     const [caseRes, invRes, mgrRes] = await Promise.all([
-      supabase.from('cases').select('*, specialties(name), manager:case_manager(id, first_name, last_name, email, role)').eq('id', id).single(),
+      supabase.from('cases').select('*, specialties(name), manager:case_manager(id, first_name, last_name, email, role), assignedExpert:assigned_expert(id, first_name, last_name, email, role)').eq('id', id).single(),
       supabase.from('case_invitations').select('*, profiles:expert_id(id, first_name, last_name, email)').eq('case_id', id).order('invited_at', { ascending: false }),
       supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
     ]);
@@ -62,6 +64,45 @@ export default function CaseDetail() {
   const updateStatus = async (status) => {
     await supabase.from('cases').update({ status }).eq('id', id);
     setCaseData(prev => ({ ...prev, status }));
+  };
+
+  const searchAssignExpert = async (term) => {
+    setAssignExpertTerm(term);
+    if (term.length < 2) { setAssignExpertResults([]); return; }
+    const safe = sanitizeSearch(term);
+    if (!safe) { setAssignExpertResults([]); return; }
+    const { data } = await supabase
+      .from('profiles')
+      .select('id, first_name, last_name, email, role')
+      .eq('role', 'expert')
+      .or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`)
+      .limit(10);
+    setAssignExpertResults(data || []);
+  };
+
+  const assignExpert = async (expertId) => {
+    await supabase.from('cases').update({ assigned_expert: expertId }).eq('id', id);
+    setAssignExpertTerm('');
+    setAssignExpertResults([]);
+    fetch('/api/notify-assigned-expert', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session?.access_token}`,
+      },
+      body: JSON.stringify({
+        expertId,
+        caseTitle: caseData.title,
+        caseId: id,
+        caseNumber: caseData.case_number,
+      }),
+    }).catch(() => {});
+    await loadCase();
+  };
+
+  const removeAssignedExpert = async () => {
+    await supabase.from('cases').update({ assigned_expert: null }).eq('id', id);
+    await loadCase();
   };
 
   if (loading) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
@@ -145,6 +186,50 @@ export default function CaseDetail() {
             </span>
           )}
         </div>
+        <div style={{ marginTop: 12 }}>
+          <strong>Assigned Expert:</strong>{' '}
+          {caseData.assignedExpert ? (
+            <span>
+              {formatName(caseData.assignedExpert)}
+              {(isAdmin || profile?.role === 'staff') && (
+                <button
+                  className="portal-btn-action"
+                  style={{ marginLeft: 8, padding: '4px 10px', fontSize: '0.8rem' }}
+                  onClick={removeAssignedExpert}
+                >
+                  Remove
+                </button>
+              )}
+            </span>
+          ) : (isAdmin || profile?.role === 'staff') ? (
+            <div style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: 8 }}>
+              <input
+                className="portal-field__input"
+                style={{ width: 260, display: 'inline-block' }}
+                placeholder="Search experts by name or email..."
+                value={assignExpertTerm}
+                onChange={(e) => searchAssignExpert(e.target.value)}
+              />
+              {assignExpertResults.length > 0 && (
+                <div style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', marginTop: 4, position: 'absolute', background: '#fff', zIndex: 10, width: 360 }}>
+                  {assignExpertResults.map(exp => (
+                    <div key={exp.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid var(--color-gray-100)' }}>
+                      <div>
+                        <strong>{formatName(exp)}</strong>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginLeft: 8 }}>{exp.email}</span>
+                      </div>
+                      <button className="btn btn--primary" onClick={() => assignExpert(exp.id)} style={{ padding: '4px 12px', fontSize: '0.8rem' }}>
+                        Assign
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <span>Unassigned</span>
+          )}
+        </div>
         <p style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginTop: 8 }}>
           Created: {new Date(caseData.created_at).toLocaleDateString()}
         </p>
@@ -180,8 +265,12 @@ export default function CaseDetail() {
 
       {/* Invited Experts */}
       <div className="portal-card">
-        <h2 className="portal-card__title">Invited Experts ({invitations.length})</h2>
-        {invitations.length === 0 ? (
+        {(() => {
+          const filteredInvitations = invitations.filter(inv => inv.profiles?.id !== caseData.assignedExpert?.id);
+          return (
+            <>
+        <h2 className="portal-card__title">Invited Experts ({filteredInvitations.length})</h2>
+        {filteredInvitations.length === 0 ? (
           <p style={{ color: 'var(--color-gray-400)', fontSize: '0.85rem' }}>No experts invited yet</p>
         ) : (
           <div className="portal-table-wrap">
@@ -196,7 +285,7 @@ export default function CaseDetail() {
                 </tr>
               </thead>
               <tbody>
-                {invitations.map(inv => (
+                {filteredInvitations.map(inv => (
                   <tr key={inv.id}>
                     <td>
                       {inv.profiles?.first_name
@@ -221,6 +310,9 @@ export default function CaseDetail() {
             </table>
           </div>
         )}
+            </>
+          );
+        })()}
       </div>
     </div>
   );

@@ -18,7 +18,7 @@ export default function CaseList() {
   useEffect(() => {
     supabase
       .from('cases')
-      .select('*, specialties(name), case_invitations(count), manager:case_manager(first_name, last_name, email, role)')
+      .select('*, specialties(name), case_invitations(count), manager:case_manager(first_name, last_name, email, role), assignedExpert:assigned_expert(first_name, last_name, email, role)')
       .order('created_at', { ascending: false })
       .then(({ data }) => {
         setCases(data || []);
@@ -88,6 +88,7 @@ export default function CaseList() {
                 <th>Specialty</th>
                 <th>Status</th>
                 <th>Case Manager</th>
+                <th>Assigned Expert</th>
                 <th>Invitations</th>
                 <th>Created</th>
                 <th></th>
@@ -104,6 +105,7 @@ export default function CaseList() {
                     </span>
                   </td>
                   <td>{c.manager ? formatName(c.manager) : '—'}</td>
+                  <td>{c.assignedExpert ? formatName(c.assignedExpert) : '—'}</td>
                   <td>{c.case_invitations?.[0]?.count || 0}</td>
                   <td>{new Date(c.created_at).toLocaleDateString()}</td>
                   <td style={{ display: 'flex', gap: 8 }}>
