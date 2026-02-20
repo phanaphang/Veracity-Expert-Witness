@@ -21,6 +21,7 @@ export default function CaseCreate() {
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
 
   useEffect(() => {
     Promise.all([
@@ -118,7 +119,16 @@ export default function CaseCreate() {
             </div>
             <div className="portal-field">
               <label className="portal-field__label">Case Manager</label>
-              <select className="portal-field__select" name="case_manager" value={form.case_manager} onChange={handleChange}>
+              <select
+                className="portal-field__select"
+                name="case_manager"
+                value={form.case_manager}
+                onChange={(e) => {
+                  const value = e.target.value || '';
+                  const selected = managers.find(m => m.id === value);
+                  setManagerConfirmTarget({ id: value, profile: selected });
+                }}
+              >
                 <option value="">Select case manager</option>
                 {managers.map(m => (
                   <option key={m.id} value={m.id}>
@@ -133,6 +143,35 @@ export default function CaseCreate() {
           </button>
         </form>
       </div>
+
+      {managerConfirmTarget && (
+        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
+            <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>
+              {managerConfirmTarget.id ? 'Assign Case Manager' : 'Remove Case Manager'}
+            </h3>
+            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
+              {managerConfirmTarget.id ? (
+                <>Are you sure you want to assign <strong>{formatName(managerConfirmTarget.profile)}</strong> as the case manager?</>
+              ) : (
+                <>Are you sure you want to remove the current case manager?</>
+              )}
+            </p>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn--secondary" onClick={() => setManagerConfirmTarget(null)}>Cancel</button>
+              <button
+                className="btn btn--primary"
+                onClick={() => {
+                  setForm(prev => ({ ...prev, case_manager: managerConfirmTarget.id }));
+                  setManagerConfirmTarget(null);
+                }}
+              >
+                {managerConfirmTarget.id ? 'Assign Manager' : 'Remove Manager'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
