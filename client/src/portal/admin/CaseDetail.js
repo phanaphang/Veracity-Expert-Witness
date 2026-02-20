@@ -20,6 +20,8 @@ export default function CaseDetail() {
   const [removeExpertConfirm, setRemoveExpertConfirm] = useState(false);
   const [notesEditing, setNotesEditing] = useState(false);
   const [notesValue, setNotesValue] = useState('');
+  const [clientEditing, setClientEditing] = useState(false);
+  const [clientValue, setClientValue] = useState('');
   const [loading, setLoading] = useState(true);
 
   const loadCase = async () => {
@@ -29,6 +31,7 @@ export default function CaseDetail() {
       supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
     ]);
     setCaseData(caseRes.data);
+    setClientValue(caseRes.data?.client || '');
     setNotesValue(caseRes.data?.additional_notes || '');
     setInvitations(invRes.data || []);
     setManagers(mgrRes.data || []);
@@ -145,8 +148,43 @@ export default function CaseDetail() {
       <div className="portal-card">
         <h2 className="portal-card__title">Case Details</h2>
         <p style={{ lineHeight: 1.6, color: 'var(--color-gray-600)', marginBottom: 12 }}>{caseData.description}</p>
+        <div style={{ marginBottom: 12 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <strong>Client:</strong>
+            {(isAdmin || profile?.role === 'staff') && (
+              clientEditing ? (
+                <button
+                  className="btn btn--primary"
+                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                  onClick={async () => {
+                    await supabase.from('cases').update({ client: clientValue }).eq('id', id);
+                    setCaseData(prev => ({ ...prev, client: clientValue }));
+                    setClientEditing(false);
+                  }}
+                >
+                  Save
+                </button>
+              ) : (
+                <button
+                  className="portal-btn-action"
+                  style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                  onClick={() => setClientEditing(true)}
+                >
+                  Edit
+                </button>
+              )
+            )}
+          </div>
+          <input
+            className="portal-field__input"
+            style={{ marginTop: 4, background: clientEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)' }}
+            value={clientValue}
+            onChange={(e) => setClientValue(e.target.value)}
+            readOnly={!clientEditing}
+            placeholder={clientEditing ? 'Enter client name...' : 'No client specified'}
+          />
+        </div>
         <div className="portal-list-item__row">
-          {caseData.client && <div><strong>Client:</strong> {caseData.client}</div>}
           {caseData.case_type && <div><strong>Type:</strong> {caseData.case_type}</div>}
           {caseData.jurisdiction && <div><strong>Jurisdiction:</strong> {caseData.jurisdiction}</div>}
         </div>
