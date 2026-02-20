@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function CaseCreate() {
   const navigate = useNavigate();
+  const { session } = useAuth();
   const [specialties, setSpecialties] = useState([]);
   const [managers, setManagers] = useState([]);
   const [form, setForm] = useState({
@@ -51,6 +53,22 @@ export default function CaseCreate() {
       setError('Failed to create case. Please check your input and try again.');
       setSaving(false);
       return;
+    }
+
+    // Send notification email to assigned case manager
+    if (data.case_manager) {
+      fetch('/api/notify-case-manager', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({
+          caseManagerId: data.case_manager,
+          caseTitle: data.title,
+          caseId: data.id,
+        }),
+      }).catch(() => {});
     }
 
     navigate(`/admin/cases/${data.id}`);

@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 export default function CaseDetail() {
   const { id } = useParams();
-  const { profile } = useAuth();
+  const { profile, session } = useAuth();
   const isAdmin = profile?.role === 'admin';
   const [caseData, setCaseData] = useState(null);
   const [invitations, setInvitations] = useState([]);
@@ -112,6 +112,20 @@ export default function CaseDetail() {
                 const value = e.target.value || null;
                 await supabase.from('cases').update({ case_manager: value }).eq('id', id);
                 setCaseData(prev => ({ ...prev, case_manager: value }));
+                if (value) {
+                  fetch('/api/notify-case-manager', {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      Authorization: `Bearer ${session?.access_token}`,
+                    },
+                    body: JSON.stringify({
+                      caseManagerId: value,
+                      caseTitle: caseData.title,
+                      caseId: id,
+                    }),
+                  }).catch(() => {});
+                }
                 await loadCase();
               }}
             >
