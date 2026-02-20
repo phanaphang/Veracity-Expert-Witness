@@ -13,6 +13,7 @@ export default function Profile() {
   const [testimony, setTestimony] = useState([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [editing, setEditing] = useState(false);
 
   const loadData = useCallback(async () => {
     if (!user) return;
@@ -155,6 +156,7 @@ export default function Profile() {
       setMessage('Errors: ' + errors.join('; '));
     } else {
       setMessage('Profile saved successfully');
+      setEditing(false);
     }
     setSaving(false);
   };
@@ -162,32 +164,39 @@ export default function Profile() {
   return (
     <div>
       <div className="portal-page__header">
-        <h1 className="portal-page__title">Edit Profile</h1>
+        <h1 className="portal-page__title">My Profile</h1>
+        {!editing ? (
+          <button className="portal-btn-action" style={{ padding: '8px 16px', fontSize: '0.85rem' }} onClick={() => setEditing(true)}>Edit</button>
+        ) : (
+          <button type="submit" form="profile-form" className="btn btn--primary" disabled={saving} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+            {saving ? 'Saving...' : 'Save'}
+          </button>
+        )}
       </div>
 
       {message && <div className={`portal-alert ${message.startsWith('Errors') ? 'portal-alert--error' : 'portal-alert--success'}`}>{message}</div>}
 
-      <form onSubmit={handleSubmit}>
+      <form id="profile-form" onSubmit={handleSubmit}>
         {/* Basic Info */}
         <div className="portal-card">
           <h2 className="portal-card__title">Basic Information</h2>
           <div className="portal-list-item__row">
             <div className="portal-field">
               <label className="portal-field__label">First Name</label>
-              <input className="portal-field__input" name="first_name" value={form.first_name} onChange={handleChange} required maxLength={200} />
+              <input className="portal-field__input" name="first_name" value={form.first_name} onChange={handleChange} required maxLength={200} readOnly={!editing} />
             </div>
             <div className="portal-field">
               <label className="portal-field__label">Last Name</label>
-              <input className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required maxLength={200} />
+              <input className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required maxLength={200} readOnly={!editing} />
             </div>
           </div>
           <div className="portal-field">
             <label className="portal-field__label">Phone</label>
-            <input className="portal-field__input" name="phone" type="tel" value={form.phone} onChange={handleChange} maxLength={30} />
+            <input className="portal-field__input" name="phone" type="tel" value={form.phone} onChange={handleChange} maxLength={30} readOnly={!editing} />
           </div>
           <div className="portal-field">
             <label className="portal-field__label">Bio</label>
-            <textarea className="portal-field__textarea" name="bio" value={form.bio} onChange={handleChange} rows="4" placeholder="Describe your expertise and experience..." maxLength={5000} />
+            <textarea className="portal-field__textarea" name="bio" value={form.bio} onChange={handleChange} rows="4" placeholder="Describe your expertise and experience..." maxLength={5000} readOnly={!editing} />
           </div>
         </div>
 
@@ -197,7 +206,7 @@ export default function Profile() {
           <div className="portal-checkbox-group">
             {allSpecialties.map(s => (
               <label key={s.id} className="portal-checkbox">
-                <input type="checkbox" checked={selectedSpecialties.includes(s.id)} onChange={() => toggleSpecialty(s.id)} />
+                <input type="checkbox" checked={selectedSpecialties.includes(s.id)} onChange={() => toggleSpecialty(s.id)} disabled={!editing} />
                 {s.name}
               </label>
             ))}
@@ -209,11 +218,11 @@ export default function Profile() {
           <h2 className="portal-card__title">Credentials</h2>
           {credentials.map((cred, i) => (
             <div key={i} className="portal-list-item">
-              <button type="button" className="portal-list-item__remove" onClick={() => removeItem(credentials, setCredentials, i, 'credentials')}>Remove</button>
+              {editing && <button type="button" className="portal-list-item__remove" onClick={() => removeItem(credentials, setCredentials, i, 'credentials')}>Remove</button>}
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Type</label>
-                  <select className="portal-field__select" value={cred.credential_type} onChange={(e) => { const c = [...credentials]; c[i].credential_type = e.target.value; setCredentials(c); }}>
+                  <select className="portal-field__select" value={cred.credential_type} onChange={(e) => { const c = [...credentials]; c[i].credential_type = e.target.value; setCredentials(c); }} disabled={!editing}>
                     <option value="certification">Certification</option>
                     <option value="license">License</option>
                     <option value="board_certification">Board Certification</option>
@@ -222,22 +231,22 @@ export default function Profile() {
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Name</label>
-                  <input className="portal-field__input" value={cred.name} onChange={(e) => { const c = [...credentials]; c[i].name = e.target.value; setCredentials(c); }} />
+                  <input className="portal-field__input" value={cred.name} onChange={(e) => { const c = [...credentials]; c[i].name = e.target.value; setCredentials(c); }} readOnly={!editing} />
                 </div>
               </div>
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Issuing Body</label>
-                  <input className="portal-field__input" value={cred.issuing_body || ''} onChange={(e) => { const c = [...credentials]; c[i].issuing_body = e.target.value; setCredentials(c); }} />
+                  <input className="portal-field__input" value={cred.issuing_body || ''} onChange={(e) => { const c = [...credentials]; c[i].issuing_body = e.target.value; setCredentials(c); }} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Credential Number</label>
-                  <input className="portal-field__input" value={cred.credential_number || ''} onChange={(e) => { const c = [...credentials]; c[i].credential_number = e.target.value; setCredentials(c); }} />
+                  <input className="portal-field__input" value={cred.credential_number || ''} onChange={(e) => { const c = [...credentials]; c[i].credential_number = e.target.value; setCredentials(c); }} readOnly={!editing} />
                 </div>
               </div>
             </div>
           ))}
-          <button type="button" className="portal-add-btn" onClick={addCredential}>+ Add Credential</button>
+          {editing && <button type="button" className="portal-add-btn" onClick={addCredential}>+ Add Credential</button>}
         </div>
 
         {/* Education */}
@@ -245,33 +254,33 @@ export default function Profile() {
           <h2 className="portal-card__title">Education</h2>
           {education.map((edu, i) => (
             <div key={i} className="portal-list-item">
-              <button type="button" className="portal-list-item__remove" onClick={() => removeItem(education, setEducation, i, 'education')}>Remove</button>
+              {editing && <button type="button" className="portal-list-item__remove" onClick={() => removeItem(education, setEducation, i, 'education')}>Remove</button>}
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Institution</label>
-                  <input className="portal-field__input" value={edu.institution} onChange={(e) => { const ed = [...education]; ed[i].institution = e.target.value; setEducation(ed); }} />
+                  <input className="portal-field__input" value={edu.institution} onChange={(e) => { const ed = [...education]; ed[i].institution = e.target.value; setEducation(ed); }} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Degree</label>
-                  <input className="portal-field__input" value={edu.degree} onChange={(e) => { const ed = [...education]; ed[i].degree = e.target.value; setEducation(ed); }} />
+                  <input className="portal-field__input" value={edu.degree} onChange={(e) => { const ed = [...education]; ed[i].degree = e.target.value; setEducation(ed); }} readOnly={!editing} />
                 </div>
               </div>
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Field of Study</label>
-                  <input className="portal-field__input" value={edu.field_of_study || ''} onChange={(e) => { const ed = [...education]; ed[i].field_of_study = e.target.value; setEducation(ed); }} />
+                  <input className="portal-field__input" value={edu.field_of_study || ''} onChange={(e) => { const ed = [...education]; ed[i].field_of_study = e.target.value; setEducation(ed); }} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Years (Start - End)</label>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <input className="portal-field__input" placeholder="Start" value={edu.start_year || ''} onChange={(e) => { const ed = [...education]; ed[i].start_year = e.target.value; setEducation(ed); }} />
-                    <input className="portal-field__input" placeholder="End" value={edu.end_year || ''} onChange={(e) => { const ed = [...education]; ed[i].end_year = e.target.value; setEducation(ed); }} />
+                    <input className="portal-field__input" placeholder="Start" value={edu.start_year || ''} onChange={(e) => { const ed = [...education]; ed[i].start_year = e.target.value; setEducation(ed); }} readOnly={!editing} />
+                    <input className="portal-field__input" placeholder="End" value={edu.end_year || ''} onChange={(e) => { const ed = [...education]; ed[i].end_year = e.target.value; setEducation(ed); }} readOnly={!editing} />
                   </div>
                 </div>
               </div>
             </div>
           ))}
-          <button type="button" className="portal-add-btn" onClick={addEducation}>+ Add Education</button>
+          {editing && <button type="button" className="portal-add-btn" onClick={addEducation}>+ Add Education</button>}
         </div>
 
         {/* Work Experience */}
@@ -279,28 +288,28 @@ export default function Profile() {
           <h2 className="portal-card__title">Work Experience</h2>
           {experience.map((exp, i) => (
             <div key={i} className="portal-list-item">
-              <button type="button" className="portal-list-item__remove" onClick={() => removeItem(experience, setExperience, i, 'work_experience')}>Remove</button>
+              {editing && <button type="button" className="portal-list-item__remove" onClick={() => removeItem(experience, setExperience, i, 'work_experience')}>Remove</button>}
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Organization</label>
-                  <input className="portal-field__input" value={exp.organization} onChange={(e) => { const ex = [...experience]; ex[i].organization = e.target.value; setExperience(ex); }} />
+                  <input className="portal-field__input" value={exp.organization} onChange={(e) => { const ex = [...experience]; ex[i].organization = e.target.value; setExperience(ex); }} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Title</label>
-                  <input className="portal-field__input" value={exp.title} onChange={(e) => { const ex = [...experience]; ex[i].title = e.target.value; setExperience(ex); }} />
+                  <input className="portal-field__input" value={exp.title} onChange={(e) => { const ex = [...experience]; ex[i].title = e.target.value; setExperience(ex); }} readOnly={!editing} />
                 </div>
               </div>
               <div className="portal-field">
                 <label className="portal-field__label">Description</label>
-                <textarea className="portal-field__textarea" rows="2" value={exp.description || ''} onChange={(e) => { const ex = [...experience]; ex[i].description = e.target.value; setExperience(ex); }} />
+                <textarea className="portal-field__textarea" rows="2" value={exp.description || ''} onChange={(e) => { const ex = [...experience]; ex[i].description = e.target.value; setExperience(ex); }} readOnly={!editing} />
               </div>
               <label className="portal-checkbox">
-                <input type="checkbox" checked={exp.is_current || false} onChange={(e) => { const ex = [...experience]; ex[i].is_current = e.target.checked; setExperience(ex); }} />
+                <input type="checkbox" checked={exp.is_current || false} onChange={(e) => { const ex = [...experience]; ex[i].is_current = e.target.checked; setExperience(ex); }} disabled={!editing} />
                 Currently working here
               </label>
             </div>
           ))}
-          <button type="button" className="portal-add-btn" onClick={addExperience}>+ Add Experience</button>
+          {editing && <button type="button" className="portal-add-btn" onClick={addExperience}>+ Add Experience</button>}
         </div>
 
         {/* Prior Expert Testimony */}
@@ -317,35 +326,35 @@ export default function Profile() {
           })()}</h2>
           {testimony.map((test, i) => (
             <div key={i} className="portal-list-item">
-              <button type="button" className="portal-list-item__remove" onClick={() => removeItem(testimony, setTestimony, i, 'prior_testimony')}>Remove</button>
+              {editing && <button type="button" className="portal-list-item__remove" onClick={() => removeItem(testimony, setTestimony, i, 'prior_testimony')}>Remove</button>}
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Case Name</label>
-                  <input className="portal-field__input" value={test.case_name} onChange={(e) => { const t = [...testimony]; t[i].case_name = e.target.value; setTestimony(t); }} maxLength={500} />
+                  <input className="portal-field__input" value={test.case_name} onChange={(e) => { const t = [...testimony]; t[i].case_name = e.target.value; setTestimony(t); }} maxLength={500} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Court</label>
-                  <input className="portal-field__input" value={test.court || ''} onChange={(e) => { const t = [...testimony]; t[i].court = e.target.value; setTestimony(t); }} maxLength={500} />
+                  <input className="portal-field__input" value={test.court || ''} onChange={(e) => { const t = [...testimony]; t[i].court = e.target.value; setTestimony(t); }} maxLength={500} readOnly={!editing} />
                 </div>
               </div>
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Jurisdiction</label>
-                  <input className="portal-field__input" value={test.jurisdiction || ''} onChange={(e) => { const t = [...testimony]; t[i].jurisdiction = e.target.value; setTestimony(t); }} maxLength={500} />
+                  <input className="portal-field__input" value={test.jurisdiction || ''} onChange={(e) => { const t = [...testimony]; t[i].jurisdiction = e.target.value; setTestimony(t); }} maxLength={500} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Date of Testimony</label>
-                  <input className="portal-field__input" type="date" value={test.date_of_testimony || ''} onChange={(e) => { const t = [...testimony]; t[i].date_of_testimony = e.target.value; setTestimony(t); }} />
+                  <input className="portal-field__input" type="date" value={test.date_of_testimony || ''} onChange={(e) => { const t = [...testimony]; t[i].date_of_testimony = e.target.value; setTestimony(t); }} readOnly={!editing} />
                 </div>
               </div>
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Topic</label>
-                  <input className="portal-field__input" value={test.topic || ''} onChange={(e) => { const t = [...testimony]; t[i].topic = e.target.value; setTestimony(t); }} maxLength={500} />
+                  <input className="portal-field__input" value={test.topic || ''} onChange={(e) => { const t = [...testimony]; t[i].topic = e.target.value; setTestimony(t); }} maxLength={500} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Retained By</label>
-                  <select className="portal-field__select" value={test.retained_by || ''} onChange={(e) => { const t = [...testimony]; t[i].retained_by = e.target.value; setTestimony(t); }}>
+                  <select className="portal-field__select" value={test.retained_by || ''} onChange={(e) => { const t = [...testimony]; t[i].retained_by = e.target.value; setTestimony(t); }} disabled={!editing}>
                     <option value="">-- Select --</option>
                     <option value="plaintiff">Plaintiff</option>
                     <option value="defendant">Defendant</option>
@@ -356,7 +365,7 @@ export default function Profile() {
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Testimony Outcome</label>
-                  <select className="portal-field__select" value={test.outcome || ''} onChange={(e) => { const t = [...testimony]; t[i].outcome = e.target.value; setTestimony(t); }}>
+                  <select className="portal-field__select" value={test.outcome || ''} onChange={(e) => { const t = [...testimony]; t[i].outcome = e.target.value; setTestimony(t); }} disabled={!editing}>
                     <option value="">-- Select --</option>
                     <option value="accepted">Accepted</option>
                     <option value="rejected">Rejected</option>
@@ -365,7 +374,7 @@ export default function Profile() {
               </div>
             </div>
           ))}
-          <button type="button" className="portal-add-btn" onClick={addTestimony}>+ Add Testimony</button>
+          {editing && <button type="button" className="portal-add-btn" onClick={addTestimony}>+ Add Testimony</button>}
         </div>
 
         {/* Rate & Availability */}
@@ -374,20 +383,20 @@ export default function Profile() {
           <div className="portal-list-item__row">
             <div className="portal-field">
               <label className="portal-field__label">Review & Report Rate ($/hr)</label>
-              <input className="portal-field__input" name="rate_review_report" type="number" value={form.rate_review_report} onChange={handleChange} placeholder="e.g. 500" />
+              <input className="portal-field__input" name="rate_review_report" type="number" value={form.rate_review_report} onChange={handleChange} placeholder="e.g. 500" readOnly={!editing} />
             </div>
             <div className="portal-field">
               <label className="portal-field__label">Deposition Rate ($/hr)</label>
-              <input className="portal-field__input" name="rate_deposition" type="number" value={form.rate_deposition} onChange={handleChange} placeholder="e.g. 600" />
+              <input className="portal-field__input" name="rate_deposition" type="number" value={form.rate_deposition} onChange={handleChange} placeholder="e.g. 600" readOnly={!editing} />
             </div>
             <div className="portal-field">
               <label className="portal-field__label">Trial Testimony Rate ($/hr)</label>
-              <input className="portal-field__input" name="rate_trial_testimony" type="number" value={form.rate_trial_testimony} onChange={handleChange} placeholder="e.g. 750" />
+              <input className="portal-field__input" name="rate_trial_testimony" type="number" value={form.rate_trial_testimony} onChange={handleChange} placeholder="e.g. 750" readOnly={!editing} />
             </div>
           </div>
           <div className="portal-field" style={{ marginTop: 12 }}>
             <label className="portal-field__label">Availability</label>
-            <select className="portal-field__select" name="availability" value={form.availability} onChange={handleChange}>
+            <select className="portal-field__select" name="availability" value={form.availability} onChange={handleChange} disabled={!editing}>
               <option value="available">Available</option>
               <option value="limited">Limited</option>
               <option value="unavailable">Unavailable</option>
@@ -395,9 +404,6 @@ export default function Profile() {
           </div>
         </div>
 
-        <button type="submit" className="btn btn--primary" disabled={saving} style={{ marginTop: 8 }}>
-          {saving ? 'Saving...' : 'Save Profile'}
-        </button>
       </form>
     </div>
   );
