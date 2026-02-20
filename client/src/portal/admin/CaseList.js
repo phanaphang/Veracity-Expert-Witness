@@ -6,9 +6,12 @@ import { useAuth } from '../../hooks/useAuth';
 export default function CaseList() {
   const { profile } = useAuth();
   const isStaff = profile?.role === 'staff';
+  const isAdmin = profile?.role === 'admin';
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     supabase
@@ -22,6 +25,17 @@ export default function CaseList() {
   }, []);
 
   const filtered = filterStatus ? cases.filter(c => c.status === filterStatus) : cases;
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    const { error } = await supabase.from('cases').delete().eq('id', deleteTarget.id);
+    if (!error) {
+      setCases(prev => prev.filter(c => c.id !== deleteTarget.id));
+    }
+    setDeleting(false);
+    setDeleteTarget(null);
+  };
 
   if (loading) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
 
@@ -75,15 +89,41 @@ export default function CaseList() {
                   </td>
                   <td>{c.case_invitations?.[0]?.count || 0}</td>
                   <td>{new Date(c.created_at).toLocaleDateString()}</td>
-                  <td>
+                  <td style={{ display: 'flex', gap: 8 }}>
                     <Link to={`/admin/cases/${c.id}`} className="portal-btn-action">
                       View
                     </Link>
+                    {isAdmin && (
+                      <button
+                        className="portal-btn-action"
+                        style={{ color: 'var(--color-error, #e53e3e)', border: '1px solid var(--color-error, #e53e3e)', background: 'none', cursor: 'pointer' }}
+                        onClick={() => setDeleteTarget(c)}
+                      >
+                        Delete
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {deleteTarget && (
+        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
+            <h3 style={{ margin: '0 0 8px', color: 'var(--color-error, #e53e3e)' }}>Delete Case</h3>
+            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
+              Are you sure you want to permanently delete <strong>{deleteTarget.title}</strong>? This will remove the case and all associated invitations. This action cannot be undone.
+            </p>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn--secondary" onClick={() => setDeleteTarget(null)} disabled={deleting}>Cancel</button>
+              <button className="btn" style={{ background: 'var(--color-error, #e53e3e)', color: '#fff', border: 'none' }} onClick={handleDelete} disabled={deleting}>
+                {deleting ? 'Deleting...' : 'Delete Case'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
