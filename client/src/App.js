@@ -113,7 +113,7 @@ function App() {
           <Route path="/admin/experts/:id" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ExpertDetail /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/invite" element={<ProtectedRoute requiredRole="admin-only"><AdminLayout><InviteExpert /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/cases" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseList /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/cases/new" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseCreate /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/cases/new" element={<ProtectedRoute requiredRole="admin-only"><AdminLayout><CaseCreate /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/cases/:id" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseDetail /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/messages" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminMessages /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/change-password" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ChangePassword /></AdminLayout></ProtectedRoute>} />

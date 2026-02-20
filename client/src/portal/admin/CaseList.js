@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function CaseList() {
+  const { profile } = useAuth();
+  const isStaff = profile?.role === 'staff';
   const [cases, setCases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState('');
@@ -26,9 +29,11 @@ export default function CaseList() {
     <div>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Cases</h1>
-        <Link to="/admin/cases/new" className="btn btn--primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>
-          Create Case
-        </Link>
+        {!isStaff && (
+          <Link to="/admin/cases/new" className="btn btn--primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>
+            Create Case
+          </Link>
+        )}
       </div>
 
       <div className="portal-search-bar">
@@ -43,7 +48,7 @@ export default function CaseList() {
       {filtered.length === 0 ? (
         <div className="portal-empty">
           <p className="portal-empty__text">No cases found</p>
-          <Link to="/admin/cases/new" style={{ color: 'var(--color-accent)', fontSize: '0.9rem' }}>Create your first case</Link>
+          {!isStaff && <Link to="/admin/cases/new" style={{ color: 'var(--color-accent)', fontSize: '0.9rem' }}>Create your first case</Link>}
         </div>
       ) : (
         <div className="portal-table-wrap">
