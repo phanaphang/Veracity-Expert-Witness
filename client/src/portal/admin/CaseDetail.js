@@ -178,6 +178,9 @@ export default function CaseDetail() {
           {caseData.assignedExpert ? (
             <span>
               {formatName(caseData.assignedExpert)}
+              <Link to={`/admin/experts/${caseData.assignedExpert.id}`} style={{ color: 'var(--color-accent)', fontSize: '0.8rem', marginLeft: 8 }}>
+                View Profile
+              </Link>
               {(isAdmin || profile?.role === 'staff') && (
                 <button
                   className="portal-btn-action"
