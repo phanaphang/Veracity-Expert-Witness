@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { formatName } from '../../utils/formatName';
 
 export default function CaseCreate() {
   const navigate = useNavigate();
@@ -116,7 +117,7 @@ export default function CaseCreate() {
                 <option value="">Select case manager</option>
                 {managers.map(m => (
                   <option key={m.id} value={m.id}>
-                    {m.first_name ? `${m.first_name} ${m.last_name || ''}`.trim() : m.email} ({m.role})
+                    {formatName(m)} ({m.role})
                   </option>
                 ))}
               </select>

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { useMessages } from '../../hooks/useMessages';
+import { formatName } from '../../utils/formatName';
 
 export default function Messages() {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ export default function Messages() {
     if (!user) return;
     supabase
       .from('conversations')
-      .select('*, participant_1_profile:profiles!conversations_participant_1_fkey(id, first_name, last_name, email), participant_2_profile:profiles!conversations_participant_2_fkey(id, first_name, last_name, email)')
+      .select('*, participant_1_profile:profiles!conversations_participant_1_fkey(id, first_name, last_name, email, role), participant_2_profile:profiles!conversations_participant_2_fkey(id, first_name, last_name, email, role)')
       .or(`participant_1.eq.${user.id},participant_2.eq.${user.id}`)
       .order('last_message_at', { ascending: false })
       .then(({ data }) => setConversations(data || []));
@@ -54,10 +55,6 @@ export default function Messages() {
     setNewMessage('');
   };
 
-  const formatName = (p) => {
-    if (p?.first_name) return `${p.first_name} ${p.last_name || ''}`.trim();
-    return p?.email || 'Unknown';
-  };
 
   return (
     <div>

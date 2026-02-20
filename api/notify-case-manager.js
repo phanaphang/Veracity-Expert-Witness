@@ -46,7 +46,9 @@ module.exports = async (req, res) => {
     return res.status(404).json({ error: 'Case manager not found' });
   }
 
-  const managerName = manager.first_name ? `${manager.first_name} ${manager.last_name || ''}`.trim() : 'there';
+  const managerName = manager.first_name
+    ? `${manager.first_name} ${manager.last_name ? manager.last_name.charAt(0) + '.' : ''}`.trim()
+    : 'there';
   const caseUrl = `https://veracityexpertwitness.com/admin/cases/${caseId}`;
 
   const htmlContent = `

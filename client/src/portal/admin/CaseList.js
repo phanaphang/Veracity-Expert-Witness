@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { formatName } from '../../utils/formatName';
 
 export default function CaseList() {
   const { profile } = useAuth();
@@ -16,7 +17,7 @@ export default function CaseList() {
   useEffect(() => {
     supabase
       .from('cases')
-      .select('*, specialties(name), case_invitations(count), manager:case_manager(first_name, last_name, email)')
+      .select('*, specialties(name), case_invitations(count), manager:case_manager(first_name, last_name, email, role)')
       .order('created_at', { ascending: false })
       .then(({ data }) => {
         setCases(data || []);
@@ -88,7 +89,7 @@ export default function CaseList() {
                       {c.status?.replace('_', ' ')}
                     </span>
                   </td>
-                  <td>{c.manager ? `${c.manager.first_name ? `${c.manager.first_name} ${c.manager.last_name || ''}`.trim() : c.manager.email}` : '—'}</td>
+                  <td>{c.manager ? formatName(c.manager) : '—'}</td>
                   <td>{c.case_invitations?.[0]?.count || 0}</td>
                   <td>{new Date(c.created_at).toLocaleDateString()}</td>
                   <td style={{ display: 'flex', gap: 8 }}>

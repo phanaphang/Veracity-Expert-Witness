@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { formatName } from '../../utils/formatName';
 
 export default function CaseDetail() {
   const { id } = useParams();
@@ -132,14 +133,14 @@ export default function CaseDetail() {
               <option value="">Unassigned</option>
               {managers.map(m => (
                 <option key={m.id} value={m.id}>
-                  {m.first_name ? `${m.first_name} ${m.last_name || ''}`.trim() : m.email} ({m.role})
+                  {formatName(m)} ({m.role})
                 </option>
               ))}
             </select>
           ) : (
             <span>
               {caseData.manager
-                ? `${caseData.manager.first_name ? `${caseData.manager.first_name} ${caseData.manager.last_name || ''}`.trim() : caseData.manager.email} (${caseData.manager.role})`
+                ? `${formatName(caseData.manager)} (${caseData.manager.role})`
                 : 'Unassigned'}
             </span>
           )}
