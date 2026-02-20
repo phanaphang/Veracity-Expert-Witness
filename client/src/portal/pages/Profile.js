@@ -165,13 +165,12 @@ export default function Profile() {
     <div>
       <div className="portal-page__header">
         <h1 className="portal-page__title">My Profile</h1>
-        {!editing ? (
-          <button className="portal-btn-action" style={{ padding: '8px 16px', fontSize: '0.85rem' }} onClick={() => setEditing(true)}>Edit</button>
-        ) : (
-          <button type="submit" form="profile-form" className="btn btn--primary" disabled={saving} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="button" className="portal-btn-action" style={{ padding: '8px 16px', fontSize: '0.85rem' }} onClick={() => setEditing(true)} disabled={editing}>Edit</button>
+          <button type="submit" form="profile-form" className="btn btn--primary" disabled={!editing || saving} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
             {saving ? 'Saving...' : 'Save'}
           </button>
-        )}
+        </div>
       </div>
 
       {message && <div className={`portal-alert ${message.startsWith('Errors') ? 'portal-alert--error' : 'portal-alert--success'}`}>{message}</div>}
