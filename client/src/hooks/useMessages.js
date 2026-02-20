@@ -11,7 +11,7 @@ export function useMessages(conversationId) {
     setLoading(true);
     supabase
       .from('messages')
-      .select('*')
+      .select('*, sender_profile:profiles!messages_sender_id_fkey(first_name, last_name, email)')
       .eq('conversation_id', conversationId)
       .order('created_at', { ascending: true })
       .then(({ data }) => {
@@ -26,8 +26,13 @@ export function useMessages(conversationId) {
         schema: 'public',
         table: 'messages',
         filter: `conversation_id=eq.${conversationId}`,
-      }, (payload) => {
-        setMessages(prev => [...prev, payload.new]);
+      }, async (payload) => {
+        const { data } = await supabase
+          .from('messages')
+          .select('*, sender_profile:profiles!messages_sender_id_fkey(first_name, last_name, email)')
+          .eq('id', payload.new.id)
+          .single();
+        setMessages(prev => [...prev, data || payload.new]);
       })
       .subscribe();
 

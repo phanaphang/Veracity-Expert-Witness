@@ -172,11 +172,10 @@ export default function AdminMessages() {
                   ) : (
                     messages.map(msg => {
                       const isSent = msg.sender_id === user.id;
-                      const senderProfile = msg.sender_id === activeConv.participant_1 ? activeConv.participant_1_profile : activeConv.participant_2_profile;
                       return (
                         <div key={msg.id} className={`portal-message ${isSent ? 'portal-message--sent' : 'portal-message--received'}`}>
                           <div className="portal-message__sender" style={{ fontSize: '0.75rem', fontWeight: 600, marginBottom: 2, color: isSent ? 'rgba(255,255,255,0.85)' : 'var(--color-gray-500)' }}>
-                            {isSent ? 'You' : formatName(senderProfile)}
+                            {isSent ? 'You' : formatName(msg.sender_profile)}
                           </div>
                           {msg.content}
                           <div className="portal-message__time">
