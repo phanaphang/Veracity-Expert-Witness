@@ -243,6 +243,13 @@ ALTER TABLE invitations ENABLE ROW LEVEL SECURITY;
 -- PROFILES
 CREATE POLICY "Users can view own profile" ON profiles FOR SELECT USING (auth.uid() = id);
 CREATE POLICY "Admins can view all profiles" ON profiles FOR SELECT USING (is_admin());
+CREATE POLICY "Users can view conversation partner profiles" ON profiles FOR SELECT USING (
+  EXISTS (
+    SELECT 1 FROM conversations
+    WHERE (participant_1 = auth.uid() AND participant_2 = profiles.id)
+       OR (participant_2 = auth.uid() AND participant_1 = profiles.id)
+  )
+);
 CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
 CREATE POLICY "Admins can update all profiles" ON profiles FOR UPDATE USING (is_admin());
 
