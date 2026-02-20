@@ -1,22 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../hooks/useAuth';
 
 export default function CaseDetail() {
   const { id } = useParams();
+  const { profile } = useAuth();
+  const isAdmin = profile?.role === 'admin';
   const [caseData, setCaseData] = useState(null);
   const [invitations, setInvitations] = useState([]);
   const [experts, setExperts] = useState([]);
+  const [managers, setManagers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
   const loadCase = async () => {
-    const [caseRes, invRes] = await Promise.all([
-      supabase.from('cases').select('*, specialties(name)').eq('id', id).single(),
+    const [caseRes, invRes, mgrRes] = await Promise.all([
+      supabase.from('cases').select('*, specialties(name), manager:case_manager(id, first_name, last_name, email, role)').eq('id', id).single(),
       supabase.from('case_invitations').select('*, profiles:expert_id(id, first_name, last_name, email)').eq('case_id', id).order('invited_at', { ascending: false }),
+      supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
     ]);
     setCaseData(caseRes.data);
     setInvitations(invRes.data || []);
+    setManagers(mgrRes.data || []);
     setLoading(false);
   };
 
@@ -94,6 +100,35 @@ export default function CaseDetail() {
         <div className="portal-list-item__row">
           {caseData.case_type && <div><strong>Type:</strong> {caseData.case_type}</div>}
           {caseData.jurisdiction && <div><strong>Jurisdiction:</strong> {caseData.jurisdiction}</div>}
+        </div>
+        <div style={{ marginTop: 12 }}>
+          <strong>Case Manager:</strong>{' '}
+          {isAdmin ? (
+            <select
+              className="portal-field__select"
+              style={{ display: 'inline-block', width: 'auto', marginLeft: 8 }}
+              value={caseData.case_manager || ''}
+              onChange={async (e) => {
+                const value = e.target.value || null;
+                await supabase.from('cases').update({ case_manager: value }).eq('id', id);
+                setCaseData(prev => ({ ...prev, case_manager: value }));
+                await loadCase();
+              }}
+            >
+              <option value="">Unassigned</option>
+              {managers.map(m => (
+                <option key={m.id} value={m.id}>
+                  {m.first_name ? `${m.first_name} ${m.last_name || ''}`.trim() : m.email} ({m.role})
+                </option>
+              ))}
+            </select>
+          ) : (
+            <span>
+              {caseData.manager
+                ? `${caseData.manager.first_name ? `${caseData.manager.first_name} ${caseData.manager.last_name || ''}`.trim() : caseData.manager.email} (${caseData.manager.role})`
+                : 'Unassigned'}
+            </span>
+          )}
         </div>
         <p style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginTop: 8 }}>
           Created: {new Date(caseData.created_at).toLocaleDateString()}

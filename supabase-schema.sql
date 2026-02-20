@@ -116,6 +116,7 @@ CREATE TABLE cases (
   specialty_id UUID REFERENCES specialties(id),
   case_type TEXT DEFAULT '',
   jurisdiction TEXT DEFAULT '',
+  case_manager UUID REFERENCES profiles(id),
   status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'closed')),
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()

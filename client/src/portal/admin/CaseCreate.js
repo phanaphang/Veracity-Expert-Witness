@@ -5,20 +5,26 @@ import { supabase } from '../../lib/supabase';
 export default function CaseCreate() {
   const navigate = useNavigate();
   const [specialties, setSpecialties] = useState([]);
+  const [managers, setManagers] = useState([]);
   const [form, setForm] = useState({
     title: '',
     description: '',
     specialty_id: '',
     case_type: '',
     jurisdiction: '',
+    case_manager: '',
     status: 'open',
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    supabase.from('specialties').select('*').order('name').then(({ data }) => {
-      setSpecialties(data || []);
+    Promise.all([
+      supabase.from('specialties').select('*').order('name'),
+      supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
+    ]).then(([specRes, mgrRes]) => {
+      setSpecialties(specRes.data || []);
+      setManagers(mgrRes.data || []);
     });
   }, []);
 
@@ -33,6 +39,7 @@ export default function CaseCreate() {
 
     const insertData = { ...form };
     if (!insertData.specialty_id) insertData.specialty_id = null;
+    if (!insertData.case_manager) insertData.case_manager = null;
 
     const { data, error: insertError } = await supabase
       .from('cases')
@@ -80,9 +87,22 @@ export default function CaseCreate() {
               <input className="portal-field__input" name="case_type" value={form.case_type} onChange={handleChange} placeholder="e.g. Medical Malpractice" />
             </div>
           </div>
-          <div className="portal-field">
-            <label className="portal-field__label">Jurisdiction</label>
-            <input className="portal-field__input" name="jurisdiction" value={form.jurisdiction} onChange={handleChange} placeholder="e.g. California, Federal" />
+          <div className="portal-list-item__row">
+            <div className="portal-field">
+              <label className="portal-field__label">Jurisdiction</label>
+              <input className="portal-field__input" name="jurisdiction" value={form.jurisdiction} onChange={handleChange} placeholder="e.g. California, Federal" />
+            </div>
+            <div className="portal-field">
+              <label className="portal-field__label">Case Manager</label>
+              <select className="portal-field__select" name="case_manager" value={form.case_manager} onChange={handleChange}>
+                <option value="">Select case manager</option>
+                {managers.map(m => (
+                  <option key={m.id} value={m.id}>
+                    {m.first_name ? `${m.first_name} ${m.last_name || ''}`.trim() : m.email} ({m.role})
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <button type="submit" className="btn btn--primary" disabled={saving} style={{ marginTop: 8, padding: '10px 24px' }}>
             {saving ? 'Creating...' : 'Create Case'}

@@ -16,7 +16,7 @@ export default function CaseList() {
   useEffect(() => {
     supabase
       .from('cases')
-      .select('*, specialties(name), case_invitations(count)')
+      .select('*, specialties(name), case_invitations(count), manager:case_manager(first_name, last_name, email)')
       .order('created_at', { ascending: false })
       .then(({ data }) => {
         setCases(data || []);
@@ -72,6 +72,7 @@ export default function CaseList() {
                 <th>Title</th>
                 <th>Specialty</th>
                 <th>Status</th>
+                <th>Case Manager</th>
                 <th>Invitations</th>
                 <th>Created</th>
                 <th></th>
@@ -87,6 +88,7 @@ export default function CaseList() {
                       {c.status?.replace('_', ' ')}
                     </span>
                   </td>
+                  <td>{c.manager ? `${c.manager.first_name ? `${c.manager.first_name} ${c.manager.last_name || ''}`.trim() : c.manager.email}` : '—'}</td>
                   <td>{c.case_invitations?.[0]?.count || 0}</td>
                   <td>{new Date(c.created_at).toLocaleDateString()}</td>
                   <td style={{ display: 'flex', gap: 8 }}>
