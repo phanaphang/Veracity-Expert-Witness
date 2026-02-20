@@ -16,6 +16,7 @@ export default function CaseDetail() {
   const [assignExpertTerm, setAssignExpertTerm] = useState('');
   const [assignExpertResults, setAssignExpertResults] = useState([]);
   const [assignConfirmTarget, setAssignConfirmTarget] = useState(null);
+  const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const loadCase = async () => {
@@ -151,25 +152,10 @@ export default function CaseDetail() {
               className="portal-field__select"
               style={{ display: 'inline-block', width: 'auto', marginLeft: 8 }}
               value={caseData.case_manager || ''}
-              onChange={async (e) => {
+              onChange={(e) => {
                 const value = e.target.value || null;
-                await supabase.from('cases').update({ case_manager: value }).eq('id', id);
-                setCaseData(prev => ({ ...prev, case_manager: value }));
-                if (value) {
-                  fetch('/api/notify-case-manager', {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                      Authorization: `Bearer ${session?.access_token}`,
-                    },
-                    body: JSON.stringify({
-                      caseManagerId: value,
-                      caseTitle: caseData.title,
-                      caseId: id,
-                    }),
-                  }).catch(() => {});
-                }
-                await loadCase();
+                const selected = managers.find(m => m.id === value);
+                setManagerConfirmTarget({ id: value, profile: selected });
               }}
             >
               <option value="">Unassigned</option>
@@ -219,7 +205,7 @@ export default function CaseDetail() {
                         <strong>{formatName(exp)}</strong>
                         <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginLeft: 8 }}>{exp.email}</span>
                       </div>
-                      <button className="btn btn--primary" onClick={() => assignExpert(exp.id)} style={{ padding: '4px 12px', fontSize: '0.8rem' }}>
+                      <button className="btn btn--primary" onClick={() => setAssignConfirmTarget({ type: 'search', expertId: exp.id, name: formatName(exp) })} style={{ padding: '4px 12px', fontSize: '0.8rem' }}>
                         Assign
                       </button>
                     </div>
@@ -308,7 +294,7 @@ export default function CaseDetail() {
                         <button
                           className="btn btn--primary"
                           style={{ padding: '4px 12px', fontSize: '0.8rem', marginLeft: 'auto' }}
-                          onClick={() => setAssignConfirmTarget(inv)}
+                          onClick={() => setAssignConfirmTarget({ type: 'invited', expertId: inv.expert_id, name: inv.profiles?.first_name ? `${inv.profiles.first_name} ${inv.profiles.last_name || ''}`.trim() : inv.profiles?.email || 'this expert' })}
                         >
                           Assign
                         </button>
@@ -331,11 +317,7 @@ export default function CaseDetail() {
             <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>Assign Expert</h3>
             <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
               Are you sure you want to assign{' '}
-              <strong>
-                {assignConfirmTarget.profiles?.first_name
-                  ? `${assignConfirmTarget.profiles.first_name} ${assignConfirmTarget.profiles.last_name || ''}`.trim()
-                  : assignConfirmTarget.profiles?.email || 'this expert'}
-              </strong>{' '}
+              <strong>{assignConfirmTarget.name}</strong>{' '}
               as the assigned expert for this case?
             </p>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
@@ -343,11 +325,57 @@ export default function CaseDetail() {
               <button
                 className="btn btn--primary"
                 onClick={async () => {
-                  await assignExpert(assignConfirmTarget.expert_id);
+                  await assignExpert(assignConfirmTarget.expertId);
                   setAssignConfirmTarget(null);
                 }}
               >
                 Assign Expert
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {managerConfirmTarget && (
+        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
+            <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>
+              {managerConfirmTarget.id ? 'Assign Case Manager' : 'Remove Case Manager'}
+            </h3>
+            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
+              {managerConfirmTarget.id ? (
+                <>Are you sure you want to assign <strong>{formatName(managerConfirmTarget.profile)}</strong> as the case manager?</>
+              ) : (
+                <>Are you sure you want to remove the current case manager?</>
+              )}
+            </p>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn--secondary" onClick={() => setManagerConfirmTarget(null)}>Cancel</button>
+              <button
+                className="btn btn--primary"
+                onClick={async () => {
+                  const value = managerConfirmTarget.id;
+                  await supabase.from('cases').update({ case_manager: value }).eq('id', id);
+                  setCaseData(prev => ({ ...prev, case_manager: value }));
+                  if (value) {
+                    fetch('/api/notify-case-manager', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${session?.access_token}`,
+                      },
+                      body: JSON.stringify({
+                        caseManagerId: value,
+                        caseTitle: caseData.title,
+                        caseId: id,
+                      }),
+                    }).catch(() => {});
+                  }
+                  setManagerConfirmTarget(null);
+                  await loadCase();
+                }}
+              >
+                {managerConfirmTarget.id ? 'Assign Manager' : 'Remove Manager'}
               </button>
             </div>
           </div>
