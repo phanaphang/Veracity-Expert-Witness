@@ -13,7 +13,7 @@ export default function Login() {
 
   if (loading) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
   if (user && !profile) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
-  if (user && profile?.role === 'admin') return <Navigate to="/admin/dashboard" replace />;
+  if (user && ['admin', 'staff'].includes(profile?.role)) return <Navigate to="/admin/dashboard" replace />;
   if (user) return <Navigate to="/portal/dashboard" replace />;
 
   const handleSubmit = async (e) => {

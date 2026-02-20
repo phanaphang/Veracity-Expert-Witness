@@ -38,7 +38,7 @@ export default function AuthCallback() {
         .eq('id', session.user.id)
         .single();
 
-      if (data?.role === 'admin') {
+      if (['admin', 'staff'].includes(data?.role)) {
         navigate('/admin/dashboard', { replace: true });
       } else if (!data?.onboarded_at) {
         navigate('/portal/accept-invite', { replace: true });

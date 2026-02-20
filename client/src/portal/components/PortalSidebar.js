@@ -27,7 +27,11 @@ export default function PortalSidebar({ isAdmin, onNavigate }) {
     { to: '/admin/change-password', label: 'Change Password', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
   ];
 
-  const links = isAdmin ? adminLinks : expertLinks;
+  const filteredAdminLinks = profile?.role === 'staff'
+    ? adminLinks.filter(link => link.to !== '/admin/invite')
+    : adminLinks;
+
+  const links = isAdmin ? filteredAdminLinks : expertLinks;
 
   return (
     <aside className="portal-sidebar">
@@ -40,7 +44,7 @@ export default function PortalSidebar({ isAdmin, onNavigate }) {
           </svg>
           <span>Veracity</span>
         </NavLink>
-        <span className="portal-sidebar__role">{isAdmin ? 'Admin' : 'Expert Portal'}</span>
+        <span className="portal-sidebar__role">{isAdmin ? (profile?.role === 'staff' ? 'Staff' : 'Admin') : 'Expert Portal'}</span>
       </div>
 
       <nav className="portal-sidebar__nav">

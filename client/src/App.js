@@ -111,7 +111,7 @@ function App() {
           <Route path="/admin/profile" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminProfile /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/experts" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ExpertList /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/experts/:id" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ExpertDetail /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/invite" element={<ProtectedRoute requiredRole="admin"><AdminLayout><InviteExpert /></AdminLayout></ProtectedRoute>} />
+          <Route path="/admin/invite" element={<ProtectedRoute requiredRole="admin-only"><AdminLayout><InviteExpert /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/cases" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseList /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/cases/new" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseCreate /></AdminLayout></ProtectedRoute>} />
           <Route path="/admin/cases/:id" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseDetail /></AdminLayout></ProtectedRoute>} />

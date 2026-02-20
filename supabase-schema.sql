@@ -11,7 +11,7 @@
 CREATE TABLE profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   email TEXT NOT NULL,
-  role TEXT NOT NULL DEFAULT 'expert' CHECK (role IN ('expert', 'admin')),
+  role TEXT NOT NULL DEFAULT 'expert' CHECK (role IN ('expert', 'admin', 'staff')),
   first_name TEXT DEFAULT '',
   last_name TEXT DEFAULT '',
   phone TEXT DEFAULT '',
@@ -172,7 +172,7 @@ CREATE OR REPLACE FUNCTION is_admin()
 RETURNS boolean AS $$
   SELECT EXISTS (
     SELECT 1 FROM profiles
-    WHERE id = auth.uid() AND role = 'admin'
+    WHERE id = auth.uid() AND role IN ('admin', 'staff')
   );
 $$ LANGUAGE sql SECURITY DEFINER SET search_path = public;
 

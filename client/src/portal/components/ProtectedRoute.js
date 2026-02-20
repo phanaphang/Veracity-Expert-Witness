@@ -112,11 +112,15 @@ export default function ProtectedRoute({ children, requiredRole }) {
   }
 
   // Experts who haven't onboarded must set a password first
-  if (profile.role !== 'admin' && !profile.onboarded_at) {
+  if (!['admin', 'staff'].includes(profile.role) && !profile.onboarded_at) {
     return <SetPasswordForm />;
   }
 
-  if (requiredRole && profile.role !== requiredRole) {
+  if (requiredRole === 'admin-only' && profile.role !== 'admin') {
+    return <Navigate to="/admin/dashboard" replace />;
+  }
+
+  if (requiredRole === 'admin' && !['admin', 'staff'].includes(profile.role)) {
     return <Navigate to="/portal/dashboard" replace />;
   }
 
