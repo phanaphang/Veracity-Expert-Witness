@@ -146,6 +146,7 @@ export default function CaseDetail() {
         <h2 className="portal-card__title">Case Details</h2>
         <p style={{ lineHeight: 1.6, color: 'var(--color-gray-600)', marginBottom: 12 }}>{caseData.description}</p>
         <div className="portal-list-item__row">
+          {caseData.client && <div><strong>Client:</strong> {caseData.client}</div>}
           {caseData.case_type && <div><strong>Type:</strong> {caseData.case_type}</div>}
           {caseData.jurisdiction && <div><strong>Jurisdiction:</strong> {caseData.jurisdiction}</div>}
         </div>

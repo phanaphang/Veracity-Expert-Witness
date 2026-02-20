@@ -12,6 +12,7 @@ export default function CaseCreate() {
   const [form, setForm] = useState({
     title: '',
     description: '',
+    client: '',
     specialty_id: '',
     case_type: '',
     jurisdiction: '',
@@ -92,6 +93,10 @@ export default function CaseCreate() {
           <div className="portal-field">
             <label className="portal-field__label">Description *</label>
             <textarea className="portal-field__textarea" name="description" value={form.description} onChange={handleChange} required rows="4" placeholder="Describe the case details and what type of expert is needed..." />
+          </div>
+          <div className="portal-field">
+            <label className="portal-field__label">Client</label>
+            <input className="portal-field__input" name="client" value={form.client} onChange={handleChange} placeholder="e.g. Smith & Associates Law Firm" />
           </div>
           <div className="portal-list-item__row">
             <div className="portal-field">
