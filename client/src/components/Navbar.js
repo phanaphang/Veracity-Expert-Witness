@@ -35,8 +35,8 @@ function Navbar() {
     { label: 'Expert Categories', href: '#categories' },
     { label: 'How It Works', href: '#how-it-works' },
     { label: 'Join Our Panel', href: '/join-our-panel', isRoute: true },
-    { label: 'FAQ', href: '/faq', isRoute: true },
     { label: 'Expert Portal', href: '/portal/login', isRoute: true },
+    { label: 'FAQ', href: '/faq', isRoute: true },
   ];
 
   const scrollToElement = (hash) => {
