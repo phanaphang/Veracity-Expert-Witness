@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import * as XLSX from 'xlsx';
 
 export default function ExpertList() {
   const { profile, session } = useAuth();
@@ -59,17 +60,52 @@ export default function ExpertList() {
     setDeleteTarget(null);
   };
 
+  const exportToExcel = async () => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('*, expert_specialties(specialties(name))')
+      .eq('role', 'expert')
+      .order('last_name');
+
+    const rows = (data || []).map(exp => ({
+      'First Name': exp.first_name || '',
+      'Last Name': exp.last_name || '',
+      'Email': exp.email || '',
+      'Phone': exp.phone || '',
+      'Specialties': (exp.expert_specialties || []).map(es => es.specialties?.name).filter(Boolean).join(', '),
+      'Availability': exp.availability || '',
+      'Bio': exp.bio || '',
+      'Review & Report Rate': exp.rate_review_report || '',
+      'Deposition Rate': exp.rate_deposition || '',
+      'Trial Testimony Rate': exp.rate_trial_testimony || '',
+      'Status': exp.onboarded_at ? 'Onboarded' : 'Pending',
+      'Created': exp.created_at ? new Date(exp.created_at).toLocaleDateString() : '',
+    }));
+
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Experts');
+    XLSX.writeFile(wb, `Experts_${new Date().toISOString().split('T')[0]}.xlsx`);
+  };
+
   if (loading) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
 
   return (
     <div>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Experts</h1>
-        {profile?.role !== 'staff' && (
-          <Link to="/admin/invite" className="btn btn--primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>
-            Invite Expert
-          </Link>
-        )}
+        <div style={{ display: 'flex', gap: 8 }}>
+          {isAdmin && (
+            <button className="portal-btn-action" style={{ padding: '10px 20px' }} onClick={exportToExcel}>
+              Export
+            </button>
+          )}
+          {profile?.role !== 'staff' && (
+            <Link to="/admin/invite" className="btn btn--primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>
+              Invite Expert
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="portal-search-bar">
