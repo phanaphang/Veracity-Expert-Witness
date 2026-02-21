@@ -18,6 +18,7 @@ export default function CaseDetail() {
   const [assignConfirmTarget, setAssignConfirmTarget] = useState(null);
   const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
   const [removeExpertConfirm, setRemoveExpertConfirm] = useState(false);
+  const [statusConfirmTarget, setStatusConfirmTarget] = useState(null);
   const [detailsEditing, setDetailsEditing] = useState(false);
   const [descValue, setDescValue] = useState('');
   const [clientValue, setClientValue] = useState('');
@@ -133,12 +134,12 @@ export default function CaseDetail() {
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           {caseData.status !== 'closed' && (
-            <button className="portal-btn-action" onClick={() => updateStatus('closed')}>
+            <button className="portal-btn-action" onClick={() => setStatusConfirmTarget('closed')}>
               Close Case
             </button>
           )}
           {caseData.status === 'closed' && (
-            <button className="btn btn--primary" onClick={() => updateStatus('open')} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+            <button className="btn btn--primary" onClick={() => setStatusConfirmTarget('open')} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
               Reopen Case
             </button>
           )}
@@ -428,6 +429,32 @@ export default function CaseDetail() {
                 }}
               >
                 Assign Expert
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {statusConfirmTarget && (
+        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
+            <h3 style={{ margin: '0 0 8px', color: statusConfirmTarget === 'closed' ? 'var(--color-error, #e53e3e)' : 'var(--color-gray-800)' }}>
+              {statusConfirmTarget === 'closed' ? 'Close Case' : 'Reopen Case'}
+            </h3>
+            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
+              Are you sure you want to {statusConfirmTarget === 'closed' ? 'close' : 'reopen'} this case?
+            </p>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn--secondary" onClick={() => setStatusConfirmTarget(null)}>Cancel</button>
+              <button
+                className={statusConfirmTarget === 'closed' ? 'btn' : 'btn btn--primary'}
+                style={statusConfirmTarget === 'closed' ? { background: 'var(--color-error, #e53e3e)', color: '#fff', border: 'none' } : {}}
+                onClick={async () => {
+                  await updateStatus(statusConfirmTarget);
+                  setStatusConfirmTarget(null);
+                }}
+              >
+                {statusConfirmTarget === 'closed' ? 'Close Case' : 'Reopen Case'}
               </button>
             </div>
           </div>
