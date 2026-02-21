@@ -15,6 +15,7 @@ export default function ExpertList() {
   const [filterAvailability, setFilterAvailability] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [exportConfirm, setExportConfirm] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -96,7 +97,7 @@ export default function ExpertList() {
         <h1 className="portal-page__title">Experts</h1>
         <div style={{ display: 'flex', gap: 8 }}>
           {isAdmin && (
-            <button className="portal-btn-action" style={{ padding: '10px 20px' }} onClick={exportToExcel}>
+            <button className="portal-btn-action" style={{ padding: '10px 20px' }} onClick={() => setExportConfirm(true)}>
               Export
             </button>
           )}
@@ -184,6 +185,29 @@ export default function ExpertList() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {exportConfirm && (
+        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
+            <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>Export Experts</h3>
+            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
+              Are you sure you want to export the Experts database to an Excel file?
+            </p>
+            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+              <button className="btn btn--secondary" onClick={() => setExportConfirm(false)}>Cancel</button>
+              <button
+                className="btn btn--primary"
+                onClick={() => {
+                  setExportConfirm(false);
+                  exportToExcel();
+                }}
+              >
+                Export
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
