@@ -66,9 +66,13 @@ export default function ExpertList() {
   const exportToExcel = async () => {
     setExporting(true);
     try {
-      const [profilesRes, docsRes] = await Promise.all([
+      const [profilesRes, docsRes, eduRes, expRes, credRes, testRes] = await Promise.all([
         supabase.from('profiles').select('*, expert_specialties(specialties(name))').eq('role', 'expert').order('last_name'),
         supabase.from('documents').select('*').order('uploaded_at', { ascending: false }),
+        supabase.from('education').select('*').order('end_year', { ascending: false }),
+        supabase.from('work_experience').select('*').order('start_date', { ascending: false }),
+        supabase.from('credentials').select('*'),
+        supabase.from('prior_testimony').select('*').order('date_of_testimony', { ascending: false }),
       ]);
 
       const allDocs = docsRes.data || [];
@@ -77,6 +81,19 @@ export default function ExpertList() {
         if (!docsByExpert[doc.expert_id]) docsByExpert[doc.expert_id] = [];
         docsByExpert[doc.expert_id].push(doc);
       }
+
+      const groupBy = (arr, key) => {
+        const map = {};
+        for (const item of (arr || [])) {
+          if (!map[item[key]]) map[item[key]] = [];
+          map[item[key]].push(item);
+        }
+        return map;
+      };
+      const eduByExpert = groupBy(eduRes.data, 'expert_id');
+      const expByExpert = groupBy(expRes.data, 'expert_id');
+      const credByExpert = groupBy(credRes.data, 'expert_id');
+      const testByExpert = groupBy(testRes.data, 'expert_id');
 
       // Generate signed URLs for all documents (1 hour expiry)
       const signedUrlMap = {};
@@ -87,7 +104,10 @@ export default function ExpertList() {
 
       const rows = (profilesRes.data || []).map(exp => {
         const expertDocs = docsByExpert[exp.id] || [];
-        const docNames = expertDocs.map(d => d.file_name).join(', ');
+        const expertEdu = eduByExpert[exp.id] || [];
+        const expertExp = expByExpert[exp.id] || [];
+        const expertCred = credByExpert[exp.id] || [];
+        const expertTest = testByExpert[exp.id] || [];
         return {
           'First Name': exp.first_name || '',
           'Last Name': exp.last_name || '',
@@ -99,16 +119,20 @@ export default function ExpertList() {
           'Review & Report Rate': exp.rate_review_report || '',
           'Deposition Rate': exp.rate_deposition || '',
           'Trial Testimony Rate': exp.rate_trial_testimony || '',
+          'Education': expertEdu.map(e => `${e.degree || ''} ${e.field_of_study ? 'in ' + e.field_of_study : ''} — ${e.institution || ''}${e.end_year ? ' (' + e.end_year + ')' : ''}`.trim()).join('; '),
+          'Work Experience': expertExp.map(e => `${e.title || ''} at ${e.organization || ''}${e.is_current ? ' (Current)' : ''}`.trim()).join('; '),
+          'Credentials': expertCred.map(c => `${c.name || ''}${c.issuing_body ? ' — ' + c.issuing_body : ''} (${c.credential_type || ''})`.trim()).join('; '),
+          'Prior Testimony': expertTest.map(t => `${t.case_name || ''}${t.court ? ' — ' + t.court : ''}${t.retained_by ? ' [' + t.retained_by + ']' : ''}`.trim()).join('; '),
           'Status': exp.onboarded_at ? 'Onboarded' : 'Pending',
           'Created': exp.created_at ? new Date(exp.created_at).toLocaleDateString() : '',
-          'Documents': docNames,
+          'Documents': expertDocs.map(d => d.file_name).join(', '),
         };
       });
 
       const ws = XLSX.utils.json_to_sheet(rows);
 
-      // Add hyperlinks to the Documents column (column M, index 12)
-      const docColIndex = 12;
+      // Add hyperlinks to the Documents column (index 16)
+      const docColIndex = 16;
       let rowIndex = 1;
       for (const exp of (profilesRes.data || [])) {
         const expertDocs = docsByExpert[exp.id] || [];
