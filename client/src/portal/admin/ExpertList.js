@@ -61,32 +61,99 @@ export default function ExpertList() {
     setDeleteTarget(null);
   };
 
+  const [exporting, setExporting] = useState(false);
+
   const exportToExcel = async () => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('*, expert_specialties(specialties(name))')
-      .eq('role', 'expert')
-      .order('last_name');
+    setExporting(true);
+    try {
+      const [profilesRes, docsRes] = await Promise.all([
+        supabase.from('profiles').select('*, expert_specialties(specialties(name))').eq('role', 'expert').order('last_name'),
+        supabase.from('documents').select('*').order('uploaded_at', { ascending: false }),
+      ]);
 
-    const rows = (data || []).map(exp => ({
-      'First Name': exp.first_name || '',
-      'Last Name': exp.last_name || '',
-      'Email': exp.email || '',
-      'Phone': exp.phone || '',
-      'Specialties': (exp.expert_specialties || []).map(es => es.specialties?.name).filter(Boolean).join(', '),
-      'Availability': exp.availability || '',
-      'Bio': exp.bio || '',
-      'Review & Report Rate': exp.rate_review_report || '',
-      'Deposition Rate': exp.rate_deposition || '',
-      'Trial Testimony Rate': exp.rate_trial_testimony || '',
-      'Status': exp.onboarded_at ? 'Onboarded' : 'Pending',
-      'Created': exp.created_at ? new Date(exp.created_at).toLocaleDateString() : '',
-    }));
+      const allDocs = docsRes.data || [];
+      const docsByExpert = {};
+      for (const doc of allDocs) {
+        if (!docsByExpert[doc.expert_id]) docsByExpert[doc.expert_id] = [];
+        docsByExpert[doc.expert_id].push(doc);
+      }
 
-    const ws = XLSX.utils.json_to_sheet(rows);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Experts');
-    XLSX.writeFile(wb, `Experts_${new Date().toISOString().split('T')[0]}.xlsx`);
+      // Generate signed URLs for all documents (1 hour expiry)
+      const signedUrlMap = {};
+      for (const doc of allDocs) {
+        const { data } = await supabase.storage.from('expert-documents').createSignedUrl(doc.file_path, 3600);
+        if (data?.signedUrl) signedUrlMap[doc.id] = data.signedUrl;
+      }
+
+      const rows = (profilesRes.data || []).map(exp => {
+        const expertDocs = docsByExpert[exp.id] || [];
+        const docNames = expertDocs.map(d => d.file_name).join(', ');
+        return {
+          'First Name': exp.first_name || '',
+          'Last Name': exp.last_name || '',
+          'Email': exp.email || '',
+          'Phone': exp.phone || '',
+          'Specialties': (exp.expert_specialties || []).map(es => es.specialties?.name).filter(Boolean).join(', '),
+          'Availability': exp.availability || '',
+          'Bio': exp.bio || '',
+          'Review & Report Rate': exp.rate_review_report || '',
+          'Deposition Rate': exp.rate_deposition || '',
+          'Trial Testimony Rate': exp.rate_trial_testimony || '',
+          'Status': exp.onboarded_at ? 'Onboarded' : 'Pending',
+          'Created': exp.created_at ? new Date(exp.created_at).toLocaleDateString() : '',
+          'Documents': docNames,
+        };
+      });
+
+      const ws = XLSX.utils.json_to_sheet(rows);
+
+      // Add hyperlinks to the Documents column (column M, index 12)
+      const docColIndex = 12;
+      let rowIndex = 1;
+      for (const exp of (profilesRes.data || [])) {
+        const expertDocs = docsByExpert[exp.id] || [];
+        if (expertDocs.length > 0) {
+          const cellRef = XLSX.utils.encode_cell({ r: rowIndex, c: docColIndex });
+          const links = expertDocs
+            .map(d => signedUrlMap[d.id] ? d.file_name : null)
+            .filter(Boolean);
+          if (links.length > 0 && expertDocs.length === 1 && signedUrlMap[expertDocs[0].id]) {
+            ws[cellRef].l = { Target: signedUrlMap[expertDocs[0].id], Tooltip: expertDocs[0].file_name };
+          }
+        }
+        rowIndex++;
+      }
+
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Experts');
+
+      // Create a separate Documents sheet with all files hyperlinked
+      const docRows = allDocs.map(doc => {
+        const expert = (profilesRes.data || []).find(e => e.id === doc.expert_id);
+        return {
+          'Expert': expert ? `${expert.first_name || ''} ${expert.last_name || ''}`.trim() || expert.email : '',
+          'File Name': doc.file_name,
+          'Type': doc.document_type,
+          'Uploaded': doc.uploaded_at ? new Date(doc.uploaded_at).toLocaleDateString() : '',
+          'Link': signedUrlMap[doc.id] || '',
+        };
+      });
+      const ws2 = XLSX.utils.json_to_sheet(docRows);
+      // Add hyperlinks to Link column (column E, index 4)
+      docRows.forEach((row, i) => {
+        if (row.Link) {
+          const cellRef = XLSX.utils.encode_cell({ r: i + 1, c: 4 });
+          if (ws2[cellRef]) {
+            ws2[cellRef].l = { Target: row.Link, Tooltip: docRows[i]['File Name'] };
+          }
+        }
+      });
+      XLSX.utils.book_append_sheet(wb, ws2, 'Documents');
+
+      XLSX.writeFile(wb, `Experts_${new Date().toISOString().split('T')[0]}.xlsx`);
+    } finally {
+      setExporting(false);
+    }
   };
 
   if (loading) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
@@ -97,8 +164,8 @@ export default function ExpertList() {
         <h1 className="portal-page__title">Experts</h1>
         <div style={{ display: 'flex', gap: 8 }}>
           {isAdmin && (
-            <button className="portal-btn-action" style={{ padding: '10px 20px' }} onClick={() => setExportConfirm(true)}>
-              Export
+            <button className="portal-btn-action" style={{ padding: '10px 20px' }} onClick={() => setExportConfirm(true)} disabled={exporting}>
+              {exporting ? 'Exporting...' : 'Export'}
             </button>
           )}
           {profile?.role !== 'staff' && (
