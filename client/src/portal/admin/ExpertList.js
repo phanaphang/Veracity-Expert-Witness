@@ -201,6 +201,14 @@ export default function ExpertList() {
       </div>
 
       <div className="portal-stats" style={{ marginBottom: 24 }}>
+        <div
+          className="portal-stat"
+          style={{ cursor: 'pointer', transition: 'border-color 0.15s', borderColor: filterSpecialty === '' ? 'var(--color-accent)' : undefined }}
+          onClick={() => setFilterSpecialty('')}
+        >
+          <div className="portal-stat__value">{experts.length}</div>
+          <div className="portal-stat__label">All Experts</div>
+        </div>
         {specialties.map(s => {
           const count = experts.filter(exp =>
             exp.expert_specialties?.some(es => es.specialty_id === s.id)
