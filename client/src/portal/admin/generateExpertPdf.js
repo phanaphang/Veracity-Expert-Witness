@@ -82,8 +82,6 @@ function buildProfilePdf(expert, specialties, education, experience, credentials
   y = sectionHeader(doc, y, 'Basic Information');
   y = addField(doc, y, 'Email', expert.email);
   y = addField(doc, y, 'Phone', expert.phone);
-  y = addField(doc, y, 'Status', expert.profile_status || 'pending');
-  y = addField(doc, y, 'Availability', expert.availability);
   if (expert.rate_review_report) y = addField(doc, y, 'Rate - Review & Report', `$${expert.rate_review_report}/hr`);
   if (expert.rate_deposition) y = addField(doc, y, 'Rate - Deposition', `$${expert.rate_deposition}/hr`);
   if (expert.rate_trial_testimony) y = addField(doc, y, 'Rate - Trial Testimony', `$${expert.rate_trial_testimony}/hr`);
