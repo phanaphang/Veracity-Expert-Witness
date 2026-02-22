@@ -8,6 +8,8 @@ client/build/
 .env
 .env.local
 .env.production
+.env.staging
+.env.test
 
 # OS files
 .DS_Store
@@ -18,9 +20,16 @@ nul
 .vscode/
 .idea/
 
+# Claude Code (user-specific local settings)
+.claude/settings.local.json
+
 # Vercel
 .vercel/
 
 # Logs
 *.log
 npm-debug.log*
+yarn-error.log*
+
+# Test coverage
+coverage/
