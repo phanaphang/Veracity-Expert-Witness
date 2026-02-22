@@ -66,13 +66,15 @@ export default function ExpertList() {
   const exportToExcel = async () => {
     setExporting(true);
     try {
-      const [profilesRes, docsRes, eduRes, expRes, credRes, testRes] = await Promise.all([
-        supabase.from('profiles').select('*, expert_specialties(specialties(name))').eq('role', 'expert').order('last_name'),
-        supabase.from('documents').select('*').order('uploaded_at', { ascending: false }),
-        supabase.from('education').select('*').order('end_year', { ascending: false }),
-        supabase.from('work_experience').select('*').order('start_date', { ascending: false }),
-        supabase.from('credentials').select('*'),
-        supabase.from('prior_testimony').select('*').order('date_of_testimony', { ascending: false }),
+      const exportExperts = [...filtered].sort((a, b) => (a.last_name || '').localeCompare(b.last_name || ''));
+      const expertIds = exportExperts.map(e => e.id);
+
+      const [docsRes, eduRes, expRes, credRes, testRes] = await Promise.all([
+        supabase.from('documents').select('*').in('expert_id', expertIds).order('uploaded_at', { ascending: false }),
+        supabase.from('education').select('*').in('expert_id', expertIds).order('end_year', { ascending: false }),
+        supabase.from('work_experience').select('*').in('expert_id', expertIds).order('start_date', { ascending: false }),
+        supabase.from('credentials').select('*').in('expert_id', expertIds),
+        supabase.from('prior_testimony').select('*').in('expert_id', expertIds).order('date_of_testimony', { ascending: false }),
       ]);
 
       const allDocs = docsRes.data || [];
@@ -102,7 +104,7 @@ export default function ExpertList() {
         if (data?.signedUrl) signedUrlMap[doc.id] = data.signedUrl;
       }
 
-      const rows = (profilesRes.data || []).map(exp => {
+      const rows = exportExperts.map(exp => {
         const expertDocs = docsByExpert[exp.id] || [];
         const expertEdu = eduByExpert[exp.id] || [];
         const expertExp = expByExpert[exp.id] || [];
@@ -134,14 +136,11 @@ export default function ExpertList() {
       // Add hyperlinks to the Documents column (index 16)
       const docColIndex = 16;
       let rowIndex = 1;
-      for (const exp of (profilesRes.data || [])) {
+      for (const exp of exportExperts) {
         const expertDocs = docsByExpert[exp.id] || [];
         if (expertDocs.length > 0) {
           const cellRef = XLSX.utils.encode_cell({ r: rowIndex, c: docColIndex });
-          const links = expertDocs
-            .map(d => signedUrlMap[d.id] ? d.file_name : null)
-            .filter(Boolean);
-          if (links.length > 0 && expertDocs.length === 1 && signedUrlMap[expertDocs[0].id]) {
+          if (expertDocs.length === 1 && signedUrlMap[expertDocs[0].id]) {
             ws[cellRef].l = { Target: signedUrlMap[expertDocs[0].id], Tooltip: expertDocs[0].file_name };
           }
         }
@@ -153,7 +152,7 @@ export default function ExpertList() {
 
       // Create a separate Documents sheet with all files hyperlinked
       const docRows = allDocs.map(doc => {
-        const expert = (profilesRes.data || []).find(e => e.id === doc.expert_id);
+        const expert = exportExperts.find(e => e.id === doc.expert_id);
         return {
           'Expert': expert ? `${expert.first_name || ''} ${expert.last_name || ''}`.trim() || expert.email : '',
           'File Name': doc.file_name,
