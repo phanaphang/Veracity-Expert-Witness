@@ -7,9 +7,6 @@ export default function Profile() {
   const [form, setForm] = useState({ first_name: '', last_name: '', phone: '', bio: '', rate_review_report: '', rate_deposition: '', rate_trial_testimony: '', availability: 'available' });
   const [allSpecialties, setAllSpecialties] = useState([]);
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
-  const [education, setEducation] = useState([]);
-  const [experience, setExperience] = useState([]);
-  const [credentials, setCredentials] = useState([]);
   const [testimony, setTestimony] = useState([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -17,19 +14,13 @@ export default function Profile() {
 
   const loadData = useCallback(async () => {
     if (!user) return;
-    const [specRes, selRes, eduRes, expRes, credRes, testRes] = await Promise.all([
+    const [specRes, selRes, testRes] = await Promise.all([
       supabase.from('specialties').select('*').order('name'),
       supabase.from('expert_specialties').select('specialty_id').eq('expert_id', user.id),
-      supabase.from('education').select('*').eq('expert_id', user.id).order('end_year', { ascending: false }),
-      supabase.from('work_experience').select('*').eq('expert_id', user.id).order('start_date', { ascending: false }),
-      supabase.from('credentials').select('*').eq('expert_id', user.id),
       supabase.from('prior_testimony').select('*').eq('expert_id', user.id).order('date_of_testimony', { ascending: false }),
     ]);
     setAllSpecialties(specRes.data || []);
     setSelectedSpecialties(selRes.data?.map(s => s.specialty_id) || []);
-    setEducation(eduRes.data || []);
-    setExperience(expRes.data || []);
-    setCredentials(credRes.data || []);
     setTestimony(testRes.data || []);
   }, [user]);
 
@@ -59,9 +50,6 @@ export default function Profile() {
     );
   };
 
-  const addEducation = () => setEducation(prev => [...prev, { institution: '', degree: '', field_of_study: '', start_year: '', end_year: '', _new: true }]);
-  const addExperience = () => setExperience(prev => [...prev, { organization: '', title: '', description: '', start_date: '', end_date: '', is_current: false, _new: true }]);
-  const addCredential = () => setCredentials(prev => [...prev, { credential_type: 'certification', name: '', issuing_body: '', issue_date: '', expiry_date: '', credential_number: '', _new: true }]);
   const addTestimony = () => setTestimony(prev => [...prev, { case_name: '', court: '', jurisdiction: '', date_of_testimony: '', topic: '', retained_by: '', outcome: '', _new: true }]);
 
   const removeItem = (list, setList, index, table) => {
@@ -96,42 +84,6 @@ export default function Profile() {
           selectedSpecialties.map(id => ({ expert_id: user.id, specialty_id: id }))
         );
         if (specErr) errors.push('Specialties: ' + specErr.message);
-      }
-
-      // Education
-      for (const edu of education) {
-        const data = { expert_id: user.id, institution: edu.institution, degree: edu.degree, field_of_study: edu.field_of_study, start_year: edu.start_year ? parseInt(edu.start_year) : null, end_year: edu.end_year ? parseInt(edu.end_year) : null };
-        if (edu.id && !edu._new) {
-          const { error } = await supabase.from('education').update(data).eq('id', edu.id);
-          if (error) errors.push('Education: ' + error.message);
-        } else {
-          const { error } = await supabase.from('education').insert(data);
-          if (error) errors.push('Education: ' + error.message);
-        }
-      }
-
-      // Experience
-      for (const exp of experience) {
-        const data = { expert_id: user.id, organization: exp.organization, title: exp.title, description: exp.description, start_date: exp.start_date || null, end_date: exp.end_date || null, is_current: exp.is_current };
-        if (exp.id && !exp._new) {
-          const { error } = await supabase.from('work_experience').update(data).eq('id', exp.id);
-          if (error) errors.push('Experience: ' + error.message);
-        } else {
-          const { error } = await supabase.from('work_experience').insert(data);
-          if (error) errors.push('Experience: ' + error.message);
-        }
-      }
-
-      // Credentials
-      for (const cred of credentials) {
-        const data = { expert_id: user.id, credential_type: cred.credential_type, name: cred.name, issuing_body: cred.issuing_body, issue_date: cred.issue_date || null, expiry_date: cred.expiry_date || null, credential_number: cred.credential_number };
-        if (cred.id && !cred._new) {
-          const { error } = await supabase.from('credentials').update(data).eq('id', cred.id);
-          if (error) errors.push('Credentials: ' + error.message);
-        } else {
-          const { error } = await supabase.from('credentials').insert(data);
-          if (error) errors.push('Credentials: ' + error.message);
-        }
       }
 
       // Prior Testimony
@@ -210,105 +162,6 @@ export default function Profile() {
               </label>
             ))}
           </div>
-        </div>
-
-        {/* Credentials */}
-        <div className="portal-card">
-          <h2 className="portal-card__title">Credentials</h2>
-          {credentials.map((cred, i) => (
-            <div key={i} className="portal-list-item">
-              {editing && <button type="button" className="portal-list-item__remove" onClick={() => removeItem(credentials, setCredentials, i, 'credentials')}>Remove</button>}
-              <div className="portal-list-item__row">
-                <div className="portal-field">
-                  <label className="portal-field__label">Type</label>
-                  <select className="portal-field__select" value={cred.credential_type} onChange={(e) => { const c = [...credentials]; c[i].credential_type = e.target.value; setCredentials(c); }} disabled={!editing}>
-                    <option value="certification">Certification</option>
-                    <option value="license">License</option>
-                    <option value="board_certification">Board Certification</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-                <div className="portal-field">
-                  <label className="portal-field__label">Name</label>
-                  <input className="portal-field__input" value={cred.name} onChange={(e) => { const c = [...credentials]; c[i].name = e.target.value; setCredentials(c); }} readOnly={!editing} />
-                </div>
-              </div>
-              <div className="portal-list-item__row">
-                <div className="portal-field">
-                  <label className="portal-field__label">Issuing Body</label>
-                  <input className="portal-field__input" value={cred.issuing_body || ''} onChange={(e) => { const c = [...credentials]; c[i].issuing_body = e.target.value; setCredentials(c); }} readOnly={!editing} />
-                </div>
-                <div className="portal-field">
-                  <label className="portal-field__label">Credential Number</label>
-                  <input className="portal-field__input" value={cred.credential_number || ''} onChange={(e) => { const c = [...credentials]; c[i].credential_number = e.target.value; setCredentials(c); }} readOnly={!editing} />
-                </div>
-              </div>
-            </div>
-          ))}
-          {editing && <button type="button" className="portal-add-btn" onClick={addCredential}>+ Add Credential</button>}
-        </div>
-
-        {/* Education */}
-        <div className="portal-card">
-          <h2 className="portal-card__title">Education</h2>
-          {education.map((edu, i) => (
-            <div key={i} className="portal-list-item">
-              {editing && <button type="button" className="portal-list-item__remove" onClick={() => removeItem(education, setEducation, i, 'education')}>Remove</button>}
-              <div className="portal-list-item__row">
-                <div className="portal-field">
-                  <label className="portal-field__label">Institution</label>
-                  <input className="portal-field__input" value={edu.institution} onChange={(e) => { const ed = [...education]; ed[i].institution = e.target.value; setEducation(ed); }} readOnly={!editing} />
-                </div>
-                <div className="portal-field">
-                  <label className="portal-field__label">Degree</label>
-                  <input className="portal-field__input" value={edu.degree} onChange={(e) => { const ed = [...education]; ed[i].degree = e.target.value; setEducation(ed); }} readOnly={!editing} />
-                </div>
-              </div>
-              <div className="portal-list-item__row">
-                <div className="portal-field">
-                  <label className="portal-field__label">Field of Study</label>
-                  <input className="portal-field__input" value={edu.field_of_study || ''} onChange={(e) => { const ed = [...education]; ed[i].field_of_study = e.target.value; setEducation(ed); }} readOnly={!editing} />
-                </div>
-                <div className="portal-field">
-                  <label className="portal-field__label">Years (Start - End)</label>
-                  <div style={{ display: 'flex', gap: 8 }}>
-                    <input className="portal-field__input" placeholder="Start" value={edu.start_year || ''} onChange={(e) => { const ed = [...education]; ed[i].start_year = e.target.value; setEducation(ed); }} readOnly={!editing} />
-                    <input className="portal-field__input" placeholder="End" value={edu.end_year || ''} onChange={(e) => { const ed = [...education]; ed[i].end_year = e.target.value; setEducation(ed); }} readOnly={!editing} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-          {editing && <button type="button" className="portal-add-btn" onClick={addEducation}>+ Add Education</button>}
-        </div>
-
-        {/* Work Experience */}
-        <div className="portal-card">
-          <h2 className="portal-card__title">Work Experience</h2>
-          {experience.map((exp, i) => (
-            <div key={i} className="portal-list-item">
-              {editing && <button type="button" className="portal-list-item__remove" onClick={() => removeItem(experience, setExperience, i, 'work_experience')}>Remove</button>}
-              <div className="portal-list-item__row">
-                <div className="portal-field">
-                  <label className="portal-field__label">Organization</label>
-                  <input className="portal-field__input" value={exp.organization} onChange={(e) => { const ex = [...experience]; ex[i].organization = e.target.value; setExperience(ex); }} readOnly={!editing} />
-                </div>
-                <div className="portal-field">
-                  <label className="portal-field__label">Title</label>
-                  <input className="portal-field__input" value={exp.title} onChange={(e) => { const ex = [...experience]; ex[i].title = e.target.value; setExperience(ex); }} readOnly={!editing} />
-                </div>
-              </div>
-              <div className="portal-field">
-                <label className="portal-field__label">Description</label>
-                <textarea className="portal-field__textarea" rows="2" value={exp.description || ''} onChange={(e) => { const ex = [...experience]; ex[i].description = e.target.value; setExperience(ex); }} readOnly={!editing} />
-              </div>
-              <label className="portal-checkbox">
-                <input type="checkbox" checked={exp.is_current || false} onChange={(e) => { const ex = [...experience]; ex[i].is_current = e.target.checked; setExperience(ex); }} disabled={!editing} />
-                Currently working here
-              </label>
-            </div>
-          ))}
-          {editing && <button type="button" className="portal-add-btn" onClick={addExperience}>+ Add Experience</button>}
         </div>
 
         {/* Prior Expert Testimony */}
