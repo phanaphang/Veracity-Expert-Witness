@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+
+const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+const MAX_SIZE = 10 * 1024 * 1024;
 
 export default function Profile() {
   const { user, profile, fetchProfile } = useAuth();
@@ -11,6 +14,10 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
+  const [cvDocs, setCvDocs] = useState([]);
+  const [cvUploading, setCvUploading] = useState(false);
+  const [cvError, setCvError] = useState('');
+  const cvFileRef = useRef();
 
   const loadData = useCallback(async () => {
     if (!user) return;
@@ -22,6 +29,9 @@ export default function Profile() {
     setAllSpecialties(specRes.data || []);
     setSelectedSpecialties(selRes.data?.map(s => s.specialty_id) || []);
     setTestimony(testRes.data || []);
+
+    const { data: cvData } = await supabase.from('documents').select('*').eq('expert_id', user.id).eq('document_type', 'cv').order('uploaded_at', { ascending: false });
+    setCvDocs(cvData || []);
   }, [user]);
 
   useEffect(() => {
@@ -57,6 +67,35 @@ export default function Profile() {
       supabase.from(table).delete().eq('id', item.id);
     }
     setList(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleCvUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setCvError('');
+    if (!ALLOWED_TYPES.includes(file.type)) { setCvError('File type not allowed. Please upload PDF, DOC, DOCX, JPG, or PNG.'); return; }
+    if (file.size > MAX_SIZE) { setCvError('File too large. Maximum size is 10MB.'); return; }
+    setCvUploading(true);
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const filePath = `${user.id}/cv/${Date.now()}_${safeName}`;
+    const { error: uploadError } = await supabase.storage.from('expert-documents').upload(filePath, file);
+    if (uploadError) { setCvError('Upload failed. Please try again.'); setCvUploading(false); return; }
+    await supabase.from('documents').insert({ expert_id: user.id, document_type: 'cv', file_name: file.name, file_path: filePath, file_size: file.size, mime_type: file.type });
+    const { data } = await supabase.from('documents').select('*').eq('expert_id', user.id).eq('document_type', 'cv').order('uploaded_at', { ascending: false });
+    setCvDocs(data || []);
+    setCvUploading(false);
+    if (cvFileRef.current) cvFileRef.current.value = '';
+  };
+
+  const handleCvDownload = async (doc) => {
+    const { data } = await supabase.storage.from('expert-documents').createSignedUrl(doc.file_path, 60);
+    if (data?.signedUrl) window.open(data.signedUrl, '_blank');
+  };
+
+  const handleCvDelete = async (doc) => {
+    await supabase.storage.from('expert-documents').remove([doc.file_path]);
+    await supabase.from('documents').delete().eq('id', doc.id);
+    setCvDocs(prev => prev.filter(d => d.id !== doc.id));
   };
 
   const handleSubmit = async (e) => {
@@ -248,6 +287,45 @@ export default function Profile() {
         </div>
 
       </form>
+
+      {/* CV / Resume Upload */}
+      <div className="portal-card">
+        <h2 className="portal-card__title">CV / Resume</h2>
+        {cvError && <div className="portal-alert portal-alert--error" style={{ marginBottom: 12 }}>{cvError}</div>}
+        <div className="portal-field" style={{ marginBottom: 12 }}>
+          <label className="portal-field__label">Upload CV / Resume</label>
+          <input
+            ref={cvFileRef}
+            type="file"
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+            onChange={handleCvUpload}
+            disabled={cvUploading}
+            className="portal-field__input"
+          />
+          {cvUploading && <p style={{ fontSize: '0.85rem', color: 'var(--color-accent)', marginTop: 4 }}>Uploading...</p>}
+          <p className="portal-upload__hint">PDF, DOC, DOCX, JPG, or PNG. Max 10MB.</p>
+        </div>
+        {cvDocs.length > 0 && (
+          <div className="portal-doc-grid">
+            {cvDocs.map(doc => (
+              <div key={doc.id} className="portal-doc-card">
+                <div className="portal-doc-card__info">
+                  <div className="portal-doc-card__name">{doc.file_name}</div>
+                  <div className="portal-doc-card__meta">{new Date(doc.uploaded_at).toLocaleDateString()}</div>
+                </div>
+                <div className="portal-doc-card__actions">
+                  <button className="portal-doc-card__btn" onClick={() => handleCvDownload(doc)} title="Download">
+                    <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </button>
+                  <button className="portal-doc-card__btn" onClick={() => handleCvDelete(doc)} title="Delete">
+                    <svg viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
