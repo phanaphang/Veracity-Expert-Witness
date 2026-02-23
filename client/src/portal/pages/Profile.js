@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 
 export default function Profile() {
   const { user, profile, fetchProfile } = useAuth();
-  const [form, setForm] = useState({ first_name: '', last_name: '', phone: '', bio: '', rate_review_report: '', rate_deposition: '', rate_trial_testimony: '', availability: 'available' });
+  const [form, setForm] = useState({ first_name: '', last_name: '', phone: '', bio: '', rate_review_report: '', rate_deposition: '', rate_trial_testimony: '' });
   const [allSpecialties, setAllSpecialties] = useState([]);
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
   const [testimony, setTestimony] = useState([]);
@@ -34,7 +34,6 @@ export default function Profile() {
         rate_review_report: profile.rate_review_report || '',
         rate_deposition: profile.rate_deposition || '',
         rate_trial_testimony: profile.rate_trial_testimony || '',
-        availability: profile.availability || 'available',
       });
     }
     loadData();
@@ -245,14 +244,6 @@ export default function Profile() {
               <label className="portal-field__label">Trial Testimony Rate ($/hr)</label>
               <input className="portal-field__input" name="rate_trial_testimony" type="number" value={form.rate_trial_testimony} onChange={handleChange} placeholder="e.g. 750" readOnly={!editing} />
             </div>
-          </div>
-          <div className="portal-field" style={{ marginTop: 12 }}>
-            <label className="portal-field__label">Availability</label>
-            <select className="portal-field__select" name="availability" value={form.availability} onChange={handleChange} disabled={!editing}>
-              <option value="available">Available</option>
-              <option value="limited">Limited</option>
-              <option value="unavailable">Unavailable</option>
-            </select>
           </div>
         </div>
 
