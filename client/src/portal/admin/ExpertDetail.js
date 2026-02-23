@@ -11,9 +11,6 @@ export default function ExpertDetail() {
   const caseId = searchParams.get('caseId');
   const [expert, setExpert] = useState(null);
   const [specialties, setSpecialties] = useState([]);
-  const [education, setEducation] = useState([]);
-  const [experience, setExperience] = useState([]);
-  const [credentials, setCredentials] = useState([]);
   const [testimony, setTestimony] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,17 +20,11 @@ export default function ExpertDetail() {
     Promise.all([
       supabase.from('profiles').select('*').eq('id', id).single(),
       supabase.from('expert_specialties').select('specialties(name)').eq('expert_id', id),
-      supabase.from('education').select('*').eq('expert_id', id).order('end_year', { ascending: false }),
-      supabase.from('work_experience').select('*').eq('expert_id', id).order('start_date', { ascending: false }),
-      supabase.from('credentials').select('*').eq('expert_id', id),
       supabase.from('prior_testimony').select('*').eq('expert_id', id).order('date_of_testimony', { ascending: false }),
       supabase.from('documents').select('*').eq('expert_id', id).order('uploaded_at', { ascending: false }),
-    ]).then(([prof, specs, edu, exp, creds, test, docs]) => {
+    ]).then(([prof, specs, test, docs]) => {
       setExpert(prof.data);
       setSpecialties(specs.data?.map(s => s.specialties?.name).filter(Boolean) || []);
-      setEducation(edu.data || []);
-      setExperience(exp.data || []);
-      setCredentials(creds.data || []);
       setTestimony(test.data || []);
       setDocuments(docs.data || []);
       setLoading(false);
@@ -48,7 +39,7 @@ export default function ExpertDetail() {
   const handleGeneratePdf = async () => {
     setGenerating(true);
     try {
-      await generateExpertPdf(expert, specialties, education, experience, credentials, testimony, documents, supabase);
+      await generateExpertPdf(expert, specialties, testimony, documents, supabase);
     } catch (e) {
       console.error('PDF generation failed', e);
       alert('Failed to generate PDF. See console for details.');
@@ -139,50 +130,6 @@ export default function ExpertDetail() {
               <span key={i} className="portal-badge portal-badge--open">{name}</span>
             ))}
           </div>
-        </div>
-      )}
-
-      {/* Credentials */}
-      {credentials.length > 0 && (
-        <div className="portal-card">
-          <h2 className="portal-card__title">Credentials</h2>
-          {credentials.map(cred => (
-            <div key={cred.id} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid var(--color-gray-200)' }}>
-              <strong>{cred.name}</strong> <span className="portal-badge portal-badge--open">{cred.credential_type}</span>
-              {cred.issuing_body && <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>{cred.issuing_body}</p>}
-              {cred.credential_number && <p style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)' }}>#{cred.credential_number}</p>}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Education */}
-      {education.length > 0 && (
-        <div className="portal-card">
-          <h2 className="portal-card__title">Education</h2>
-          {education.map(edu => (
-            <div key={edu.id} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid var(--color-gray-200)' }}>
-              <strong>{edu.degree}</strong> — {edu.institution}
-              {edu.field_of_study && <span>, {edu.field_of_study}</span>}
-              <p style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)' }}>
-                {edu.start_year && `${edu.start_year} – `}{edu.end_year || 'Present'}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Work Experience */}
-      {experience.length > 0 && (
-        <div className="portal-card">
-          <h2 className="portal-card__title">Work Experience</h2>
-          {experience.map(exp => (
-            <div key={exp.id} style={{ marginBottom: 12, paddingBottom: 12, borderBottom: '1px solid var(--color-gray-200)' }}>
-              <strong>{exp.title}</strong> at {exp.organization}
-              {exp.is_current && <span className="portal-badge portal-badge--accepted" style={{ marginLeft: 8 }}>Current</span>}
-              {exp.description && <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 4 }}>{exp.description}</p>}
-            </div>
-          ))}
         </div>
       )}
 

@@ -59,7 +59,7 @@ function addField(doc, y, label, value) {
   return y;
 }
 
-function buildProfilePdf(expert, specialties, education, experience, credentials, testimony, documents) {
+function buildProfilePdf(expert, specialties, testimony, documents) {
   const doc = new jsPDF();
   let y = MARGIN;
 
@@ -101,76 +101,6 @@ function buildProfilePdf(expert, specialties, education, experience, credentials
       y = addPageIfNeeded(doc, y);
       doc.text(`  •  ${s}`, MARGIN, y);
       y += LINE_HEIGHT;
-    }
-  }
-
-  // Credentials
-  if (credentials.length > 0) {
-    y = sectionHeader(doc, y, 'Credentials');
-    for (const cred of credentials) {
-      y = addPageIfNeeded(doc, y, 18);
-      doc.setFont('helvetica', 'bold');
-      doc.text(cred.name || '', MARGIN, y);
-      doc.setFont('helvetica', 'normal');
-      if (cred.credential_type) {
-        doc.setTextColor(100);
-        doc.text(`  [${cred.credential_type}]`, MARGIN + doc.getTextWidth((cred.name || '') + ' '), y);
-        doc.setTextColor(0);
-      }
-      y += LINE_HEIGHT;
-      if (cred.issuing_body) {
-        y = addField(doc, y, '  Issuing Body', cred.issuing_body);
-      }
-      if (cred.credential_number) {
-        y = addField(doc, y, '  Number', cred.credential_number);
-      }
-      y += 2;
-    }
-  }
-
-  // Education
-  if (education.length > 0) {
-    y = sectionHeader(doc, y, 'Education');
-    for (const edu of education) {
-      y = addPageIfNeeded(doc, y, 14);
-      doc.setFont('helvetica', 'bold');
-      doc.text(edu.degree || '', MARGIN, y);
-      doc.setFont('helvetica', 'normal');
-      const inst = edu.institution ? ` — ${edu.institution}` : '';
-      const field = edu.field_of_study ? `, ${edu.field_of_study}` : '';
-      doc.text(`${inst}${field}`, MARGIN + doc.getTextWidth((edu.degree || '') + ' '), y);
-      y += LINE_HEIGHT;
-      const years = [edu.start_year, edu.end_year || 'Present'].filter(Boolean).join(' – ');
-      if (years) {
-        doc.setTextColor(120);
-        doc.text(`  ${years}`, MARGIN, y);
-        doc.setTextColor(0);
-        y += LINE_HEIGHT;
-      }
-      y += 2;
-    }
-  }
-
-  // Work Experience
-  if (experience.length > 0) {
-    y = sectionHeader(doc, y, 'Work Experience');
-    for (const exp of experience) {
-      y = addPageIfNeeded(doc, y, 16);
-      doc.setFont('helvetica', 'bold');
-      doc.text(exp.title || '', MARGIN, y);
-      doc.setFont('helvetica', 'normal');
-      const org = exp.organization ? ` at ${exp.organization}` : '';
-      doc.text(org, MARGIN + doc.getTextWidth((exp.title || '') + ' '), y);
-      if (exp.is_current) {
-        doc.setTextColor(40, 140, 40);
-        doc.text('  (Current)', MARGIN + doc.getTextWidth((exp.title || '') + ' ' + org + ' '), y);
-        doc.setTextColor(0);
-      }
-      y += LINE_HEIGHT;
-      if (exp.description) {
-        y = addWrappedText(doc, y, exp.description, 9);
-      }
-      y += 2;
     }
   }
 
@@ -306,8 +236,8 @@ function triggerDownload(bytes, filename) {
   URL.revokeObjectURL(url);
 }
 
-export async function generateExpertPdf(expert, specialties, education, experience, credentials, testimony, documents, supabase) {
-  const profileBytes = buildProfilePdf(expert, specialties, education, experience, credentials, testimony, documents);
+export async function generateExpertPdf(expert, specialties, testimony, documents, supabase) {
+  const profileBytes = buildProfilePdf(expert, specialties, testimony, documents);
 
   let finalBytes;
   if (documents.length > 0) {
