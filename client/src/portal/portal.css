@@ -827,14 +827,16 @@
 @media (max-width: 768px) {
   .portal-sidebar-wrapper {
     position: fixed;
-    left: -260px;
+    left: 0;
     top: 0;
     z-index: 1000;
-    transition: left var(--transition);
+    transform: translateX(-260px);
+    transition: transform 0.22s ease;
+    will-change: transform;
   }
 
   .portal-sidebar-wrapper--open {
-    left: 0;
+    transform: translateX(0);
   }
 
   .portal-overlay {
