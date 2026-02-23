@@ -9,6 +9,8 @@ export default function Messages() {
   const [conversations, setConversations] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
   const [newMessage, setNewMessage] = useState('');
+  const [showNewChat, setShowNewChat] = useState(false);
+  const [staffList, setStaffList] = useState([]);
   const { messages, loading: msgsLoading, sendMessage } = useMessages(activeConv?.id);
   const threadRef = useRef();
 
@@ -20,6 +22,13 @@ export default function Messages() {
       .or(`participant_1.eq.${user.id},participant_2.eq.${user.id}`)
       .order('last_message_at', { ascending: false })
       .then(({ data }) => setConversations(data || []));
+
+    supabase
+      .from('profiles')
+      .select('id, first_name, last_name, email, role')
+      .in('role', ['admin', 'staff'])
+      .order('first_name', { ascending: true })
+      .then(({ data }) => setStaffList(data || []));
   }, [user]);
 
   useEffect(() => {
@@ -48,6 +57,28 @@ export default function Messages() {
     return conv.participant_1 === user.id ? conv.participant_2 : conv.participant_1;
   };
 
+  const startNewChat = async (recipientId) => {
+    const existing = conversations.find(c =>
+      (c.participant_1 === user.id && c.participant_2 === recipientId) ||
+      (c.participant_2 === user.id && c.participant_1 === recipientId)
+    );
+    if (existing) {
+      setActiveConv(existing);
+      setShowNewChat(false);
+      return;
+    }
+    const { data } = await supabase
+      .from('conversations')
+      .insert({ participant_1: user.id, participant_2: recipientId })
+      .select('*, participant_1_profile:profiles!conversations_participant_1_fkey(id, first_name, last_name, email, role), participant_2_profile:profiles!conversations_participant_2_fkey(id, first_name, last_name, email, role)')
+      .single();
+    if (data) {
+      setConversations(prev => [data, ...prev]);
+      setActiveConv(data);
+    }
+    setShowNewChat(false);
+  };
+
   const handleSend = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !activeConv) return;
@@ -60,13 +91,37 @@ export default function Messages() {
     <div>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Messages</h1>
+        <button className="btn btn--primary" onClick={() => setShowNewChat(!showNewChat)} style={{ padding: '10px 20px' }}>
+          New Conversation
+        </button>
       </div>
 
-      {conversations.length === 0 ? (
+      {showNewChat && (
+        <div className="portal-card" style={{ marginBottom: 16 }}>
+          <h3 className="portal-card__title">Start New Conversation</h3>
+          {staffList.length === 0 ? (
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-400)' }}>No staff or admin users found.</p>
+          ) : (
+            <div>
+              {staffList.map(person => (
+                <div key={person.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--color-gray-100)' }}>
+                  <span>
+                    {formatName(person)}
+                    <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginLeft: 8 }}>{person.role}</span>
+                  </span>
+                  <button className="portal-btn-action" onClick={() => startNewChat(person.id)}>Message</button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {conversations.length === 0 && !showNewChat ? (
         <div className="portal-empty">
           <p className="portal-empty__text">No conversations yet</p>
         </div>
-      ) : (
+      ) : conversations.length > 0 && (
         <div className="portal-messages">
           <div className="portal-messages__list">
             {conversations.map(conv => {
