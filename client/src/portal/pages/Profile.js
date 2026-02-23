@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 
-const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-const MAX_SIZE = 10 * 1024 * 1024;
+const ALLOWED_TYPES = ['application/pdf'];
+const MAX_SIZE = 5 * 1024 * 1024;
 
 export default function Profile() {
   const { user, profile, fetchProfile } = useAuth();
@@ -73,8 +73,8 @@ export default function Profile() {
     const file = e.target.files[0];
     if (!file) return;
     setCvError('');
-    if (!ALLOWED_TYPES.includes(file.type)) { setCvError('File type not allowed. Please upload PDF, DOC, DOCX, JPG, or PNG.'); return; }
-    if (file.size > MAX_SIZE) { setCvError('File too large. Maximum size is 10MB.'); return; }
+    if (!ALLOWED_TYPES.includes(file.type)) { setCvError('Only PDF files are accepted.'); return; }
+    if (file.size > MAX_SIZE) { setCvError('File too large. Maximum size is 5MB.'); return; }
     setCvUploading(true);
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
     const filePath = `${user.id}/cv/${Date.now()}_${safeName}`;
@@ -297,13 +297,13 @@ export default function Profile() {
           <input
             ref={cvFileRef}
             type="file"
-            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+            accept=".pdf"
             onChange={handleCvUpload}
             disabled={cvUploading}
             className="portal-field__input"
           />
           {cvUploading && <p style={{ fontSize: '0.85rem', color: 'var(--color-accent)', marginTop: 4 }}>Uploading...</p>}
-          <p className="portal-upload__hint">PDF, DOC, DOCX, JPG, or PNG. Max 10MB.</p>
+          <p className="portal-upload__hint">PDF only. Max 5MB.</p>
         </div>
         {cvDocs.length > 0 && (
           <div className="portal-doc-grid">
