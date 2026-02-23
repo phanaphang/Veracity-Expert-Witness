@@ -277,6 +277,7 @@ CREATE POLICY "Users can view conversation partner profiles" ON profiles FOR SEL
        OR (participant_2 = auth.uid() AND participant_1 = profiles.id)
   )
 );
+CREATE POLICY "Experts can view staff and admin profiles" ON profiles FOR SELECT USING (role IN ('admin', 'staff'));
 CREATE POLICY "Users can update own profile" ON profiles FOR UPDATE USING (auth.uid() = id);
 CREATE POLICY "Admins can update all profiles" ON profiles FOR UPDATE USING (is_admin());
 
