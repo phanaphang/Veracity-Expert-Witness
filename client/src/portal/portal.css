@@ -866,14 +866,21 @@
 
   .portal-messages {
     flex-direction: column;
-    height: calc(100vh - 150px);
+    height: calc(100dvh - 220px);
   }
 
   .portal-messages__list {
     width: 100%;
-    max-height: 200px;
+    max-height: 160px;
+    flex-shrink: 0;
     border-right: none;
     border-bottom: 1px solid var(--color-gray-200);
+    overflow-y: auto;
+  }
+
+  .portal-messages__thread {
+    min-height: 0;
+    flex: 1;
   }
 
   .portal-list-item__row {
