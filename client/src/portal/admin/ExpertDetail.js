@@ -90,9 +90,6 @@ export default function ExpertDetail() {
         <span className={`portal-badge portal-badge--${expert.profile_status || 'pending'}`}>
           {expert.profile_status || 'pending review'}
         </span>
-        <span className={`portal-badge portal-badge--${expert.availability || 'pending'}`}>
-          {expert.availability || 'not set'}
-        </span>
         {expert.onboarded_at && <span className="portal-badge portal-badge--accepted">onboarded</span>}
       </div>
 
