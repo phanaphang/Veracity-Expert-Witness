@@ -39,6 +39,7 @@ import Documents from './portal/pages/Documents';
 import CaseInvitations from './portal/pages/CaseInvitations';
 import Messages from './portal/pages/Messages';
 import ChangePassword from './portal/pages/ChangePassword';
+import CalendarPage from './portal/pages/Calendar';
 
 // Admin
 import AdminLayout from './portal/admin/AdminLayout';
@@ -105,6 +106,7 @@ function App() {
           <Route path="/portal/cases" element={<ProtectedRoute><PortalLayout><CaseInvitations /></PortalLayout></ProtectedRoute>} />
           <Route path="/portal/messages" element={<ProtectedRoute><PortalLayout><Messages /></PortalLayout></ProtectedRoute>} />
           <Route path="/portal/change-password" element={<ProtectedRoute><PortalLayout><ChangePassword /></PortalLayout></ProtectedRoute>} />
+          <Route path="/portal/calendar" element={<ProtectedRoute><PortalLayout><CalendarPage /></PortalLayout></ProtectedRoute>} />
 
           {/* Admin (protected, admin only) */}
           <Route path="/admin/dashboard" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />

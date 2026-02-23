@@ -6,19 +6,24 @@ import { useAuth } from '../../hooks/useAuth';
 export default function Dashboard() {
   const { user, profile } = useAuth();
   const [stats, setStats] = useState({ pendingCases: 0, unreadMessages: 0, documents: 0 });
+  const [upcomingEvents, setUpcomingEvents] = useState([]);
 
   useEffect(() => {
     if (!user) return;
+    const now = new Date().toISOString();
+    const weekOut = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
     Promise.all([
       supabase.from('case_invitations').select('*', { count: 'exact', head: true }).eq('expert_id', user.id).eq('status', 'pending'),
       supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
       supabase.from('documents').select('*', { count: 'exact', head: true }).eq('expert_id', user.id),
-    ]).then(([cases, msgs, docs]) => {
+      supabase.from('calendar_events').select('id, title, start_time').eq('expert_id', user.id).gte('start_time', now).lte('start_time', weekOut).order('start_time', { ascending: true }).limit(5),
+    ]).then(([cases, msgs, docs, events]) => {
       setStats({
         pendingCases: cases.count || 0,
         unreadMessages: msgs.count || 0,
         documents: docs.count || 0,
       });
+      setUpcomingEvents(events.data || []);
     });
   }, [user]);
 
@@ -75,6 +80,36 @@ export default function Dashboard() {
             View and respond to case opportunities
           </p>
         </Link>
+      </div>
+
+      <div className="portal-card" style={{ marginTop: 16 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+          <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Upcoming This Week</h3>
+          <Link to="/portal/calendar" style={{ fontSize: '0.8rem', color: 'var(--color-accent)', fontWeight: 600 }}>
+            View Calendar →
+          </Link>
+        </div>
+        {upcomingEvents.length === 0 ? (
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-400)' }}>
+            No events in the next 7 days. <Link to="/portal/calendar" style={{ color: 'var(--color-accent)' }}>Add one →</Link>
+          </p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {upcomingEvents.map(ev => (
+              <div key={ev.id} className="cal-upcoming-event">
+                <div className="cal-upcoming-event__dot" />
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--color-navy)' }}>{ev.title}</div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--color-gray-500)' }}>
+                    {new Date(ev.start_time).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
+                    {' · '}
+                    {new Date(ev.start_time).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

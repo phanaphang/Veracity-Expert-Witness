@@ -420,6 +420,32 @@ INSERT INTO specialties (name, slug) VALUES
 ALTER PUBLICATION supabase_realtime ADD TABLE messages;
 
 -- ============================================================
+-- 8. CALENDAR EVENTS
+-- ============================================================
+
+CREATE TABLE calendar_events (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  expert_id   UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  title       TEXT NOT NULL,
+  start_time  TIMESTAMPTZ NOT NULL,
+  end_time    TIMESTAMPTZ NOT NULL,
+  notes       TEXT DEFAULT '',
+  case_id     UUID REFERENCES cases(id) ON DELETE SET NULL,
+  created_at  TIMESTAMPTZ DEFAULT now()
+);
+
+ALTER TABLE calendar_events ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Experts manage own events"
+  ON calendar_events FOR ALL
+  USING (expert_id = auth.uid())
+  WITH CHECK (expert_id = auth.uid());
+
+CREATE POLICY "Admins manage all events"
+  ON calendar_events FOR ALL
+  USING (is_admin());
+
+-- ============================================================
 -- DONE! Next steps:
 -- 1. Add your first admin user in Supabase Auth > Users
 -- 2. Run: UPDATE profiles SET role = 'admin' WHERE email = 'your-admin@veracityexpertwitness.com';

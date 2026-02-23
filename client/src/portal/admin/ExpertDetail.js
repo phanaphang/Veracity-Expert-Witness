@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { generateExpertPdf } from './generateExpertPdf';
+import CalendarView from '../components/CalendarView';
 
 export default function ExpertDetail() {
   const { id } = useParams();
@@ -233,6 +234,12 @@ export default function ExpertDetail() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* Calendar */}
+      <div className="portal-card">
+        <h2 className="portal-card__title">Calendar</h2>
+        <CalendarView expertId={id} />
       </div>
     </div>
   );
