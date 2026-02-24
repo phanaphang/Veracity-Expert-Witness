@@ -18,7 +18,7 @@ export default function Dashboard() {
       supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
       supabase.from('documents').select('*', { count: 'exact', head: true }).eq('expert_id', user.id),
       supabase.from('calendar_events').select('id, title, start_time').eq('expert_id', user.id).gte('start_time', now).lte('start_time', weekOut).order('start_time', { ascending: true }).limit(5),
-      supabase.from('documents').select('id', { count: 'exact', head: true }).eq('expert_id', user.id).eq('document_type', 'cv'),
+      supabase.from('documents').select('id').eq('expert_id', user.id).eq('document_type', 'cv').limit(1),
     ]).then(([cases, msgs, docs, events, cv]) => {
       setStats({
         pendingCases: cases.count || 0,
@@ -26,7 +26,7 @@ export default function Dashboard() {
         documents: docs.count || 0,
       });
       setUpcomingEvents(events.data || []);
-      setHasCv((cv.count || 0) > 0);
+      setHasCv((cv.data?.length || 0) > 0);
     });
   }, [user]);
 
