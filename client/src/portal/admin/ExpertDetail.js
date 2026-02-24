@@ -18,6 +18,8 @@ export default function ExpertDetail() {
   const caseId = searchParams.get('caseId');
   const [expert, setExpert] = useState(null);
   const [specialties, setSpecialties] = useState([]);
+  const [specialtyObjects, setSpecialtyObjects] = useState([]);
+  const [parentSpecialties, setParentSpecialties] = useState([]);
   const [testimony, setTestimony] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,12 +28,16 @@ export default function ExpertDetail() {
   useEffect(() => {
     Promise.all([
       supabase.from('profiles').select('*').eq('id', id).single(),
-      supabase.from('expert_specialties').select('specialties(name)').eq('expert_id', id),
+      supabase.from('expert_specialties').select('specialties(id, name, parent_id)').eq('expert_id', id),
       supabase.from('prior_testimony').select('*').eq('expert_id', id).order('date_of_testimony', { ascending: false }),
       supabase.from('documents').select('*').eq('expert_id', id).order('uploaded_at', { ascending: false }),
-    ]).then(([prof, specs, test, docs]) => {
+      supabase.from('specialties').select('id, name').is('parent_id', null).order('name'),
+    ]).then(([prof, specs, test, docs, parents]) => {
+      const specObjs = specs.data?.map(s => s.specialties).filter(Boolean) || [];
       setExpert(prof.data);
-      setSpecialties(specs.data?.map(s => s.specialties?.name).filter(Boolean) || []);
+      setSpecialties(specObjs.map(s => s.name));
+      setSpecialtyObjects(specObjs);
+      setParentSpecialties(parents.data || []);
       setTestimony(test.data || []);
       setDocuments(docs.data || []);
       setLoading(false);
@@ -130,15 +136,57 @@ export default function ExpertDetail() {
         )}
       </div>
 
-      {/* Specialties */}
-      {specialties.length > 0 && (
+      {/* Specialties & Tags */}
+      {(specialtyObjects.length > 0 || expert.tags?.length > 0) && (
         <div className="portal-card">
-          <h2 className="portal-card__title">Specialties</h2>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-            {specialties.map((name, i) => (
-              <span key={i} className="portal-badge portal-badge--open">{name}</span>
-            ))}
-          </div>
+          <h2 className="portal-card__title">Specialties & Subspecialties</h2>
+
+          {/* Grouped subspecialties */}
+          {(() => {
+            const grouped = parentSpecialties
+              .map(parent => ({ parent, subs: specialtyObjects.filter(s => s.parent_id === parent.id) }))
+              .filter(g => g.subs.length > 0);
+            const legacy = specialtyObjects.filter(s => !s.parent_id);
+            return (
+              <>
+                {grouped.map(({ parent, subs }) => (
+                  <div key={parent.id} style={{ marginBottom: 14 }}>
+                    <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-gray-400)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 6 }}>
+                      {parent.name}
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {subs.map(sub => (
+                        <span key={sub.id} className="portal-badge portal-badge--open">{sub.name}</span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+                {legacy.length > 0 && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: grouped.length > 0 ? 8 : 0 }}>
+                    {legacy.map(s => (
+                      <span key={s.id} className="portal-badge portal-badge--open">{s.name}</span>
+                    ))}
+                  </div>
+                )}
+              </>
+            );
+          })()}
+
+          {/* Keyword tags */}
+          {expert.tags?.length > 0 && (
+            <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid var(--color-gray-200)' }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-gray-400)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
+                Keyword Tags
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {expert.tags.map(tag => (
+                  <span key={tag} style={{ background: '#e0e7ff', color: '#3730a3', borderRadius: 999, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 500 }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
