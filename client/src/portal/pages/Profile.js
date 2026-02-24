@@ -269,7 +269,7 @@ export default function Profile() {
 
         {/* Rate & Availability */}
         <div className="portal-card">
-          <h2 className="portal-card__title">Rate & Availability</h2>
+          <h2 className="portal-card__title">Rates</h2>
           <div className="portal-list-item__row">
             <div className="portal-field">
               <label className="portal-field__label">Review & Report Rate ($/hr)</label>
