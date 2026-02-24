@@ -193,11 +193,11 @@ export default function Profile() {
           <div className="portal-list-item__row">
             <div className="portal-field">
               <label className="portal-field__label">First Name</label>
-              <input className="portal-field__input" name="first_name" value={form.first_name} onChange={handleChange} required maxLength={100} readOnly={!editing} />
+              <input className="portal-field__input" name="first_name" value={form.first_name} onChange={handleChange} required maxLength={50} readOnly={!editing} />
             </div>
             <div className="portal-field">
               <label className="portal-field__label">Last Name</label>
-              <input className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required maxLength={100} readOnly={!editing} />
+              <input className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required maxLength={50} readOnly={!editing} />
             </div>
           </div>
           <div className="portal-field">
@@ -210,7 +210,7 @@ export default function Profile() {
           </div>
           <div className="portal-field">
             <label className="portal-field__label">Bio</label>
-            <textarea className="portal-field__textarea" name="bio" value={form.bio} onChange={handleChange} rows="4" placeholder="Describe your expertise and experience..." maxLength={5000} readOnly={!editing} />
+            <textarea className="portal-field__textarea" name="bio" value={form.bio} onChange={handleChange} rows="4" placeholder="Describe your expertise and experience..." maxLength={2000} readOnly={!editing} />
           </div>
         </div>
 
@@ -245,17 +245,17 @@ export default function Profile() {
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Case Name</label>
-                  <input className="portal-field__input" value={test.case_name} onChange={(e) => { const t = [...testimony]; t[i].case_name = e.target.value; setTestimony(t); }} maxLength={500} readOnly={!editing} />
+                  <input className="portal-field__input" value={test.case_name} onChange={(e) => { const t = [...testimony]; t[i].case_name = e.target.value; setTestimony(t); }} maxLength={150} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Court</label>
-                  <input className="portal-field__input" value={test.court || ''} onChange={(e) => { const t = [...testimony]; t[i].court = e.target.value; setTestimony(t); }} maxLength={200} readOnly={!editing} />
+                  <input className="portal-field__input" value={test.court || ''} onChange={(e) => { const t = [...testimony]; t[i].court = e.target.value; setTestimony(t); }} maxLength={100} readOnly={!editing} />
                 </div>
               </div>
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Jurisdiction</label>
-                  <input className="portal-field__input" value={test.jurisdiction || ''} onChange={(e) => { const t = [...testimony]; t[i].jurisdiction = e.target.value; setTestimony(t); }} maxLength={200} readOnly={!editing} />
+                  <input className="portal-field__input" value={test.jurisdiction || ''} onChange={(e) => { const t = [...testimony]; t[i].jurisdiction = e.target.value; setTestimony(t); }} maxLength={100} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Date of Testimony</label>
@@ -265,7 +265,7 @@ export default function Profile() {
               <div className="portal-list-item__row">
                 <div className="portal-field">
                   <label className="portal-field__label">Topic</label>
-                  <input className="portal-field__input" value={test.topic || ''} onChange={(e) => { const t = [...testimony]; t[i].topic = e.target.value; setTestimony(t); }} maxLength={200} readOnly={!editing} />
+                  <input className="portal-field__input" value={test.topic || ''} onChange={(e) => { const t = [...testimony]; t[i].topic = e.target.value; setTestimony(t); }} maxLength={100} readOnly={!editing} />
                 </div>
                 <div className="portal-field">
                   <label className="portal-field__label">Retained By</label>
@@ -298,15 +298,15 @@ export default function Profile() {
           <div className="portal-list-item__row">
             <div className="portal-field">
               <label className="portal-field__label">Review & Report Rate ($/hr)</label>
-              <input className="portal-field__input" name="rate_review_report" type="number" value={form.rate_review_report} onChange={handleChange} placeholder="e.g. 500" min={0} max={99999} readOnly={!editing} />
+              <input className="portal-field__input" name="rate_review_report" type="number" value={form.rate_review_report} onChange={handleChange} placeholder="e.g. 500" min={0} max={9999} readOnly={!editing} />
             </div>
             <div className="portal-field">
               <label className="portal-field__label">Deposition Rate ($/hr)</label>
-              <input className="portal-field__input" name="rate_deposition" type="number" value={form.rate_deposition} onChange={handleChange} placeholder="e.g. 600" min={0} max={99999} readOnly={!editing} />
+              <input className="portal-field__input" name="rate_deposition" type="number" value={form.rate_deposition} onChange={handleChange} placeholder="e.g. 600" min={0} max={9999} readOnly={!editing} />
             </div>
             <div className="portal-field">
               <label className="portal-field__label">Trial Testimony Rate ($/hr)</label>
-              <input className="portal-field__input" name="rate_trial_testimony" type="number" value={form.rate_trial_testimony} onChange={handleChange} placeholder="e.g. 750" min={0} max={99999} readOnly={!editing} />
+              <input className="portal-field__input" name="rate_trial_testimony" type="number" value={form.rate_trial_testimony} onChange={handleChange} placeholder="e.g. 750" min={0} max={9999} readOnly={!editing} />
             </div>
           </div>
         </div>
