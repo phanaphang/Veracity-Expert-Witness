@@ -40,7 +40,15 @@ export default function ExpertDetail() {
 
   const handleDownload = async (doc) => {
     const { data } = await supabase.storage.from('expert-documents').createSignedUrl(doc.file_path, 60);
-    if (data?.signedUrl) window.open(data.signedUrl, '_blank');
+    if (data?.signedUrl) {
+      const a = document.createElement('a');
+      a.href = data.signedUrl;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   };
 
   const handleGeneratePdf = async () => {
