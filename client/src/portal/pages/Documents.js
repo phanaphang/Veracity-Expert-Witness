@@ -3,7 +3,6 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 
 const DOC_TYPES = [
-  { value: 'cv', label: 'CV / Resume' },
   { value: 'license', label: 'License' },
   { value: 'certification', label: 'Certification' },
   { value: 'sample_report', label: 'Sample Report' },
