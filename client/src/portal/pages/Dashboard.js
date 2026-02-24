@@ -7,26 +7,30 @@ export default function Dashboard() {
   const { user, profile } = useAuth();
   const [stats, setStats] = useState({ pendingCases: 0, unreadMessages: 0, documents: 0 });
   const [upcomingEvents, setUpcomingEvents] = useState([]);
-  const [hasCv, setHasCv] = useState(null);
+  const [hasCv, setHasCv] = useState(false);
 
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      const now = new Date().toISOString();
-      const weekOut = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-      const [cases, msgs, docs, events] = await Promise.all([
-        supabase.from('case_invitations').select('*', { count: 'exact', head: true }).eq('expert_id', user.id).eq('status', 'pending'),
-        supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
-        supabase.from('documents').select('document_type').eq('expert_id', user.id),
-        supabase.from('calendar_events').select('id, title, start_time').eq('expert_id', user.id).gte('start_time', now).lte('start_time', weekOut).order('start_time', { ascending: true }).limit(5),
-      ]);
-      setStats({
-        pendingCases: cases.count || 0,
-        unreadMessages: msgs.count || 0,
-        documents: docs.data?.length || 0,
-      });
-      setUpcomingEvents(events.data || []);
-      setHasCv(docs.data?.some(d => d.document_type === 'cv') ?? false);
+      try {
+        const now = new Date().toISOString();
+        const weekOut = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+        const [cases, msgs, docs, events] = await Promise.all([
+          supabase.from('case_invitations').select('*', { count: 'exact', head: true }).eq('expert_id', user.id).eq('status', 'pending'),
+          supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
+          supabase.from('documents').select('document_type').eq('expert_id', user.id),
+          supabase.from('calendar_events').select('id, title, start_time').eq('expert_id', user.id).gte('start_time', now).lte('start_time', weekOut).order('start_time', { ascending: true }).limit(5),
+        ]);
+        setStats({
+          pendingCases: cases.count || 0,
+          unreadMessages: msgs.count || 0,
+          documents: docs.data?.length || 0,
+        });
+        setUpcomingEvents(events.data || []);
+        if (docs.data?.some(d => d.document_type === 'cv')) setHasCv(true);
+      } catch (e) {
+        console.error('Dashboard load error', e);
+      }
     };
     load();
   }, [user]);
@@ -67,7 +71,7 @@ export default function Dashboard() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
         <Link to="/portal/profile" className="portal-card portal-card--clickable" style={{ textDecoration: 'none', position: 'relative' }}>
-          {hasCv === false && (
+          {!hasCv && (
             <span style={{ position: 'absolute', top: 12, right: 12, background: 'var(--color-accent)', color: '#fff', fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: 999 }}>
               CV missing
             </span>
@@ -76,7 +80,7 @@ export default function Dashboard() {
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
             Update your credentials, specialties, and availability
           </p>
-          {hasCv === false && (
+          {!hasCv && (
             <p style={{ fontSize: '0.78rem', color: 'var(--color-accent)', marginTop: 6, fontWeight: 600 }}>
               Upload your CV / Resume to complete your profile
             </p>
