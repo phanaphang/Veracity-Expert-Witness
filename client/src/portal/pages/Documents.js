@@ -10,7 +10,7 @@ const DOC_TYPES = [
   { value: 'other', label: 'Other' },
 ];
 
-const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/png'];
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 export default function Documents() {
@@ -40,7 +40,7 @@ export default function Documents() {
     setError('');
 
     if (!ALLOWED_TYPES.includes(file.type)) {
-      setError('File type not allowed. Please upload PDF, DOC, DOCX, JPG, or PNG files.');
+      setError('File type not allowed. Please upload PDF, JPG, or PNG files.');
       return;
     }
     if (file.size > MAX_SIZE) {
@@ -49,7 +49,7 @@ export default function Documents() {
     }
 
     setUploading(true);
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 100);
     const filePath = `${user.id}/${selectedType}/${Date.now()}_${safeName}`;
 
     const { error: uploadError } = await supabase.storage
@@ -118,7 +118,7 @@ export default function Documents() {
             <input
               ref={fileRef}
               type="file"
-              accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+              accept=".pdf,.jpg,.jpeg,.png"
               onChange={handleUpload}
               disabled={uploading}
               className="portal-field__input"
@@ -126,7 +126,7 @@ export default function Documents() {
           </div>
         </div>
         {uploading && <p style={{ fontSize: '0.85rem', color: 'var(--color-accent)' }}>Uploading...</p>}
-        <p className="portal-upload__hint">PDF, DOC, DOCX, JPG, or PNG. Max 10MB.</p>
+        <p className="portal-upload__hint">PDF, JPG, or PNG. Max 10MB.</p>
       </div>
 
       {/* Document List */}

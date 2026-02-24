@@ -76,7 +76,7 @@ export default function Profile() {
     if (!ALLOWED_TYPES.includes(file.type)) { setCvError('Only PDF files are accepted.'); return; }
     if (file.size > MAX_SIZE) { setCvError('File too large. Maximum size is 5MB.'); return; }
     setCvUploading(true);
-    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 100);
     const filePath = `${user.id}/cv/${Date.now()}_${safeName}`;
     const { error: uploadError } = await supabase.storage.from('expert-documents').upload(filePath, file);
     if (uploadError) { setCvError('Upload failed. Please try again.'); setCvUploading(false); return; }

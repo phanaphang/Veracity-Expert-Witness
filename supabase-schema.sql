@@ -322,7 +322,7 @@ CREATE POLICY "Experts can delete own testimony" ON prior_testimony FOR DELETE U
 -- DOCUMENTS
 CREATE POLICY "Experts can view own documents" ON documents FOR SELECT USING (auth.uid() = expert_id);
 CREATE POLICY "Admins can view all documents" ON documents FOR SELECT USING (is_admin());
-CREATE POLICY "Experts can upload documents" ON documents FOR INSERT WITH CHECK (auth.uid() = expert_id);
+CREATE POLICY "Experts can upload documents" ON documents FOR INSERT WITH CHECK (auth.uid() = expert_id AND document_type IN ('cv', 'license', 'certification', 'sample_report', 'other'));
 CREATE POLICY "Experts can delete own documents" ON documents FOR DELETE USING (auth.uid() = expert_id);
 
 -- CASES
@@ -368,7 +368,7 @@ VALUES (
   'expert-documents',
   false,
   10485760, -- 10MB
-  ARRAY['application/pdf', 'image/jpeg', 'image/png', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+  ARRAY['application/pdf', 'image/jpeg', 'image/png']
 );
 
 -- Storage policies: experts access own folder, admins access all
