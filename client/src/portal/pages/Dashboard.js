@@ -54,9 +54,11 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="portal-alert portal-alert--error" style={{ marginBottom: 24 }}>
-        DEBUG: dashboard v2
-      </div>
+      {!hasCv && (
+        <div className="portal-alert portal-alert--error" style={{ marginBottom: 24 }}>
+          CV / Resume not uploaded. <Link to="/portal/profile" style={{ fontWeight: 600 }}>Upload it on your profile →</Link>
+        </div>
+      )}
 
       <div className="portal-stats">
         <div className="portal-stat">
