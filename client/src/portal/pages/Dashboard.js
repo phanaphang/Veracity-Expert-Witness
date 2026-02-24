@@ -14,7 +14,7 @@ export default function Dashboard() {
     const load = async () => {
       try {
         const now = new Date().toISOString();
-        const weekOut = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+        const weekOut = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
         const [cases, msgs, docs, events] = await Promise.all([
           supabase.from('case_invitations').select('*', { count: 'exact', head: true }).eq('expert_id', user.id).eq('status', 'pending'),
           supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
@@ -105,14 +105,14 @@ export default function Dashboard() {
 
       <div className="portal-card" style={{ marginTop: 16 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-          <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Upcoming This Week</h3>
+          <h3 className="portal-card__title" style={{ marginBottom: 0 }}>My 30-Day Horizon</h3>
           <Link to="/portal/calendar" style={{ fontSize: '0.8rem', color: 'var(--color-accent)', fontWeight: 600 }}>
             View Calendar →
           </Link>
         </div>
         {upcomingEvents.length === 0 ? (
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-400)' }}>
-            No events in the next 7 days. <Link to="/portal/calendar" style={{ color: 'var(--color-accent)' }}>Add one →</Link>
+            No events in the next 30 days. <Link to="/portal/calendar" style={{ color: 'var(--color-accent)' }}>Add one →</Link>
           </p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
