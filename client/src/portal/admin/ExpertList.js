@@ -13,6 +13,7 @@ export default function ExpertList() {
   const [search, setSearch] = useState('');
   const [filterSpecialty, setFilterSpecialty] = useState('');
   const [filterAvailability, setFilterAvailability] = useState('');
+  const [filterTag, setFilterTag] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const [exportConfirm, setExportConfirm] = useState(false);
@@ -28,13 +29,27 @@ export default function ExpertList() {
     });
   }, []);
 
+  const parents = specialties.filter(s => !s.parent_id);
+  const subsOf = (parentId) => specialties.filter(s => s.parent_id === parentId).map(s => s.id);
+
   const filtered = experts.filter(exp => {
     const name = `${exp.first_name || ''} ${exp.last_name || ''} ${exp.email || ''}`.toLowerCase();
     if (search && !name.includes(search.toLowerCase())) return false;
     if (filterAvailability && exp.availability !== filterAvailability) return false;
     if (filterSpecialty) {
-      const hasSpec = exp.expert_specialties?.some(es => es.specialty_id === filterSpecialty);
-      if (!hasSpec) return false;
+      const selected = specialties.find(s => s.id === filterSpecialty);
+      if (selected && !selected.parent_id) {
+        // Parent selected: match experts with the parent itself OR any of its subspecialties
+        const childIds = subsOf(filterSpecialty);
+        const ids = [filterSpecialty, ...childIds];
+        if (!exp.expert_specialties?.some(es => ids.includes(es.specialty_id))) return false;
+      } else {
+        if (!exp.expert_specialties?.some(es => es.specialty_id === filterSpecialty)) return false;
+      }
+    }
+    if (filterTag) {
+      const term = filterTag.toLowerCase();
+      if (!exp.tags?.some(t => t.toLowerCase().includes(term))) return false;
     }
     return true;
   });
@@ -116,6 +131,7 @@ export default function ExpertList() {
           'Email': exp.email || '',
           'Phone': exp.phone || '',
           'Specialties': (exp.expert_specialties || []).map(es => es.specialties?.name).filter(Boolean).join(', '),
+          'Tags': (exp.tags || []).join(', '),
           'Availability': exp.availability || '',
           'Bio': exp.bio || '',
           'Review & Report Rate': exp.rate_review_report || '',
@@ -208,19 +224,21 @@ export default function ExpertList() {
           <div className="portal-stat__value">{experts.length}</div>
           <div className="portal-stat__label">All Experts</div>
         </div>
-        {specialties.map(s => {
+        {parents.map(parent => {
+          const childIds = subsOf(parent.id);
+          const ids = [parent.id, ...childIds];
           const count = experts.filter(exp =>
-            exp.expert_specialties?.some(es => es.specialty_id === s.id)
+            exp.expert_specialties?.some(es => ids.includes(es.specialty_id))
           ).length;
           return (
             <div
-              key={s.id}
+              key={parent.id}
               className="portal-stat"
-              style={{ cursor: 'pointer', transition: 'border-color 0.15s', borderColor: filterSpecialty === s.id ? 'var(--color-accent)' : undefined }}
-              onClick={() => setFilterSpecialty(prev => prev === s.id ? '' : s.id)}
+              style={{ cursor: 'pointer', transition: 'border-color 0.15s', borderColor: filterSpecialty === parent.id ? 'var(--color-accent)' : undefined }}
+              onClick={() => setFilterSpecialty(prev => prev === parent.id ? '' : parent.id)}
             >
               <div className="portal-stat__value">{count}</div>
-              <div className="portal-stat__label">{s.name}</div>
+              <div className="portal-stat__label">{parent.name}</div>
             </div>
           );
         })}
@@ -235,7 +253,14 @@ export default function ExpertList() {
         />
         <select className="portal-field__select" value={filterSpecialty} onChange={(e) => setFilterSpecialty(e.target.value)}>
           <option value="">All Specialties</option>
-          {specialties.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+          {parents.map(parent => (
+            <optgroup key={parent.id} label={parent.name}>
+              <option value={parent.id}>— All {parent.name}</option>
+              {specialties.filter(s => s.parent_id === parent.id).map(sub => (
+                <option key={sub.id} value={sub.id}>{sub.name}</option>
+              ))}
+            </optgroup>
+          ))}
         </select>
         <select className="portal-field__select" value={filterAvailability} onChange={(e) => setFilterAvailability(e.target.value)}>
           <option value="">All Availability</option>
@@ -243,6 +268,12 @@ export default function ExpertList() {
           <option value="limited">Limited</option>
           <option value="unavailable">Unavailable</option>
         </select>
+        <input
+          className="portal-field__input"
+          placeholder="Search by keyword tag..."
+          value={filterTag}
+          onChange={(e) => setFilterTag(e.target.value)}
+        />
       </div>
 
       {filtered.length === 0 ? (
