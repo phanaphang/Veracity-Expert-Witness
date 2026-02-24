@@ -54,11 +54,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {!hasCv && (
-        <div className="portal-alert portal-alert--error" style={{ marginBottom: 24 }}>
-          CV / Resume not uploaded. <Link to="/portal/profile" style={{ fontWeight: 600 }}>Upload it on your profile →</Link>
-        </div>
-      )}
 
       <div className="portal-stats">
         <div className="portal-stat">
@@ -77,10 +72,22 @@ export default function Dashboard() {
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
         <Link to="/portal/profile" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
-          <h3 className="portal-card__title">Edit Profile</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Edit Profile</h3>
+            {!hasCv && (
+              <span style={{ background: '#ef4444', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: 999, whiteSpace: 'nowrap', marginLeft: 8 }}>
+                CV missing
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 8 }}>
             Update your credentials, specialties, and availability
           </p>
+          {!hasCv && (
+            <p style={{ fontSize: '0.78rem', color: '#ef4444', marginTop: 6, fontWeight: 600 }}>
+              Upload your CV / Resume →
+            </p>
+          )}
         </Link>
         <Link to="/portal/documents" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
           <h3 className="portal-card__title">Documents</h3>
