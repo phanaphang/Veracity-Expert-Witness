@@ -70,20 +70,15 @@ export default function Dashboard() {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
-        <Link to="/portal/profile" className="portal-card portal-card--clickable" style={{ textDecoration: 'none', position: 'relative' }}>
-          {!hasCv && (
-            <span style={{ position: 'absolute', top: 12, right: 12, background: 'var(--color-accent)', color: '#fff', fontSize: '0.7rem', fontWeight: 700, padding: '2px 8px', borderRadius: 999 }}>
-              CV missing
-            </span>
-          )}
+        <Link to="/portal/profile" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
           <h3 className="portal-card__title">Edit Profile</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
             Update your credentials, specialties, and availability
           </p>
           {!hasCv && (
-            <p style={{ fontSize: '0.78rem', color: 'var(--color-accent)', marginTop: 6, fontWeight: 600 }}>
-              Upload your CV / Resume to complete your profile
-            </p>
+            <div style={{ marginTop: 10, padding: '6px 10px', background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: 6, fontSize: '0.8rem', fontWeight: 600, color: '#92400e' }}>
+              CV / Resume not uploaded
+            </div>
           )}
         </Link>
         <Link to="/portal/documents" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
