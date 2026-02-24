@@ -52,7 +52,7 @@ function EventModal({ event, slot, expertId, cases, onClose, onSaved, onDeleted 
     }
     setSaving(false);
     if (result.error) { setError(result.error.message); return; }
-    onSaved(result.data);
+    onSaved(result.data, isNew);
   };
 
   const handleDelete = async () => {
@@ -203,9 +203,29 @@ export default function CalendarView({ expertId, readOnly = false }) {
     setModalOpen(true);
   };
 
-  const handleSaved = (row) => {
+  const handleSaved = async (row, isNew) => {
     setModalOpen(false);
     loadEvents();
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session || session.user.id === expertId) return;
+      await fetch('/api/notify-calendar-event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+        },
+        body: JSON.stringify({
+          expertId,
+          eventTitle: row.title,
+          startTime: row.start_time,
+          endTime: row.end_time,
+          action: isNew ? 'created' : 'updated',
+        }),
+      });
+    } catch (e) {
+      // Notification is best-effort — don't block the UI
+    }
   };
 
   const handleDeleted = (id) => {
