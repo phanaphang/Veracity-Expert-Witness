@@ -4,6 +4,13 @@ import { supabase } from '../../lib/supabase';
 import { generateExpertPdf } from './generateExpertPdf';
 import CalendarView from '../components/CalendarView';
 
+function formatPhone(value) {
+  if (!value) return '—';
+  const digits = value.replace(/\D/g, '').slice(0, 11);
+  if (digits.length < 11) return value;
+  return `${digits[0]}-${digits.slice(1, 4)}-${digits.slice(4, 7)}-${digits.slice(7)}`;
+}
+
 export default function ExpertDetail() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
@@ -97,8 +104,8 @@ export default function ExpertDetail() {
       <div className="portal-card">
         <h2 className="portal-card__title">Basic Information</h2>
         <div className="portal-list-item__row">
-          <div><strong>Email:</strong> {expert.email}</div>
-          <div><strong>Phone:</strong> {expert.phone || '—'}</div>
+          <div><strong>Email:</strong> {expert.email || '—'}</div>
+          <div><strong>Phone:</strong> {formatPhone(expert.phone)}</div>
         </div>
         {(expert.rate_review_report || expert.rate_deposition || expert.rate_trial_testimony) && (
           <div style={{ marginTop: 8 }}>
