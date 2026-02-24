@@ -10,6 +10,8 @@ export default function Profile() {
   const [form, setForm] = useState({ first_name: '', last_name: '', email: '', phone: '', bio: '', rate_review_report: '', rate_deposition: '', rate_trial_testimony: '' });
   const [allSpecialties, setAllSpecialties] = useState([]);
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState('');
   const [testimony, setTestimony] = useState([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -46,6 +48,7 @@ export default function Profile() {
         rate_deposition: profile.rate_deposition || '',
         rate_trial_testimony: profile.rate_trial_testimony || '',
       });
+      setTags(profile.tags || []);
     }
     loadData();
   }, [profile, loadData]);
@@ -73,6 +76,21 @@ export default function Profile() {
       prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
     );
   };
+
+  const addTag = (value) => {
+    const tag = value.trim();
+    if (tag && !tags.includes(tag)) setTags(prev => [...prev, tag]);
+    setTagInput('');
+  };
+
+  const handleTagKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addTag(tagInput);
+    }
+  };
+
+  const removeTag = (tag) => setTags(prev => prev.filter(t => t !== tag));
 
   const addTestimony = () => setTestimony(prev => [...prev, { case_name: '', court: '', jurisdiction: '', date_of_testimony: '', topic: '', retained_by: '', outcome: '', _new: true }]);
 
@@ -131,7 +149,7 @@ export default function Profile() {
         return;
       }
 
-      const updates = { ...form };
+      const updates = { ...form, tags };
       for (const key of ['rate_review_report', 'rate_deposition', 'rate_trial_testimony']) {
         if (updates[key]) updates[key] = parseFloat(updates[key]);
         else updates[key] = null;
@@ -219,16 +237,59 @@ export default function Profile() {
           </div>
         </div>
 
-        {/* Specialties */}
+        {/* Specialties & Subspecialties */}
         <div className="portal-card">
-          <h2 className="portal-card__title">Specialties</h2>
-          <div className="portal-checkbox-group">
-            {allSpecialties.map(s => (
-              <label key={s.id} className="portal-checkbox">
-                <input type="checkbox" checked={selectedSpecialties.includes(s.id)} onChange={() => toggleSpecialty(s.id)} disabled={!editing} />
-                {s.name}
-              </label>
-            ))}
+          <h2 className="portal-card__title">Specialties & Subspecialties</h2>
+          <p style={{ fontSize: '0.82rem', color: 'var(--color-gray-500)', marginBottom: 16 }}>
+            Select the subspecialties that best describe your areas of expertise.
+          </p>
+          {allSpecialties.filter(s => !s.parent_id).map(parent => {
+            const subs = allSpecialties.filter(s => s.parent_id === parent.id);
+            if (subs.length === 0) return null;
+            return (
+              <div key={parent.id} style={{ marginBottom: 20 }}>
+                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--color-navy)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8, paddingBottom: 6, borderBottom: '1px solid var(--color-gray-200)' }}>
+                  {parent.name}
+                </div>
+                <div className="portal-checkbox-group">
+                  {subs.map(sub => (
+                    <label key={sub.id} className="portal-checkbox">
+                      <input type="checkbox" checked={selectedSpecialties.includes(sub.id)} onChange={() => toggleSpecialty(sub.id)} disabled={!editing} />
+                      {sub.name}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+
+          {/* Keyword Tags */}
+          <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--color-gray-200)' }}>
+            <label className="portal-field__label">Keyword Tags</label>
+            <p style={{ fontSize: '0.78rem', color: 'var(--color-gray-500)', marginBottom: 10 }}>
+              Add specific areas of expertise (e.g. "Soil and groundwater contamination", "PFAS remediation"). Press Enter or comma to add.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: tags.length > 0 ? 10 : 0 }}>
+              {tags.map(tag => (
+                <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#e0e7ff', color: '#3730a3', borderRadius: 999, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 500 }}>
+                  {tag}
+                  {editing && (
+                    <button type="button" onClick={() => removeTag(tag)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3730a3', fontSize: '1rem', lineHeight: 1, padding: 0, marginLeft: 2 }}>×</button>
+                  )}
+                </span>
+              ))}
+            </div>
+            {editing && (
+              <input
+                className="portal-field__input"
+                value={tagInput}
+                onChange={e => setTagInput(e.target.value)}
+                onKeyDown={handleTagKeyDown}
+                onBlur={() => tagInput.trim() && addTag(tagInput)}
+                placeholder="Type a keyword and press Enter..."
+                maxLength={100}
+              />
+            )}
           </div>
         </div>
 

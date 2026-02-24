@@ -21,18 +21,20 @@ CREATE TABLE profiles (
   rate_trial_testimony NUMERIC,
   availability TEXT DEFAULT 'available' CHECK (availability IN ('available', 'limited', 'unavailable')),
   profile_status TEXT DEFAULT 'pending' CHECK (profile_status IN ('pending', 'approved', 'rejected')),
+  tags TEXT[] DEFAULT '{}',               -- free-text keyword tags (Option B hybrid)
   invited_at TIMESTAMPTZ,
   onboarded_at TIMESTAMPTZ,
   created_at TIMESTAMPTZ DEFAULT now(),
   updated_at TIMESTAMPTZ DEFAULT now()
 );
 
--- Specialties (the 8 expert categories)
+-- Specialties (8 parent categories + ~72 subspecialties via parent_id)
 CREATE TABLE specialties (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL UNIQUE,
   slug TEXT NOT NULL UNIQUE,
   description TEXT DEFAULT '',
+  parent_id UUID REFERENCES specialties(id) ON DELETE CASCADE, -- NULL = top-level specialty
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
@@ -400,7 +402,8 @@ USING (
 );
 
 -- ============================================================
--- 6. SEED DATA — Specialties
+-- 6. SEED DATA — Specialties (parents + subspecialties)
+-- See supabase-migration-subspecialties.sql for subspecialty seed
 -- ============================================================
 
 INSERT INTO specialties (name, slug) VALUES
@@ -412,6 +415,9 @@ INSERT INTO specialties (name, slug) VALUES
   ('Intellectual Property', 'intellectual-property'),
   ('Accident Reconstruction', 'accident-reconstruction'),
   ('Forensic Analysis', 'forensic-analysis');
+
+-- After inserting parents, run supabase-migration-subspecialties.sql
+-- to seed the ~72 subspecialties with parent_id references.
 
 -- ============================================================
 -- 7. REALTIME — Enable on messages table
