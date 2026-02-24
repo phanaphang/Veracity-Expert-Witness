@@ -17,18 +17,16 @@ export default function Dashboard() {
       const [cases, msgs, docs, events] = await Promise.all([
         supabase.from('case_invitations').select('*', { count: 'exact', head: true }).eq('expert_id', user.id).eq('status', 'pending'),
         supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
-        supabase.from('documents').select('*', { count: 'exact', head: true }).eq('expert_id', user.id),
+        supabase.from('documents').select('document_type').eq('expert_id', user.id),
         supabase.from('calendar_events').select('id, title, start_time').eq('expert_id', user.id).gte('start_time', now).lte('start_time', weekOut).order('start_time', { ascending: true }).limit(5),
       ]);
       setStats({
         pendingCases: cases.count || 0,
         unreadMessages: msgs.count || 0,
-        documents: docs.count || 0,
+        documents: docs.data?.length || 0,
       });
       setUpcomingEvents(events.data || []);
-
-      const { data: cvData } = await supabase.from('documents').select('id').eq('expert_id', user.id).eq('document_type', 'cv').limit(1);
-      setHasCv((cvData?.length || 0) > 0);
+      setHasCv(docs.data?.some(d => d.document_type === 'cv') ?? false);
     };
     load();
   }, [user]);
