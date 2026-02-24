@@ -54,6 +54,12 @@ export default function Dashboard() {
         </div>
       )}
 
+      {!hasCv && (
+        <div className="portal-alert portal-alert--error" style={{ marginBottom: 24 }}>
+          CV / Resume not uploaded. <Link to="/portal/profile" style={{ fontWeight: 600 }}>Upload it on your profile →</Link>
+        </div>
+      )}
+
       <div className="portal-stats">
         <div className="portal-stat">
           <div className="portal-stat__value">{stats.pendingCases}</div>
@@ -75,9 +81,6 @@ export default function Dashboard() {
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
             Update your credentials, specialties, and availability
           </p>
-          <div style={{ marginTop: 10, padding: '6px 10px', background: '#fef3c7', border: '1px solid #f59e0b', borderRadius: 6, fontSize: '0.8rem', fontWeight: 600, color: '#92400e' }}>
-            CV / Resume not uploaded (hasCv={String(hasCv)})
-          </div>
         </Link>
         <Link to="/portal/documents" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
           <h3 className="portal-card__title">Documents</h3>
