@@ -7,7 +7,7 @@ const MAX_SIZE = 5 * 1024 * 1024;
 
 export default function Profile() {
   const { user, profile, fetchProfile } = useAuth();
-  const [form, setForm] = useState({ first_name: '', last_name: '', phone: '', bio: '', rate_review_report: '', rate_deposition: '', rate_trial_testimony: '' });
+  const [form, setForm] = useState({ first_name: '', last_name: '', email: '', phone: '', bio: '', rate_review_report: '', rate_deposition: '', rate_trial_testimony: '' });
   const [allSpecialties, setAllSpecialties] = useState([]);
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
   const [testimony, setTestimony] = useState([]);
@@ -39,6 +39,7 @@ export default function Profile() {
       setForm({
         first_name: profile.first_name || '',
         last_name: profile.last_name || '',
+        email: profile.email || '',
         phone: profile.phone || '',
         bio: profile.bio || '',
         rate_review_report: profile.rate_review_report || '',
@@ -49,8 +50,22 @@ export default function Profile() {
     loadData();
   }, [profile, loadData]);
 
+  const formatPhone = (value) => {
+    const digits = value.replace(/\D/g, '').slice(0, 11);
+    if (digits.length === 0) return '';
+    if (digits.length <= 1) return digits;
+    if (digits.length <= 4) return `${digits[0]}-${digits.slice(1)}`;
+    if (digits.length <= 7) return `${digits[0]}-${digits.slice(1, 4)}-${digits.slice(4)}`;
+    return `${digits[0]}-${digits.slice(1, 4)}-${digits.slice(4, 7)}-${digits.slice(7)}`;
+  };
+
   const handleChange = (e) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    if (name === 'phone') {
+      setForm(prev => ({ ...prev, phone: formatPhone(value) }));
+    } else {
+      setForm(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const toggleSpecialty = (id) => {
@@ -105,6 +120,12 @@ export default function Profile() {
     const errors = [];
 
     try {
+      if (form.phone && !/^1-\d{3}-\d{3}-\d{4}$/.test(form.phone)) {
+        setMessage('Phone number must be in the format 1-xxx-xxx-xxxx.');
+        setSaving(false);
+        return;
+      }
+
       const updates = { ...form };
       for (const key of ['rate_review_report', 'rate_deposition', 'rate_trial_testimony']) {
         if (updates[key]) updates[key] = parseFloat(updates[key]);
@@ -180,8 +201,12 @@ export default function Profile() {
             </div>
           </div>
           <div className="portal-field">
+            <label className="portal-field__label">Email</label>
+            <input className="portal-field__input" name="email" type="email" value={form.email} onChange={handleChange} maxLength={254} readOnly={!editing} />
+          </div>
+          <div className="portal-field">
             <label className="portal-field__label">Phone</label>
-            <input className="portal-field__input" name="phone" type="tel" value={form.phone} onChange={handleChange} maxLength={30} readOnly={!editing} />
+            <input className="portal-field__input" name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="1-xxx-xxx-xxxx" maxLength={14} readOnly={!editing} />
           </div>
           <div className="portal-field">
             <label className="portal-field__label">Bio</label>
