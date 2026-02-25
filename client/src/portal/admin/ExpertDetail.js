@@ -176,7 +176,7 @@ export default function ExpertDetail() {
           {expert.tags?.length > 0 && (
             <div style={{ marginTop: 16, paddingTop: 12, borderTop: '1px solid var(--color-gray-200)' }}>
               <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'var(--color-gray-400)', textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: 8 }}>
-                Keyword Tags
+                Additional Subspecialties
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {expert.tags.map(tag => (
