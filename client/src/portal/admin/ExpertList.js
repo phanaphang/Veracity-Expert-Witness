@@ -358,7 +358,7 @@ export default function ExpertList() {
         </select>
         <input
           className="portal-field__input"
-          placeholder="Search by keyword tag..."
+          placeholder="Search for additional subspecialties..."
           value={filterTag}
           onChange={(e) => setFilterTag(e.target.value)}
         />
