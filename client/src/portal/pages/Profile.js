@@ -102,9 +102,16 @@ export default function Profile() {
     });
   };
 
+  const TAG_MAX_LENGTH = 50;
+  const TAG_MAX_COUNT = 20;
+  // Allow only letters, numbers, spaces, and common punctuation used in subspecialty names
+  const sanitizeTag = (value) => value.replace(/[^a-zA-Z0-9\s\-&().,']/g, '').slice(0, TAG_MAX_LENGTH);
+
   const addTag = (value) => {
-    const tag = value.trim();
-    if (tag && !tags.includes(tag)) setTags(prev => [...prev, tag]);
+    const tag = sanitizeTag(value).trim();
+    if (!tag) { setTagInput(''); return; }
+    if (tags.length >= TAG_MAX_COUNT) { setTagInput(''); return; }
+    if (!tags.includes(tag)) setTags(prev => [...prev, tag]);
     setTagInput('');
   };
 
@@ -114,6 +121,8 @@ export default function Profile() {
       addTag(tagInput);
     }
   };
+
+  const handleTagInput = (e) => setTagInput(sanitizeTag(e.target.value));
 
   const removeTag = (tag) => setTags(prev => prev.filter(t => t !== tag));
 
@@ -314,15 +323,21 @@ export default function Profile() {
               ))}
             </div>
             {editing && (
-              <input
-                className="portal-field__input"
-                value={tagInput}
-                onChange={e => setTagInput(e.target.value)}
-                onKeyDown={handleTagKeyDown}
-                onBlur={() => tagInput.trim() && addTag(tagInput)}
-                placeholder="Type a keyword and press Enter..."
-                maxLength={100}
-              />
+              <>
+                <input
+                  className="portal-field__input"
+                  value={tagInput}
+                  onChange={handleTagInput}
+                  onKeyDown={handleTagKeyDown}
+                  onBlur={() => tagInput.trim() && addTag(tagInput)}
+                  placeholder="Type and press Enter..."
+                  disabled={tags.length >= TAG_MAX_COUNT}
+                />
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--color-gray-400)', marginTop: 4 }}>
+                  <span>{tags.length}/{TAG_MAX_COUNT} added</span>
+                  <span>{tagInput.length}/{TAG_MAX_LENGTH} characters</span>
+                </div>
+              </>
             )}
           </div>
         </div>
