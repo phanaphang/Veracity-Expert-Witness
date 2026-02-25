@@ -395,6 +395,7 @@ export default function ExpertList() {
                 <th>Name</th>
                 <th>Email</th>
                 <th>Specialties</th>
+                <th>Subspecialties</th>
                 <th>Availability</th>
                 <th>Status</th>
                 <th></th>
@@ -411,6 +412,15 @@ export default function ExpertList() {
                         {es.specialties?.name}
                       </span>
                     ))}
+                  </td>
+                  <td>
+                    {exp.tags?.length > 0
+                      ? exp.tags.map((tag, i) => (
+                          <span key={i} className="portal-badge portal-badge--open" style={{ marginRight: 4, marginBottom: 4 }}>
+                            {tag}
+                          </span>
+                        ))
+                      : '—'}
                   </td>
                   <td>
                     <span className={`portal-badge portal-badge--${exp.availability || 'pending'}`}>
