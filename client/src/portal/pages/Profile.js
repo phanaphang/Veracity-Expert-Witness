@@ -274,37 +274,63 @@ export default function Profile() {
         {/* Specialties & Subspecialties */}
         <div className="portal-card">
           <h2 className="portal-card__title">Specialties & Subspecialties</h2>
-          <p style={{ fontSize: '0.82rem', color: 'var(--color-gray-500)', marginBottom: 16 }}>
-            Select a specialty to expand its subspecialties, then choose the ones that apply.
-          </p>
-          {allSpecialties.filter(s => !s.parent_id).map(parent => {
-            const subs = allSpecialties.filter(s => s.parent_id === parent.id);
-            if (subs.length === 0) return null;
-            const isExpanded = expandedParents.has(parent.id);
-            return (
-              <div key={parent.id} style={{ marginBottom: 12, borderBottom: '1px solid var(--color-gray-200)', paddingBottom: 12 }}>
-                <label className="portal-checkbox" style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-navy)', cursor: editing ? 'pointer' : 'default' }}>
-                  <input
-                    type="checkbox"
-                    checked={isExpanded}
-                    onChange={() => editing && toggleParent(parent.id)}
-                    disabled={!editing}
-                  />
-                  {parent.name}
-                </label>
-                {isExpanded && (
-                  <div className="portal-checkbox-group" style={{ marginTop: 10, marginLeft: 24 }}>
-                    {subs.map(sub => (
-                      <label key={sub.id} className="portal-checkbox">
-                        <input type="checkbox" checked={selectedSpecialties.includes(sub.id)} onChange={() => toggleSpecialty(sub.id)} disabled={!editing} />
-                        {sub.name}
+          {(() => {
+            const hasSubspecialties = allSpecialties.some(s => s.parent_id);
+            if (!hasSubspecialties) {
+              // Pre-migration fallback: flat checkbox list of parent specialties
+              return (
+                <>
+                  <p style={{ fontSize: '0.82rem', color: 'var(--color-gray-500)', marginBottom: 16 }}>
+                    Select all specialties that apply.
+                  </p>
+                  <div className="portal-checkbox-group">
+                    {allSpecialties.map(s => (
+                      <label key={s.id} className="portal-checkbox">
+                        <input type="checkbox" checked={selectedSpecialties.includes(s.id)} onChange={() => toggleSpecialty(s.id)} disabled={!editing} />
+                        {s.name}
                       </label>
                     ))}
                   </div>
-                )}
-              </div>
+                </>
+              );
+            }
+            // Post-migration: grouped expand/collapse UI
+            return (
+              <>
+                <p style={{ fontSize: '0.82rem', color: 'var(--color-gray-500)', marginBottom: 16 }}>
+                  Select a specialty to expand its subspecialties, then choose the ones that apply.
+                </p>
+                {allSpecialties.filter(s => !s.parent_id).map(parent => {
+                  const subs = allSpecialties.filter(s => s.parent_id === parent.id);
+                  if (subs.length === 0) return null;
+                  const isExpanded = expandedParents.has(parent.id);
+                  return (
+                    <div key={parent.id} style={{ marginBottom: 12, borderBottom: '1px solid var(--color-gray-200)', paddingBottom: 12 }}>
+                      <label className="portal-checkbox" style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-navy)', cursor: editing ? 'pointer' : 'default' }}>
+                        <input
+                          type="checkbox"
+                          checked={isExpanded}
+                          onChange={() => editing && toggleParent(parent.id)}
+                          disabled={!editing}
+                        />
+                        {parent.name}
+                      </label>
+                      {isExpanded && (
+                        <div className="portal-checkbox-group" style={{ marginTop: 10, marginLeft: 24 }}>
+                          {subs.map(sub => (
+                            <label key={sub.id} className="portal-checkbox">
+                              <input type="checkbox" checked={selectedSpecialties.includes(sub.id)} onChange={() => toggleSpecialty(sub.id)} disabled={!editing} />
+                              {sub.name}
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </>
             );
-          })}
+          })()}
 
           {/* Add a Subspecialty */}
           <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--color-gray-200)' }}>
