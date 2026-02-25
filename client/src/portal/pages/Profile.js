@@ -297,9 +297,9 @@ export default function Profile() {
             );
           })}
 
-          {/* Keyword Tags */}
+          {/* Add a Subspecialty */}
           <div style={{ marginTop: 24, paddingTop: 20, borderTop: '1px solid var(--color-gray-200)' }}>
-            <label className="portal-field__label">Keyword Tags</label>
+            <label className="portal-field__label">Add a Subspecialty</label>
             <p style={{ fontSize: '0.78rem', color: 'var(--color-gray-500)', marginBottom: 10 }}>
               Add specific areas of expertise (e.g. "Soil and groundwater contamination", "PFAS remediation"). Press Enter or comma to add.
             </p>
