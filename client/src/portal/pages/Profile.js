@@ -10,6 +10,7 @@ export default function Profile() {
   const [form, setForm] = useState({ first_name: '', last_name: '', email: '', phone: '', bio: '', rate_review_report: '', rate_deposition: '', rate_trial_testimony: '' });
   const [allSpecialties, setAllSpecialties] = useState([]);
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+  const [expandedParents, setExpandedParents] = useState(new Set());
   const [tags, setTags] = useState([]);
   const [tagInput, setTagInput] = useState('');
   const [testimony, setTestimony] = useState([]);
@@ -28,8 +29,17 @@ export default function Profile() {
       supabase.from('expert_specialties').select('specialty_id').eq('expert_id', user.id),
       supabase.from('prior_testimony').select('*').eq('expert_id', user.id).order('date_of_testimony', { ascending: false }),
     ]);
-    setAllSpecialties(specRes.data || []);
-    setSelectedSpecialties(selRes.data?.map(s => s.specialty_id) || []);
+    const allSpecs = specRes.data || [];
+    const selIds = selRes.data?.map(s => s.specialty_id) || [];
+    setAllSpecialties(allSpecs);
+    setSelectedSpecialties(selIds);
+    // Auto-expand any parent that already has a subspecialty selected
+    const autoExpanded = new Set();
+    for (const selId of selIds) {
+      const spec = allSpecs.find(s => s.id === selId);
+      if (spec?.parent_id) autoExpanded.add(spec.parent_id);
+    }
+    setExpandedParents(autoExpanded);
     setTestimony(testRes.data || []);
 
     const { data: cvData } = await supabase.from('documents').select('*').eq('expert_id', user.id).eq('document_type', 'cv').order('uploaded_at', { ascending: false });
@@ -75,6 +85,21 @@ export default function Profile() {
     setSelectedSpecialties(prev =>
       prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
     );
+  };
+
+  const toggleParent = (parentId) => {
+    setExpandedParents(prev => {
+      const next = new Set(prev);
+      if (next.has(parentId)) {
+        // Collapsing: clear any selected subspecialties under this parent
+        const subIds = allSpecialties.filter(s => s.parent_id === parentId).map(s => s.id);
+        setSelectedSpecialties(sel => sel.filter(id => !subIds.includes(id)));
+        next.delete(parentId);
+      } else {
+        next.add(parentId);
+      }
+      return next;
+    });
   };
 
   const addTag = (value) => {
@@ -241,24 +266,33 @@ export default function Profile() {
         <div className="portal-card">
           <h2 className="portal-card__title">Specialties & Subspecialties</h2>
           <p style={{ fontSize: '0.82rem', color: 'var(--color-gray-500)', marginBottom: 16 }}>
-            Select the subspecialties that best describe your areas of expertise.
+            Select a specialty to expand its subspecialties, then choose the ones that apply.
           </p>
           {allSpecialties.filter(s => !s.parent_id).map(parent => {
             const subs = allSpecialties.filter(s => s.parent_id === parent.id);
             if (subs.length === 0) return null;
+            const isExpanded = expandedParents.has(parent.id);
             return (
-              <div key={parent.id} style={{ marginBottom: 20 }}>
-                <div style={{ fontWeight: 700, fontSize: '0.85rem', color: 'var(--color-navy)', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: 8, paddingBottom: 6, borderBottom: '1px solid var(--color-gray-200)' }}>
+              <div key={parent.id} style={{ marginBottom: 12, borderBottom: '1px solid var(--color-gray-200)', paddingBottom: 12 }}>
+                <label className="portal-checkbox" style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-navy)', cursor: editing ? 'pointer' : 'default' }}>
+                  <input
+                    type="checkbox"
+                    checked={isExpanded}
+                    onChange={() => editing && toggleParent(parent.id)}
+                    disabled={!editing}
+                  />
                   {parent.name}
-                </div>
-                <div className="portal-checkbox-group">
-                  {subs.map(sub => (
-                    <label key={sub.id} className="portal-checkbox">
-                      <input type="checkbox" checked={selectedSpecialties.includes(sub.id)} onChange={() => toggleSpecialty(sub.id)} disabled={!editing} />
-                      {sub.name}
-                    </label>
-                  ))}
-                </div>
+                </label>
+                {isExpanded && (
+                  <div className="portal-checkbox-group" style={{ marginTop: 10, marginLeft: 24 }}>
+                    {subs.map(sub => (
+                      <label key={sub.id} className="portal-checkbox">
+                        <input type="checkbox" checked={selectedSpecialties.includes(sub.id)} onChange={() => toggleSpecialty(sub.id)} disabled={!editing} />
+                        {sub.name}
+                      </label>
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
