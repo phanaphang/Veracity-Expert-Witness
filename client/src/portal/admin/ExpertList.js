@@ -78,8 +78,9 @@ export default function ExpertList() {
       if (!matchesAny) return false;
     }
     if (filterTag) {
-      const term = filterTag.toLowerCase();
-      if (!exp.tags?.some(t => t.toLowerCase().includes(term))) return false;
+      const words = filterTag.toLowerCase().split(/\s+/).filter(Boolean);
+      const tagText = (exp.tags || []).join(' ').toLowerCase();
+      if (!words.every(word => tagText.includes(word))) return false;
     }
     return true;
   });
