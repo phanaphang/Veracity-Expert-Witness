@@ -21,13 +21,27 @@ export default function CaseDetail() {
   const [removeExpertConfirm, setRemoveExpertConfirm] = useState(false);
   const [statusConfirmTarget, setStatusConfirmTarget] = useState(null);
   const [detailsEditing, setDetailsEditing] = useState(false);
-  const { UnsavedModal } = useUnsavedChanges(detailsEditing);
+  const { UnsavedModal, setSaveHandler } = useUnsavedChanges(detailsEditing);
   const [descValue, setDescValue] = useState('');
   const [clientValue, setClientValue] = useState('');
   const [caseTypeValue, setCaseTypeValue] = useState('');
   const [jurisdictionValue, setJurisdictionValue] = useState('');
   const [notesValue, setNotesValue] = useState('');
   const [loading, setLoading] = useState(true);
+
+  const saveDetails = async () => {
+    await supabase.from('cases').update({
+      description: descValue,
+      client: clientValue,
+      case_type: caseTypeValue,
+      jurisdiction: jurisdictionValue,
+      additional_notes: notesValue,
+    }).eq('id', id);
+    setCaseData(prev => ({ ...prev, description: descValue, client: clientValue, case_type: caseTypeValue, jurisdiction: jurisdictionValue, additional_notes: notesValue }));
+    setDetailsEditing(false);
+    return true;
+  };
+  setSaveHandler(saveDetails);
 
   const loadCase = async () => {
     const [caseRes, invRes, mgrRes] = await Promise.all([
@@ -161,17 +175,7 @@ export default function CaseDetail() {
               <button
                 className="btn btn--primary"
                 style={{ padding: '6px 16px', fontSize: '0.85rem' }}
-                onClick={async () => {
-                  await supabase.from('cases').update({
-                    description: descValue,
-                    client: clientValue,
-                    case_type: caseTypeValue,
-                    jurisdiction: jurisdictionValue,
-                    additional_notes: notesValue,
-                  }).eq('id', id);
-                  setCaseData(prev => ({ ...prev, description: descValue, client: clientValue, case_type: caseTypeValue, jurisdiction: jurisdictionValue, additional_notes: notesValue }));
-                  setDetailsEditing(false);
-                }}
+                onClick={saveDetails}
               >
                 Save
               </button>

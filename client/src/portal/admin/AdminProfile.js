@@ -9,7 +9,7 @@ export default function AdminProfile() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
-  const { UnsavedModal } = useUnsavedChanges(editing);
+  const { UnsavedModal, setSaveHandler } = useUnsavedChanges(editing);
 
   useEffect(() => {
     if (profile) {
@@ -25,25 +25,33 @@ export default function AdminProfile() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const save = async () => {
     setSaving(true);
     setMessage('');
-
     try {
       const { error } = await supabase.from('profiles').update(form).eq('id', user.id);
       if (error) {
         setMessage('Error: ' + error.message);
+        setSaving(false);
+        return false;
       } else {
         await fetchProfile(user.id);
         setMessage('Profile saved successfully');
         setEditing(false);
+        setSaving(false);
+        return true;
       }
     } catch (err) {
       setMessage('Error: ' + err.message);
+      setSaving(false);
+      return false;
     }
+  };
+  setSaveHandler(save);
 
-    setSaving(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await save();
   };
 
   return (

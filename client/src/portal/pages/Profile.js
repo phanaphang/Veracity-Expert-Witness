@@ -18,7 +18,7 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
-  const { UnsavedModal } = useUnsavedChanges(editing);
+  const { UnsavedModal, setSaveHandler } = useUnsavedChanges(editing);
   const [cvDocs, setCvDocs] = useState([]);
   const [cvUploading, setCvUploading] = useState(false);
   const [cvError, setCvError] = useState('');
@@ -172,8 +172,7 @@ export default function Profile() {
     setCvDocs(prev => prev.filter(d => d.id !== doc.id));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const saveProfile = async () => {
     setSaving(true);
     setMessage('');
     const errors = [];
@@ -182,7 +181,7 @@ export default function Profile() {
       if (form.phone && !/^1-\d{3}-\d{3}-\d{4}$/.test(form.phone)) {
         setMessage('Phone number must be in the format 1-xxx-xxx-xxxx.');
         setSaving(false);
-        return;
+        return false;
       }
 
       const updates = { ...form, tags };
@@ -224,11 +223,20 @@ export default function Profile() {
 
     if (errors.length > 0) {
       setMessage('Errors: ' + errors.join('; '));
+      setSaving(false);
+      return false;
     } else {
       setMessage('Profile saved successfully');
       setEditing(false);
+      setSaving(false);
+      return true;
     }
-    setSaving(false);
+  };
+  setSaveHandler(saveProfile);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await saveProfile();
   };
 
   return (
