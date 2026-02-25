@@ -21,6 +21,8 @@ export default function CaseCreate() {
   });
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
   const [expandedParents, setExpandedParents] = useState(new Set());
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState('');
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
@@ -61,12 +63,25 @@ export default function CaseCreate() {
     );
   };
 
+  const TAG_MAX_LENGTH = 50;
+  const sanitizeTag = (value) => value.replace(/[^a-zA-Z0-9\s\-&().,']/g, '').slice(0, TAG_MAX_LENGTH);
+  const addTag = (value) => {
+    const tag = sanitizeTag(value).trim();
+    if (!tag || tags.includes(tag)) { setTagInput(''); return; }
+    setTags(prev => [...prev, tag]);
+    setTagInput('');
+  };
+  const removeTag = (tag) => setTags(prev => prev.filter(t => t !== tag));
+  const handleTagKeyDown = (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); addTag(tagInput); }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     setError('');
 
-    const insertData = { ...form, specialty_id: null };
+    const insertData = { ...form, specialty_id: null, specialty_tags: tags };
     if (!insertData.case_manager) insertData.case_manager = null;
 
     const { data, error: insertError } = await supabase
@@ -176,6 +191,30 @@ export default function CaseCreate() {
                     {selectedSpecialties.length} subspecialt{selectedSpecialties.length === 1 ? 'y' : 'ies'} selected
                   </p>
                 )}
+                <div style={{ borderTop: '1px solid var(--color-gray-100)', paddingTop: 10, marginTop: 10 }}>
+                  {tags.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+                      {tags.map(tag => (
+                        <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#e0e7ff', color: '#3730a3', borderRadius: 999, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 500 }}>
+                          {tag}
+                          <button type="button" onClick={() => removeTag(tag)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3730a3', fontSize: '1rem', lineHeight: 1, padding: 0, marginLeft: 2 }}>×</button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <input
+                    className="portal-field__input"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(sanitizeTag(e.target.value))}
+                    onKeyDown={handleTagKeyDown}
+                    onBlur={() => tagInput.trim() && addTag(tagInput)}
+                    placeholder="Other Subspecialty"
+                    style={{ marginBottom: 0 }}
+                  />
+                  <p style={{ fontSize: '0.75rem', color: 'var(--color-gray-400)', marginTop: 4, marginBottom: 0 }}>
+                    Press Enter to add. For subspecialties not in the list above.
+                  </p>
+                </div>
               </div>
             ) : (
               <select className="portal-field__select" value={selectedSpecialties[0] || ''} onChange={(e) => setSelectedSpecialties(e.target.value ? [e.target.value] : [])}>

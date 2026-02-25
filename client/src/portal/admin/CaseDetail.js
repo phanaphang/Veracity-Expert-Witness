@@ -31,6 +31,8 @@ export default function CaseDetail() {
   const [allSpecialties, setAllSpecialties] = useState([]);
   const [editingSpecialties, setEditingSpecialties] = useState([]);
   const [expandedParents, setExpandedParents] = useState(new Set());
+  const [editingTags, setEditingTags] = useState([]);
+  const [tagInput, setTagInput] = useState('');
   const [loading, setLoading] = useState(true);
 
   const toggleParent = (parentId) => {
@@ -53,6 +55,19 @@ export default function CaseDetail() {
     );
   };
 
+  const TAG_MAX_LENGTH = 50;
+  const sanitizeTag = (value) => value.replace(/[^a-zA-Z0-9\s\-&().,']/g, '').slice(0, TAG_MAX_LENGTH);
+  const addTag = (value) => {
+    const tag = sanitizeTag(value).trim();
+    if (!tag || editingTags.includes(tag)) { setTagInput(''); return; }
+    setEditingTags(prev => [...prev, tag]);
+    setTagInput('');
+  };
+  const removeTag = (tag) => setEditingTags(prev => prev.filter(t => t !== tag));
+  const handleTagKeyDown = (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); addTag(tagInput); }
+  };
+
   const saveDetails = async () => {
     await supabase.from('cases').update({
       description: descValue,
@@ -60,6 +75,7 @@ export default function CaseDetail() {
       case_type: caseTypeValue,
       jurisdiction: jurisdictionValue,
       additional_notes: notesValue,
+      specialty_tags: editingTags,
     }).eq('id', id);
     await supabase.from('case_specialties').delete().eq('case_id', id);
     if (editingSpecialties.length > 0) {
@@ -96,6 +112,7 @@ export default function CaseDetail() {
     setAllSpecialties(specRes.data || []);
     const loadedIds = loadedCs.map(cs => cs.specialty_id);
     setEditingSpecialties(loadedIds);
+    setEditingTags(caseRes.data?.specialty_tags || []);
     const autoExpanded = new Set();
     for (const cs of loadedCs) {
       if (cs.specialties?.parent_id) autoExpanded.add(cs.specialties.parent_id);
@@ -410,14 +427,41 @@ export default function CaseDetail() {
                     {editingSpecialties.length} subspecialt{editingSpecialties.length === 1 ? 'y' : 'ies'} selected
                   </p>
                 )}
+                <div style={{ borderTop: '1px solid var(--color-gray-100)', paddingTop: 10, marginTop: 10 }}>
+                  {editingTags.length > 0 && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
+                      {editingTags.map(tag => (
+                        <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#e0e7ff', color: '#3730a3', borderRadius: 999, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 500 }}>
+                          {tag}
+                          <button type="button" onClick={() => removeTag(tag)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3730a3', fontSize: '1rem', lineHeight: 1, padding: 0, marginLeft: 2 }}>×</button>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                  <input
+                    className="portal-field__input"
+                    value={tagInput}
+                    onChange={(e) => setTagInput(sanitizeTag(e.target.value))}
+                    onKeyDown={handleTagKeyDown}
+                    onBlur={() => tagInput.trim() && addTag(tagInput)}
+                    placeholder="Other Subspecialty"
+                    style={{ marginBottom: 0 }}
+                  />
+                  <p style={{ fontSize: '0.75rem', color: 'var(--color-gray-400)', marginTop: 4, marginBottom: 0 }}>
+                    Press Enter to add. For subspecialties not in the list above.
+                  </p>
+                </div>
               </div>
             );
           })() : (
             <div style={{ marginTop: 6 }}>
-              {caseSpecialties.length > 0 ? (
+              {(caseSpecialties.length > 0 || (caseData.specialty_tags?.length > 0)) ? (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                   {caseSpecialties.map(cs => (
                     <span key={cs.specialty_id} className="portal-badge portal-badge--open">{cs.specialties?.name}</span>
+                  ))}
+                  {caseData.specialty_tags?.map(tag => (
+                    <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', background: '#e0e7ff', color: '#3730a3', borderRadius: 999, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 500 }}>{tag}</span>
                   ))}
                 </div>
               ) : (
