@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
@@ -11,10 +11,13 @@ export default function ExpertList() {
   const [specialties, setSpecialties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
-  const [filterSpecialty, setFilterSpecialty] = useState('');
+  const [filterSpecialties, setFilterSpecialties] = useState(new Set());
+  const [filterPanelOpen, setFilterPanelOpen] = useState(false);
+  const [expandedInFilter, setExpandedInFilter] = useState(new Set());
   const [filterAvailability, setFilterAvailability] = useState('');
   const [filterTag, setFilterTag] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const filterPanelRef = useRef(null);
   const [deleting, setDeleting] = useState(false);
   const [exportConfirm, setExportConfirm] = useState(false);
 
@@ -29,23 +32,50 @@ export default function ExpertList() {
     });
   }, []);
 
+  useEffect(() => {
+    const handler = (e) => {
+      if (filterPanelRef.current && !filterPanelRef.current.contains(e.target)) {
+        setFilterPanelOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
   const parents = specialties.filter(s => !s.parent_id);
   const subsOf = (parentId) => specialties.filter(s => s.parent_id === parentId).map(s => s.id);
+
+  const toggleFilterSpecialty = (id) => {
+    setFilterSpecialties(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleExpandInFilter = (parentId) => {
+    setExpandedInFilter(prev => {
+      const next = new Set(prev);
+      next.has(parentId) ? next.delete(parentId) : next.add(parentId);
+      return next;
+    });
+  };
 
   const filtered = experts.filter(exp => {
     const name = `${exp.first_name || ''} ${exp.last_name || ''} ${exp.email || ''}`.toLowerCase();
     if (search && !name.includes(search.toLowerCase())) return false;
     if (filterAvailability && exp.availability !== filterAvailability) return false;
-    if (filterSpecialty) {
-      const selected = specialties.find(s => s.id === filterSpecialty);
-      if (selected && !selected.parent_id) {
-        // Parent selected: match experts with the parent itself OR any of its subspecialties
-        const childIds = subsOf(filterSpecialty);
-        const ids = [filterSpecialty, ...childIds];
-        if (!exp.expert_specialties?.some(es => ids.includes(es.specialty_id))) return false;
-      } else {
-        if (!exp.expert_specialties?.some(es => es.specialty_id === filterSpecialty)) return false;
-      }
+    if (filterSpecialties.size > 0) {
+      const matchesAny = [...filterSpecialties].some(filterId => {
+        const spec = specialties.find(s => s.id === filterId);
+        if (spec && !spec.parent_id) {
+          // Parent: match experts with the parent itself OR any of its subspecialties
+          const ids = [filterId, ...subsOf(filterId)];
+          return exp.expert_specialties?.some(es => ids.includes(es.specialty_id));
+        }
+        return exp.expert_specialties?.some(es => es.specialty_id === filterId);
+      });
+      if (!matchesAny) return false;
     }
     if (filterTag) {
       const term = filterTag.toLowerCase();
@@ -218,8 +248,8 @@ export default function ExpertList() {
       <div className="portal-stats" style={{ marginBottom: 24 }}>
         <div
           className="portal-stat"
-          style={{ cursor: 'pointer', transition: 'border-color 0.15s', borderColor: filterSpecialty === '' ? 'var(--color-accent)' : undefined }}
-          onClick={() => setFilterSpecialty('')}
+          style={{ cursor: 'pointer', transition: 'border-color 0.15s', borderColor: filterSpecialties.size === 0 ? 'var(--color-accent)' : undefined }}
+          onClick={() => setFilterSpecialties(new Set())}
         >
           <div className="portal-stat__value">{experts.length}</div>
           <div className="portal-stat__label">All Experts</div>
@@ -234,8 +264,8 @@ export default function ExpertList() {
             <div
               key={parent.id}
               className="portal-stat"
-              style={{ cursor: 'pointer', transition: 'border-color 0.15s', borderColor: filterSpecialty === parent.id ? 'var(--color-accent)' : undefined }}
-              onClick={() => setFilterSpecialty(prev => prev === parent.id ? '' : parent.id)}
+              style={{ cursor: 'pointer', transition: 'border-color 0.15s', borderColor: filterSpecialties.has(parent.id) ? 'var(--color-accent)' : undefined }}
+              onClick={() => toggleFilterSpecialty(parent.id)}
             >
               <div className="portal-stat__value">{count}</div>
               <div className="portal-stat__label">{parent.name}</div>
@@ -251,17 +281,75 @@ export default function ExpertList() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-        <select className="portal-field__select" value={filterSpecialty} onChange={(e) => setFilterSpecialty(e.target.value)}>
-          <option value="">All Specialties</option>
-          {parents.map(parent => (
-            <optgroup key={parent.id} label={parent.name}>
-              <option value={parent.id}>— All {parent.name}</option>
-              {specialties.filter(s => s.parent_id === parent.id).map(sub => (
-                <option key={sub.id} value={sub.id}>{sub.name}</option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+
+        {/* Multi-select specialty/subspecialty dropdown */}
+        <div style={{ position: 'relative' }} ref={filterPanelRef}>
+          <button
+            type="button"
+            className="portal-field__select"
+            style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', width: '100%', textAlign: 'left', background: '#fff' }}
+            onClick={() => setFilterPanelOpen(p => !p)}
+          >
+            <span style={{ flex: 1 }}>
+              {filterSpecialties.size === 0 ? 'All Specialties' : `Specialties (${filterSpecialties.size})`}
+            </span>
+            <span style={{ fontSize: '0.7rem', color: 'var(--color-gray-400)' }}>{filterPanelOpen ? '▲' : '▼'}</span>
+          </button>
+
+          {filterPanelOpen && (
+            <div style={{ position: 'absolute', top: 'calc(100% + 4px)', left: 0, zIndex: 200, background: '#fff', border: '1px solid var(--color-gray-200)', borderRadius: 8, boxShadow: '0 4px 20px rgba(0,0,0,0.12)', minWidth: 300, maxHeight: 400, overflowY: 'auto' }}>
+              {filterSpecialties.size > 0 && (
+                <div style={{ padding: '8px 12px', borderBottom: '1px solid var(--color-gray-200)' }}>
+                  <button type="button" onClick={() => setFilterSpecialties(new Set())} style={{ fontSize: '0.78rem', color: 'var(--color-accent)', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}>
+                    Clear all ({filterSpecialties.size} selected)
+                  </button>
+                </div>
+              )}
+              {parents.map(parent => {
+                const subs = specialties.filter(s => s.parent_id === parent.id);
+                const isExpanded = expandedInFilter.has(parent.id);
+                return (
+                  <div key={parent.id}>
+                    <div style={{ display: 'flex', alignItems: 'center', padding: '7px 12px', gap: 6, borderBottom: '1px solid var(--color-gray-100)' }}>
+                      <label style={{ display: 'flex', alignItems: 'center', gap: 7, flex: 1, cursor: 'pointer', fontSize: '0.88rem', fontWeight: 600, color: 'var(--color-navy)' }}>
+                        <input
+                          type="checkbox"
+                          checked={filterSpecialties.has(parent.id)}
+                          onChange={() => toggleFilterSpecialty(parent.id)}
+                        />
+                        {parent.name}
+                      </label>
+                      {subs.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => toggleExpandInFilter(parent.id)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-gray-400)', fontSize: '0.7rem', padding: '2px 4px', lineHeight: 1 }}
+                          title={isExpanded ? 'Collapse subspecialties' : 'Expand subspecialties'}
+                        >
+                          {isExpanded ? '▲' : '▼'}
+                        </button>
+                      )}
+                    </div>
+                    {isExpanded && subs.map(sub => (
+                      <label
+                        key={sub.id}
+                        style={{ display: 'flex', alignItems: 'center', gap: 7, padding: '6px 12px 6px 32px', cursor: 'pointer', fontSize: '0.83rem', color: 'var(--color-gray-600)', borderBottom: '1px solid var(--color-gray-100)' }}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={filterSpecialties.has(sub.id)}
+                          onChange={() => toggleFilterSpecialty(sub.id)}
+                        />
+                        {sub.name}
+                      </label>
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
         <select className="portal-field__select" value={filterAvailability} onChange={(e) => setFilterAvailability(e.target.value)}>
           <option value="">All Availability</option>
           <option value="available">Available</option>
@@ -275,6 +363,25 @@ export default function ExpertList() {
           onChange={(e) => setFilterTag(e.target.value)}
         />
       </div>
+
+      {/* Active filter chips */}
+      {filterSpecialties.size > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 12 }}>
+          {[...filterSpecialties].map(id => {
+            const spec = specialties.find(s => s.id === id);
+            if (!spec) return null;
+            return (
+              <span key={id} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#e0e7ff', color: '#3730a3', borderRadius: 999, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 500 }}>
+                {spec.name}
+                <button type="button" onClick={() => toggleFilterSpecialty(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3730a3', fontSize: '1rem', lineHeight: 1, padding: 0, marginLeft: 2 }}>×</button>
+              </span>
+            );
+          })}
+          <button type="button" onClick={() => setFilterSpecialties(new Set())} style={{ fontSize: '0.78rem', color: 'var(--color-gray-400)', background: 'none', border: 'none', cursor: 'pointer', padding: '3px 4px' }}>
+            Clear all
+          </button>
+        </div>
+      )}
 
       {filtered.length === 0 ? (
         <div className="portal-empty">
