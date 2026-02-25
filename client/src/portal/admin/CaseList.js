@@ -4,6 +4,18 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { formatName } from '../../utils/formatName';
 
+function highlight(text, term) {
+  if (!text || !term) return text;
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escaped})`, 'gi');
+  const parts = text.split(regex);
+  return parts.map((part, i) =>
+    i % 2 === 1
+      ? <mark key={i} style={{ background: '#fef08a', borderRadius: 2, padding: '0 1px' }}>{part}</mark>
+      : part
+  );
+}
+
 export default function CaseList() {
   const { profile } = useAuth();
   const isStaff = profile?.role === 'staff';
@@ -97,7 +109,7 @@ export default function CaseList() {
             <tbody>
               {filtered.map(c => (
                 <tr key={c.id}>
-                  <td><strong>#{c.case_number} — {c.title}</strong></td>
+                  <td><strong>#{highlight(c.case_number || '', searchTerm)} — {highlight(c.title, searchTerm)}</strong></td>
                   <td>{c.specialties?.name || '—'}</td>
                   <td>
                     <span className={`portal-badge portal-badge--${c.status}`}>
