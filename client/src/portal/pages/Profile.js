@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 
 const ALLOWED_TYPES = ['application/pdf'];
 const MAX_SIZE = 5 * 1024 * 1024;
@@ -17,6 +18,7 @@ export default function Profile() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
+  const { UnsavedModal } = useUnsavedChanges(editing);
   const [cvDocs, setCvDocs] = useState([]);
   const [cvUploading, setCvUploading] = useState(false);
   const [cvError, setCvError] = useState('');
@@ -492,6 +494,7 @@ export default function Profile() {
           </div>
         )}
       </div>
+      {UnsavedModal}
     </div>
   );
 }

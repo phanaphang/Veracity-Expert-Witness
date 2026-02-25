@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { formatName } from '../../utils/formatName';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 
 export default function CaseCreate() {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ export default function CaseCreate() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
+  const isDirty = form.title !== '' || form.description !== '' || form.client !== '' || form.case_type !== '' || form.jurisdiction !== '';
+  const { UnsavedModal, allowNavigation } = useUnsavedChanges(isDirty);
 
   useEffect(() => {
     Promise.all([
@@ -74,6 +77,7 @@ export default function CaseCreate() {
       }).catch(() => {});
     }
 
+    allowNavigation();
     navigate(`/admin/cases/${data.id}`);
   };
 
@@ -172,6 +176,7 @@ export default function CaseCreate() {
           </div>
         </div>
       )}
+      {UnsavedModal}
     </div>
   );
 }

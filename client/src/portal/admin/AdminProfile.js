@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 
 export default function AdminProfile() {
   const { user, profile, fetchProfile } = useAuth();
@@ -8,6 +9,7 @@ export default function AdminProfile() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
   const [editing, setEditing] = useState(false);
+  const { UnsavedModal } = useUnsavedChanges(editing);
 
   useEffect(() => {
     if (profile) {
@@ -82,6 +84,7 @@ export default function AdminProfile() {
         </div>
 
       </form>
+      {UnsavedModal}
     </div>
   );
 }

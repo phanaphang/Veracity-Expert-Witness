@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { formatName } from '../../utils/formatName';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 
 export default function CaseDetail() {
   const { id } = useParams();
@@ -20,6 +21,7 @@ export default function CaseDetail() {
   const [removeExpertConfirm, setRemoveExpertConfirm] = useState(false);
   const [statusConfirmTarget, setStatusConfirmTarget] = useState(null);
   const [detailsEditing, setDetailsEditing] = useState(false);
+  const { UnsavedModal } = useUnsavedChanges(detailsEditing);
   const [descValue, setDescValue] = useState('');
   const [clientValue, setClientValue] = useState('');
   const [caseTypeValue, setCaseTypeValue] = useState('');
@@ -530,6 +532,7 @@ export default function CaseDetail() {
           </div>
         </div>
       )}
+      {UnsavedModal}
     </div>
   );
 }

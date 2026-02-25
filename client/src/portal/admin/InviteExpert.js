@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 
 export default function InviteExpert() {
   const { session } = useAuth();
@@ -8,6 +9,8 @@ export default function InviteExpert() {
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const isDirty = form.email !== '' || form.first_name !== '' || form.last_name !== '';
+  const { UnsavedModal } = useUnsavedChanges(isDirty);
 
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -109,6 +112,7 @@ export default function InviteExpert() {
           <li>You can then review their profile and invite them to cases</li>
         </ol>
       </div>
+      {UnsavedModal}
     </div>
   );
 }
