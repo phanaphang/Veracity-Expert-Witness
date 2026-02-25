@@ -27,7 +27,31 @@ export default function CaseDetail() {
   const [caseTypeValue, setCaseTypeValue] = useState('');
   const [jurisdictionValue, setJurisdictionValue] = useState('');
   const [notesValue, setNotesValue] = useState('');
+  const [caseSpecialties, setCaseSpecialties] = useState([]);
+  const [allSpecialties, setAllSpecialties] = useState([]);
+  const [editingSpecialties, setEditingSpecialties] = useState([]);
+  const [expandedParents, setExpandedParents] = useState(new Set());
   const [loading, setLoading] = useState(true);
+
+  const toggleParent = (parentId) => {
+    setExpandedParents(prev => {
+      const next = new Set(prev);
+      if (next.has(parentId)) {
+        const subIds = allSpecialties.filter(s => s.parent_id === parentId).map(s => s.id);
+        setEditingSpecialties(sel => sel.filter(id => !subIds.includes(id)));
+        next.delete(parentId);
+      } else {
+        next.add(parentId);
+      }
+      return next;
+    });
+  };
+
+  const toggleSpecialty = (id) => {
+    setEditingSpecialties(prev =>
+      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
+    );
+  };
 
   const saveDetails = async () => {
     await supabase.from('cases').update({
@@ -37,6 +61,14 @@ export default function CaseDetail() {
       jurisdiction: jurisdictionValue,
       additional_notes: notesValue,
     }).eq('id', id);
+    await supabase.from('case_specialties').delete().eq('case_id', id);
+    if (editingSpecialties.length > 0) {
+      await supabase.from('case_specialties').insert(
+        editingSpecialties.map(sid => ({ case_id: id, specialty_id: sid }))
+      );
+    }
+    const { data: newCs } = await supabase.from('case_specialties').select('specialty_id, specialties(id, name, parent_id)').eq('case_id', id);
+    setCaseSpecialties(newCs || []);
     setCaseData(prev => ({ ...prev, description: descValue, client: clientValue, case_type: caseTypeValue, jurisdiction: jurisdictionValue, additional_notes: notesValue }));
     setDetailsEditing(false);
     return true;
@@ -44,10 +76,12 @@ export default function CaseDetail() {
   setSaveHandler(saveDetails);
 
   const loadCase = async () => {
-    const [caseRes, invRes, mgrRes] = await Promise.all([
+    const [caseRes, invRes, mgrRes, csRes, specRes] = await Promise.all([
       supabase.from('cases').select('*, specialties(name), manager:case_manager(id, first_name, last_name, email, role), assignedExpert:assigned_expert(id, first_name, last_name, email, role)').eq('id', id).single(),
       supabase.from('case_invitations').select('*, profiles:expert_id(id, first_name, last_name, email)').eq('case_id', id).order('invited_at', { ascending: false }),
       supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
+      supabase.from('case_specialties').select('specialty_id, specialties(id, name, parent_id)').eq('case_id', id),
+      supabase.from('specialties').select('*').order('name'),
     ]);
     setCaseData(caseRes.data);
     setDescValue(caseRes.data?.description || '');
@@ -57,6 +91,16 @@ export default function CaseDetail() {
     setNotesValue(caseRes.data?.additional_notes || '');
     setInvitations(invRes.data || []);
     setManagers(mgrRes.data || []);
+    const loadedCs = csRes.data || [];
+    setCaseSpecialties(loadedCs);
+    setAllSpecialties(specRes.data || []);
+    const loadedIds = loadedCs.map(cs => cs.specialty_id);
+    setEditingSpecialties(loadedIds);
+    const autoExpanded = new Set();
+    for (const cs of loadedCs) {
+      if (cs.specialties?.parent_id) autoExpanded.add(cs.specialties.parent_id);
+    }
+    setExpandedParents(autoExpanded);
     setLoading(false);
   };
 
@@ -162,9 +206,11 @@ export default function CaseDetail() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: 8, marginBottom: 24 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 24 }}>
         <span className={`portal-badge portal-badge--${caseData.status}`}>{caseData.status?.replace('_', ' ')}</span>
-        {caseData.specialties?.name && <span className="portal-badge portal-badge--open">{caseData.specialties.name}</span>}
+        {caseSpecialties.map(cs => (
+          <span key={cs.specialty_id} className="portal-badge portal-badge--open">{cs.specialties?.name}</span>
+        ))}
       </div>
 
       <div className="portal-card">
@@ -324,6 +370,61 @@ export default function CaseDetail() {
             readOnly={!detailsEditing}
             placeholder={detailsEditing ? 'Enter additional notes...' : 'No additional notes'}
           />
+        </div>
+        <div style={{ marginTop: 16 }}>
+          <strong>Specialties & Subspecialties:</strong>
+          {detailsEditing ? (() => {
+            const parents = allSpecialties.filter(s => !s.parent_id);
+            const hasSubs = allSpecialties.some(s => s.parent_id);
+            if (!hasSubs) return null;
+            return (
+              <div style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', padding: '10px 14px', marginTop: 6 }}>
+                <p style={{ fontSize: '0.78rem', color: 'var(--color-gray-500)', margin: '0 0 8px' }}>
+                  Select a specialty to expand its subspecialties, then choose the ones that apply.
+                </p>
+                {parents.map(parent => {
+                  const subs = allSpecialties.filter(s => s.parent_id === parent.id);
+                  if (subs.length === 0) return null;
+                  const isExpanded = expandedParents.has(parent.id);
+                  return (
+                    <div key={parent.id} style={{ marginBottom: 8, borderBottom: '1px solid var(--color-gray-100)', paddingBottom: 8 }}>
+                      <label className="portal-checkbox" style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-navy)' }}>
+                        <input type="checkbox" checked={isExpanded} onChange={() => toggleParent(parent.id)} />
+                        {parent.name}
+                      </label>
+                      {isExpanded && (
+                        <div className="portal-checkbox-group" style={{ marginTop: 6, marginLeft: 24 }}>
+                          {subs.map(sub => (
+                            <label key={sub.id} className="portal-checkbox">
+                              <input type="checkbox" checked={editingSpecialties.includes(sub.id)} onChange={() => toggleSpecialty(sub.id)} />
+                              {sub.name}
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                {editingSpecialties.length > 0 && (
+                  <p style={{ fontSize: '0.78rem', color: 'var(--color-accent)', margin: '4px 0 0', fontWeight: 500 }}>
+                    {editingSpecialties.length} subspecialt{editingSpecialties.length === 1 ? 'y' : 'ies'} selected
+                  </p>
+                )}
+              </div>
+            );
+          })() : (
+            <div style={{ marginTop: 6 }}>
+              {caseSpecialties.length > 0 ? (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                  {caseSpecialties.map(cs => (
+                    <span key={cs.specialty_id} className="portal-badge portal-badge--open">{cs.specialties?.name}</span>
+                  ))}
+                </div>
+              ) : (
+                <span style={{ color: 'var(--color-gray-400)', fontSize: '0.85rem' }}>None specified</span>
+              )}
+            </div>
+          )}
         </div>
       </div>
 

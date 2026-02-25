@@ -8,18 +8,19 @@ import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
 export default function CaseCreate() {
   const navigate = useNavigate();
   const { session } = useAuth();
-  const [specialties, setSpecialties] = useState([]);
+  const [allSpecialties, setAllSpecialties] = useState([]);
   const [managers, setManagers] = useState([]);
   const [form, setForm] = useState({
     title: '',
     description: '',
     client: '',
-    specialty_id: '',
     case_type: '',
     jurisdiction: '',
     case_manager: '',
     status: 'open',
   });
+  const [selectedSpecialties, setSelectedSpecialties] = useState([]);
+  const [expandedParents, setExpandedParents] = useState(new Set());
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
@@ -31,7 +32,7 @@ export default function CaseCreate() {
       supabase.from('specialties').select('*').order('name'),
       supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
     ]).then(([specRes, mgrRes]) => {
-      setSpecialties(specRes.data || []);
+      setAllSpecialties(specRes.data || []);
       setManagers(mgrRes.data || []);
     });
   }, []);
@@ -40,13 +41,32 @@ export default function CaseCreate() {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const toggleParent = (parentId) => {
+    setExpandedParents(prev => {
+      const next = new Set(prev);
+      if (next.has(parentId)) {
+        const subIds = allSpecialties.filter(s => s.parent_id === parentId).map(s => s.id);
+        setSelectedSpecialties(sel => sel.filter(id => !subIds.includes(id)));
+        next.delete(parentId);
+      } else {
+        next.add(parentId);
+      }
+      return next;
+    });
+  };
+
+  const toggleSpecialty = (id) => {
+    setSelectedSpecialties(prev =>
+      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
+    );
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
     setError('');
 
-    const insertData = { ...form };
-    if (!insertData.specialty_id) insertData.specialty_id = null;
+    const insertData = { ...form, specialty_id: null };
     if (!insertData.case_manager) insertData.case_manager = null;
 
     const { data, error: insertError } = await supabase
@@ -61,7 +81,12 @@ export default function CaseCreate() {
       return;
     }
 
-    // Send notification email to assigned case manager
+    if (selectedSpecialties.length > 0) {
+      await supabase.from('case_specialties').insert(
+        selectedSpecialties.map(sid => ({ case_id: data.id, specialty_id: sid }))
+      );
+    }
+
     if (data.case_manager) {
       fetch('/api/notify-case-manager', {
         method: 'POST',
@@ -81,6 +106,9 @@ export default function CaseCreate() {
     navigate(`/admin/cases/${data.id}`);
   };
 
+  const parents = allSpecialties.filter(s => !s.parent_id);
+  const hasSubs = allSpecialties.some(s => s.parent_id);
+
   return (
     <div>
       <div className="portal-page__header">
@@ -89,7 +117,7 @@ export default function CaseCreate() {
 
       {error && <div className="portal-alert portal-alert--error">{error}</div>}
 
-      <div className="portal-card" style={{ maxWidth: 600 }}>
+      <div className="portal-card" style={{ maxWidth: 640 }}>
         <form onSubmit={handleSubmit}>
           <div className="portal-field">
             <label className="portal-field__label">Case Title *</label>
@@ -103,44 +131,89 @@ export default function CaseCreate() {
             <label className="portal-field__label">Client</label>
             <input className="portal-field__input" name="client" value={form.client} onChange={handleChange} placeholder="e.g. Smith & Associates Law Firm" />
           </div>
-          <div className="portal-list-item__row">
-            <div className="portal-field">
-              <label className="portal-field__label">Specialty</label>
-              <select className="portal-field__select" name="specialty_id" value={form.specialty_id} onChange={handleChange}>
+
+          {/* Specialties */}
+          <div className="portal-field">
+            <label className="portal-field__label">Specialties & Subspecialties</label>
+            {hasSubs ? (
+              <div style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', padding: '12px 14px' }}>
+                <p style={{ fontSize: '0.78rem', color: 'var(--color-gray-500)', margin: '0 0 10px' }}>
+                  Select a specialty to expand its subspecialties, then choose the ones that apply.
+                </p>
+                {parents.map(parent => {
+                  const subs = allSpecialties.filter(s => s.parent_id === parent.id);
+                  if (subs.length === 0) return null;
+                  const isExpanded = expandedParents.has(parent.id);
+                  return (
+                    <div key={parent.id} style={{ marginBottom: 10, borderBottom: '1px solid var(--color-gray-100)', paddingBottom: 10 }}>
+                      <label className="portal-checkbox" style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-navy)' }}>
+                        <input
+                          type="checkbox"
+                          checked={isExpanded}
+                          onChange={() => toggleParent(parent.id)}
+                        />
+                        {parent.name}
+                      </label>
+                      {isExpanded && (
+                        <div className="portal-checkbox-group" style={{ marginTop: 8, marginLeft: 24 }}>
+                          {subs.map(sub => (
+                            <label key={sub.id} className="portal-checkbox">
+                              <input
+                                type="checkbox"
+                                checked={selectedSpecialties.includes(sub.id)}
+                                onChange={() => toggleSpecialty(sub.id)}
+                              />
+                              {sub.name}
+                            </label>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                {selectedSpecialties.length > 0 && (
+                  <p style={{ fontSize: '0.78rem', color: 'var(--color-accent)', margin: '4px 0 0', fontWeight: 500 }}>
+                    {selectedSpecialties.length} subspecialt{selectedSpecialties.length === 1 ? 'y' : 'ies'} selected
+                  </p>
+                )}
+              </div>
+            ) : (
+              <select className="portal-field__select" value={selectedSpecialties[0] || ''} onChange={(e) => setSelectedSpecialties(e.target.value ? [e.target.value] : [])}>
                 <option value="">Select specialty</option>
-                {specialties.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                {allSpecialties.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
               </select>
-            </div>
+            )}
+          </div>
+
+          <div className="portal-list-item__row">
             <div className="portal-field">
               <label className="portal-field__label">Case Type</label>
               <input className="portal-field__input" name="case_type" value={form.case_type} onChange={handleChange} placeholder="e.g. Medical Malpractice" />
             </div>
-          </div>
-          <div className="portal-list-item__row">
             <div className="portal-field">
               <label className="portal-field__label">Jurisdiction</label>
               <input className="portal-field__input" name="jurisdiction" value={form.jurisdiction} onChange={handleChange} placeholder="e.g. California, Federal" />
             </div>
-            <div className="portal-field">
-              <label className="portal-field__label">Case Manager</label>
-              <select
-                className="portal-field__select"
-                name="case_manager"
-                value={form.case_manager}
-                onChange={(e) => {
-                  const value = e.target.value || '';
-                  const selected = managers.find(m => m.id === value);
-                  setManagerConfirmTarget({ id: value, profile: selected });
-                }}
-              >
-                <option value="">Select case manager</option>
-                {managers.map(m => (
-                  <option key={m.id} value={m.id}>
-                    {formatName(m)} ({m.role})
-                  </option>
-                ))}
-              </select>
-            </div>
+          </div>
+          <div className="portal-field">
+            <label className="portal-field__label">Case Manager</label>
+            <select
+              className="portal-field__select"
+              name="case_manager"
+              value={form.case_manager}
+              onChange={(e) => {
+                const value = e.target.value || '';
+                const selected = managers.find(m => m.id === value);
+                setManagerConfirmTarget({ id: value, profile: selected });
+              }}
+            >
+              <option value="">Select case manager</option>
+              {managers.map(m => (
+                <option key={m.id} value={m.id}>
+                  {formatName(m)} ({m.role})
+                </option>
+              ))}
+            </select>
           </div>
           <button type="submit" className="btn btn--primary" disabled={saving} style={{ marginTop: 8, padding: '10px 24px' }}>
             {saving ? 'Creating...' : 'Create Case'}
