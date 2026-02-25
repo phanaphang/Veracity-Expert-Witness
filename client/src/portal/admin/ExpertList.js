@@ -4,6 +4,20 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import * as XLSX from 'xlsx';
 
+function highlight(text, terms) {
+  if (!text) return text;
+  const nonEmpty = (terms || []).filter(t => t.length > 0);
+  if (nonEmpty.length === 0) return text;
+  const escaped = nonEmpty.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  const regex = new RegExp(`(${escaped.join('|')})`, 'gi');
+  const parts = text.split(regex);
+  return parts.map((part, i) =>
+    i % 2 === 1
+      ? <mark key={i} style={{ background: '#fef08a', borderRadius: 2, padding: '0 1px' }}>{part}</mark>
+      : part
+  );
+}
+
 export default function ExpertList() {
   const { profile, session } = useAuth();
   const isAdmin = profile?.role === 'admin';
@@ -405,8 +419,8 @@ export default function ExpertList() {
             <tbody>
               {filtered.map(exp => (
                 <tr key={exp.id}>
-                  <td>{exp.first_name ? `${exp.first_name} ${exp.last_name || ''}`.trim() : '—'}</td>
-                  <td>{exp.email}</td>
+                  <td>{exp.first_name ? highlight(`${exp.first_name} ${exp.last_name || ''}`.trim(), search ? [search] : []) : '—'}</td>
+                  <td>{highlight(exp.email || '', search ? [search] : [])}</td>
                   <td>
                     {exp.expert_specialties?.map(es => (
                       <span key={es.specialty_id} className="portal-badge portal-badge--open" style={{ marginRight: 4, marginBottom: 4 }}>
@@ -418,7 +432,7 @@ export default function ExpertList() {
                     {exp.tags?.length > 0
                       ? exp.tags.map((tag, i) => (
                           <span key={i} className="portal-badge portal-badge--open" style={{ marginRight: 4, marginBottom: 4 }}>
-                            {tag}
+                            {filterTag ? highlight(tag, filterTag.toLowerCase().split(/\s+/).filter(Boolean)) : tag}
                           </span>
                         ))
                       : '—'}
