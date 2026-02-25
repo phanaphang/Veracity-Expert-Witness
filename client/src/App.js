@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import SEO from './components/SEO';
 import Navbar from './components/Navbar';
@@ -71,58 +71,67 @@ function HomePage() {
   );
 }
 
-function App() {
+function Root() {
   return (
     <AuthProvider>
       <div className="app">
-        <Routes>
-          {/* Public Site */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="/terms-of-service" element={<TermsOfService />} />
-          <Route path="/cookie-policy" element={<CookiePolicy />} />
-          <Route path="/compliance" element={<Compliance />} />
-          <Route path="/medical-healthcare" element={<MedicalHealthcare />} />
-          <Route path="/financial-accounting" element={<FinancialAccounting />} />
-          <Route path="/technology-cyber" element={<TechnologyCyber />} />
-          <Route path="/construction-engineering" element={<ConstructionEngineering />} />
-          <Route path="/environmental-science" element={<EnvironmentalScience />} />
-          <Route path="/intellectual-property" element={<IntellectualProperty />} />
-          <Route path="/accident-reconstruction" element={<AccidentReconstruction />} />
-          <Route path="/forensic-analysis" element={<ForensicAnalysis />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/join-our-panel" element={<JoinOurPanel />} />
-
-          {/* Portal - Auth (public) */}
-          <Route path="/portal/login" element={<Login />} />
-          <Route path="/portal/accept-invite" element={<AcceptInvite />} />
-          <Route path="/portal/auth/callback" element={<AuthCallback />} />
-          <Route path="/portal/forgot-password" element={<ForgotPassword />} />
-
-          {/* Portal - Expert (protected) */}
-          <Route path="/portal/dashboard" element={<ProtectedRoute><PortalLayout><Dashboard /></PortalLayout></ProtectedRoute>} />
-          <Route path="/portal/profile" element={<ProtectedRoute><PortalLayout><Profile /></PortalLayout></ProtectedRoute>} />
-          <Route path="/portal/documents" element={<ProtectedRoute><PortalLayout><Documents /></PortalLayout></ProtectedRoute>} />
-          <Route path="/portal/cases" element={<ProtectedRoute><PortalLayout><CaseInvitations /></PortalLayout></ProtectedRoute>} />
-          <Route path="/portal/messages" element={<ProtectedRoute><PortalLayout><Messages /></PortalLayout></ProtectedRoute>} />
-          <Route path="/portal/change-password" element={<ProtectedRoute><PortalLayout><ChangePassword /></PortalLayout></ProtectedRoute>} />
-          <Route path="/portal/calendar" element={<ProtectedRoute><PortalLayout><CalendarPage /></PortalLayout></ProtectedRoute>} />
-
-          {/* Admin (protected, admin only) */}
-          <Route path="/admin/dashboard" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/profile" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminProfile /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/experts" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ExpertList /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/experts/:id" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ExpertDetail /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/invite" element={<ProtectedRoute requiredRole="admin-only"><AdminLayout><InviteExpert /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/cases" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseList /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/cases/new" element={<ProtectedRoute requiredRole="admin-only"><AdminLayout><CaseCreate /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/cases/:id" element={<ProtectedRoute requiredRole="admin"><AdminLayout><CaseDetail /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/messages" element={<ProtectedRoute requiredRole="admin"><AdminLayout><AdminMessages /></AdminLayout></ProtectedRoute>} />
-          <Route path="/admin/change-password" element={<ProtectedRoute requiredRole="admin"><AdminLayout><ChangePassword /></AdminLayout></ProtectedRoute>} />
-        </Routes>
+        <Outlet />
       </div>
     </AuthProvider>
   );
 }
 
-export default App;
+const router = createBrowserRouter([
+  {
+    element: <Root />,
+    children: [
+      // Public Site
+      { path: '/', element: <HomePage /> },
+      { path: '/privacy-policy', element: <PrivacyPolicy /> },
+      { path: '/terms-of-service', element: <TermsOfService /> },
+      { path: '/cookie-policy', element: <CookiePolicy /> },
+      { path: '/compliance', element: <Compliance /> },
+      { path: '/medical-healthcare', element: <MedicalHealthcare /> },
+      { path: '/financial-accounting', element: <FinancialAccounting /> },
+      { path: '/technology-cyber', element: <TechnologyCyber /> },
+      { path: '/construction-engineering', element: <ConstructionEngineering /> },
+      { path: '/environmental-science', element: <EnvironmentalScience /> },
+      { path: '/intellectual-property', element: <IntellectualProperty /> },
+      { path: '/accident-reconstruction', element: <AccidentReconstruction /> },
+      { path: '/forensic-analysis', element: <ForensicAnalysis /> },
+      { path: '/faq', element: <FAQ /> },
+      { path: '/join-our-panel', element: <JoinOurPanel /> },
+
+      // Portal - Auth (public)
+      { path: '/portal/login', element: <Login /> },
+      { path: '/portal/accept-invite', element: <AcceptInvite /> },
+      { path: '/portal/auth/callback', element: <AuthCallback /> },
+      { path: '/portal/forgot-password', element: <ForgotPassword /> },
+
+      // Portal - Expert (protected)
+      { path: '/portal/dashboard', element: <ProtectedRoute><PortalLayout><Dashboard /></PortalLayout></ProtectedRoute> },
+      { path: '/portal/profile', element: <ProtectedRoute><PortalLayout><Profile /></PortalLayout></ProtectedRoute> },
+      { path: '/portal/documents', element: <ProtectedRoute><PortalLayout><Documents /></PortalLayout></ProtectedRoute> },
+      { path: '/portal/cases', element: <ProtectedRoute><PortalLayout><CaseInvitations /></PortalLayout></ProtectedRoute> },
+      { path: '/portal/messages', element: <ProtectedRoute><PortalLayout><Messages /></PortalLayout></ProtectedRoute> },
+      { path: '/portal/change-password', element: <ProtectedRoute><PortalLayout><ChangePassword /></PortalLayout></ProtectedRoute> },
+      { path: '/portal/calendar', element: <ProtectedRoute><PortalLayout><CalendarPage /></PortalLayout></ProtectedRoute> },
+
+      // Admin (protected, admin only)
+      { path: '/admin/dashboard', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/profile', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminProfile /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/experts', element: <ProtectedRoute requiredRole="admin"><AdminLayout><ExpertList /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/experts/:id', element: <ProtectedRoute requiredRole="admin"><AdminLayout><ExpertDetail /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/invite', element: <ProtectedRoute requiredRole="admin-only"><AdminLayout><InviteExpert /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/cases', element: <ProtectedRoute requiredRole="admin"><AdminLayout><CaseList /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/cases/new', element: <ProtectedRoute requiredRole="admin-only"><AdminLayout><CaseCreate /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/cases/:id', element: <ProtectedRoute requiredRole="admin"><AdminLayout><CaseDetail /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/messages', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminMessages /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/change-password', element: <ProtectedRoute requiredRole="admin"><AdminLayout><ChangePassword /></AdminLayout></ProtectedRoute> },
+    ],
+  },
+]);
+
+export default function App() {
+  return <RouterProvider router={router} />;
+}
