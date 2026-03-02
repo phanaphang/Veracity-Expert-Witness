@@ -92,7 +92,7 @@ export default function Dashboard() {
         <Link to="/portal/documents" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
           <h3 className="portal-card__title">Documents</h3>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
-            Upload your CV, licenses, and certifications
+            Upload your licenses and certifications
           </p>
         </Link>
         <Link to="/portal/cases" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
