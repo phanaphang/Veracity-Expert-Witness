@@ -14,7 +14,7 @@ export default function AdminLayout({ children }) {
       <main className="portal-main">
         <header className="portal-topbar">
           <button className="portal-topbar__menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
-            <svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+            <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
               <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
