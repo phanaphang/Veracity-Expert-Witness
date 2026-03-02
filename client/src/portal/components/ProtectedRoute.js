@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { Navigate, Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
+
+const noIndex = (
+  <Helmet>
+    <meta name="robots" content="noindex, nofollow" />
+  </Helmet>
+);
 
 function SetPasswordForm() {
   const { user, fetchProfile } = useAuth();
@@ -113,7 +120,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
 
   // Experts who haven't onboarded must set a password first
   if (!['admin', 'staff'].includes(profile.role) && !profile.onboarded_at) {
-    return <SetPasswordForm />;
+    return <>{noIndex}<SetPasswordForm /></>;
   }
 
   if (requiredRole === 'admin-only' && profile.role !== 'admin') {
@@ -124,5 +131,5 @@ export default function ProtectedRoute({ children, requiredRole }) {
     return <Navigate to="/portal/dashboard" replace />;
   }
 
-  return children;
+  return <>{noIndex}{children}</>;
 }

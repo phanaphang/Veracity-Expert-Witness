@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import SEO from '../components/SEO';
+
+function extractText(node) {
+  if (!node) return '';
+  if (typeof node === 'string') return node;
+  if (Array.isArray(node)) return node.map(extractText).join('');
+  if (node.props?.children) return extractText(node.props.children);
+  return '';
+}
 
 const faqData = [
   {
@@ -119,6 +128,21 @@ function FAQ() {
 
   const currentYear = new Date().getFullYear();
 
+  const faqSchema = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqData.flatMap(cat =>
+      cat.items.map(item => ({
+        '@type': 'Question',
+        name: item.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: extractText(item.answer),
+        },
+      }))
+    ),
+  });
+
   return (
     <div className="legal-page">
       <SEO
@@ -126,6 +150,9 @@ function FAQ() {
         description="Find answers to common questions about Veracity Expert Witness services, how expert matching works, pricing, confidentiality, and our Expert Portal."
         path="/faq"
       />
+      <Helmet>
+        <script type="application/ld+json">{faqSchema}</script>
+      </Helmet>
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">
