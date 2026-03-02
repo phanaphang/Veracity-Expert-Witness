@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+
+// Home page components — always needed on first load
 import SEO from './components/SEO';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -9,49 +11,53 @@ import Categories from './components/Categories';
 import HowItWorks from './components/HowItWorks';
 import ContactForm from './components/ContactForm';
 import Footer from './components/Footer';
-import PrivacyPolicy from './pages/PrivacyPolicy';
-import TermsOfService from './pages/TermsOfService';
-import CookiePolicy from './pages/CookiePolicy';
-import Compliance from './pages/Compliance';
-import MedicalHealthcare from './pages/MedicalHealthcare';
-import FinancialAccounting from './pages/FinancialAccounting';
-import TechnologyCyber from './pages/TechnologyCyber';
-import ConstructionEngineering from './pages/ConstructionEngineering';
-import EnvironmentalScience from './pages/EnvironmentalScience';
-import IntellectualProperty from './pages/IntellectualProperty';
-import AccidentReconstruction from './pages/AccidentReconstruction';
-import ForensicAnalysis from './pages/ForensicAnalysis';
-import FAQ from './pages/FAQ';
-import JoinOurPanel from './pages/JoinOurPanel';
 
-// Portal - Auth
-import Login from './portal/pages/Login';
-import AcceptInvite from './portal/pages/AcceptInvite';
-import AuthCallback from './portal/pages/AuthCallback';
-import ForgotPassword from './portal/pages/ForgotPassword';
-
-// Portal - Expert
+// Route wrappers — small, used on every portal/admin route
 import PortalLayout from './portal/components/PortalLayout';
 import ProtectedRoute from './portal/components/ProtectedRoute';
-import Dashboard from './portal/pages/Dashboard';
-import Profile from './portal/pages/Profile';
-import Documents from './portal/pages/Documents';
-import CaseInvitations from './portal/pages/CaseInvitations';
-import Messages from './portal/pages/Messages';
-import ChangePassword from './portal/pages/ChangePassword';
-import CalendarPage from './portal/pages/Calendar';
-
-// Admin
 import AdminLayout from './portal/admin/AdminLayout';
-import AdminDashboard from './portal/admin/AdminDashboard';
-import ExpertList from './portal/admin/ExpertList';
-import ExpertDetail from './portal/admin/ExpertDetail';
-import InviteExpert from './portal/admin/InviteExpert';
-import CaseList from './portal/admin/CaseList';
-import CaseCreate from './portal/admin/CaseCreate';
-import CaseDetail from './portal/admin/CaseDetail';
-import AdminMessages from './portal/admin/AdminMessages';
-import AdminProfile from './portal/admin/AdminProfile';
+
+// Public pages — lazy loaded
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+const TermsOfService = lazy(() => import('./pages/TermsOfService'));
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy'));
+const Compliance = lazy(() => import('./pages/Compliance'));
+const MedicalHealthcare = lazy(() => import('./pages/MedicalHealthcare'));
+const FinancialAccounting = lazy(() => import('./pages/FinancialAccounting'));
+const TechnologyCyber = lazy(() => import('./pages/TechnologyCyber'));
+const ConstructionEngineering = lazy(() => import('./pages/ConstructionEngineering'));
+const EnvironmentalScience = lazy(() => import('./pages/EnvironmentalScience'));
+const IntellectualProperty = lazy(() => import('./pages/IntellectualProperty'));
+const AccidentReconstruction = lazy(() => import('./pages/AccidentReconstruction'));
+const ForensicAnalysis = lazy(() => import('./pages/ForensicAnalysis'));
+const FAQ = lazy(() => import('./pages/FAQ'));
+const JoinOurPanel = lazy(() => import('./pages/JoinOurPanel'));
+
+// Portal — Auth pages
+const Login = lazy(() => import('./portal/pages/Login'));
+const AcceptInvite = lazy(() => import('./portal/pages/AcceptInvite'));
+const AuthCallback = lazy(() => import('./portal/pages/AuthCallback'));
+const ForgotPassword = lazy(() => import('./portal/pages/ForgotPassword'));
+
+// Portal — Expert pages
+const Dashboard = lazy(() => import('./portal/pages/Dashboard'));
+const Profile = lazy(() => import('./portal/pages/Profile'));
+const Documents = lazy(() => import('./portal/pages/Documents'));
+const CaseInvitations = lazy(() => import('./portal/pages/CaseInvitations'));
+const Messages = lazy(() => import('./portal/pages/Messages'));
+const ChangePassword = lazy(() => import('./portal/pages/ChangePassword'));
+const CalendarPage = lazy(() => import('./portal/pages/Calendar'));
+
+// Admin pages — includes heavy libs (xlsx, jspdf, pdf-lib) only when visited
+const AdminDashboard = lazy(() => import('./portal/admin/AdminDashboard'));
+const ExpertList = lazy(() => import('./portal/admin/ExpertList'));
+const ExpertDetail = lazy(() => import('./portal/admin/ExpertDetail'));
+const InviteExpert = lazy(() => import('./portal/admin/InviteExpert'));
+const CaseList = lazy(() => import('./portal/admin/CaseList'));
+const CaseCreate = lazy(() => import('./portal/admin/CaseCreate'));
+const CaseDetail = lazy(() => import('./portal/admin/CaseDetail'));
+const AdminMessages = lazy(() => import('./portal/admin/AdminMessages'));
+const AdminProfile = lazy(() => import('./portal/admin/AdminProfile'));
 
 function HomePage() {
   return (
@@ -133,5 +139,9 @@ const router = createBrowserRouter([
 ]);
 
 export default function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 }

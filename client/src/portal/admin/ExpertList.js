@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
-import * as XLSX from 'xlsx';
 
 function highlight(text, terms) {
   if (!text) return text;
@@ -126,6 +125,7 @@ export default function ExpertList() {
   const exportToExcel = async () => {
     setExporting(true);
     try {
+      const XLSX = await import('xlsx');
       const exportExperts = [...filtered].sort((a, b) => (a.last_name || '').localeCompare(b.last_name || ''));
       const expertIds = exportExperts.map(e => e.id);
 

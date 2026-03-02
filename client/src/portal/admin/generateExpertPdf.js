@@ -1,6 +1,3 @@
-import { jsPDF } from 'jspdf';
-import { PDFDocument } from 'pdf-lib';
-
 const PAGE_WIDTH = 210;
 const MARGIN = 20;
 const CONTENT_WIDTH = PAGE_WIDTH - MARGIN * 2;
@@ -59,7 +56,7 @@ function addField(doc, y, label, value) {
   return y;
 }
 
-function buildProfilePdf(expert, specialties, testimony, documents) {
+function buildProfilePdf(expert, specialties, testimony, documents, jsPDF) {
   const doc = new jsPDF();
   let y = MARGIN;
 
@@ -185,7 +182,7 @@ function getFileExtension(filename) {
   return (filename || '').split('.').pop().toLowerCase();
 }
 
-async function mergeDocuments(profileBytes, documents, supabase) {
+async function mergeDocuments(profileBytes, documents, supabase, PDFDocument) {
   const merged = await PDFDocument.load(profileBytes);
 
   for (const doc of documents) {
@@ -237,11 +234,16 @@ function triggerDownload(bytes, filename) {
 }
 
 export async function generateExpertPdf(expert, specialties, testimony, documents, supabase) {
-  const profileBytes = buildProfilePdf(expert, specialties, testimony, documents);
+  const [{ jsPDF }, { PDFDocument }] = await Promise.all([
+    import('jspdf'),
+    import('pdf-lib'),
+  ]);
+
+  const profileBytes = buildProfilePdf(expert, specialties, testimony, documents, jsPDF);
 
   let finalBytes;
   if (documents.length > 0) {
-    finalBytes = await mergeDocuments(profileBytes, documents, supabase);
+    finalBytes = await mergeDocuments(profileBytes, documents, supabase, PDFDocument);
   } else {
     finalBytes = profileBytes;
   }
