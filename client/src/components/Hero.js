@@ -17,7 +17,7 @@ function Hero() {
           <p className="hero__subtitle">
             Veracity provides end-to-end expert witness solutions &mdash; from sourcing
             and vetting to scheduling, logistics, and compliance. We handle the details
-            so you can focus on winning your case.
+            so you can focus on your case.
           </p>
           <div className="hero__actions">
             <a href="#contact" className="btn btn--primary" onClick={(e) => {
