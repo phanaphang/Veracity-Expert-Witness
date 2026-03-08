@@ -26,7 +26,7 @@ const services = [
       </svg>
     ),
     title: 'Report Writing',
-    description: 'Our experts produce detailed, court-ready reports that clearly communicate complex technical findings to judges and juries.',
+    description: 'Our experts produce detailed, court-ready reports that clearly communicate complex technical findings.',
   },
   {
     icon: (
