@@ -17,11 +17,11 @@ const expertiseAreas = [
   {
     title: 'Orthopedic Surgery',
     specialties: [
-      'Joint replacement complications',
+      'Joint replacement outcomes and evaluation',
       'Spinal surgery outcomes',
       'Sports medicine injuries',
       'Fracture treatment and fixation',
-      'Surgical hardware failure',
+      'Surgical hardware and implant assessment',
     ],
   },
   {
@@ -38,19 +38,19 @@ const expertiseAreas = [
     title: 'Cardiology',
     specialties: [
       'Heart attack diagnosis and treatment',
-      'Cardiac surgery complications',
+      'Cardiac surgery outcomes and evaluation',
       'Interventional cardiology',
       'Heart failure management',
-      'Cardiac device malfunction',
+      'Cardiac device assessment and performance',
     ],
   },
   {
     title: 'Radiology & Diagnostic Imaging',
     specialties: [
-      'Missed or misread imaging findings',
+      'Imaging interpretation and review',
       'CT, MRI, and X-ray interpretation',
-      'Interventional radiology complications',
-      'Mammography screening failures',
+      'Interventional radiology outcomes',
+      'Mammography and screening protocols',
     ],
   },
   {
@@ -58,7 +58,7 @@ const expertiseAreas = [
     specialties: [
       'Competency and capacity evaluations',
       'Post-traumatic stress disorder',
-      'Emotional distress and psychological harm',
+      'Emotional distress and psychological impact',
       'Involuntary commitment disputes',
       'Fitness for duty assessments',
     ],
@@ -66,10 +66,10 @@ const expertiseAreas = [
   {
     title: 'Nursing Standard of Care',
     specialties: [
-      'Patient monitoring failures',
-      'Medication administration errors',
+      'Patient monitoring and assessment',
+      'Medication administration practices',
       'Fall prevention and patient safety',
-      'Documentation and charting deficiencies',
+      'Documentation and charting standards',
       'Staffing adequacy',
     ],
   },
@@ -77,7 +77,7 @@ const expertiseAreas = [
     title: 'Pharmacy & Toxicology',
     specialties: [
       'Drug interactions and contraindications',
-      'Compounding errors',
+      'Compounding practices and quality',
       'Overdose and poisoning analysis',
       'Pharmaceutical product liability',
       'Substance abuse evaluation',
@@ -86,8 +86,8 @@ const expertiseAreas = [
   {
     title: 'Emergency Medicine',
     specialties: [
-      'Triage and prioritization failures',
-      'Trauma care standard of care',
+      'Triage and prioritization protocols',
+      'Trauma care and emergency protocols',
       'Discharge decision-making',
       'Emergency department overcrowding',
       'Pediatric emergency care',
@@ -96,10 +96,10 @@ const expertiseAreas = [
   {
     title: 'Oncology',
     specialties: [
-      'Delayed cancer diagnosis',
+      'Cancer diagnosis and staging',
       'Treatment planning and protocols',
-      'Chemotherapy and radiation errors',
-      'Surgical oncology complications',
+      'Chemotherapy and radiation treatment',
+      'Surgical oncology outcomes',
       'Palliative care standards',
     ],
   },
