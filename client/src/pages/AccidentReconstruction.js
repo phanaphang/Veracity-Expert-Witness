@@ -115,7 +115,6 @@ function AccidentReconstruction() {
 
       <header className="legal-header">
         <div className="section__container">
-          <Link to="/" className="legal-header__back">&larr; Back to Home</Link>
           <h1 className="legal-header__title">Accident Reconstruction Expert Witnesses</h1>
           <p className="legal-header__subtitle">
             We connect you with accident reconstruction specialists who use science and engineering to determine how and why incidents occurred.

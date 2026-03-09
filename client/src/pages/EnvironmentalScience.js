@@ -115,7 +115,6 @@ function EnvironmentalScience() {
 
       <header className="legal-header">
         <div className="section__container">
-          <Link to="/" className="legal-header__back">&larr; Back to Home</Link>
           <h1 className="legal-header__title">Environmental Science Expert Witnesses</h1>
           <p className="legal-header__subtitle">
             We connect you with environmental scientists and engineers who bring rigorous analysis to complex environmental disputes.

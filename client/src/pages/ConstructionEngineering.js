@@ -125,7 +125,6 @@ function ConstructionEngineering() {
 
       <header className="legal-header">
         <div className="section__container">
-          <Link to="/" className="legal-header__back">&larr; Back to Home</Link>
           <h1 className="legal-header__title">Construction &amp; Engineering Expert Witnesses</h1>
           <p className="legal-header__subtitle">
             We connect you with seasoned construction and engineering professionals who bring technical authority to your case.

@@ -153,7 +153,6 @@ function MedicalHealthcare() {
 
       <header className="legal-header">
         <div className="section__container">
-          <Link to="/" className="legal-header__back">&larr; Back to Home</Link>
           <h1 className="legal-header__title">Medical &amp; Healthcare Expert Witnesses</h1>
           <p className="legal-header__subtitle">
             We connect you with leading medical professionals who provide clear, credible testimony across every healthcare specialty.

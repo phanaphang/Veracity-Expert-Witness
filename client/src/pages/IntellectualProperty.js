@@ -115,7 +115,6 @@ function IntellectualProperty() {
 
       <header className="legal-header">
         <div className="section__container">
-          <Link to="/" className="legal-header__back">&larr; Back to Home</Link>
           <h1 className="legal-header__title">Intellectual Property Expert Witnesses</h1>
           <p className="legal-header__subtitle">
             We connect you with IP professionals who bring deep technical and industry knowledge to patent, trademark, copyright, and trade secret disputes.

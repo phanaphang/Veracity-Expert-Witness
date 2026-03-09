@@ -125,7 +125,6 @@ function ForensicAnalysis() {
 
       <header className="legal-header">
         <div className="section__container">
-          <Link to="/" className="legal-header__back">&larr; Back to Home</Link>
           <h1 className="legal-header__title">Forensic Analysis Expert Witnesses</h1>
           <p className="legal-header__subtitle">
             We connect you with forensic specialists who apply scientific rigor to uncover the facts in criminal and civil cases.

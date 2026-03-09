@@ -125,7 +125,6 @@ function TechnologyCyber() {
 
       <header className="legal-header">
         <div className="section__container">
-          <Link to="/" className="legal-header__back">&larr; Back to Home</Link>
           <h1 className="legal-header__title">Technology &amp; Cyber Expert Witnesses</h1>
           <p className="legal-header__subtitle">
             We connect you with leading technology professionals who can explain complex digital issues with clarity and authority.
