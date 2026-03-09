@@ -19,7 +19,7 @@ const steps = [
   {
     number: '04',
     title: 'Expert Delivers Results',
-    description: 'Your expert provides reports, depositions, and trial testimony. We support the entire process from preparation through courtroom delivery.',
+    description: 'Your expert provides reports, depositions, and trial testimony.',
   },
 ];
 
