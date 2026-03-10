@@ -13,7 +13,7 @@ function Compliance() {
           operating in Los Angeles, California.
         </p>
         <p>
-          We are an expert witness agency &mdash; not a lawyer referral
+          We are an expert witness agency, not a lawyer referral
           service. We handle the sourcing, engagement, scheduling, logistics, and compliance
           requirements for expert witness testimony. We are not certified by the State Bar of
           California and do not provide legal advice.
@@ -103,7 +103,7 @@ function Compliance() {
           Our fee practices are designed to be straightforward and independent:
         </p>
         <ul>
-          <li>Our service fees are separate from legal fees &mdash; we do not take a share of fees paid in the context of legal representation</li>
+          <li>Our service fees are separate from legal fees; we do not take a share of fees paid in the context of legal representation</li>
           <li>We provide clear fee schedules for our services</li>
           <li>We do not receive compensation tied to case outcomes</li>
           <li>We disclose any financial relationships between our agency and referred experts</li>

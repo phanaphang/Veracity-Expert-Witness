@@ -21,7 +21,7 @@ const benefits = [
   },
   {
     title: 'Full Administrative Support',
-    description: 'Our team handles the administrative and logistics work so you can focus on what you do best — providing expert analysis and testimony.',
+    description: 'Our team handles the administrative and logistics work so you can focus on what you do best: providing expert analysis and testimony.',
   },
   {
     title: 'Scheduling & Compliance',

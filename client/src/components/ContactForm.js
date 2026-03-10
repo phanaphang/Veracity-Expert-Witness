@@ -90,7 +90,7 @@ function ContactForm() {
             Get Started <span className="text--accent">Today</span>
           </h2>
           <p className="section__subtitle">
-            Fill out the form and we'll take it from there — finding, vetting, and managing the right expert for your case.
+            Fill out the form and we'll take it from there: finding, vetting, and managing the right expert for your case.
           </p>
         </div>
 

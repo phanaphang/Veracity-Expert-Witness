@@ -14,7 +14,7 @@ const steps = [
   {
     number: '03',
     title: 'We Handle the Engagement',
-    description: 'Contracts, scheduling, fee agreements, compliance, coordination — we take care of it all.',
+    description: 'Contracts, scheduling, fee agreements, compliance, coordination: we take care of it all.',
   },
   {
     number: '04',

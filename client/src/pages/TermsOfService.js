@@ -78,7 +78,7 @@ function TermsOfService() {
 
         <h3>5.3 Engagement Coordination</h3>
         <p>
-          Once you select an expert, we handle the engagement logistics &mdash; including contracts,
+          Once you select an expert, we handle the engagement logistics, including contracts,
           scheduling, coordination between parties, and compliance with applicable requirements.
           We coordinate deposition preparation, report timelines, and trial scheduling so that
           all parties stay aligned.
@@ -125,7 +125,7 @@ function TermsOfService() {
       <section className="legal-section">
         <h2>7. Intellectual Property</h2>
         <p>
-          All content on the Site &mdash; including text, graphics, logos, and software &mdash; belongs to
+          All content on the Site, including text, graphics, logos, and software, belongs to
           Veracity Expert Witness or our licensors. You may not copy, distribute, or create
           derivative works from our content without written permission.
         </p>

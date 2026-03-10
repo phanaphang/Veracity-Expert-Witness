@@ -8,7 +8,7 @@ const services = [
       </svg>
     ),
     title: 'Expert Search & Matching',
-    description: 'We match the right expert to your case — drawing from a broad network of qualified specialists.',
+    description: 'We match the right expert to your case, drawing from a broad network of qualified specialists.',
   },
   {
     icon: (
@@ -17,7 +17,7 @@ const services = [
       </svg>
     ),
     title: 'Credential Verification',
-    description: 'Every expert in our network is thoroughly vetted — education, certifications, publications, and prior testimony history included.',
+    description: 'Every expert in our network is thoroughly vetted: education, certifications, publications, and prior testimony history included.',
   },
   {
     icon: (
@@ -35,7 +35,7 @@ const services = [
       </svg>
     ),
     title: 'Deposition Preparation',
-    description: 'We manage the full deposition process — scheduling, prep sessions, and logistics — so your expert arrives ready.',
+    description: 'We manage the full deposition process, including scheduling, prep sessions, and logistics, so your expert arrives ready.',
   },
   {
     icon: (
