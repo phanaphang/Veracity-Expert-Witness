@@ -35,7 +35,7 @@ const services = [
       </svg>
     ),
     title: 'Deposition Preparation',
-    description: 'We manage the full deposition process, including scheduling, prep sessions, and logistics, so your expert arrives ready.',
+    description: 'We manage the full deposition preparation process, including scheduling, prep sessions, and logistics, so your expert arrives ready.',
   },
   {
     icon: (
