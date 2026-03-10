@@ -14,12 +14,12 @@ const steps = [
   {
     number: '03',
     title: 'We Handle the Engagement',
-    description: 'Once you select your expert, we handle all the logistics — contracts, scheduling, compliance, and coordination between all parties.',
+    description: 'Once you select your expert, we manage everything — contracts, scheduling, fee agreements, compliance, and coordination between all parties.',
   },
   {
     number: '04',
     title: 'Expert Delivers Results',
-    description: 'Your expert provides reports, depositions, and trial testimony.',
+    description: 'Your expert provides reports, depositions, and trial testimony. Veracity coordinates every step.',
   },
 ];
 

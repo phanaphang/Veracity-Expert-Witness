@@ -35,7 +35,7 @@ const services = [
       </svg>
     ),
     title: 'Deposition Preparation',
-    description: 'We provide comprehensive deposition preparation services to ensure your expert witness delivers clear, compelling testimony.',
+    description: 'We manage the full deposition process — scheduling, prep sessions, and logistics — so your expert arrives ready.',
   },
   {
     icon: (
@@ -57,7 +57,7 @@ function Services() {
           <h2 className="section__title">
             Expert Witness <span className="text--accent">Solutions</span>
           </h2>
-          <p className="section__subtitle"></p>
+          <p className="section__subtitle">From first contact to final testimony, we handle every administrative and logistical detail.</p>
         </div>
         <div className="services__grid">
           {services.map((service) => (
