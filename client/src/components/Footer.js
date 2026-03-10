@@ -52,7 +52,7 @@ function Footer() {
         </button>
 
         <div className="footer__bottom">
-          <p>&copy; {currentYear} Veracity Expert Witness. All rights reserved.</p>
+          <p>&copy; {currentYear} Veracity Expert Witness LLC. All rights reserved.</p>
         </div>
       </div>
     </footer>
