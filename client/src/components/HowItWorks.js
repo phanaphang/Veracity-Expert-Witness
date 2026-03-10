@@ -14,12 +14,12 @@ const steps = [
   {
     number: '03',
     title: 'We Handle the Engagement',
-    description: 'Once you select your expert, we manage everything — contracts, scheduling, fee agreements, compliance, and coordination between all parties.',
+    description: 'Contracts, scheduling, fee agreements, compliance, coordination — we take care of it all.',
   },
   {
     number: '04',
     title: 'Expert Delivers Results',
-    description: 'Your expert provides reports, depositions, and trial testimony. Veracity coordinates every step.',
+    description: 'Your expert delivers reports, depositions, and courtroom testimony.',
   },
 ];
 
@@ -33,7 +33,7 @@ function HowItWorks() {
             Simple Process, <span className="text--accent">Exceptional Results</span>
           </h2>
           <p className="section__subtitle">
-            Finding the right expert should be the least of your worries. Here's how we make it simple.
+            Finding the right expert should be the least of your worries.
           </p>
         </div>
         <div className="how-it-works__grid">

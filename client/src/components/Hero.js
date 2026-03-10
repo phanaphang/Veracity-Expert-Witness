@@ -15,8 +15,7 @@ function Hero() {
             <span className="hero__title--accent">When You Need Them</span>
           </h1>
           <p className="hero__subtitle">
-            Veracity is your dedicated expert witness team &mdash; handling sourcing,
-            vetting, scheduling, logistics, and compliance so you can focus on your case.
+            We handle sourcing, vetting, scheduling, logistics, and compliance &mdash; so you can focus on your case.
           </p>
           <div className="hero__actions">
             <a href="#contact" className="btn btn--primary" onClick={(e) => {

@@ -8,7 +8,7 @@ const services = [
       </svg>
     ),
     title: 'Expert Search & Matching',
-    description: 'We identify and match the most qualified expert witnesses from our extensive network to your specific case requirements and timeline.',
+    description: 'We match the right expert to your case — drawing from a broad network of qualified specialists.',
   },
   {
     icon: (
@@ -44,7 +44,7 @@ const services = [
       </svg>
     ),
     title: 'Trial Testimony',
-    description: 'Your expert shows up prepared, credible, and ready to communicate complex findings clearly to any audience.',
+    description: 'Your expert arrives credible, prepared, and able to communicate complex findings clearly to any audience.',
   },
 ];
 
