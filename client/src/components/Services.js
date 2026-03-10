@@ -17,7 +17,7 @@ const services = [
       </svg>
     ),
     title: 'Credential Verification',
-    description: 'Every expert undergoes rigorous credential verification including education, certifications, publications, and prior testimony history.',
+    description: 'Every expert in our network is thoroughly vetted — education, certifications, publications, and prior testimony history included.',
   },
   {
     icon: (
@@ -44,7 +44,7 @@ const services = [
       </svg>
     ),
     title: 'Trial Testimony',
-    description: 'Experts provide specialized knowledge, opinions, and analysis to help judges or juries understand complex evidence.',
+    description: 'Your expert shows up prepared, credible, and ready to communicate complex findings clearly to any audience.',
   },
 ];
 

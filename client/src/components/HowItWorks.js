@@ -4,7 +4,7 @@ const steps = [
   {
     number: '01',
     title: 'Submit Your Case Details',
-    description: 'Tell us about your case, the type of expertise you need, and your timeline. Our platform makes it easy to define your requirements.',
+    description: "Tell us about your case, the expertise you need, and your timeline. We'll take it from there.",
   },
   {
     number: '02',
@@ -33,8 +33,7 @@ function HowItWorks() {
             Simple Process, <span className="text--accent">Exceptional Results</span>
           </h2>
           <p className="section__subtitle">
-            Getting the right expert witness has never been easier. Our streamlined
-            four-step process gets you from case need to courtroom-ready testimony.
+            Finding the right expert should be the least of your worries. Here's how we make it simple.
           </p>
         </div>
         <div className="how-it-works__grid">

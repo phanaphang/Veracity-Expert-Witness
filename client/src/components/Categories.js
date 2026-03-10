@@ -86,7 +86,7 @@ function Categories() {
             Find Experts Across <span className="text--accent">Many Fields</span>
           </h2>
           <p className="section__subtitle">
-            Our network spans dozens of industries and specializations.
+            Whatever the case demands, we have the right expert.
           </p>
         </div>
         <div className="categories__grid">

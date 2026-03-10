@@ -9,7 +9,7 @@ function Hero() {
       </div>
       <div className="hero__container">
         <div className="hero__content">
-          <div className="hero__badge">Expert Witness Solutions</div>
+          <div className="hero__badge">Your Expert Witness Partner</div>
           <h1 className="hero__title">
             Expert Witnesses{' '}
             <span className="hero__title--accent">When You Need Them</span>
