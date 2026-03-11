@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { TOTAL_LESSONS } from '../training/courseData';
 
 export default function Dashboard() {
   const { user, profile } = useAuth();
   const [stats, setStats] = useState({ pendingCases: 0, unreadMessages: 0, documents: 0 });
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [hasCv, setHasCv] = useState(false);
+  const [trainingPct, setTrainingPct] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -15,11 +17,12 @@ export default function Dashboard() {
       try {
         const now = new Date().toISOString();
         const weekOut = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-        const [cases, msgs, docs, events] = await Promise.all([
+        const [cases, msgs, docs, events, training] = await Promise.all([
           supabase.from('case_invitations').select('*', { count: 'exact', head: true }).eq('expert_id', user.id).eq('status', 'pending'),
           supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
           supabase.from('documents').select('document_type').eq('expert_id', user.id),
           supabase.from('calendar_events').select('id, title, start_time').eq('expert_id', user.id).gte('start_time', now).lte('start_time', weekOut).order('start_time', { ascending: true }).limit(5),
+          supabase.from('training_progress').select('lesson_id, completed').eq('user_id', user.id),
         ]);
         setStats({
           pendingCases: cases.count || 0,
@@ -28,6 +31,8 @@ export default function Dashboard() {
         });
         setUpcomingEvents(events.data || []);
         if (docs.data?.some(d => d.document_type === 'cv')) setHasCv(true);
+        const completedCount = training.data?.filter(r => r.completed && r.lesson_id).length || 0;
+        setTrainingPct(Math.round((completedCount / TOTAL_LESSONS) * 100));
       } catch (e) {
         console.error('Dashboard load error', e);
       }
@@ -102,8 +107,15 @@ export default function Dashboard() {
           </p>
         </Link>
         <Link to="/training" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
-          <h3 className="portal-card__title">Training</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Training</h3>
+            {trainingPct !== null && (
+              <span style={{ background: trainingPct === 100 ? '#16a34a' : 'var(--color-accent)', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: 999, whiteSpace: 'nowrap', marginLeft: 8 }}>
+                {trainingPct === 100 ? 'Complete' : `${trainingPct}%`}
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 8 }}>
             Expert Witness Foundations — ~60 min
           </p>
         </Link>
