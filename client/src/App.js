@@ -184,7 +184,7 @@ const router = createBrowserRouter([
       { path: '/training/scenario/:scenarioId', element: <ProtectedRoute><TrainingLayout><ScenarioPage /></TrainingLayout></ProtectedRoute> },
       { path: '/training/assessment', element: <ProtectedRoute><TrainingLayout><AssessmentPage /></TrainingLayout></ProtectedRoute> },
       { path: '/training/certificate', element: <ProtectedRoute><TrainingLayout><CertificatePage /></TrainingLayout></ProtectedRoute> },
-      { path: '/training/resources', element: <ProtectedRoute><TrainingLayout><ResourcesPage /></TrainingLayout></ProtectedRoute> },
+      { path: '/training/resources', element: <ProtectedRoute><PortalLayout><ResourcesPage /></PortalLayout></ProtectedRoute> },
 
       // Admin (protected, admin only)
       { path: '/admin/dashboard', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute> },
