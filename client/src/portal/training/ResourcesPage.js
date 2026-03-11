@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 
 // Shared inline styles for generated HTML resource pages
 const pageStyles = `
@@ -419,9 +418,7 @@ export default function ResourcesPage() {
         ))}
       </div>
 
-      <div style={{ marginTop: 24 }}>
-        <Link to="/training" className="training-lesson__back">← Training Home</Link>
-      </div>
+
     </div>
   );
 }
