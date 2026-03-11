@@ -49,6 +49,12 @@ const Messages = lazy(() => import('./portal/pages/Messages'));
 const ChangePassword = lazy(() => import('./portal/pages/ChangePassword'));
 const CalendarPage = lazy(() => import('./portal/pages/Calendar'));
 
+// Training module
+const TrainingDashboard = lazy(() => import('./portal/training/TrainingDashboard'));
+const LessonPage = lazy(() => import('./portal/training/LessonPage'));
+const TrainingComingSoon = lazy(() => import('./portal/training/TrainingComingSoon'));
+const TrainingLayout = lazy(() => import('./portal/training/TrainingLayout'));
+
 // Admin pages — includes heavy libs (xlsx, jspdf, pdf-lib) only when visited
 const AdminDashboard = lazy(() => import('./portal/admin/AdminDashboard'));
 const ExpertList = lazy(() => import('./portal/admin/ExpertList'));
@@ -123,6 +129,15 @@ const router = createBrowserRouter([
       { path: '/portal/messages', element: <ProtectedRoute><PortalLayout><Messages /></PortalLayout></ProtectedRoute> },
       { path: '/portal/change-password', element: <ProtectedRoute><PortalLayout><ChangePassword /></PortalLayout></ProtectedRoute> },
       { path: '/portal/calendar', element: <ProtectedRoute><PortalLayout><CalendarPage /></PortalLayout></ProtectedRoute> },
+
+      // Training module (expert, admin, staff)
+      { path: '/training', element: <ProtectedRoute><TrainingLayout><TrainingDashboard /></TrainingLayout></ProtectedRoute> },
+      { path: '/training/lesson/:lessonId', element: <ProtectedRoute><TrainingLayout><LessonPage /></TrainingLayout></ProtectedRoute> },
+      { path: '/training/quiz/:unitId', element: <ProtectedRoute><TrainingLayout><TrainingComingSoon title="Knowledge Check" /></TrainingLayout></ProtectedRoute> },
+      { path: '/training/scenario/:scenarioId', element: <ProtectedRoute><TrainingLayout><TrainingComingSoon title="Branching Scenario" /></TrainingLayout></ProtectedRoute> },
+      { path: '/training/assessment', element: <ProtectedRoute><TrainingLayout><TrainingComingSoon title="Final Assessment" /></TrainingLayout></ProtectedRoute> },
+      { path: '/training/certificate', element: <ProtectedRoute><TrainingLayout><TrainingComingSoon title="Certificate of Completion" /></TrainingLayout></ProtectedRoute> },
+      { path: '/training/resources', element: <ProtectedRoute><TrainingLayout><TrainingComingSoon title="Downloadable Resources" /></TrainingLayout></ProtectedRoute> },
 
       // Admin (protected, admin only)
       { path: '/admin/dashboard', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute> },

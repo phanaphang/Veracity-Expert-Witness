@@ -101,6 +101,12 @@ export default function Dashboard() {
             View and respond to case opportunities
           </p>
         </Link>
+        <Link to="/training" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
+          <h3 className="portal-card__title">Training</h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+            Expert Witness Foundations — ~60 min
+          </p>
+        </Link>
       </div>
 
       <div className="portal-card" style={{ marginTop: 16 }}>
