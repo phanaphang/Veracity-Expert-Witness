@@ -27,7 +27,8 @@ const pageStyles = `
   tr:nth-child(even) td { background: #f7f5f0; }
   .pdf-btn { display: inline-block; margin: 0 0 24px; padding: 9px 20px; background: #d36622; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; letter-spacing: 0.02em; }
   .pdf-btn:hover { background: #b8551a; }
-  @media print { .pdf-btn { display: none; } }
+  @page { margin: 0; }
+  @media print { .pdf-btn { display: none; } body { padding: 0.45in; } }
 `;
 
 function makeHtml(title, subtitle, bodyHtml) {
