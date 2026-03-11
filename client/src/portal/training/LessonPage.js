@@ -9,6 +9,7 @@ import {
   getLessonIndex,
   getUnitForLesson,
 } from './courseData';
+// unit object is used for scenarioId routing (suppress lint: used via getUnitForLesson return value)
 
 const COMPLETE_DELAY_MS = 60 * 1000; // 60 seconds before "Mark Complete" appears
 
@@ -150,16 +151,27 @@ export default function LessonPage({ onProgressUpdate }) {
       // Navigate to next lesson or to the quiz for this unit
       if (nextLessonId) {
         const nextUnit = getUnitForLesson(nextLessonId);
-        // If next lesson is in a different unit, check if we should redirect to the quiz first
+        // Crossing a unit boundary — go to scenario (if unit has one) or quiz
         if (nextUnit && unit && nextUnit.id !== unit.id) {
-          navigate(`/training/quiz/${unit.quizId}`);
+          if (unit.scenarioId) {
+            navigate(`/training/scenario/${unit.scenarioId}`);
+          } else {
+            navigate(`/training/quiz/${unit.quizId}`);
+          }
         } else {
           navigate(`/training/lesson/${nextLessonId}`);
         }
       } else {
-        // Last lesson — go to the unit quiz
-        if (unit) navigate(`/training/quiz/${unit.quizId}`);
-        else navigate('/training');
+        // Last lesson in the course — go to scenario or quiz for its unit
+        if (unit) {
+          if (unit.scenarioId) {
+            navigate(`/training/scenario/${unit.scenarioId}`);
+          } else {
+            navigate(`/training/quiz/${unit.quizId}`);
+          }
+        } else {
+          navigate('/training');
+        }
       }
     } catch (e) {
       console.error('Mark complete error', e);

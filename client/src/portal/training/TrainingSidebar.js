@@ -91,6 +91,32 @@ export default function TrainingSidebar({ completedLessons, passedQuizzes, onNav
               );
             })}
 
+            {/* Scenario link (units 2 & 3) */}
+            {unit.scenarioId && (() => {
+              const scenarioUnlocked = isQuizUnlocked(unit); // unlocked when all lessons done
+              const activeScenario = location.pathname === `/training/scenario/${unit.scenarioId}`;
+
+              if (!scenarioUnlocked) {
+                return (
+                  <div key="scenario" className="training-sidebar__lesson training-sidebar__lesson--locked">
+                    <LockIcon />
+                    <span>Scenario</span>
+                  </div>
+                );
+              }
+              return (
+                <Link
+                  key="scenario"
+                  to={`/training/scenario/${unit.scenarioId}`}
+                  className={`training-sidebar__lesson${activeScenario ? ' training-sidebar__lesson--active' : ''}`}
+                  onClick={onNavigate}
+                >
+                  <span className="training-sidebar__dot training-sidebar__dot--quiz" />
+                  <span>Scenario</span>
+                </Link>
+              );
+            })()}
+
             {/* Knowledge check link */}
             {(() => {
               const quizUnlocked = isQuizUnlocked(unit);
