@@ -9,6 +9,10 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, info) {
     console.error('App error:', error, info);
+    const msg = error?.message || '';
+    if (msg.includes('dynamically imported module') || msg.includes('Loading chunk') || msg.includes('Failed to fetch')) {
+      window.location.reload();
+    }
   }
 
   render() {
