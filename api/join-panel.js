@@ -60,7 +60,7 @@ module.exports = async (req, res) => {
       body: JSON.stringify({
         data: {
           message: {
-            recipients: ['info@veracityexpertwitness.com'],
+            recipients: [process.env.CONTACT_EMAIL || 'info@veracityexpertwitness.com'],
             headers: {
               subject: `New Expert Panel Application: ${escapeHtml(specialty)} - ${escapeHtml(name)}`,
               from: 'noreply@veracityexpertwitness.com',

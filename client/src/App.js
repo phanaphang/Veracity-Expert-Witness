@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import ErrorBoundary from './components/ErrorBoundary';
 
 // Home page components — always needed on first load
 import SEO from './components/SEO';
@@ -140,8 +141,10 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
-      <RouterProvider router={router} />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<div style={{ minHeight: '100vh' }} />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </ErrorBoundary>
   );
 }
