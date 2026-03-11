@@ -25,6 +25,9 @@ const pageStyles = `
   td { padding: 10px 14px; border-bottom: 1px solid #e8dab2; color: #4e5538; vertical-align: top; }
   tr:last-child td { border-bottom: none; }
   tr:nth-child(even) td { background: #f7f5f0; }
+  .pdf-btn { display: inline-block; margin: 0 0 24px; padding: 9px 20px; background: #d36622; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; letter-spacing: 0.02em; }
+  .pdf-btn:hover { background: #b8551a; }
+  @media print { .pdf-btn { display: none; } }
 `;
 
 function makeHtml(title, subtitle, bodyHtml) {
@@ -45,6 +48,7 @@ function makeHtml(title, subtitle, bodyHtml) {
   </div>
   <div class="page-wrap">
     <div class="content-card">
+      <button class="pdf-btn" onclick="window.print()">PDF</button>
       <h1>${title}</h1>
       <div class="subtitle">${subtitle}</div>
       ${bodyHtml}
