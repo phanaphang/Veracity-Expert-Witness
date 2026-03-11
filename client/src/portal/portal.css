@@ -141,6 +141,34 @@
   flex-direction: column;
 }
 
+.portal-idle-warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 24px;
+  background: #7c3aed;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  flex-wrap: wrap;
+}
+
+.portal-idle-warning__btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 14px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.portal-idle-warning__btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
 .portal-topbar {
   display: none;
   align-items: center;

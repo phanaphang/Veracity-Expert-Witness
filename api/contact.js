@@ -1,3 +1,5 @@
+const { rateLimit } = require('./_lib/rateLimit');
+
 const escapeHtml = (str) =>
   String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
@@ -6,6 +8,12 @@ const MAX_LEN = { short: 500, long: 5000 };
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const rl = rateLimit(req);
+  if (rl.limited) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
   }
 
   const { name, firm, email, phone, expertise, details, website, _elapsed } = req.body;

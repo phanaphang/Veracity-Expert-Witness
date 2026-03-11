@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import PortalSidebar from './PortalSidebar';
+import { AuthContext } from '../../contexts/AuthContext';
 import '../portal.css';
 
 export default function PortalLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { idleWarning, resetIdleTimer } = useContext(AuthContext);
 
   return (
     <div className="portal">
@@ -12,6 +14,14 @@ export default function PortalLayout({ children }) {
         <PortalSidebar onNavigate={() => setSidebarOpen(false)} />
       </div>
       <main className="portal-main">
+        {idleWarning && (
+          <div className="portal-idle-warning" role="alert">
+            <span>Your session will expire in 2 minutes due to inactivity.</span>
+            <button className="portal-idle-warning__btn" onClick={resetIdleTimer}>
+              Stay signed in
+            </button>
+          </div>
+        )}
         <header className="portal-topbar">
           <button className="portal-topbar__menu" onClick={() => setSidebarOpen(!sidebarOpen)}>
             <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
