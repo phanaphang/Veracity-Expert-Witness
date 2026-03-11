@@ -170,14 +170,6 @@ export default function TrainingSidebar({ completedLessons, passedQuizzes, onNav
             <span className="training-sidebar__dot" />
             <span>Certificate</span>
           </Link>
-          <Link
-            to="/training/resources"
-            className={`training-sidebar__lesson${location.pathname === '/training/resources' ? ' training-sidebar__lesson--active' : ''}`}
-            onClick={onNavigate}
-          >
-            <span className="training-sidebar__dot" />
-            <span>Resources</span>
-          </Link>
         </div>
       </div>
     </nav>
