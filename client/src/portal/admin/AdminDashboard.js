@@ -90,6 +90,12 @@ export default function AdminDashboard() {
             Communicate with experts
           </p>
         </Link>
+        <Link to="/admin/training" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
+          <h3 className="portal-card__title">Training Report</h3>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+            Panel progress on Expert Witness Foundations
+          </p>
+        </Link>
       </div>
     </div>
   );

@@ -69,6 +69,7 @@ const CaseCreate = lazy(() => import('./portal/admin/CaseCreate'));
 const CaseDetail = lazy(() => import('./portal/admin/CaseDetail'));
 const AdminMessages = lazy(() => import('./portal/admin/AdminMessages'));
 const AdminProfile = lazy(() => import('./portal/admin/AdminProfile'));
+const TrainingReport = lazy(() => import('./portal/admin/TrainingReport'));
 
 function HomePage() {
   return (
@@ -153,6 +154,7 @@ const router = createBrowserRouter([
       { path: '/admin/cases/new', element: <ProtectedRoute requiredRole="admin-only"><AdminLayout><CaseCreate /></AdminLayout></ProtectedRoute> },
       { path: '/admin/cases/:id', element: <ProtectedRoute requiredRole="admin"><AdminLayout><CaseDetail /></AdminLayout></ProtectedRoute> },
       { path: '/admin/messages', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminMessages /></AdminLayout></ProtectedRoute> },
+      { path: '/admin/training', element: <ProtectedRoute requiredRole="admin"><AdminLayout><TrainingReport /></AdminLayout></ProtectedRoute> },
       { path: '/admin/change-password', element: <ProtectedRoute requiredRole="admin"><AdminLayout><ChangePassword /></AdminLayout></ProtectedRoute> },
     ],
   },
