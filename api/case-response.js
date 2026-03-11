@@ -1,9 +1,25 @@
+const supabaseAdmin = require('./_lib/supabaseAdmin');
+
 const escapeHtml = (str) =>
   String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
+  }
+
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+  const authHeader = req.headers.authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | case-response | missing token`);
+    return res.status(401).json({ error: 'Missing authorization token' });
+  }
+
+  const token = authHeader.replace('Bearer ', '');
+  const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+  if (authError || !user) {
+    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | case-response | invalid token`);
+    return res.status(401).json({ error: 'Invalid token' });
   }
 
   const { expertName, expertEmail, caseTitle, action } = req.body;

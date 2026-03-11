@@ -31,16 +31,21 @@ export default function CaseInvitations() {
 
     // Send notification email (fire-and-forget)
     const expertName = profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : user.email;
-    fetch('/api/case-response', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        expertName: expertName || user.email,
-        expertEmail: user.email,
-        caseTitle: inv?.cases?.title || 'Untitled Case',
-        action: status,
-      }),
-    }).catch(() => {});
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      fetch('/api/case-response', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session?.access_token}`,
+        },
+        body: JSON.stringify({
+          expertName: expertName || user.email,
+          expertEmail: user.email,
+          caseTitle: inv?.cases?.title || 'Untitled Case',
+          action: status,
+        }),
+      }).catch(() => {});
+    });
 
     await loadInvitations();
   };

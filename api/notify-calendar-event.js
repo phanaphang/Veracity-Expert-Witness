@@ -8,14 +8,17 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
   const authHeader = req.headers.authorization;
   if (!authHeader?.startsWith('Bearer ')) {
+    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | notify-calendar-event | missing token`);
     return res.status(401).json({ error: 'Missing authorization token' });
   }
 
   const token = authHeader.replace('Bearer ', '');
   const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
   if (authError || !user) {
+    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | notify-calendar-event | invalid token`);
     return res.status(401).json({ error: 'Invalid token' });
   }
 
@@ -26,6 +29,7 @@ module.exports = async (req, res) => {
     .single();
 
   if (!callerProfile || !['admin', 'staff'].includes(callerProfile.role)) {
+    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | notify-calendar-event | insufficient role: ${callerProfile?.role}`);
     return res.status(403).json({ error: 'Admin or staff access required' });
   }
 
