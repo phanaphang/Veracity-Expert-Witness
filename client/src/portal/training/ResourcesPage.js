@@ -3,21 +3,28 @@ import { Link } from 'react-router-dom';
 
 // Shared inline styles for generated HTML resource pages
 const pageStyles = `
-  body { font-family: Arial, Helvetica, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px 32px; color: #1a1f3a; line-height: 1.6; }
-  h1 { font-size: 24px; color: #1a1f3a; margin-bottom: 4px; }
-  .subtitle { font-size: 13px; color: #d36622; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 32px; border-bottom: 2px solid #d36622; padding-bottom: 12px; }
-  h2 { font-size: 16px; color: #1a1f3a; margin: 28px 0 8px; border-left: 4px solid #d36622; padding-left: 10px; }
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+  *, *::before, *::after { box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f7f5f0; color: #3e442b; line-height: 1.6; }
+  .page-wrap { max-width: 820px; margin: 0 auto; padding: 0 24px 60px; }
+  .header-bar { background: #3e442b; color: white; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .header-bar .brand { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .header-bar .tag { font-size: 11px; color: #d36622; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
+  .content-card { background: #ffffff; border: 1px solid #e8dab2; border-radius: 12px; padding: 40px 48px; }
+  h1 { font-size: 24px; font-weight: 700; color: #3e442b; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .subtitle { font-size: 11px; color: #d36622; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin: 0 0 32px; padding-bottom: 16px; border-bottom: 1px solid #e8dab2; }
+  h2 { font-size: 11px; font-weight: 700; color: #d36622; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: 0.07em; padding-left: 12px; border-left: 3px solid #d36622; }
   ul { padding-left: 20px; margin: 0 0 16px; }
-  li { margin-bottom: 6px; font-size: 14px; color: #374151; }
-  p { font-size: 14px; color: #374151; margin: 0 0 12px; }
-  .note { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 12px 16px; font-size: 13px; color: #6b7280; margin-top: 32px; }
-  .header-bar { background: #1a1f3a; color: white; padding: 16px 32px; margin: -40px -32px 32px; display: flex; align-items: center; gap: 12px; }
-  .header-bar span { font-size: 18px; font-weight: 700; }
-  .header-bar small { font-size: 12px; color: #d36622; display: block; }
-  table { width: 100%; border-collapse: collapse; margin: 12px 0 20px; font-size: 14px; }
-  th { background: #1a1f3a; color: white; padding: 8px 12px; text-align: left; font-size: 13px; }
-  td { padding: 8px 12px; border-bottom: 1px solid #e5e7eb; color: #374151; }
-  tr:nth-child(even) td { background: #f9fafb; }
+  li { margin-bottom: 7px; font-size: 14px; color: #4e5538; line-height: 1.6; }
+  p { font-size: 14px; color: #4e5538; margin: 0 0 12px; line-height: 1.6; }
+  strong { color: #3e442b; }
+  em { font-style: normal; font-size: 13px; color: #676d5f; background: #f0ece3; padding: 2px 6px; border-radius: 4px; display: inline-block; margin: 4px 0 8px; line-height: 1.5; }
+  .note { background: #f0ece3; border: 1px solid #e8dab2; border-radius: 8px; padding: 14px 18px; font-size: 12px; color: #676d5f; margin-top: 40px; line-height: 1.5; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 24px; font-size: 13px; border-radius: 8px; overflow: hidden; }
+  th { background: #3e442b; color: white; padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 10px 14px; border-bottom: 1px solid #e8dab2; color: #4e5538; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #f7f5f0; }
 `;
 
 function makeHtml(title, subtitle, bodyHtml) {
@@ -26,20 +33,24 @@ function makeHtml(title, subtitle, bodyHtml) {
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${title} — Veracity Expert Witness</title>
+  <title>${title} | Veracity Expert Witness</title>
   <style>${pageStyles}</style>
 </head>
 <body>
   <div class="header-bar">
     <div>
-      <span>Veracity Expert Witness</span>
-      <small>Expert Witness Foundations</small>
+      <div class="brand">Veracity Expert Witness</div>
+      <div class="tag">Expert Witness Foundations</div>
     </div>
   </div>
-  <h1>${title}</h1>
-  <div class="subtitle">${subtitle}</div>
-  ${bodyHtml}
-  <div class="note">This document is provided by Veracity Expert Witness as a training resource. It is for educational purposes only and does not constitute legal advice.</div>
+  <div class="page-wrap">
+    <div class="content-card">
+      <h1>${title}</h1>
+      <div class="subtitle">${subtitle}</div>
+      ${bodyHtml}
+      <div class="note">This document is provided by Veracity Expert Witness as a training reference. It is for educational purposes only and does not constitute legal advice.</div>
+    </div>
+  </div>
 </body>
 </html>`;
 }
