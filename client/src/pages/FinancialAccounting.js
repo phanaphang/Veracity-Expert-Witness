@@ -156,7 +156,7 @@ function FinancialAccounting() {
         <div className="specialty-cta">
           <h2>Need a Financial Expert Witness?</h2>
           <p>
-            Tell us about your case and we'll match you with the right financial expert.
+            Tell us about your case and we&apos;ll match you with the right financial expert.
           </p>
           <Link to="/" className="btn btn--primary" onClick={() => {
             setTimeout(() => {

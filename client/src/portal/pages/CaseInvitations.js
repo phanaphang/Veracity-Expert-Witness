@@ -68,7 +68,7 @@ export default function CaseInvitations() {
       {invitations.length === 0 ? (
         <div className="portal-empty">
           <p className="portal-empty__text">No case invitations yet</p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-400)' }}>When you're invited to a case, it will appear here.</p>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-400)' }}>When you&apos;re invited to a case, it will appear here.</p>
         </div>
       ) : (
         invitations.filter(inv => {

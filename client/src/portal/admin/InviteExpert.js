@@ -106,9 +106,9 @@ export default function InviteExpert() {
       <div className="portal-card" style={{ marginTop: 24 }}>
         <h2 className="portal-card__title">How It Works</h2>
         <ol style={{ paddingLeft: 20, lineHeight: 2, fontSize: '0.9rem', color: 'var(--color-gray-600)' }}>
-          <li>Enter the expert's email address above</li>
-          <li>They'll receive an invitation email with a link to set their password</li>
-          <li>After signing in, they'll be prompted to complete their profile</li>
+          <li>Enter the expert&apos;s email address above</li>
+          <li>They&apos;ll receive an invitation email with a link to set their password</li>
+          <li>After signing in, they&apos;ll be prompted to complete their profile</li>
           <li>You can then review their profile and invite them to cases</li>
         </ol>
       </div>

@@ -45,7 +45,7 @@ export default function ForgotPassword() {
           </div>
         ) : (
           <>
-            <p className="portal-auth__subtitle">Enter your email and we'll send you a reset link</p>
+            <p className="portal-auth__subtitle">Enter your email and we&apos;ll send you a reset link</p>
             {error && <div className="portal-alert portal-alert--error">{error}</div>}
             <form onSubmit={handleSubmit} className="portal-auth__form">
               <div className="portal-field">

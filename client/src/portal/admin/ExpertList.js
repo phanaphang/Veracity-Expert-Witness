@@ -125,7 +125,7 @@ export default function ExpertList() {
   const exportToExcel = async () => {
     setExporting(true);
     try {
-      const XLSX = await import('xlsx');
+      const XLSX = await import('@e965/xlsx');
       const exportExperts = [...filtered].sort((a, b) => (a.last_name || '').localeCompare(b.last_name || ''));
       const expertIds = exportExperts.map(e => e.id);
 

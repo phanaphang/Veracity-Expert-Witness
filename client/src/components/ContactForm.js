@@ -90,14 +90,14 @@ function ContactForm() {
             Get Started <span className="text--accent">Today</span>
           </h2>
           <p className="section__subtitle">
-            Fill out the form and we'll take it from there: finding, vetting, and managing the right expert for your case.
+            Fill out the form and we&apos;ll take it from there: finding, vetting, and managing the right expert for your case.
           </p>
         </div>
 
         <form className="contact__form" onSubmit={handleSubmit} noValidate>
           {status === 'success' && (
             <div className="contact__alert contact__alert--success">
-              Thank you! Your request has been submitted. We'll be in touch within 24 hours.
+              Thank you! Your request has been submitted. We&apos;ll be in touch within 24 hours.
             </div>
           )}
           {status === 'error' && (

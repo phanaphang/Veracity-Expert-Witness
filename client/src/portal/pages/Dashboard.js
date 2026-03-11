@@ -44,7 +44,7 @@ export default function Dashboard() {
           <h1 className="portal-page__title">
             Welcome{profile?.first_name ? `, ${profile.first_name}` : ''}
           </h1>
-          <p className="portal-page__subtitle">Here's an overview of your account</p>
+          <p className="portal-page__subtitle">Here&apos;s an overview of your account</p>
         </div>
       </div>
 

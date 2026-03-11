@@ -146,7 +146,7 @@ function IntellectualProperty() {
         <div className="specialty-cta">
           <h2>Need an Intellectual Property Expert Witness?</h2>
           <p>
-            Tell us about your case and we'll match you with the right IP expert.
+            Tell us about your case and we&apos;ll match you with the right IP expert.
           </p>
           <Link to="/" className="btn btn--primary" onClick={() => {
             setTimeout(() => {
