@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from 'react';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet, useRouteError, isRouteErrorResponse } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -71,6 +71,47 @@ const AdminMessages = lazy(() => import('./portal/admin/AdminMessages'));
 const AdminProfile = lazy(() => import('./portal/admin/AdminProfile'));
 const TrainingReport = lazy(() => import('./portal/admin/TrainingReport'));
 
+function RouteErrorPage() {
+  const error = useRouteError();
+  const is404 = isRouteErrorResponse(error) && error.status === 404;
+
+  return (
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '40px',
+      textAlign: 'center',
+      fontFamily: 'system-ui, sans-serif',
+    }}>
+      <h2 style={{ marginBottom: '12px' }}>
+        {is404 ? 'Page Not Found' : 'Something went wrong'}
+      </h2>
+      <p style={{ color: '#666', marginBottom: '24px' }}>
+        {is404
+          ? "The page you're looking for doesn't exist."
+          : 'An unexpected error occurred. Please try again.'}
+      </p>
+      <button
+        onClick={() => window.location.href = '/'}
+        style={{
+          padding: '10px 24px',
+          background: '#1a365d',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '6px',
+          cursor: 'pointer',
+          fontSize: '14px',
+        }}
+      >
+        Go Home
+      </button>
+    </div>
+  );
+}
+
 function HomePage() {
   return (
     <>
@@ -102,6 +143,7 @@ function Root() {
 const router = createBrowserRouter([
   {
     element: <Root />,
+    errorElement: <RouteErrorPage />,
     children: [
       // Public Site
       { path: '/', element: <HomePage /> },
