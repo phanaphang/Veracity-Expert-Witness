@@ -107,10 +107,11 @@ export default function TrainingDashboard() {
           const unitTotal = unit.lessons.length;
           const quizPassed = (passedQuizzes[unit.quizId] || 0) >= 2;
           const firstLesson = unit.lessons[0];
-          // Unit is accessible if it's unit 1 or previous unit's quiz was passed
+          // Unit is accessible if it's unit 1, previous unit's quiz was passed, or user is admin/staff
           const prevUnit = ui > 0 ? UNITS[ui - 1] : null;
+          const isAdminOrStaff = ['admin', 'staff'].includes(profile?.role);
           const accessible =
-            !prevUnit || (passedQuizzes[prevUnit.quizId] || 0) >= 2;
+            isAdminOrStaff || !prevUnit || (passedQuizzes[prevUnit.quizId] || 0) >= 2;
 
           return (
             <div

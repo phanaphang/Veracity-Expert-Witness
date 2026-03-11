@@ -28,8 +28,11 @@ export default function TrainingSidebar({ completedLessons, passedQuizzes, onNav
     ? '/admin/dashboard'
     : '/portal/dashboard';
 
+  const isAdminOrStaff = ['admin', 'staff'].includes(profile?.role);
+
   // A lesson is unlocked if it's '1.1' or all previous lessons are complete
   function isLessonUnlocked(lessonId) {
+    if (isAdminOrStaff) return true;
     if (lessonId === '1.1') return true;
     const idx = LESSON_SEQUENCE.indexOf(lessonId);
     if (idx <= 0) return true;
@@ -39,6 +42,7 @@ export default function TrainingSidebar({ completedLessons, passedQuizzes, onNav
 
   // A unit's quiz is unlocked when all lessons in that unit are complete
   function isQuizUnlocked(unit) {
+    if (isAdminOrStaff) return true;
     return unit.lessons.every((lid) => completedLessons.includes(lid));
   }
 
