@@ -1421,7 +1421,7 @@ img {
 
 @media (max-width: 480px) {
   .hero {
-    padding: 100px 0 170px;
+    padding: 100px 0 200px;
   }
 
   .hero__title {
