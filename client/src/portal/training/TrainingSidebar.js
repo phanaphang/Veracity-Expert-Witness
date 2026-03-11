@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import { UNITS, LESSON_SEQUENCE } from './courseData';
 
 function CheckIcon() {
@@ -22,6 +23,10 @@ function LockIcon() {
 
 export default function TrainingSidebar({ completedLessons, passedQuizzes, onNavigate }) {
   const location = useLocation();
+  const { profile } = useAuth();
+  const dashboardLink = ['admin', 'staff'].includes(profile?.role)
+    ? '/admin/dashboard'
+    : '/portal/dashboard';
 
   // A lesson is unlocked if it's '1.1' or all previous lessons are complete
   function isLessonUnlocked(lessonId) {
@@ -52,7 +57,7 @@ export default function TrainingSidebar({ completedLessons, passedQuizzes, onNav
       </Link>
 
       <Link
-        to="/portal/dashboard"
+        to={dashboardLink}
         className="training-sidebar__back"
         onClick={onNavigate}
       >
