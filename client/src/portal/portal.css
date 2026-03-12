@@ -854,6 +854,14 @@
 
 /* --- Responsive --- */
 @media (max-width: 768px) {
+  .portal-main {
+    overflow-x: hidden;
+  }
+
+  .portal-sidebar {
+    overflow-y: auto;
+  }
+
   .portal-sidebar-wrapper {
     position: fixed;
     left: 0;
