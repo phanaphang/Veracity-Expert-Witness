@@ -1155,7 +1155,7 @@
   left: 0;
   height: 100vh;
   width: 260px;
-  z-index: 200;
+  z-index: 1000;
   transform: translateX(0);
   transition: transform var(--transition);
   overflow-y: auto;
