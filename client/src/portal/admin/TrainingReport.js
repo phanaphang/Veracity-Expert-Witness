@@ -177,8 +177,8 @@ export default function TrainingReport() {
           No experts match your filters.
         </div>
       ) : (
-        <div className="portal-card" style={{ padding: 0, overflow: 'hidden' }}>
-          <table className="portal-table">
+        <div className="portal-table-wrap">
+          <table className="portal-table training-report-table">
             <thead>
               <tr>
                 <th>Expert</th>
