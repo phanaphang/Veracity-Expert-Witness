@@ -49,7 +49,7 @@ const Messages = lazy(() => import('./portal/pages/Messages'));
 const ChangePassword = lazy(() => import('./portal/pages/ChangePassword'));
 const CalendarPage = lazy(() => import('./portal/pages/Calendar'));
 
-// Training module
+// Training module — Expert Witness Foundations
 const TrainingDashboard = lazy(() => import('./portal/training/TrainingDashboard'));
 const LessonPage = lazy(() => import('./portal/training/LessonPage'));
 const QuizPage = lazy(() => import('./portal/training/QuizPage'));
@@ -58,6 +58,15 @@ const AssessmentPage = lazy(() => import('./portal/training/AssessmentPage'));
 const CertificatePage = lazy(() => import('./portal/training/CertificatePage'));
 const ResourcesPage = lazy(() => import('./portal/training/ResourcesPage'));
 const TrainingLayout = lazy(() => import('./portal/training/TrainingLayout'));
+
+// Training module — Standards of Admissibility: Frye, Kelly, and Daubert
+const AdmissibilityLayout = lazy(() => import('./portal/training/admissibility/AdmissibilityLayout'));
+const AdmissibilityDashboard = lazy(() => import('./portal/training/admissibility/AdmissibilityDashboard'));
+const AdmissibilityLessonPage = lazy(() => import('./portal/training/admissibility/AdmissibilityLessonPage'));
+const AdmissibilityScenarioPage = lazy(() => import('./portal/training/admissibility/AdmissibilityScenarioPage'));
+const AdmissibilityQuizPage = lazy(() => import('./portal/training/admissibility/AdmissibilityQuizPage'));
+const AdmissibilityCertificatePage = lazy(() => import('./portal/training/admissibility/AdmissibilityCertificatePage'));
+const AdmissibilityResourcesPage = lazy(() => import('./portal/training/admissibility/AdmissibilityResourcesPage'));
 
 // Admin pages — includes heavy libs (xlsx, jspdf, pdf-lib) only when visited
 const AdminDashboard = lazy(() => import('./portal/admin/AdminDashboard'));
@@ -185,6 +194,14 @@ const router = createBrowserRouter([
       { path: '/training/assessment', element: <ProtectedRoute><TrainingLayout><AssessmentPage /></TrainingLayout></ProtectedRoute> },
       { path: '/training/certificate', element: <ProtectedRoute><TrainingLayout><CertificatePage /></TrainingLayout></ProtectedRoute> },
       { path: '/training/resources', element: <ProtectedRoute><PortalLayout><ResourcesPage /></PortalLayout></ProtectedRoute> },
+
+      // Training module — Standards of Admissibility (expert, admin, staff)
+      { path: '/training/admissibility', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityDashboard /></AdmissibilityLayout></ProtectedRoute> },
+      { path: '/training/admissibility/lesson/:lessonId', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityLessonPage /></AdmissibilityLayout></ProtectedRoute> },
+      { path: '/training/admissibility/scenario', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityScenarioPage /></AdmissibilityLayout></ProtectedRoute> },
+      { path: '/training/admissibility/quiz', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityQuizPage /></AdmissibilityLayout></ProtectedRoute> },
+      { path: '/training/admissibility/certificate', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityCertificatePage /></AdmissibilityLayout></ProtectedRoute> },
+      { path: '/training/admissibility/resources', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityResourcesPage /></AdmissibilityLayout></ProtectedRoute> },
 
       // Admin (protected, admin only)
       { path: '/admin/dashboard', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute> },

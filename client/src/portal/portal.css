@@ -1566,6 +1566,23 @@
   margin: 0 0 16px;
 }
 
+/* Admissibility module — section wrapper and sub-heading (h3) */
+.training-lesson__section {
+  margin-bottom: 28px;
+}
+.training-lesson__section:last-child {
+  margin-bottom: 0;
+}
+.training-lesson__subheading {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--color-accent);
+  display: inline-block;
+}
+
 .training-lesson__para {
   font-size: 15px;
   line-height: 1.7;
