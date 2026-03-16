@@ -73,7 +73,7 @@ export const LESSONS = {
       {
         subheading: 'Why This Matters Regardless of Industry',
         body: [
-          'Admissibility standards do not apply only to medical or scientific testimony. A structural engineer\'s finite element analysis software, a forensic accountant\'s proprietary damages model, a cybersecurity expert\'s novel attribution methodology, and a physician\'s causation opinion based on a new diagnostic technique all face the same threshold question: is your methodology admissible?',
+          'Admissibility standards do not apply only to medical or scientific testimony. A structural engineer\'s finite element analysis software, a forensic accountant\'s proprietary damages model, a cybersecurity expert\'s novel attribution methodology, a physician\'s causation opinion based on a new diagnostic technique, an environmental scientist\'s novel contaminant transport model, an intellectual property expert\'s proprietary damages methodology, an accident reconstructionist\'s simulation software, and a forensic analyst\'s pattern-matching technique all face the same threshold question: is your methodology admissible?',
           'Your credentials establish that you are qualified to hold an opinion. Admissibility standards ask a separate question entirely: did you reach that opinion the right way?',
         ],
       },
@@ -103,6 +103,10 @@ export const LESSONS = {
           'Engineering: the relevant discipline — structural, mechanical, civil, geotechnical, or other',
           'Finance: forensic accounting or valuation peer practice',
           'Digital forensics: accepted cybersecurity and forensic methodology standards, including NIST guidelines and recognized forensic community practices',
+          'Environmental science: toxicologists, hydrogeologists, or environmental engineers in the applicable sub-discipline, with reference to EPA-approved methodologies and ASTM environmental standards',
+          'Intellectual property: IP economists, licensing professionals, forensic accountants, and patent valuation practitioners',
+          'Accident reconstruction: ACTAR-accredited reconstructionists and vehicle dynamics engineers, with reference to SAE International standards',
+          'Forensic analysis: the relevant forensic science sub-discipline (forensic biology, trace evidence, questioned documents, latent prints, etc.), with reference to OSAC/NIST standards and ASTM',
         ],
       },
       {
@@ -120,7 +124,7 @@ export const LESSONS = {
         subheading: 'Important Scope Limitation',
         body: [
           'The Kelly test applies specifically to novel scientific techniques and methods — new instruments, tools, or processes offered as the basis for expert opinion. It does not apply to all expert testimony.',
-          'Standard professional opinions, clinical diagnoses, and experience-based analysis are not subject to Kelly/Frye unless they rest on a novel scientific technique or mechanism. This distinction matters across all four professional disciplines: a physician offering a standard clinical diagnosis, an engineer applying accepted structural principles, a forensic accountant using peer-validated methodology, and a cybersecurity analyst following recognized forensic protocols are all offering experience-based opinions — not novel-technique testimony — and Kelly/Frye does not apply to those opinions.',
+          'Standard professional opinions, clinical diagnoses, and experience-based analysis are not subject to Kelly/Frye unless they rest on a novel scientific technique or mechanism. This distinction matters across all professional disciplines: a physician offering a standard clinical diagnosis, an engineer applying accepted structural principles, a forensic accountant using peer-validated methodology, a cybersecurity analyst following recognized forensic protocols, an environmental scientist applying accepted EPA protocols, an IP damages expert using established valuation frameworks, an accident reconstructionist applying standard physics and documented measurements, and a forensic analyst following validated OSAC/NIST protocols are all offering experience-based opinions — not novel-technique testimony — and Kelly/Frye does not apply to those opinions.',
         ],
       },
       {
@@ -140,6 +144,10 @@ export const LESSONS = {
           'Engineering: proprietary structural analysis software developed by the expert but not independently validated or adopted by peers in the field',
           'Finance: a damages calculation tool or quantitative model developed by the expert but not used or validated by forensic accounting or valuation practitioners',
           'Digital forensics: an attribution methodology or analysis tool not recognized by NIST or the peer forensic community',
+          'Environmental science: a novel contaminant fate-and-transport model or sampling protocol not yet adopted by environmental scientists in the applicable sub-discipline',
+          'Intellectual property: a proprietary damages methodology or valuation model not used by IP valuation practitioners (note: IP damages are economic opinions — the primary California risk is typically Sargon rather than Kelly, unless the methodology depends on a novel scientific or computational technique)',
+          'Accident reconstruction: proprietary crash simulation or dynamics software not independently validated or adopted by the reconstruction community',
+          'Forensic analysis: a novel evidence interpretation technique — such as a pattern-matching method or forensic identification procedure — not recognized by the relevant forensic science community or OSAC/NIST standards',
         ],
       },
     ],
@@ -176,7 +184,7 @@ export const LESSONS = {
       {
         subheading: 'Kumho Tire v. Carmichael (1999)',
         body: [
-          'Kumho Tire extended Daubert beyond hard science to all forms of expert testimony. A forensic accountant\'s damages model, a cybersecurity analyst\'s attribution methodology, a civil engineer\'s failure analysis, and a physician\'s causation opinion are all subject to Daubert scrutiny in federal court and in the majority of state courts.',
+          'Kumho Tire extended Daubert beyond hard science to all forms of expert testimony. A forensic accountant\'s damages model, a cybersecurity analyst\'s attribution methodology, a civil engineer\'s failure analysis, a physician\'s causation opinion, an environmental scientist\'s causation methodology, an IP damages expert\'s valuation model, an accident reconstructionist\'s analysis, and a forensic analyst\'s evidence interpretation are all subject to Daubert scrutiny in federal court and in the majority of state courts.',
           'Engineers, accountants, and digital forensics professionals cannot avoid Daubert scrutiny by characterizing their work as experience-based rather than scientific. After Kumho Tire, that distinction is irrelevant.',
         ],
       },
@@ -195,6 +203,10 @@ export const LESSONS = {
           'Engineering: failure analysis must show testing, modeling, or peer-validated simulation — not only the engineer\'s judgment',
           'Finance: damages models must show accepted valuation methodology, not only arithmetic — the court scrutinizes the basis for assumptions and projections',
           'Digital forensics: attribution or evidence analysis must follow documented, repeatable, peer-recognized procedures — undocumented or novel attribution methods are highly vulnerable',
+          'Environmental science: exposure or causation opinions must show documented dose-response methodology — the court examines whether transport or dispersion models have been tested and validated against field data',
+          'Intellectual property: damages opinions must apply accepted valuation frameworks (e.g., Georgia-Pacific factors for reasonable royalties) with documented basis for assumptions — proprietary models without peer validation are highly vulnerable',
+          'Accident reconstruction: opinions must be supported by documented measurements, testing, or peer-validated analytical methods — relying solely on visual assessment without quantitative analysis is insufficient',
+          'Forensic analysis: evidence analysis must follow documented, repeatable procedures with validated error rates — techniques lacking scientific validation (as highlighted by the 2009 NAS and 2016 PCAST reports) face heightened scrutiny',
         ],
       },
       {

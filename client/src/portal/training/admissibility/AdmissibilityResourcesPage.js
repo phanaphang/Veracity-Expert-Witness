@@ -63,8 +63,9 @@ const resource1Html = () => htmlShell(
   `
 <h1>Frye vs. Kelly vs. Daubert — Quick Reference Card</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
-  All four professional disciplines: medical &amp; healthcare, engineering &amp; construction,
-  finance &amp; accounting, digital forensics &amp; technology
+  All eight professional disciplines: medical &amp; healthcare, engineering &amp; construction,
+  finance &amp; accounting, digital forensics &amp; technology, environmental science,
+  intellectual property, accident reconstruction, forensic analysis
 </p>
 
 <h2>Standards at a Glance</h2>
@@ -172,6 +173,26 @@ const resource1Html = () => htmlShell(
       <td>Attribution methodology or analysis tool not recognized by NIST or the peer forensic community</td>
       <td>Evidence analysis using undocumented or non-repeatable procedures without recognized forensic standards</td>
     </tr>
+    <tr>
+      <td><strong>Environmental Science</strong></td>
+      <td>Novel contaminant fate-and-transport model or sampling protocol not yet adopted by environmental scientists in the applicable sub-discipline</td>
+      <td>Exposure or causation opinion without documented dose-response methodology; transport models not validated against field data</td>
+    </tr>
+    <tr>
+      <td><strong>Intellectual Property</strong></td>
+      <td>Proprietary damages methodology or valuation model not used by IP valuation practitioners (note: IP damages are economic opinions — the primary California risk is typically Sargon rather than Kelly, unless the methodology depends on a novel scientific or computational technique)</td>
+      <td>Damages opinion without accepted valuation framework (e.g., Georgia-Pacific factors); proprietary models without peer validation; speculative assumptions</td>
+    </tr>
+    <tr>
+      <td><strong>Accident Reconstruction</strong></td>
+      <td>Proprietary crash simulation or dynamics software not independently validated or adopted by the reconstruction community</td>
+      <td>Opinion based solely on visual assessment without documented measurements, testing, or peer-validated analytical methods</td>
+    </tr>
+    <tr>
+      <td><strong>Forensic Analysis</strong></td>
+      <td>Novel evidence interpretation technique — such as a pattern-matching method or identification procedure — not recognized by the relevant forensic science community or OSAC/NIST standards</td>
+      <td>Evidence analysis without documented, repeatable procedures or validated error rates; techniques lacking scientific validation per 2009 NAS and 2016 PCAST reports</td>
+    </tr>
   </tbody>
 </table>
 `
@@ -250,6 +271,38 @@ const resource2Html = () => htmlShell(
   <li>Accepted forensic analysis tools and procedures following NIST or recognized standards are not subject to Kelly/Frye</li>
   <li>Document recognition by NIST, SWGDE, or other authoritative forensic standards bodies</li>
   <li><strong>Red flags:</strong> attribution methodologies not recognized by NIST or peer forensic community; tools without documented, repeatable procedures; novel analysis techniques used only by the testifying expert</li>
+</ul>
+
+<h2>Environmental Science</h2>
+<ul>
+  <li>Kelly/Frye applies when the technique is novel — e.g., a novel contaminant fate-and-transport model or sampling protocol not yet adopted by environmental scientists in the applicable sub-discipline</li>
+  <li>Standard EPA-approved methodologies and accepted environmental protocols are <em>not</em> subject to Kelly/Frye; focus preparation on Sargon (analytical support) instead</li>
+  <li>Document adoption within the relevant sub-discipline (toxicology, hydrogeology, environmental engineering, etc.) with reference to EPA-approved methodologies and ASTM environmental standards</li>
+  <li><strong>Red flags:</strong> proprietary sampling devices; unvalidated transport or dispersion models; no dose-response methodology; novel modeling assumptions without field calibration</li>
+</ul>
+
+<h2>Intellectual Property</h2>
+<ul>
+  <li>IP damages are economic opinions — the primary California risk is typically <strong>Sargon</strong> (speculative or analytically unsupported opinions) rather than Kelly, unless the methodology depends on a novel scientific or computational technique</li>
+  <li>Standard valuation frameworks (e.g., Georgia-Pacific factors for reasonable royalties, comparable licensing analysis) are <em>not</em> subject to Kelly/Frye</li>
+  <li>Document that the methodology is recognized by IP economists, licensing professionals, forensic accountants, and patent valuation practitioners</li>
+  <li><strong>Red flags:</strong> proprietary royalty models without peer validation; speculative lost-profits projections; no Georgia-Pacific framework or accepted valuation basis; untested assumptions about market share or growth</li>
+</ul>
+
+<h2>Accident Reconstruction</h2>
+<ul>
+  <li>Kelly/Frye applies when the technique is novel — e.g., proprietary crash simulation or dynamics software not independently validated or adopted by the reconstruction community</li>
+  <li>Standard physics-based analysis, documented measurements, and peer-validated analytical methods are <em>not</em> subject to Kelly/Frye</li>
+  <li>Document adoption by ACTAR-accredited reconstructionists and vehicle dynamics engineers, with reference to SAE International standards</li>
+  <li><strong>Red flags:</strong> unvalidated simulation software; no scene visit or independent measurements; visual-only speed estimates without quantitative analysis; proprietary methods used only by the testifying expert</li>
+</ul>
+
+<h2>Forensic Analysis</h2>
+<ul>
+  <li>Kelly/Frye applies when the technique is novel — e.g., a novel evidence interpretation technique, pattern-matching method, or forensic identification procedure not recognized by the relevant forensic science community or OSAC/NIST standards</li>
+  <li>Validated OSAC/NIST protocols and accepted forensic procedures are <em>not</em> subject to Kelly/Frye</li>
+  <li>Document recognition within the relevant forensic science sub-discipline (forensic biology, trace evidence, questioned documents, latent prints, etc.) with reference to OSAC/NIST standards and ASTM</li>
+  <li><strong>Red flags:</strong> expert-only techniques not used by the broader forensic community; no validated error rates; undocumented procedures; techniques criticized in the 2009 NAS or 2016 PCAST reports</li>
 </ul>
 `
 );
@@ -359,6 +412,38 @@ const resource3Html = () => htmlShell(
   <li>NIST and SWGDE standards are highly persuasive evidence of general acceptance and proper procedure</li>
   <li><strong>Common exclusion patterns:</strong> undocumented analysis methodology; failure to follow chain of custody or documented forensic procedures; attribution methods not recognized by the forensic community; expert conflating correlation with causation in network or malware analysis</li>
 </ul>
+
+<h3>Environmental Science</h3>
+<ul>
+  <li>Exposure or causation opinions must show documented dose-response methodology — the court examines whether transport or dispersion models have been tested and validated against field data</li>
+  <li>Document that your modeling parameters are grounded in peer-reviewed data and accepted environmental science practice</li>
+  <li>EPA-approved methodologies and ASTM environmental standards are strong evidence of reliability</li>
+  <li><strong>Common exclusion patterns:</strong> no dose-response analysis; unsupported model parameters without field calibration; transport models not validated against actual site data; novel sampling protocols without peer recognition</li>
+</ul>
+
+<h3>Intellectual Property</h3>
+<ul>
+  <li>Damages opinions must apply accepted valuation frameworks (e.g., Georgia-Pacific factors for reasonable royalties) with documented basis for every key assumption</li>
+  <li>Speculative lost-profits projections without reliable foundation are a primary exclusion risk</li>
+  <li>The expert must explain why their chosen methodology is the appropriate framework for the specific IP damages question</li>
+  <li><strong>Common exclusion patterns:</strong> untested assumptions about market share or licensing rates; novel valuation models not used in the IP valuation community; speculative lost profits based on unvalidated projections; failure to apply Georgia-Pacific or comparable accepted framework</li>
+</ul>
+
+<h3>Accident Reconstruction</h3>
+<ul>
+  <li>Opinions must be supported by documented measurements, testing, or peer-validated analytical methods — relying solely on visual assessment is insufficient</li>
+  <li>Document that your analysis follows SAE International standards and accepted reconstruction methodology</li>
+  <li>Simulation software must be validated; show it produces results consistent with established physics-based methods</li>
+  <li><strong>Common exclusion patterns:</strong> no independent measurements or scene documentation; ipse dixit reasoning without quantitative support; unvalidated simulation software; speed estimates based solely on visual assessment</li>
+</ul>
+
+<h3>Forensic Analysis</h3>
+<ul>
+  <li>Evidence analysis must follow documented, repeatable procedures with validated error rates — techniques lacking scientific validation face heightened scrutiny</li>
+  <li>Document every step of your analysis in a manner that could be independently reproduced, with reference to OSAC/NIST standards</li>
+  <li>The 2009 NAS and 2016 PCAST reports have influenced judicial scrutiny of pattern-matching and identification disciplines</li>
+  <li><strong>Common exclusion patterns:</strong> no validated error rates; undocumented methodology; techniques not recognized by OSAC/NIST or the relevant forensic science community; expert-only methods without independent validation</li>
+</ul>
 `
 );
 
@@ -426,7 +511,7 @@ const resource4Html = () => htmlShell(
   <li>Correct procedures were used in the particular case</li>
 </ol>
 
-<h3>Scope Limitation — Critical for All Four Disciplines</h3>
+<h3>Scope Limitation — Critical for All Disciplines</h3>
 <p>
   Kelly/Frye applies only to novel scientific techniques and methods — new instruments, tools, or
   processes offered as the basis for expert opinion. It does <em>not</em> apply to all expert
@@ -435,8 +520,11 @@ const resource4Html = () => htmlShell(
 </p>
 <p>
   Practical implication: a physician's standard differential diagnosis, an engineer's accepted
-  structural analysis, a forensic accountant's peer-validated damages methodology, and a
-  cybersecurity analyst's recognized forensic procedure are all experience-based opinions that
+  structural analysis, a forensic accountant's peer-validated damages methodology, a
+  cybersecurity analyst's recognized forensic procedure, an environmental scientist applying
+  accepted EPA protocols, an IP damages expert using established valuation frameworks, an
+  accident reconstructionist applying standard physics and documented measurements, and a
+  forensic analyst following validated OSAC/NIST protocols are all experience-based opinions that
   Kelly/Frye does not govern. However, any of these could face a Sargon challenge if the opinion
   is speculative or analytically unsupported.
 </p>
@@ -529,7 +617,7 @@ const RESOURCES = [
     id: 'r1',
     title: 'Frye vs. Kelly vs. Daubert Quick Reference Card',
     description:
-      'Side-by-side comparison table, Kelly three-prong checklist, Daubert five-factor checklist, Sargon summary, and industry application examples across all four disciplines.',
+      'Side-by-side comparison table, Kelly three-prong checklist, Daubert five-factor checklist, Sargon summary, and industry application examples across all eight disciplines.',
     generate: resource1Html,
   },
   {
@@ -543,7 +631,7 @@ const RESOURCES = [
     id: 'r3',
     title: 'Federal Court Daubert Preparation Guide',
     description:
-      'Daubert hearing overview, what federal judges look for, methodology documentation guide, and common exclusion patterns — with field-specific guidance for all four industries.',
+      'Daubert hearing overview, what federal judges look for, methodology documentation guide, and common exclusion patterns — with field-specific guidance for all eight industries.',
     generate: resource3Html,
   },
   {
