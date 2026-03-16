@@ -166,7 +166,7 @@ export default function AdmissibilityQuizPage({ onProgressUpdate }) {
         </div>
       )}
 
-      {/* Questions — hidden after pass or out of retries */}
+      {/* Questions - hidden after pass or out of retries */}
       {!passed && !outOfRetries && (
         <>
           {QUIZ_DATA.questions.map((q, qi) => {

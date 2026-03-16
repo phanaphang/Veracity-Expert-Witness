@@ -7,7 +7,7 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>${title} — Veracity Expert Witness</title>
+<title>${title} - Veracity Expert Witness</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; }
   body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a2e; background: #fff;
@@ -61,7 +61,7 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
 const resource1Html = () => htmlShell(
   'Frye vs. Kelly vs. Daubert Quick Reference Card',
   `
-<h1>Frye vs. Kelly vs. Daubert — Quick Reference Card</h1>
+<h1>Frye vs. Kelly vs. Daubert - Quick Reference Card</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   All eight professional disciplines: medical &amp; healthcare, engineering &amp; construction,
   finance &amp; accounting, digital forensics &amp; technology, environmental science,
@@ -74,15 +74,15 @@ const resource1Html = () => htmlShell(
     <tr>
       <th style="min-width:110px">Dimension</th>
       <th>Frye (1923)</th>
-      <th>Kelly/Frye — California (1976)</th>
+      <th>Kelly/Frye - California (1976)</th>
       <th>Daubert (1993)</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td><strong>Origin case</strong></td>
-      <td>Frye v. United States (D.C. Cir. 1923) — polygraph precursor excluded</td>
-      <td>People v. Kelly (Cal. 1976) — voiceprint analysis</td>
+      <td>Frye v. United States (D.C. Cir. 1923) - polygraph precursor excluded</td>
+      <td>People v. Kelly (Cal. 1976) - voiceprint analysis</td>
       <td>Daubert v. Merrell Dow Pharmaceuticals (U.S. 1993)</td>
     </tr>
     <tr>
@@ -95,13 +95,13 @@ const resource1Html = () => htmlShell(
       <td><strong>Scope of application</strong></td>
       <td>Generally applied to novel scientific techniques and methodologies</td>
       <td>Applies specifically to novel scientific techniques and methods; does not apply to all expert testimony</td>
-      <td>Applies to all expert testimony — scientific, technical, and experience-based (per Kumho Tire, 1999)</td>
+      <td>Applies to all expert testimony - scientific, technical, and experience-based (per Kumho Tire, 1999)</td>
     </tr>
     <tr>
       <td><strong>Standard applied</strong></td>
       <td>General acceptance in the relevant professional community</td>
       <td>General acceptance + proper qualification + correct application (three-prong test)</td>
-      <td>Reliability and relevance — non-exhaustive multi-factor analysis by the judge</td>
+      <td>Reliability and relevance - non-exhaustive multi-factor analysis by the judge</td>
     </tr>
     <tr>
       <td><strong>Who decides</strong></td>
@@ -112,7 +112,7 @@ const resource1Html = () => htmlShell(
     <tr>
       <td><strong>California applicability</strong></td>
       <td>Not the standard in California; Kelly/Frye applies instead for novel techniques</td>
-      <td>Yes — California state courts only</td>
+      <td>Yes - California state courts only</td>
       <td>Not in California state court; applies in federal court and most other states</td>
     </tr>
   </tbody>
@@ -132,11 +132,11 @@ const resource1Html = () => htmlShell(
 <div class="check-item">Are there standards and controls governing the technique?</div>
 <div class="check-item">Is it generally accepted in the relevant professional community?</div>
 
-<h2>Sargon Enterprises v. USC (Cal. 2012) — Plain Language Summary</h2>
+<h2>Sargon Enterprises v. USC (Cal. 2012) - Plain Language Summary</h2>
 <p>
   California trial courts have a gatekeeping duty to exclude expert opinions that are speculative,
   unsupported by the materials relied on, or rest on too great an analytical gap between data and
-  conclusion. This gatekeeping authority applies across all expert testimony — beyond the
+  conclusion. This gatekeeping authority applies across all expert testimony - beyond the
   Kelly/Frye novel-technique context. Sargon did not adopt Daubert and did not change California's
   retention of Kelly/Frye for novel scientific techniques. The practical effect: in California state
   court, an opinion can be excluded either (a) under Kelly/Frye for lack of general acceptance of
@@ -166,7 +166,7 @@ const resource1Html = () => htmlShell(
     <tr>
       <td><strong>Finance &amp; Accounting</strong></td>
       <td>Proprietary damages model developed by the expert but not used or validated by forensic accounting or valuation practitioners</td>
-      <td>Damages model without accepted valuation methodology — court scrutinizes basis for assumptions and projections</td>
+      <td>Damages model without accepted valuation methodology - court scrutinizes basis for assumptions and projections</td>
     </tr>
     <tr>
       <td><strong>Digital Forensics &amp; Technology</strong></td>
@@ -180,7 +180,7 @@ const resource1Html = () => htmlShell(
     </tr>
     <tr>
       <td><strong>Intellectual Property</strong></td>
-      <td>Proprietary damages methodology or valuation model not used by IP valuation practitioners (note: IP damages are economic opinions — the primary California risk is typically Sargon rather than Kelly, unless the methodology depends on a novel scientific or computational technique)</td>
+      <td>Proprietary damages methodology or valuation model not used by IP valuation practitioners (note: IP damages are economic opinions - the primary California risk is typically Sargon rather than Kelly, unless the methodology depends on a novel scientific or computational technique)</td>
       <td>Damages opinion without accepted valuation framework (e.g., Georgia-Pacific factors); proprietary models without peer validation; speculative assumptions</td>
     </tr>
     <tr>
@@ -190,7 +190,7 @@ const resource1Html = () => htmlShell(
     </tr>
     <tr>
       <td><strong>Forensic Analysis</strong></td>
-      <td>Novel evidence interpretation technique — such as a pattern-matching method or identification procedure — not recognized by the relevant forensic science community or OSAC/NIST standards</td>
+      <td>Novel evidence interpretation technique - such as a pattern-matching method or identification procedure - not recognized by the relevant forensic science community or OSAC/NIST standards</td>
       <td>Evidence analysis without documented, repeatable procedures or validated error rates; techniques lacking scientific validation per 2009 NAS and 2016 PCAST reports</td>
     </tr>
   </tbody>
@@ -211,11 +211,11 @@ const resource2Html = () => htmlShell(
 <p>Before accepting a retention in a California state court matter, ask yourself:</p>
 <div class="check-item">Is this California state court or federal court? (Kelly applies in CA state court; Daubert applies in federal court and most other states)</div>
 <div class="check-item">Am I relying on any novel scientific technique, instrument, tool, or analytical method?</div>
-<div class="check-item">If yes to above — has that technique been generally accepted in my professional community? Can I document it?</div>
+<div class="check-item">If yes to above - has that technique been generally accepted in my professional community? Can I document it?</div>
 <div class="check-item">Can I demonstrate that I am properly qualified to apply this specific technique?</div>
 <div class="check-item">Did I follow the accepted, correct procedures for the technique in this case?</div>
 <div class="check-item">Is my opinion free of speculation? Is it based on sufficient data, not an analytical leap?</div>
-<div class="check-item">Would my opinion survive a Sargon challenge — is it analytically supported, not speculative?</div>
+<div class="check-item">Would my opinion survive a Sargon challenge - is it analytically supported, not speculative?</div>
 
 <div class="alert">
   <strong>Note on scope:</strong> If you are offering a standard professional opinion, clinical
@@ -229,7 +229,7 @@ const resource2Html = () => htmlShell(
   If your testimony involves a novel scientific technique or methodology, prepare for a Kelly
   challenge by documenting the following <em>before</em> you accept the retention:
 </p>
-<div class="check-item">Peer-reviewed literature showing adoption of your methodology in the field — not just publication of your own work</div>
+<div class="check-item">Peer-reviewed literature showing adoption of your methodology in the field - not just publication of your own work</div>
 <div class="check-item">Usage data from practitioners in your field who apply this method</div>
 <div class="check-item">Professional standards documents, guidelines, or recognized protocols that incorporate or endorse the technique</div>
 <div class="check-item">Testimony or declarations from colleagues who use the methodology in their practice</div>
@@ -243,15 +243,15 @@ const resource2Html = () => htmlShell(
 
 <h2>Medical &amp; Healthcare</h2>
 <ul>
-  <li>Kelly/Frye applies when the technique is novel — e.g., a new diagnostic instrument, testing protocol, or clinical measurement tool not yet adopted by the specialty</li>
+  <li>Kelly/Frye applies when the technique is novel - e.g., a new diagnostic instrument, testing protocol, or clinical measurement tool not yet adopted by the specialty</li>
   <li>Standard clinical diagnoses, accepted imaging modalities, and peer-validated laboratory tests are <em>not</em> subject to Kelly/Frye; focus preparation on Sargon (analytical support) instead</li>
-  <li>Document adoption within the relevant specialty (oncology, neurology, etc.) — not medicine generally</li>
+  <li>Document adoption within the relevant specialty (oncology, neurology, etc.) - not medicine generally</li>
   <li><strong>Red flags:</strong> proprietary diagnostic tools; tests not approved or endorsed by relevant professional bodies; novel biomarker analysis; methods used in research but not yet in clinical practice</li>
 </ul>
 
 <h2>Engineering &amp; Construction</h2>
 <ul>
-  <li>Kelly/Frye applies when the method is novel — e.g., proprietary simulation software, a unique testing protocol, or an unconventional failure analysis technique not validated by the engineering community</li>
+  <li>Kelly/Frye applies when the method is novel - e.g., proprietary simulation software, a unique testing protocol, or an unconventional failure analysis technique not validated by the engineering community</li>
   <li>Standard FEA software in common use, accepted structural analysis methods, and peer-validated testing protocols are not subject to Kelly/Frye</li>
   <li>Document adoption within the specific sub-discipline (structural, mechanical, civil, etc.)</li>
   <li><strong>Red flags:</strong> software developed by the expert; testing methods not documented in peer-reviewed literature; non-standard modeling assumptions without validation</li>
@@ -259,7 +259,7 @@ const resource2Html = () => htmlShell(
 
 <h2>Finance &amp; Accounting</h2>
 <ul>
-  <li>Kelly/Frye applies when the damages model or valuation tool is novel — e.g., a proprietary quantitative model developed by the expert that is not used by other forensic accountants or valuation professionals</li>
+  <li>Kelly/Frye applies when the damages model or valuation tool is novel - e.g., a proprietary quantitative model developed by the expert that is not used by other forensic accountants or valuation professionals</li>
   <li>Accepted valuation methodologies (DCF, comparable transactions, market approach) are not subject to Kelly/Frye; focus preparation on Sargon (analytical support and basis for assumptions)</li>
   <li>Document that the methodology is recognized in forensic accounting or valuation professional practice</li>
   <li><strong>Red flags:</strong> expert-developed quantitative models not published or peer-validated; damages methodologies not recognized by the forensic accounting community; assumptions without documented basis</li>
@@ -267,7 +267,7 @@ const resource2Html = () => htmlShell(
 
 <h2>Digital Forensics &amp; Technology</h2>
 <ul>
-  <li>Kelly/Frye applies when the attribution method or analysis tool is novel — e.g., a technique not documented in NIST guidelines, not used by the forensic community, or developed without peer validation</li>
+  <li>Kelly/Frye applies when the attribution method or analysis tool is novel - e.g., a technique not documented in NIST guidelines, not used by the forensic community, or developed without peer validation</li>
   <li>Accepted forensic analysis tools and procedures following NIST or recognized standards are not subject to Kelly/Frye</li>
   <li>Document recognition by NIST, SWGDE, or other authoritative forensic standards bodies</li>
   <li><strong>Red flags:</strong> attribution methodologies not recognized by NIST or peer forensic community; tools without documented, repeatable procedures; novel analysis techniques used only by the testifying expert</li>
@@ -275,7 +275,7 @@ const resource2Html = () => htmlShell(
 
 <h2>Environmental Science</h2>
 <ul>
-  <li>Kelly/Frye applies when the technique is novel — e.g., a novel contaminant fate-and-transport model or sampling protocol not yet adopted by environmental scientists in the applicable sub-discipline</li>
+  <li>Kelly/Frye applies when the technique is novel - e.g., a novel contaminant fate-and-transport model or sampling protocol not yet adopted by environmental scientists in the applicable sub-discipline</li>
   <li>Standard EPA-approved methodologies and accepted environmental protocols are <em>not</em> subject to Kelly/Frye; focus preparation on Sargon (analytical support) instead</li>
   <li>Document adoption within the relevant sub-discipline (toxicology, hydrogeology, environmental engineering, etc.) with reference to EPA-approved methodologies and ASTM environmental standards</li>
   <li><strong>Red flags:</strong> proprietary sampling devices; unvalidated transport or dispersion models; no dose-response methodology; novel modeling assumptions without field calibration</li>
@@ -283,7 +283,7 @@ const resource2Html = () => htmlShell(
 
 <h2>Intellectual Property</h2>
 <ul>
-  <li>IP damages are economic opinions — the primary California risk is typically <strong>Sargon</strong> (speculative or analytically unsupported opinions) rather than Kelly, unless the methodology depends on a novel scientific or computational technique</li>
+  <li>IP damages are economic opinions - the primary California risk is typically <strong>Sargon</strong> (speculative or analytically unsupported opinions) rather than Kelly, unless the methodology depends on a novel scientific or computational technique</li>
   <li>Standard valuation frameworks (e.g., Georgia-Pacific factors for reasonable royalties, comparable licensing analysis) are <em>not</em> subject to Kelly/Frye</li>
   <li>Document that the methodology is recognized by IP economists, licensing professionals, forensic accountants, and patent valuation practitioners</li>
   <li><strong>Red flags:</strong> proprietary royalty models without peer validation; speculative lost-profits projections; no Georgia-Pacific framework or accepted valuation basis; untested assumptions about market share or growth</li>
@@ -291,7 +291,7 @@ const resource2Html = () => htmlShell(
 
 <h2>Accident Reconstruction</h2>
 <ul>
-  <li>Kelly/Frye applies when the technique is novel — e.g., proprietary crash simulation or dynamics software not independently validated or adopted by the reconstruction community</li>
+  <li>Kelly/Frye applies when the technique is novel - e.g., proprietary crash simulation or dynamics software not independently validated or adopted by the reconstruction community</li>
   <li>Standard physics-based analysis, documented measurements, and peer-validated analytical methods are <em>not</em> subject to Kelly/Frye</li>
   <li>Document adoption by ACTAR-accredited reconstructionists and vehicle dynamics engineers, with reference to SAE International standards</li>
   <li><strong>Red flags:</strong> unvalidated simulation software; no scene visit or independent measurements; visual-only speed estimates without quantitative analysis; proprietary methods used only by the testifying expert</li>
@@ -299,7 +299,7 @@ const resource2Html = () => htmlShell(
 
 <h2>Forensic Analysis</h2>
 <ul>
-  <li>Kelly/Frye applies when the technique is novel — e.g., a novel evidence interpretation technique, pattern-matching method, or forensic identification procedure not recognized by the relevant forensic science community or OSAC/NIST standards</li>
+  <li>Kelly/Frye applies when the technique is novel - e.g., a novel evidence interpretation technique, pattern-matching method, or forensic identification procedure not recognized by the relevant forensic science community or OSAC/NIST standards</li>
   <li>Validated OSAC/NIST protocols and accepted forensic procedures are <em>not</em> subject to Kelly/Frye</li>
   <li>Document recognition within the relevant forensic science sub-discipline (forensic biology, trace evidence, questioned documents, latent prints, etc.) with reference to OSAC/NIST standards and ASTM</li>
   <li><strong>Red flags:</strong> expert-only techniques not used by the broader forensic community; no validated error rates; undocumented procedures; techniques criticized in the 2009 NAS or 2016 PCAST reports</li>
@@ -330,7 +330,7 @@ const resource3Html = () => htmlShell(
   A Daubert hearing (sometimes called an evidentiary hearing or reliability hearing) is a
   pre-trial proceeding in which the judge evaluates whether a proposed expert's methodology meets
   the Daubert reliability standard. If your methodology is excluded at a Daubert hearing, that
-  ruling is reviewed on appeal only for abuse of discretion — making reversals rare. Preparation
+  ruling is reviewed on appeal only for abuse of discretion - making reversals rare. Preparation
   before trial is essential.
 </p>
 
@@ -371,9 +371,9 @@ const resource3Html = () => htmlShell(
 
 <h2>How to Document Your Methodology Before Trial</h2>
 <div class="check-item">Prepare a written methodology statement explaining how you reached your opinion, step by step</div>
-<div class="check-item">List all data, materials, and sources you relied on — and document why each is the type reasonably relied on by experts in your field</div>
+<div class="check-item">List all data, materials, and sources you relied on - and document why each is the type reasonably relied on by experts in your field</div>
 <div class="check-item">Identify the specific methodology or analytical framework you applied and its basis in peer-recognized practice</div>
-<div class="check-item">Address each Daubert factor in your expert report proactively — don't wait for cross-examination</div>
+<div class="check-item">Address each Daubert factor in your expert report proactively - don't wait for cross-examination</div>
 <div class="check-item">Anticipate and document responses to the most likely challenges to your methodology</div>
 <div class="check-item">Ensure your report reflects that your opinion is based on sufficient facts or data, not an unsupported assumption</div>
 
@@ -383,7 +383,7 @@ const resource3Html = () => htmlShell(
 
 <h3>Medical &amp; Healthcare</h3>
 <ul>
-  <li>Causation opinions must show differential diagnosis — how you systematically ruled out alternative causes, not just a conclusion</li>
+  <li>Causation opinions must show differential diagnosis - how you systematically ruled out alternative causes, not just a conclusion</li>
   <li>Document the clinical literature supporting each step of your diagnostic reasoning</li>
   <li>Opinions based on novel or emerging research without peer-validated methodology are high-risk</li>
   <li><strong>Common exclusion patterns:</strong> "black box" causation opinions; reliance on studies not specifically addressing the causal mechanism at issue; failure to rule out alternative causes; dose-response not addressed</li>
@@ -391,7 +391,7 @@ const resource3Html = () => htmlShell(
 
 <h3>Engineering &amp; Construction</h3>
 <ul>
-  <li>Failure analysis must show testing, modeling, or peer-validated simulation — not only the engineer's professional judgment</li>
+  <li>Failure analysis must show testing, modeling, or peer-validated simulation - not only the engineer's professional judgment</li>
   <li>Document that your FEA or modeling methodology is consistent with accepted engineering practice</li>
   <li>Proprietary software must be validated; show it produces results consistent with established methods</li>
   <li><strong>Common exclusion patterns:</strong> untested hypotheses; failure to test the specific product or conditions at issue; modeling without validation; non-peer-reviewed simulation methods</li>
@@ -399,7 +399,7 @@ const resource3Html = () => htmlShell(
 
 <h3>Finance &amp; Accounting</h3>
 <ul>
-  <li>Damages models must show accepted valuation methodology — DCF, comparable transactions, market approach — with documented basis for every key assumption</li>
+  <li>Damages models must show accepted valuation methodology - DCF, comparable transactions, market approach - with documented basis for every key assumption</li>
   <li>Speculative projections without reliable foundation are a primary exclusion risk</li>
   <li>The expert must be able to explain why their methodology is the appropriate choice for this damages question</li>
   <li><strong>Common exclusion patterns:</strong> assumptions without evidentiary support; novel methodology not used in the field; failure to address known alternative methodologies; speculative lost profits based on untested projections</li>
@@ -415,7 +415,7 @@ const resource3Html = () => htmlShell(
 
 <h3>Environmental Science</h3>
 <ul>
-  <li>Exposure or causation opinions must show documented dose-response methodology — the court examines whether transport or dispersion models have been tested and validated against field data</li>
+  <li>Exposure or causation opinions must show documented dose-response methodology - the court examines whether transport or dispersion models have been tested and validated against field data</li>
   <li>Document that your modeling parameters are grounded in peer-reviewed data and accepted environmental science practice</li>
   <li>EPA-approved methodologies and ASTM environmental standards are strong evidence of reliability</li>
   <li><strong>Common exclusion patterns:</strong> no dose-response analysis; unsupported model parameters without field calibration; transport models not validated against actual site data; novel sampling protocols without peer recognition</li>
@@ -431,7 +431,7 @@ const resource3Html = () => htmlShell(
 
 <h3>Accident Reconstruction</h3>
 <ul>
-  <li>Opinions must be supported by documented measurements, testing, or peer-validated analytical methods — relying solely on visual assessment is insufficient</li>
+  <li>Opinions must be supported by documented measurements, testing, or peer-validated analytical methods - relying solely on visual assessment is insufficient</li>
   <li>Document that your analysis follows SAE International standards and accepted reconstruction methodology</li>
   <li>Simulation software must be validated; show it produces results consistent with established physics-based methods</li>
   <li><strong>Common exclusion patterns:</strong> no independent measurements or scene documentation; ipse dixit reasoning without quantitative support; unvalidated simulation software; speed estimates based solely on visual assessment</li>
@@ -439,7 +439,7 @@ const resource3Html = () => htmlShell(
 
 <h3>Forensic Analysis</h3>
 <ul>
-  <li>Evidence analysis must follow documented, repeatable procedures with validated error rates — techniques lacking scientific validation face heightened scrutiny</li>
+  <li>Evidence analysis must follow documented, repeatable procedures with validated error rates - techniques lacking scientific validation face heightened scrutiny</li>
   <li>Document every step of your analysis in a manner that could be independently reproduced, with reference to OSAC/NIST standards</li>
   <li>The 2009 NAS and 2016 PCAST reports have influenced judicial scrutiny of pattern-matching and identification disciplines</li>
   <li><strong>Common exclusion patterns:</strong> no validated error rates; undocumented methodology; techniques not recognized by OSAC/NIST or the relevant forensic science community; expert-only methods without independent validation</li>
@@ -449,16 +449,16 @@ const resource3Html = () => htmlShell(
 
 // ── Resource 4: Full Module Summary ──────────────────────────────────────────
 const resource4Html = () => htmlShell(
-  'Admissibility Standards — Full Module Summary',
+  'Admissibility Standards - Full Module Summary',
   `
-<h1>Admissibility Standards — Full Module Summary</h1>
+<h1>Admissibility Standards - Full Module Summary</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Condensed reference notes from all three lessons · Standards of Admissibility: Frye, Kelly, and Daubert
 </p>
 
 <h2>Lesson 1: The Landscape of Admissibility Standards</h2>
 <p>
-  Courts serve as gatekeepers of expert testimony — their role is to protect juries from unreliable,
+  Courts serve as gatekeepers of expert testimony - their role is to protect juries from unreliable,
   speculative, or methodologically unsound expertise. Three primary admissibility frameworks govern
   expert testimony in U.S. courts:
 </p>
@@ -476,21 +476,21 @@ const resource4Html = () => htmlShell(
 <ul>
   <li>Federal courts nationwide: <strong>Daubert</strong></li>
   <li>Majority of U.S. state courts: <strong>Daubert</strong> or a Daubert-influenced standard</li>
-  <li>California state courts: <strong>Kelly</strong> — a significant exception</li>
+  <li>California state courts: <strong>Kelly</strong> - a significant exception</li>
   <li>A number of states including Illinois, Pennsylvania, and Washington: <strong>Frye</strong> or Frye-influenced</li>
 </ul>
 <div class="alert">
   <strong>Key rule:</strong> Always confirm the applicable standard for the specific jurisdiction
-  before accepting a retention. The standard is determined by jurisdiction — not by judicial
+  before accepting a retention. The standard is determined by jurisdiction - not by judicial
   preference, case complexity, or the expert's industry.
 </div>
 
-<h2>Lesson 2: Frye &amp; Kelly — General Acceptance in California</h2>
+<h2>Lesson 2: Frye &amp; Kelly - General Acceptance in California</h2>
 
 <h3>Frye v. United States (1923)</h3>
 <p>
   Established the general acceptance standard: expert testimony based on a novel methodology is
-  admissible only if the methodology is generally accepted by the relevant professional community —
+  admissible only if the methodology is generally accepted by the relevant professional community -
   not merely endorsed by the testifying expert. "General acceptance" means practitioners in the
   relevant field have embraced the methodology as reliable.
 </p>
@@ -500,7 +500,7 @@ const resource4Html = () => htmlShell(
   forensic community with reference to standards such as NIST (digital forensics).
 </p>
 
-<h3>People v. Kelly (1976) — The Three-Prong Test</h3>
+<h3>People v. Kelly (1976) - The Three-Prong Test</h3>
 <p>
   California's Kelly test applies specifically to novel scientific techniques and methods. To admit
   expert testimony based on a novel technique in California state court, all three prongs must be met:
@@ -511,9 +511,9 @@ const resource4Html = () => htmlShell(
   <li>Correct procedures were used in the particular case</li>
 </ol>
 
-<h3>Scope Limitation — Critical for All Disciplines</h3>
+<h3>Scope Limitation - Critical for All Disciplines</h3>
 <p>
-  Kelly/Frye applies only to novel scientific techniques and methods — new instruments, tools, or
+  Kelly/Frye applies only to novel scientific techniques and methods - new instruments, tools, or
   processes offered as the basis for expert opinion. It does <em>not</em> apply to all expert
   testimony. Standard professional opinions, clinical diagnoses, and experience-based analysis are
   not subject to Kelly/Frye unless they rest on a novel scientific technique.
@@ -538,22 +538,22 @@ const resource4Html = () => htmlShell(
   testimony, not only novel-technique cases.
 </p>
 
-<h2>Lesson 3: Daubert — The Federal Standard &amp; Multi-Industry Application</h2>
+<h2>Lesson 3: Daubert - The Federal Standard &amp; Multi-Industry Application</h2>
 
 <h3>Daubert v. Merrell Dow Pharmaceuticals (1993)</h3>
 <p>
-  Replaced Frye in federal courts. The trial judge — not the professional community — serves as
+  Replaced Frye in federal courts. The trial judge - not the professional community - serves as
   the active gatekeeper, evaluating methodology directly. Since 1993, the majority of U.S. states
   have adopted Daubert or a Daubert-influenced standard.
 </p>
 <p>
-  <strong>Kumho Tire v. Carmichael (1999):</strong> Extended Daubert to all expert testimony —
+  <strong>Kumho Tire v. Carmichael (1999):</strong> Extended Daubert to all expert testimony -
   not only hard science. Engineering, accounting, and digital forensics experts are equally
   subject to Daubert scrutiny. Experience-based testimony is not exempt.
 </p>
 <p>
   <strong>General Electric v. Joiner (1997):</strong> Appellate courts review Daubert exclusions
-  for abuse of discretion — a deferential standard. Exclusions are difficult to overturn.
+  for abuse of discretion - a deferential standard. Exclusions are difficult to overturn.
 </p>
 
 <h3>The Daubert Factors (Non-Exhaustive)</h3>
@@ -565,7 +565,7 @@ const resource4Html = () => htmlShell(
   <li>Is it generally accepted in the relevant professional community?</li>
 </ol>
 
-<h3>Kelly vs. Daubert — Key Distinctions</h3>
+<h3>Kelly vs. Daubert - Key Distinctions</h3>
 <table>
   <thead>
     <tr><th>Dimension</th><th>Kelly (California)</th><th>Daubert (Federal / Most States)</th></tr>
@@ -602,9 +602,9 @@ const resource4Html = () => htmlShell(
 <h2>Key Principles to Carry Forward</h2>
 <ol>
   <li><strong>Know your jurisdiction before you accept a retention.</strong> California state court = Kelly for novel techniques. Federal court and most other states = Daubert for all testimony.</li>
-  <li><strong>Publication is not acceptance.</strong> Under Kelly, general acceptance requires that your professional community has adopted the method — not just that you authored it.</li>
+  <li><strong>Publication is not acceptance.</strong> Under Kelly, general acceptance requires that your professional community has adopted the method - not just that you authored it.</li>
   <li><strong>Daubert scrutinizes your process, not just your conclusion.</strong> How you got to your opinion matters as much as the opinion itself.</li>
-  <li><strong>Kelly/Frye is not the only California risk.</strong> Sargon gives California judges broad authority to exclude speculative or analytically unsupported opinions — beyond the novel-technique context.</li>
+  <li><strong>Kelly/Frye is not the only California risk.</strong> Sargon gives California judges broad authority to exclude speculative or analytically unsupported opinions - beyond the novel-technique context.</li>
   <li><strong>Non-scientific experts are not exempt from Daubert.</strong> After Kumho Tire, engineers, accountants, and forensic technology experts face the same scrutiny as scientific witnesses in federal and most state courts.</li>
 </ol>
 `
@@ -631,14 +631,14 @@ const RESOURCES = [
     id: 'r3',
     title: 'Federal Court Daubert Preparation Guide',
     description:
-      'Daubert hearing overview, what federal judges look for, methodology documentation guide, and common exclusion patterns — with field-specific guidance for all eight industries.',
+      'Daubert hearing overview, what federal judges look for, methodology documentation guide, and common exclusion patterns - with field-specific guidance for all eight industries.',
     generate: resource3Html,
   },
   {
     id: 'r4',
-    title: 'Admissibility Standards — Full Module Summary',
+    title: 'Admissibility Standards - Full Module Summary',
     description:
-      'Condensed reference notes from all three lessons covering Frye, Kelly, and Daubert — including jurisdiction rules, Kelly scope limitations, Sargon, and multi-industry application.',
+      'Condensed reference notes from all three lessons covering Frye, Kelly, and Daubert - including jurisdiction rules, Kelly scope limitations, Sargon, and multi-industry application.',
     generate: resource4Html,
   },
 ];
@@ -657,7 +657,7 @@ export default function AdmissibilityResourcesPage() {
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
         <p className="portal-page__subtitle">
-          Standards of Admissibility: Frye, Kelly, and Daubert &mdash; 4 reference guides
+          Standards of Admissibility: Frye, Kelly, and Daubert - 4 reference guides
         </p>
       </div>
 

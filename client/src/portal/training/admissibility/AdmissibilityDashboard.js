@@ -8,7 +8,7 @@ import { LESSONS, LESSON_SEQUENCE } from './admissibilityData';
 const TOTAL_STEPS = 6;
 
 const LESSON_DESCRIPTIONS = {
-  '1': 'Frye, Daubert, and Kelly — what they are, where they apply, and why they matter across all industries.',
+  '1': 'Frye, Daubert, and Kelly - what they are, where they apply, and why they matter across all industries.',
   '2': 'Frye\'s origins, the Kelly three-prong test, the scope of Kelly/Frye in California, and Sargon.',
   '3': 'Daubert factors, Kumho Tire, Joiner, and a side-by-side comparison with Kelly.',
 };
@@ -68,7 +68,7 @@ export default function AdmissibilityDashboard() {
       if (!completedLessons.includes(lessonId)) {
         const lesson = LESSONS[lessonId];
         return {
-          label: `${completedLessons.length === 0 ? 'Start' : 'Continue'}: Lesson ${lessonId} — ${lesson.title}`,
+          label: `${completedLessons.length === 0 ? 'Start' : 'Continue'}: Lesson ${lessonId} -${lesson.title}`,
           to: `/training/admissibility/lesson/${lessonId}`,
         };
       }
@@ -186,7 +186,7 @@ export default function AdmissibilityDashboard() {
               </div>
               <div className="training-unit-card__meta">~5 min &middot; Branching scenario</div>
               <p style={{ color: 'var(--color-gray-500)', fontSize: 14, margin: '8px 0 16px' }}>
-                Apply your knowledge to a real-world admissibility challenge — two decision points,
+                Apply your knowledge to a real-world admissibility challenge - two decision points,
                 immediate feedback, and practical takeaways.
               </p>
               {accessible && (
@@ -223,7 +223,7 @@ export default function AdmissibilityDashboard() {
               </div>
               <div className="training-unit-card__meta">~5 min &middot; Pass score: 4 out of 5</div>
               <p style={{ color: 'var(--color-gray-500)', fontSize: 14, margin: '8px 0 16px' }}>
-                Covers all three lessons — jurisdiction, Kelly, Daubert, and multi-industry
+                Covers all three lessons - jurisdiction, Kelly, Daubert, and multi-industry
                 application. One retry allowed.
               </p>
               {accessible && (
@@ -245,7 +245,7 @@ export default function AdmissibilityDashboard() {
           <div>
             <h3 className="training-resources-card__title">Downloadable Resources</h3>
             <p className="training-resources-card__sub">
-              4 reference guides — quick reference, checklists, preparation guides, and module
+              4 reference guides - quick reference, checklists, preparation guides, and module
               summary
             </p>
           </div>

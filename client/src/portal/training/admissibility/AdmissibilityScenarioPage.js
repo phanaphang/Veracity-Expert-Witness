@@ -12,7 +12,7 @@ export default function AdmissibilityScenarioPage({ onProgressUpdate }) {
   const [viewCP1, setViewCP1] = useState(null);
   const [viewCP2, setViewCP2] = useState(null);
 
-  // Committed choices — these unlock the next section
+  // Committed choices - these unlock the next section
   const [savedCP1, setSavedCP1] = useState(null);
   const [savedCP2, setSavedCP2] = useState(null);
 
@@ -85,7 +85,7 @@ export default function AdmissibilityScenarioPage({ onProgressUpdate }) {
 
   const handlePickCP1 = async (choiceId) => {
     setViewCP1(choiceId);
-    if (savedCP1) return; // already committed — exploration only
+    if (savedCP1) return; // already committed - exploration only
     setSaving(true);
     try {
       await saveToDb(choiceId, null, false);
@@ -99,7 +99,7 @@ export default function AdmissibilityScenarioPage({ onProgressUpdate }) {
 
   const handlePickCP2 = async (choiceId) => {
     setViewCP2(choiceId);
-    if (savedCP2) return; // already committed — exploration only
+    if (savedCP2) return; // already committed - exploration only
     setSaving(true);
     try {
       await saveToDb(null, choiceId, true);
@@ -129,7 +129,7 @@ export default function AdmissibilityScenarioPage({ onProgressUpdate }) {
       {/* Previously completed notice */}
       {prevCompleted && (
         <div className="portal-alert" style={{ marginBottom: 16 }}>
-          You previously completed this scenario. Your choices are shown below — you can explore the
+          You previously completed this scenario. Your choices are shown below - you can explore the
           other options at any time.
         </div>
       )}
@@ -211,7 +211,7 @@ export default function AdmissibilityScenarioPage({ onProgressUpdate }) {
         )}
       </div>
 
-      {/* ── Choice Point 2 — visible after CP1 committed ── */}
+      {/* ── Choice Point 2 - visible after CP1 committed ── */}
       {savedCP1 && (
         <div className="portal-card" style={{ marginTop: 24 }}>
           <div
@@ -292,7 +292,7 @@ export default function AdmissibilityScenarioPage({ onProgressUpdate }) {
         </div>
       )}
 
-      {/* ── Scenario Complete Summary — visible after CP2 committed ── */}
+      {/* ── Scenario Complete Summary - visible after CP2 committed ── */}
       {savedCP2 && (
         <div className="portal-card" style={{ marginTop: 24 }}>
           <div

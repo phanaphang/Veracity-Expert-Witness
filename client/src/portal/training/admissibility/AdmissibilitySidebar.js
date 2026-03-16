@@ -203,7 +203,7 @@ export default function AdmissibilitySidebar({
           )}
         </div>
 
-        {/* Resources — always accessible */}
+        {/* Resources - always accessible */}
         <div className="training-sidebar__unit">
           <Link
             to="/training/admissibility/resources"

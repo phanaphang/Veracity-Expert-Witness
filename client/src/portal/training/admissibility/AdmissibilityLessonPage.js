@@ -12,7 +12,7 @@ import {
 
 const COMPLETE_DELAY_MS = 60 * 1000; // 60 seconds before "Mark Complete" appears
 
-// Placeholder audio player — no real audio in v1
+// Placeholder audio player - no real audio in v1
 function AudioPlayer() {
   const [playing, setPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -275,7 +275,7 @@ export default function AdmissibilityLessonPage({ onProgressUpdate }) {
       if (nextLessonId) {
         navigate(`/training/admissibility/lesson/${nextLessonId}`);
       } else {
-        // Last lesson — go to scenario
+        // Last lesson - go to scenario
         navigate('/training/admissibility/scenario');
       }
     } catch (e) {
