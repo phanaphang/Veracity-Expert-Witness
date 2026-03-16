@@ -124,6 +124,10 @@ export default function Dashboard() {
             View and respond to case opportunities
           </p>
         </Link>
+      </div>
+
+      <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--color-navy)', margin: '24px 0 12px' }}>Training Modules</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
         <Link to="/training" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Expert Witness Foundations</h3>
