@@ -1,12 +1,15 @@
-import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useUnreadCount } from '../../hooks/useUnreadCount';
 
 export default function PortalSidebar({ isAdmin, onNavigate }) {
   const { profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const unreadCount = useUnreadCount();
+  const isTrainingActive = location.pathname.startsWith('/training') || location.pathname === '/admin/training';
+  const [trainingOpen, setTrainingOpen] = useState(isTrainingActive);
 
   const expertLinks = [
     { to: '/portal/dashboard', label: 'Dashboard', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4' },
@@ -27,10 +30,18 @@ export default function PortalSidebar({ isAdmin, onNavigate }) {
     { to: '/admin/invite', label: 'Invite Expert', icon: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z' },
     { to: '/admin/cases', label: 'Cases', icon: 'M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 0H8m8 0h2a2 2 0 012 2v8a2 2 0 01-2 2H6a2 2 0 01-2-2v-8a2 2 0 012-2h2' },
     { to: '/admin/messages', label: 'Messages', icon: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z' },
-    { to: '/admin/training', label: 'Training Report', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
-    { to: '/training/foundations', label: 'EW Foundations', icon: 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222' },
-    { to: '/training/admissibility', label: 'Admissibility', icon: 'M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3' },
-    { to: '/training/resources', label: 'Resources', icon: 'M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+    {
+      label: 'Training',
+      icon: 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222',
+      group: true,
+      children: [
+        { to: '/admin/training', label: 'Progress Report', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+        { to: '/training/foundations', label: 'EW Foundations', icon: 'M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222' },
+        { to: '/training/admissibility', label: 'Admissibility', icon: 'M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3' },
+        { to: '/training/report-writing', label: 'Report Writing', icon: 'M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z' },
+        { to: '/training/resources', label: 'Resources', icon: 'M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
+      ],
+    },
     { to: '/admin/change-password', label: 'Change Password', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
   ];
 
@@ -55,7 +66,45 @@ export default function PortalSidebar({ isAdmin, onNavigate }) {
       </div>
 
       <nav className="portal-sidebar__nav">
-        {links.map((link) => (
+        {links.map((link) => link.group ? (
+          <div key={link.label} className="portal-sidebar__group">
+            <button
+              className={`portal-sidebar__link portal-sidebar__group-toggle ${isTrainingActive ? 'portal-sidebar__link--active' : ''}`}
+              onClick={() => setTrainingOpen(!trainingOpen)}
+            >
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+                <path d={link.icon} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>{link.label}</span>
+              <svg
+                className={`portal-sidebar__chevron ${trainingOpen ? 'portal-sidebar__chevron--open' : ''}`}
+                viewBox="0 0 24 24" fill="none" width="16" height="16"
+              >
+                <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            {trainingOpen && (
+              <div className="portal-sidebar__group-children">
+                {link.children.map((child) => (
+                  <NavLink
+                    key={child.to}
+                    to={child.to}
+                    end
+                    className={({ isActive }) =>
+                      `portal-sidebar__link portal-sidebar__link--child ${isActive ? 'portal-sidebar__link--active' : ''}`
+                    }
+                    onClick={onNavigate}
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                      <path d={child.icon} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                    <span>{child.label}</span>
+                  </NavLink>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
           <NavLink
             key={link.to}
             to={link.to}
