@@ -181,17 +181,10 @@ export default function TrainingDashboard() {
         </div>
       </div>
 
-      {/* More modules */}
-      <div className="portal-card training-resources-card">
-        <div className="training-resources-card__body">
-          <div>
-            <h3 className="training-resources-card__title">More Training</h3>
-            <p className="training-resources-card__sub">Standards of Admissibility: Frye, Kelly, and Daubert — ~20 min</p>
-          </div>
-          <Link to="/training/admissibility" className="btn btn--secondary">
-            Start Module
-          </Link>
-        </div>
+      <div style={{ marginTop: 8 }}>
+        <Link to="/training" className="training-lesson__back">
+          ← Back to Training Home
+        </Link>
       </div>
     </div>
   );

@@ -49,7 +49,8 @@ const Messages = lazy(() => import('./portal/pages/Messages'));
 const ChangePassword = lazy(() => import('./portal/pages/ChangePassword'));
 const CalendarPage = lazy(() => import('./portal/pages/Calendar'));
 
-// Training module — Expert Witness Foundations
+// Training module — home + Expert Witness Foundations
+const TrainingHome = lazy(() => import('./portal/training/TrainingHome'));
 const TrainingDashboard = lazy(() => import('./portal/training/TrainingDashboard'));
 const LessonPage = lazy(() => import('./portal/training/LessonPage'));
 const QuizPage = lazy(() => import('./portal/training/QuizPage'));
@@ -187,7 +188,8 @@ const router = createBrowserRouter([
       { path: '/portal/calendar', element: <ProtectedRoute><PortalLayout><CalendarPage /></PortalLayout></ProtectedRoute> },
 
       // Training module (expert, admin, staff)
-      { path: '/training', element: <ProtectedRoute><TrainingLayout><TrainingDashboard /></TrainingLayout></ProtectedRoute> },
+      { path: '/training', element: <ProtectedRoute><PortalLayout><TrainingHome /></PortalLayout></ProtectedRoute> },
+      { path: '/training/foundations', element: <ProtectedRoute><TrainingLayout><TrainingDashboard /></TrainingLayout></ProtectedRoute> },
       { path: '/training/lesson/:lessonId', element: <ProtectedRoute><TrainingLayout><LessonPage /></TrainingLayout></ProtectedRoute> },
       { path: '/training/quiz/:unitId', element: <ProtectedRoute><TrainingLayout><QuizPage /></TrainingLayout></ProtectedRoute> },
       { path: '/training/scenario/:scenarioId', element: <ProtectedRoute><TrainingLayout><ScenarioPage /></TrainingLayout></ProtectedRoute> },
