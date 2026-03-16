@@ -69,6 +69,15 @@ const AdmissibilityQuizPage = lazy(() => import('./portal/training/admissibility
 const AdmissibilityCertificatePage = lazy(() => import('./portal/training/admissibility/AdmissibilityCertificatePage'));
 const AdmissibilityResourcesPage = lazy(() => import('./portal/training/admissibility/AdmissibilityResourcesPage'));
 
+// Training module — Writing an Expert Witness Testimony Report
+const ReportWritingLayout = lazy(() => import('./portal/training/report-writing/ReportWritingLayout'));
+const ReportWritingDashboard = lazy(() => import('./portal/training/report-writing/ReportWritingDashboard'));
+const ReportWritingLessonPage = lazy(() => import('./portal/training/report-writing/ReportWritingLessonPage'));
+const ReportWritingScenarioPage = lazy(() => import('./portal/training/report-writing/ReportWritingScenarioPage'));
+const ReportWritingQuizPage = lazy(() => import('./portal/training/report-writing/ReportWritingQuizPage'));
+const ReportWritingCertificatePage = lazy(() => import('./portal/training/report-writing/ReportWritingCertificatePage'));
+const ReportWritingResourcesPage = lazy(() => import('./portal/training/report-writing/ReportWritingResourcesPage'));
+
 // Admin pages — includes heavy libs (xlsx, jspdf, pdf-lib) only when visited
 const AdminDashboard = lazy(() => import('./portal/admin/AdminDashboard'));
 const ExpertList = lazy(() => import('./portal/admin/ExpertList'));
@@ -204,6 +213,14 @@ const router = createBrowserRouter([
       { path: '/training/admissibility/quiz', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityQuizPage /></AdmissibilityLayout></ProtectedRoute> },
       { path: '/training/admissibility/certificate', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityCertificatePage /></AdmissibilityLayout></ProtectedRoute> },
       { path: '/training/admissibility/resources', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityResourcesPage /></AdmissibilityLayout></ProtectedRoute> },
+
+      // Training module — Writing an Expert Witness Testimony Report (expert, admin, staff)
+      { path: '/training/report-writing', element: <ProtectedRoute><ReportWritingLayout><ReportWritingDashboard /></ReportWritingLayout></ProtectedRoute> },
+      { path: '/training/report-writing/lesson/:lessonId', element: <ProtectedRoute><ReportWritingLayout><ReportWritingLessonPage /></ReportWritingLayout></ProtectedRoute> },
+      { path: '/training/report-writing/scenario', element: <ProtectedRoute><ReportWritingLayout><ReportWritingScenarioPage /></ReportWritingLayout></ProtectedRoute> },
+      { path: '/training/report-writing/quiz', element: <ProtectedRoute><ReportWritingLayout><ReportWritingQuizPage /></ReportWritingLayout></ProtectedRoute> },
+      { path: '/training/report-writing/certificate', element: <ProtectedRoute><ReportWritingLayout><ReportWritingCertificatePage /></ReportWritingLayout></ProtectedRoute> },
+      { path: '/training/report-writing/resources', element: <ProtectedRoute><ReportWritingLayout><ReportWritingResourcesPage /></ReportWritingLayout></ProtectedRoute> },
 
       // Admin (protected, admin only)
       { path: '/admin/dashboard', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute> },
