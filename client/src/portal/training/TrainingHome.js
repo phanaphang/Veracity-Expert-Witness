@@ -9,11 +9,12 @@ export default function TrainingHome() {
   const [foundationsPct, setFoundationsPct] = useState(null);
   const [admissibilityPct, setAdmissibilityPct] = useState(null);
   const [reportWritingPct, setReportWritingPct] = useState(null);
+  const [depositionPct, setDepositionPct] = useState(null);
 
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      const [{ data: foundations }, { data: admissibility }, { data: reportWriting }] = await Promise.all([
+      const [{ data: foundations }, { data: admissibility }, { data: reportWriting }, { data: deposition }] = await Promise.all([
         supabase
           .from('training_progress')
           .select('lesson_id, completed')
@@ -24,6 +25,10 @@ export default function TrainingHome() {
           .eq('user_id', user.id),
         supabase
           .from('report_writing_progress')
+          .select('lesson_id, completed, quiz_score')
+          .eq('user_id', user.id),
+        supabase
+          .from('deposition_progress')
           .select('lesson_id, completed, quiz_score')
           .eq('user_id', user.id),
       ]);
@@ -53,6 +58,17 @@ export default function TrainingHome() {
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6
         ) ? 1 : 0;
         setReportWritingPct(Math.round(((lessons + scenario + quiz) / 10) * 100));
+      }
+
+      if (deposition) {
+        const lessons = deposition.filter(
+          (r) => r.completed && ['1', '2', '3', '4', '5', '6', '7', '8'].includes(r.lesson_id)
+        ).length;
+        const scenario = deposition.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
+        const quiz = deposition.some(
+          (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6
+        ) ? 1 : 0;
+        setDepositionPct(Math.round(((lessons + scenario + quiz) / 10) * 100));
       }
     };
     load();
@@ -202,6 +218,51 @@ export default function TrainingHome() {
           )}
           <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
             {reportWritingPct === 0 || reportWritingPct === null ? 'Start Module' : reportWritingPct === 100 ? 'Review Module' : 'Continue'}
+          </span>
+        </Link>
+
+        {/* Deposition as an Expert Witness */}
+        <Link
+          to="/training/deposition"
+          className="portal-card portal-card--clickable"
+          style={{ textDecoration: 'none' }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-navy)', margin: 0 }}>
+              Deposition
+            </h2>
+            {depositionPct !== null && (
+              <span style={{
+                background: depositionPct === 100 ? '#16a34a' : 'var(--color-accent)',
+                color: '#fff',
+                fontSize: '0.65rem',
+                fontWeight: 700,
+                padding: '2px 7px',
+                borderRadius: 999,
+                whiteSpace: 'nowrap',
+                marginLeft: 8,
+                flexShrink: 0,
+              }}>
+                {depositionPct === 100 ? 'Complete' : `${depositionPct}%`}
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', margin: '0 0 12px' }}>
+            ~60 min &middot; 8 lessons &middot; 1 scenario &middot; 1 knowledge check
+          </p>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-600)', margin: '0 0 16px', lineHeight: 1.5 }}>
+            Preparing for and excelling in expert depositions -- answering techniques, common traps,
+            composure, and post-deposition considerations.
+          </p>
+          {depositionPct !== null && depositionPct > 0 && depositionPct < 100 && (
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ height: 5, background: 'var(--color-gray-100)', borderRadius: 999, overflow: 'hidden' }}>
+                <div style={{ width: `${depositionPct}%`, height: '100%', background: 'var(--color-accent)', borderRadius: 999 }} />
+              </div>
+            </div>
+          )}
+          <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
+            {depositionPct === 0 || depositionPct === null ? 'Start Module' : depositionPct === 100 ? 'Review Module' : 'Continue'}
           </span>
         </Link>
       </div>

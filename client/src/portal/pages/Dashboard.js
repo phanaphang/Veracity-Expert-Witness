@@ -12,6 +12,7 @@ export default function Dashboard() {
   const [trainingPct, setTrainingPct] = useState(null);
   const [admissibilityPct, setAdmissibilityPct] = useState(null);
   const [reportWritingPct, setReportWritingPct] = useState(null);
+  const [depositionPct, setDepositionPct] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -19,7 +20,7 @@ export default function Dashboard() {
       try {
         const now = new Date().toISOString();
         const weekOut = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-        const [cases, msgs, docs, events, training, admissibility, reportWriting] = await Promise.all([
+        const [cases, msgs, docs, events, training, admissibility, reportWriting, deposition] = await Promise.all([
           supabase.from('case_invitations').select('*', { count: 'exact', head: true }).eq('expert_id', user.id).eq('status', 'pending'),
           supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
           supabase.from('documents').select('document_type').eq('expert_id', user.id),
@@ -27,6 +28,7 @@ export default function Dashboard() {
           supabase.from('training_progress').select('lesson_id, completed').eq('user_id', user.id),
           supabase.from('admissibility_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
           supabase.from('report_writing_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
+          supabase.from('deposition_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
         ]);
         setStats({
           pendingCases: cases.count || 0,
@@ -50,6 +52,13 @@ export default function Dashboard() {
           const rwScenario = reportWriting.data.some(r => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
           const rwQuiz = reportWriting.data.some(r => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6) ? 1 : 0;
           setReportWritingPct(Math.round(((rwLessons + rwScenario + rwQuiz) / 10) * 100));
+        }
+        // Deposition: 8 lessons + scenario + quiz = 10 completable steps
+        if (deposition.data) {
+          const dpLessons = deposition.data.filter(r => r.completed && ['1','2','3','4','5','6','7','8'].includes(r.lesson_id)).length;
+          const dpScenario = deposition.data.some(r => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
+          const dpQuiz = deposition.data.some(r => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6) ? 1 : 0;
+          setDepositionPct(Math.round(((dpLessons + dpScenario + dpQuiz) / 10) * 100));
         }
       } catch (e) {
         console.error('Dashboard load error', e);
@@ -127,7 +136,7 @@ export default function Dashboard() {
       </div>
 
       <h3 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--color-navy)', margin: '24px 0 12px' }}>Training Modules</h3>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16 }}>
         <Link to="/training" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
             <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Expert Witness Foundations</h3>
@@ -165,6 +174,19 @@ export default function Dashboard() {
           </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 8 }}>
             ~60 min · Writing a defensible expert report
+          </p>
+        </Link>
+        <Link to="/training/deposition" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Deposition</h3>
+            {depositionPct !== null && (
+              <span style={{ background: depositionPct === 100 ? '#16a34a' : 'var(--color-accent)', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: 999, whiteSpace: 'nowrap', marginLeft: 8 }}>
+                {depositionPct === 100 ? 'Complete' : `${depositionPct}%`}
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 8 }}>
+            ~60 min · Expert deposition skills
           </p>
         </Link>
       </div>

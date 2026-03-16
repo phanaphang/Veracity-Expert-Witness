@@ -78,6 +78,15 @@ const ReportWritingQuizPage = lazy(() => import('./portal/training/report-writin
 const ReportWritingCertificatePage = lazy(() => import('./portal/training/report-writing/ReportWritingCertificatePage'));
 const ReportWritingResourcesPage = lazy(() => import('./portal/training/report-writing/ReportWritingResourcesPage'));
 
+// Training module — Deposition as an Expert Witness
+const DepositionLayout = lazy(() => import('./portal/training/deposition/DepositionLayout'));
+const DepositionDashboard = lazy(() => import('./portal/training/deposition/DepositionDashboard'));
+const DepositionLessonPage = lazy(() => import('./portal/training/deposition/DepositionLessonPage'));
+const DepositionScenarioPage = lazy(() => import('./portal/training/deposition/DepositionScenarioPage'));
+const DepositionQuizPage = lazy(() => import('./portal/training/deposition/DepositionQuizPage'));
+const DepositionCertificatePage = lazy(() => import('./portal/training/deposition/DepositionCertificatePage'));
+const DepositionResourcesPage = lazy(() => import('./portal/training/deposition/DepositionResourcesPage'));
+
 // Admin pages — includes heavy libs (xlsx, jspdf, pdf-lib) only when visited
 const AdminDashboard = lazy(() => import('./portal/admin/AdminDashboard'));
 const ExpertList = lazy(() => import('./portal/admin/ExpertList'));
@@ -221,6 +230,14 @@ const router = createBrowserRouter([
       { path: '/training/report-writing/quiz', element: <ProtectedRoute><ReportWritingLayout><ReportWritingQuizPage /></ReportWritingLayout></ProtectedRoute> },
       { path: '/training/report-writing/certificate', element: <ProtectedRoute><ReportWritingLayout><ReportWritingCertificatePage /></ReportWritingLayout></ProtectedRoute> },
       { path: '/training/report-writing/resources', element: <ProtectedRoute><ReportWritingLayout><ReportWritingResourcesPage /></ReportWritingLayout></ProtectedRoute> },
+
+      // Training module — Deposition as an Expert Witness (expert, admin, staff)
+      { path: '/training/deposition', element: <ProtectedRoute><DepositionLayout><DepositionDashboard /></DepositionLayout></ProtectedRoute> },
+      { path: '/training/deposition/lesson/:lessonId', element: <ProtectedRoute><DepositionLayout><DepositionLessonPage /></DepositionLayout></ProtectedRoute> },
+      { path: '/training/deposition/scenario', element: <ProtectedRoute><DepositionLayout><DepositionScenarioPage /></DepositionLayout></ProtectedRoute> },
+      { path: '/training/deposition/quiz', element: <ProtectedRoute><DepositionLayout><DepositionQuizPage /></DepositionLayout></ProtectedRoute> },
+      { path: '/training/deposition/certificate', element: <ProtectedRoute><DepositionLayout><DepositionCertificatePage /></DepositionLayout></ProtectedRoute> },
+      { path: '/training/deposition/resources', element: <ProtectedRoute><DepositionLayout><DepositionResourcesPage /></DepositionLayout></ProtectedRoute> },
 
       // Admin (protected, admin only)
       { path: '/admin/dashboard', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute> },
