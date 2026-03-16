@@ -11,6 +11,7 @@ export default function Dashboard() {
   const [hasCv, setHasCv] = useState(false);
   const [trainingPct, setTrainingPct] = useState(null);
   const [admissibilityPct, setAdmissibilityPct] = useState(null);
+  const [reportWritingPct, setReportWritingPct] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -18,13 +19,14 @@ export default function Dashboard() {
       try {
         const now = new Date().toISOString();
         const weekOut = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-        const [cases, msgs, docs, events, training, admissibility] = await Promise.all([
+        const [cases, msgs, docs, events, training, admissibility, reportWriting] = await Promise.all([
           supabase.from('case_invitations').select('*', { count: 'exact', head: true }).eq('expert_id', user.id).eq('status', 'pending'),
           supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
           supabase.from('documents').select('document_type').eq('expert_id', user.id),
           supabase.from('calendar_events').select('id, title, start_time').eq('expert_id', user.id).gte('start_time', now).lte('start_time', weekOut).order('start_time', { ascending: true }).limit(5),
           supabase.from('training_progress').select('lesson_id, completed').eq('user_id', user.id),
           supabase.from('admissibility_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
+          supabase.from('report_writing_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
         ]);
         setStats({
           pendingCases: cases.count || 0,
@@ -41,6 +43,13 @@ export default function Dashboard() {
           const adScenario = admissibility.data.some(r => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
           const adQuiz = admissibility.data.some(r => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 4) ? 1 : 0;
           setAdmissibilityPct(Math.round(((adLessons + adScenario + adQuiz) / 5) * 100));
+        }
+        // Report Writing: 8 lessons + scenario + quiz = 10 completable steps
+        if (reportWriting.data) {
+          const rwLessons = reportWriting.data.filter(r => r.completed && ['1','2','3','4','5','6','7','8'].includes(r.lesson_id)).length;
+          const rwScenario = reportWriting.data.some(r => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
+          const rwQuiz = reportWriting.data.some(r => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6) ? 1 : 0;
+          setReportWritingPct(Math.round(((rwLessons + rwScenario + rwQuiz) / 10) * 100));
         }
       } catch (e) {
         console.error('Dashboard load error', e);
@@ -139,6 +148,19 @@ export default function Dashboard() {
           </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 8 }}>
             ~20 min · Frye, Kelly, and Daubert
+          </p>
+        </Link>
+        <Link to="/training/report-writing" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Report Writing</h3>
+            {reportWritingPct !== null && (
+              <span style={{ background: reportWritingPct === 100 ? '#16a34a' : 'var(--color-accent)', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: 999, whiteSpace: 'nowrap', marginLeft: 8 }}>
+                {reportWritingPct === 100 ? 'Complete' : `${reportWritingPct}%`}
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 8 }}>
+            ~60 min · Writing a defensible expert report
           </p>
         </Link>
       </div>
