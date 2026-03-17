@@ -5,7 +5,7 @@ import { supabase } from '../../lib/supabase';
 import { TOTAL_LESSONS } from './courseData';
 
 export default function TrainingHome() {
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const [foundationsPct, setFoundationsPct] = useState(null);
   const [admissibilityPct, setAdmissibilityPct] = useState(null);
   const [reportWritingPct, setReportWritingPct] = useState(null);
@@ -94,7 +94,7 @@ export default function TrainingHome() {
     <div>
       <div className="portal-page__header">
         <h1 className="portal-page__title">
-          Training{profile?.first_name ? `, ${profile.first_name}` : ''}
+          Training
         </h1>
         <p className="portal-page__subtitle">
           Choose a module below to continue your expert witness training.
