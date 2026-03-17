@@ -90,7 +90,7 @@ const RESOURCES = [
       <ul>
         <li>All current professional licenses (state, type, license number, expiration)</li>
         <li>Board certifications with issuing board and date of certification</li>
-        <li>Any expired licenses disclosed — do not omit them</li>
+        <li>Any expired licenses disclosed - do not omit them</li>
         <li>CLE, CME, or continuing education relevant to your area of expertise noted</li>
       </ul>
 
@@ -112,7 +112,7 @@ const RESOURCES = [
 
       <h2>Expert Witness Experience</h2>
       <ul>
-        <li>Cases listed by type and jurisdiction (not by party name — maintain confidentiality)</li>
+        <li>Cases listed by type and jurisdiction (not by party name - maintain confidentiality)</li>
         <li>Number of depositions given (approximate, by year if possible)</li>
         <li>Number of trial appearances (approximate)</li>
         <li>Percentage of cases for plaintiff vs. defendant disclosed accurately</li>
@@ -122,7 +122,7 @@ const RESOURCES = [
       <h2>Before Submitting</h2>
       <ul>
         <li>CV reviewed for accuracy by a colleague or staff member</li>
-        <li>No exaggerations or embellishments — opposing counsel will verify</li>
+        <li>No exaggerations or embellishments - opposing counsel will verify</li>
         <li>All prior testimony consistent with your current opinions</li>
         <li>CV dated and versioned so you can track what was disclosed in each matter</li>
       </ul>
@@ -140,7 +140,7 @@ const RESOURCES = [
       `
       <h2>Two Weeks Before the Deposition</h2>
       <ul>
-        <li>Re-read your expert report from cover to cover — know every word</li>
+        <li>Re-read your expert report from cover to cover - know every word</li>
         <li>Review all documents, records, and materials you relied upon in forming your opinion</li>
         <li>Review your CV for accuracy and prepare to explain every entry</li>
         <li>Review any prior testimony you have given in similar cases</li>
@@ -149,18 +149,18 @@ const RESOURCES = [
 
       <h2>One Week Before</h2>
       <ul>
-        <li>Pre-deposition meeting with retaining counsel — confirm topics, likely attack areas, and ground rules</li>
+        <li>Pre-deposition meeting with retaining counsel - confirm topics, likely attack areas, and ground rules</li>
         <li>Confirm the deposition date, time, location, and format (in-person or remote)</li>
-        <li>Identify any materials you will bring to the deposition (your report, CV — nothing else unless instructed)</li>
+        <li>Identify any materials you will bring to the deposition (your report, CV - nothing else unless instructed)</li>
         <li>Review the operative complaint and any defense filings to understand the case posture</li>
         <li>Prepare brief, clear articulations of your core opinions and methodology</li>
       </ul>
 
       <h2>The Night Before</h2>
       <ul>
-        <li>Do NOT review new materials — only what you have already relied upon</li>
+        <li>Do NOT review new materials - only what you have already relied upon</li>
         <li>Confirm logistics: location, start time, parking, remote connection details</li>
-        <li>Get adequate rest — fatigue degrades performance under pressure</li>
+        <li>Get adequate rest - fatigue degrades performance under pressure</li>
         <li>Do not discuss the case with anyone other than retaining counsel</li>
       </ul>
 
@@ -168,24 +168,24 @@ const RESOURCES = [
       <ul>
         <li>Arrive at least 15 minutes early for in-person; log in 10 minutes early for remote</li>
         <li>Bring: your expert report, your CV, a notepad, water</li>
-        <li>Dress professionally — even for remote depositions</li>
+        <li>Dress professionally - even for remote depositions</li>
         <li>Brief check-in with retaining counsel immediately before starting</li>
       </ul>
 
-      <h2>During the Deposition — Key Rules</h2>
+      <h2>During the Deposition - Key Rules</h2>
       <ul>
         <li>Listen to the complete question before formulating your answer</li>
         <li>Pause briefly before answering every question</li>
-        <li>Answer only the question asked — do not volunteer additional information</li>
+        <li>Answer only the question asked - do not volunteer additional information</li>
         <li>Ask for clarification if a question is confusing or compound</li>
-        <li>"I don't know" and "I don't recall" are legitimate answers — use them when true</li>
+        <li>"I don't know" and "I don't recall" are legitimate answers - use them when true</li>
         <li>Correct any false premises embedded in questions before answering</li>
-        <li>Request a break if you need one — this is your right</li>
+        <li>Request a break if you need one - this is your right</li>
       </ul>
 
       <h2>After the Deposition</h2>
       <ul>
-        <li>Note any questions you were unprepared for — prepare better answers for trial</li>
+        <li>Note any questions you were unprepared for - prepare better answers for trial</li>
         <li>Debrief with retaining counsel promptly</li>
         <li>Review the transcript when available and submit any errata within the deadline</li>
         <li>Flag any inconsistencies between your deposition testimony and your report</li>
@@ -204,12 +204,12 @@ const RESOURCES = [
       `
       <table>
         <tr><th>Statute / Standard</th><th>What It Governs</th><th>Key Requirement</th></tr>
-        <tr><td><strong>Evidence Code § 720</strong></td><td>Expert Qualifications</td><td>Expert must have special knowledge, skill, experience, training, OR education on the subject. No degree required — practical experience alone can qualify.</td></tr>
+        <tr><td><strong>Evidence Code § 720</strong></td><td>Expert Qualifications</td><td>Expert must have special knowledge, skill, experience, training, OR education on the subject. No degree required - practical experience alone can qualify.</td></tr>
         <tr><td><strong>Evidence Code § 801</strong></td><td>Expert Opinion Admissibility</td><td>Opinion must relate to subject sufficiently beyond common experience and be based on matter reasonably relied upon by experts in the field.</td></tr>
         <tr><td><strong>Evidence Code § 802</strong></td><td>Basis of Opinion</td><td>Expert may state the basis for their opinion on direct examination. Court may require disclosure of underlying data.</td></tr>
         <tr><td><strong>CCP § 2034</strong></td><td>Expert Disclosure</td><td>Expert lists exchanged ~50 days before trial. Includes expert name, qualifications, and general substance of opinion. Late or non-disclosure → potential exclusion.</td></tr>
         <tr><td><strong>CCP § 2034.415</strong></td><td>Deposition Duration</td><td>Expert deposition limited to 7 hours on the record absent agreement or court order.</td></tr>
-        <tr><td><strong>Sargon Enterprises v. USC (2012)</strong></td><td>Gatekeeping Standard</td><td>Trial courts must exclude speculative, unfounded, or methodologically unsound expert opinions — even from qualified experts. California's Daubert equivalent.</td></tr>
+        <tr><td><strong>Sargon Enterprises v. USC (2012)</strong></td><td>Gatekeeping Standard</td><td>Trial courts must exclude speculative, unfounded, or methodologically unsound expert opinions - even from qualified experts. California's Daubert equivalent.</td></tr>
         <tr><td><strong>B&P Code § 6152</strong></td><td>Fee Arrangements</td><td>Contingency fee arrangements for expert witnesses are prohibited in California.</td></tr>
         <tr><td><strong>Evidence Code § 721</strong></td><td>Cross-Examination</td><td>Expert may be cross-examined on any matter disclosed during direct, and on the content of published treatises if used during cross.</td></tr>
         <tr><td><strong>Evidence Code § 722</strong></td><td>Bias / Compensation</td><td>Expert's compensation is admissible to attack credibility. Expert can be asked about fees, frequency of testimony, and percentage of work for each side.</td></tr>
@@ -223,7 +223,7 @@ const RESOURCES = [
         <li>Expert must be willing to be deposed after disclosure</li>
       </ul>
 
-      <h2>Sargon — What Courts Can Exclude</h2>
+      <h2>Sargon - What Courts Can Exclude</h2>
       <ul>
         <li>Opinions based on insufficient factual foundation</li>
         <li>Speculative or conjectural conclusions</li>
@@ -254,9 +254,9 @@ const RESOURCES = [
         <tr><td>Travel</td><td>Actual expenses + hourly for travel time</td><td>Coach airfare standard unless long-haul; receipts required</td></tr>
       </table>
 
-      <h2>Deposition Testimony — Response to Fee Questions</h2>
+      <h2>Deposition Testimony - Response to Fee Questions</h2>
       <p><strong>Q: "How much are you being paid for your opinion in this case?"</strong></p>
-      <p><em>Suggested response:</em> "I'm being compensated at my standard hourly rate of $[X]/hour for all time spent on this matter — reviewing records, preparing my report, and for this deposition. My total time to date is approximately [X] hours. I'm not paid for the content of my opinion, and my fee is the same regardless of the outcome of this case."</p>
+      <p><em>Suggested response:</em> "I'm being compensated at my standard hourly rate of $[X]/hour for all time spent on this matter - reviewing records, preparing my report, and for this deposition. My total time to date is approximately [X] hours. I'm not paid for the content of my opinion, and my fee is the same regardless of the outcome of this case."</p>
 
       <p><strong>Q: "What percentage of your income comes from expert witness work?"</strong></p>
       <p><em>Suggested response:</em> "Approximately [X]% of my professional time is currently devoted to consulting and expert witness work. The remainder is [clinical practice / academic work / other professional activities]."</p>
@@ -268,7 +268,7 @@ const RESOURCES = [
       <p>The following language is standard for the expert declaration required under CCP § 2034.260:</p>
       <p><em>"[Expert Name] is a [credential] with [X] years of experience in [field]. [He/She/They] will testify regarding [general subject area] and is expected to opine that [general substance of opinion, stated broadly]. [Expert] will rely upon the records, reports, and materials listed in the attached Exhibit A, as well as [his/her/their] education, training, and professional experience."</em></p>
 
-      <h2>Engagement Letter — Key Provisions</h2>
+      <h2>Engagement Letter - Key Provisions</h2>
       <ul>
         <li><strong>Scope of engagement:</strong> Records review, report preparation, deposition, and/or trial (specify which)</li>
         <li><strong>Hourly rate:</strong> Stated clearly with any minimum billing increments</li>
@@ -282,23 +282,23 @@ const RESOURCES = [
   },
   {
     id: 5,
-    title: 'Expert Witness Foundations — Full Lesson Summary',
+    title: 'Expert Witness Foundations - Full Lesson Summary',
     description: 'A complete written summary of all 10 lessons for ongoing reference.',
     icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
     generate: () => makeHtml(
-      'Expert Witness Foundations — Full Lesson Summary',
+      'Expert Witness Foundations - Full Lesson Summary',
       'Expert Witness Foundations · Veracity Expert Witness',
       `
       <h2>Unit 1: The Expert Witness Role</h2>
 
-      <p><strong>Lesson 1.1 — What Expert Witnesses Actually Do</strong></p>
+      <p><strong>Lesson 1.1 - What Expert Witnesses Actually Do</strong></p>
       <ul>
         <li>Your primary duty runs to the court and the trier of fact, not to the retaining party</li>
         <li>Expert testimony must be grounded in sufficient facts, reliable methodology, and sound reasoning</li>
-        <li>Independence is the source of your credibility — not a constraint on it</li>
+        <li>Independence is the source of your credibility - not a constraint on it</li>
       </ul>
 
-      <p><strong>Lesson 1.2 — Ethics, Independence & the Hired Gun Problem</strong></p>
+      <p><strong>Lesson 1.2 - Ethics, Independence & the Hired Gun Problem</strong></p>
       <ul>
         <li>The "hired gun" label follows experts throughout their careers and is professionally fatal</li>
         <li>Your obligations arise from your licensing board, professional codes, and FRCP Rule 26 / CCP § 2034.505</li>
@@ -308,17 +308,17 @@ const RESOURCES = [
 
       <h2>Unit 2: How Depositions Work</h2>
 
-      <p><strong>Lesson 2.1 — Deposition Basics: Anatomy & Preparation</strong></p>
+      <p><strong>Lesson 2.1 - Deposition Basics: Anatomy & Preparation</strong></p>
       <ul>
-        <li>Depositions are sworn discovery proceedings — your testimony can be used for impeachment at trial</li>
+        <li>Depositions are sworn discovery proceedings - your testimony can be used for impeachment at trial</li>
         <li>California limits expert depositions to 7 hours on the record (CCP § 2034.415)</li>
         <li>Pre-deposition preparation is mandatory: re-read your report, review all relied-upon materials, meet with counsel</li>
-        <li>Never review new materials the night before — only what you have already relied upon</li>
+        <li>Never review new materials the night before - only what you have already relied upon</li>
       </ul>
 
-      <p><strong>Lesson 2.2 — Deposition Demeanor & Answering Strategy</strong></p>
+      <p><strong>Lesson 2.2 - Deposition Demeanor & Answering Strategy</strong></p>
       <ul>
-        <li>Answer only the question asked — do not volunteer beyond the scope of the question</li>
+        <li>Answer only the question asked - do not volunteer beyond the scope of the question</li>
         <li>Pause before every answer: allows objections and prevents impulsive responses</li>
         <li>"I don't know" and "I don't recall" are legitimate, professional answers when true</li>
         <li>Correct false premises embedded in questions before answering</li>
@@ -327,54 +327,54 @@ const RESOURCES = [
 
       <h2>Unit 3: Handling Cross-Examination</h2>
 
-      <p><strong>Lesson 3.1 — The Goals of Cross-Examination</strong></p>
+      <p><strong>Lesson 3.1 - The Goals of Cross-Examination</strong></p>
       <ul>
         <li>The three attacks: qualifications, methodology, and credibility</li>
         <li>Identifying which attack is underway helps you formulate an appropriate response</li>
-        <li>Cross-examination has a script — preparation removes the element of surprise</li>
+        <li>Cross-examination has a script - preparation removes the element of surprise</li>
       </ul>
 
-      <p><strong>Lesson 3.2 — Handling Fees, Bias & Treatise Attacks</strong></p>
+      <p><strong>Lesson 3.2 - Handling Fees, Bias & Treatise Attacks</strong></p>
       <ul>
         <li>Fee questions: acknowledge transparently, note all experts are compensated, cite your track record of independence</li>
-        <li>Bias questions: don't deny your case mix — emphasize that your opinion follows the facts, not the retaining party</li>
+        <li>Bias questions: don't deny your case mix - emphasize that your opinion follows the facts, not the retaining party</li>
         <li>Treatise attacks: accept the general principle, then distinguish based on the specific facts of the case</li>
-        <li>Prior testimony attacks: consistency is your best defense — review prior testimony before every engagement</li>
+        <li>Prior testimony attacks: consistency is your best defense - review prior testimony before every engagement</li>
       </ul>
 
-      <p><strong>Lesson 3.3 — Staying Composed Under Pressure</strong></p>
+      <p><strong>Lesson 3.3 - Staying Composed Under Pressure</strong></p>
       <ul>
         <li>Composure is a learnable professional skill, not a personality trait</li>
         <li>Hostile questioning tone does not require a hostile answering tone</li>
-        <li>Look at the jury when giving explanatory answers — they are your real audience</li>
+        <li>Look at the jury when giving explanatory answers - they are your real audience</li>
         <li>"I'd like to finish my answer" is a complete, professional, and effective sentence</li>
         <li>The more composed you are under aggressive cross, the more credible you appear to the jury</li>
       </ul>
 
       <h2>Unit 4: What Attorneys Want & California Rules</h2>
 
-      <p><strong>Lesson 4.1 — What Attorneys Need from You</strong></p>
+      <p><strong>Lesson 4.1 - What Attorneys Need from You</strong></p>
       <ul>
         <li>Plaintiff experts: clarity, accessibility, causal narrative, connection with the jury</li>
         <li>Defense experts: methodological rigor, alternative explanations, calm authority</li>
         <li>Both sides need: reliability, consistency, promptness, and credibility</li>
-        <li>Understanding attorney needs improves communication — it does not compromise independence</li>
+        <li>Understanding attorney needs improves communication - it does not compromise independence</li>
       </ul>
 
-      <p><strong>Lesson 4.2 — California Evidence Code § 720</strong></p>
+      <p><strong>Lesson 4.2 - California Evidence Code § 720</strong></p>
       <ul>
-        <li>Qualifications require knowledge, skill, experience, training, OR education — not necessarily a degree</li>
+        <li>Qualifications require knowledge, skill, experience, training, OR education - not necessarily a degree</li>
         <li>Practical experience alone can qualify an expert in California</li>
         <li>Connect your specific background to the specific opinion you are offering in this specific case</li>
         <li>Generic credential recitation is less effective than targeted qualification explanation</li>
       </ul>
 
-      <p><strong>Lesson 4.3 — California-Specific Rules & Procedures</strong></p>
+      <p><strong>Lesson 4.3 - California-Specific Rules & Procedures</strong></p>
       <ul>
         <li>CCP § 2034: expert disclosures required ~50 days before trial; failure can result in exclusion</li>
         <li>Sargon (2012): California courts gatekeep speculative or methodologically unsound opinions</li>
         <li>Contingency fee arrangements for experts are prohibited in California (B&P Code § 6152)</li>
-        <li>Only disclosed experts may testify at trial — unlisted experts are generally excluded</li>
+        <li>Only disclosed experts may testify at trial - unlisted experts are generally excluded</li>
         <li>JCCP proceedings may modify standard expert witness rules</li>
       </ul>
       `
@@ -395,7 +395,7 @@ export default function ResourcesPage() {
       <Link to="/portal/resources" className="training-lesson__back" style={{ color: 'var(--color-accent)' }}>← All Training Resources</Link>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
-        <p className="portal-page__subtitle">5 reference guides — available anytime, open in a new tab</p>
+        <p className="portal-page__subtitle">5 reference guides - available anytime, open in a new tab</p>
       </div>
 
       <div className="training-resources">

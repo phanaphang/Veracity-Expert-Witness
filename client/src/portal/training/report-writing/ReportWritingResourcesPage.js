@@ -721,7 +721,7 @@ export default function ReportWritingResourcesPage() {
       <Link to="/portal/resources" className="training-lesson__back" style={{ color: 'var(--color-accent)' }}>← All Training Resources</Link>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
-        <p className="portal-page__subtitle">4 reference guides — available anytime, open in a new tab</p>
+        <p className="portal-page__subtitle">4 reference guides - available anytime, open in a new tab</p>
       </div>
 
       <div className="training-resources">
