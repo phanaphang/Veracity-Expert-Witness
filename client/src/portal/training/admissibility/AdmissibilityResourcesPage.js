@@ -613,6 +613,106 @@ const resource4Html = () => htmlShell(
 `
 );
 
+// ── Resource 5: State-by-State Admissibility Standards ────────────────────────
+const resource5Html = () => htmlShell(
+  'State-by-State Admissibility Standards',
+  `
+<h1>State-by-State Admissibility Standards</h1>
+<div class="subtitle">Which states use Daubert, Frye, or their own standard</div>
+
+<div class="alert">This reference reflects the dominant standard in each jurisdiction as of 2025. Some states have modified or hybrid approaches. <strong>Always confirm the current standard before accepting a retention</strong> — legislatures and courts can change the applicable test.</div>
+
+<h2>Daubert States (39 + Federal Courts)</h2>
+<p>These jurisdictions have adopted the Daubert framework (or a substantially similar reliability-based standard) for evaluating expert testimony admissibility.</p>
+<table>
+  <thead><tr><th>State</th><th>Adoption</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Federal Courts</strong></td><td>1993 (Daubert); codified FRE 702</td><td>Applies in all federal districts nationwide. Amended 2023 to clarify preponderance standard.</td></tr>
+    <tr><td><strong>Alaska</strong></td><td>State v. Coon (1999)</td><td>Adopted Daubert factors.</td></tr>
+    <tr><td><strong>Arkansas</strong></td><td>Farm Bureau Mut. Ins. v. Foote (2001)</td><td>Legislatively adopted via Ark. R. Evid. 702.</td></tr>
+    <tr><td><strong>Colorado</strong></td><td>People v. Shreck (2001)</td><td>CRE 702 — applies Daubert-like reliability analysis.</td></tr>
+    <tr><td><strong>Connecticut</strong></td><td>State v. Porter (2007)</td><td>Adopted Daubert, replacing prior Porter hearing standard.</td></tr>
+    <tr><td><strong>Delaware</strong></td><td>M.G. Bancorporation v. Le Beau (1999)</td><td>DRE 702 follows Daubert.</td></tr>
+    <tr><td><strong>Georgia</strong></td><td>2005 legislation (O.C.G.A. § 24-7-702)</td><td>Legislatively moved from Harper (Frye-like) to Daubert.</td></tr>
+    <tr><td><strong>Hawaii</strong></td><td>State v. Vliet (2002)</td><td>HRE 702 — reliability-focused analysis.</td></tr>
+    <tr><td><strong>Idaho</strong></td><td>State v. Merwin (2004)</td><td>IRE 702 follows Daubert.</td></tr>
+    <tr><td><strong>Indiana</strong></td><td>Turner v. State (2000)</td><td>Adopted Daubert factors under IRE 702.</td></tr>
+    <tr><td><strong>Iowa</strong></td><td>Leaf v. Goodyear Tire (1999)</td><td>Iowa R. Evid. 5.702 — Daubert framework.</td></tr>
+    <tr><td><strong>Kentucky</strong></td><td>Toyota Motor Corp. v. Gregory (2010)</td><td>KRE 702 — adopted Daubert, replacing Frye.</td></tr>
+    <tr><td><strong>Louisiana</strong></td><td>State v. Foret (1993)</td><td>La. Code Evid. art. 702 — early Daubert adopter.</td></tr>
+    <tr><td><strong>Maine</strong></td><td>State v. Williams (2002)</td><td>MRE 702 — Daubert factors applied.</td></tr>
+    <tr><td><strong>Massachusetts</strong></td><td>Commonwealth v. Lanigan (1994)</td><td>Daubert-Lanigan standard — hybrid but reliability-based.</td></tr>
+    <tr><td><strong>Michigan</strong></td><td>Gilbert v. DaimlerChrysler (2004)</td><td>MRE 702 — legislatively adopted Daubert.</td></tr>
+    <tr><td><strong>Mississippi</strong></td><td>Miss. Transp. Comm'n v. McLemore (2003)</td><td>MRE 702 follows Daubert.</td></tr>
+    <tr><td><strong>Montana</strong></td><td>State v. Cline (2003)</td><td>MRE 702 — Daubert reliability analysis.</td></tr>
+    <tr><td><strong>Nebraska</strong></td><td>Schafersman v. Agland Coop (2002)</td><td>Adopted Daubert, replacing Frye.</td></tr>
+    <tr><td><strong>Nevada</strong></td><td>Higgs v. State (1997)</td><td>NRS 50.275 — Daubert factors.</td></tr>
+    <tr><td><strong>New Hampshire</strong></td><td>Baker Valley Lumber v. Ingersoll-Rand (2005)</td><td>NRE 702 — Daubert framework.</td></tr>
+    <tr><td><strong>New Mexico</strong></td><td>State v. Alberico (1993)</td><td>Early adopter — NMRA 11-702.</td></tr>
+    <tr><td><strong>North Carolina</strong></td><td>2011 legislation (N.C.G.S. § 8C-1, Rule 702)</td><td>Legislatively adopted Daubert, effective 2011.</td></tr>
+    <tr><td><strong>Ohio</strong></td><td>Miller v. Bike Athletic Co. (1998)</td><td>ORC 2743.43 — Daubert reliability standard.</td></tr>
+    <tr><td><strong>Oklahoma</strong></td><td>Christian v. Gray (2003)</td><td>12 O.S. § 2702 — Daubert standard.</td></tr>
+    <tr><td><strong>Oregon</strong></td><td>State v. O'Key (1995)</td><td>OEC 702 — Daubert-like analysis.</td></tr>
+    <tr><td><strong>Rhode Island</strong></td><td>Owens v. Silvia (2005)</td><td>Adopted Daubert factors.</td></tr>
+    <tr><td><strong>South Carolina</strong></td><td>State v. Council (2006)</td><td>SCRE 702 — adopted Daubert framework.</td></tr>
+    <tr><td><strong>South Dakota</strong></td><td>State v. Hofer (2001)</td><td>SDCL 19-15-2 — Daubert reliability test.</td></tr>
+    <tr><td><strong>Tennessee</strong></td><td>McDaniel v. CSX Transp. (2007)</td><td>TRE 702 — Daubert standard.</td></tr>
+    <tr><td><strong>Texas</strong></td><td>E.I. du Pont v. Robinson (1995)</td><td>TRE 702 — Robinson factors (Texas Daubert).</td></tr>
+    <tr><td><strong>Utah</strong></td><td>State v. Crosby (2002)</td><td>URE 702 — Daubert reliability analysis.</td></tr>
+    <tr><td><strong>Vermont</strong></td><td>State v. Streich (2003)</td><td>VRE 702 — Daubert factors.</td></tr>
+    <tr><td><strong>West Virginia</strong></td><td>Wilt v. Buracker (1993)</td><td>Early adopter — WRE 702.</td></tr>
+    <tr><td><strong>Wisconsin</strong></td><td>State v. Giese (2014)</td><td>Wis. Stat. § 907.02 — reliability-based standard.</td></tr>
+    <tr><td><strong>Wyoming</strong></td><td>Bunting v. Jamieson (2004)</td><td>WRE 702 — Daubert factors applied.</td></tr>
+    <tr><td><strong>D.C.</strong></td><td>Motorola Inc. v. Murray (2004)</td><td>Adopted Daubert for D.C. Superior Court.</td></tr>
+    <tr><td><strong>Guam</strong></td><td>GRE 702</td><td>Follows federal Daubert standard.</td></tr>
+    <tr><td><strong>Puerto Rico</strong></td><td>P.R. R. Evid. 702</td><td>Follows federal Daubert standard.</td></tr>
+    <tr><td><strong>U.S. Virgin Islands</strong></td><td>V.I. R. Evid. 702</td><td>Follows federal Daubert standard.</td></tr>
+  </tbody>
+</table>
+
+<h2>Frye / Frye-Plus States (7)</h2>
+<p>These jurisdictions still apply the Frye "general acceptance" test (1923), sometimes with additional requirements.</p>
+<table>
+  <thead><tr><th>State</th><th>Standard</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>California</strong></td><td>Kelly/Frye (People v. Kelly, 1976)</td><td>Applies to novel scientific techniques only. Sargon (2012) adds gatekeeping for all expert opinions. Federal cases in CA use Daubert.</td></tr>
+    <tr><td><strong>Illinois</strong></td><td>Frye (Donaldson v. CDOT, 2009)</td><td>General acceptance test. Rejected Daubert in Donaldson.</td></tr>
+    <tr><td><strong>Maryland</strong></td><td>Frye-Reed (Reed v. State, 1978)</td><td>General acceptance — legislature has considered but not adopted Daubert.</td></tr>
+    <tr><td><strong>Minnesota</strong></td><td>Frye-Mack (State v. Mack, 1980)</td><td>General acceptance for novel scientific evidence.</td></tr>
+    <tr><td><strong>New York</strong></td><td>Frye (People v. Wesley, 1994)</td><td>General acceptance. Court of Appeals has repeatedly declined to adopt Daubert.</td></tr>
+    <tr><td><strong>Pennsylvania</strong></td><td>Frye (Grady v. Frito-Lay, 2014)</td><td>General acceptance. PA Supreme Court reaffirmed Frye in 2014.</td></tr>
+    <tr><td><strong>Washington</strong></td><td>Frye (State v. Copeland, 1993)</td><td>General acceptance for novel scientific evidence. ER 702 for non-scientific.</td></tr>
+  </tbody>
+</table>
+
+<h2>Unique / Hybrid Standards (4)</h2>
+<p>These states apply their own standard that does not neatly fit into either the Daubert or Frye framework.</p>
+<table>
+  <thead><tr><th>State</th><th>Standard</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Alabama</strong></td><td>Hybrid</td><td>Applies both general acceptance and reliability factors depending on the type of evidence.</td></tr>
+    <tr><td><strong>Missouri</strong></td><td>§ 490.065 (Unique)</td><td>Statutory standard — expert testimony requires "reasonable certainty" and must assist the trier of fact. Neither strictly Daubert nor Frye.</td></tr>
+    <tr><td><strong>North Dakota</strong></td><td>NDRE 702 (Modified)</td><td>Reliability-focused but does not formally adopt all Daubert factors. Courts apply a flexible analysis.</td></tr>
+    <tr><td><strong>Virginia</strong></td><td>Reliability + Helpfulness</td><td>John v. Im (2012) — requires reliability and helpfulness but does not formally follow Daubert or Frye. Expert must be qualified and testimony must assist trier of fact.</td></tr>
+  </tbody>
+</table>
+
+<h2>Quick Reference Summary</h2>
+<table>
+  <thead><tr><th>Standard</th><th>Count</th><th>Key Test</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Daubert</strong></td><td>39 states + federal + territories</td><td>Reliability, methodology, fit — judge as gatekeeper</td></tr>
+    <tr><td><strong>Frye</strong></td><td>7 states</td><td>General acceptance in the relevant scientific community</td></tr>
+    <tr><td><strong>Unique / Hybrid</strong></td><td>4 states</td><td>Varies — see individual state notes</td></tr>
+  </tbody>
+</table>
+
+<div class="callout">
+  <strong>Practice tip:</strong> Before accepting any expert retention, confirm (1) which court the case is in (state vs. federal), (2) which admissibility standard applies in that specific jurisdiction, and (3) whether the standard applies differently to scientific vs. non-scientific expert testimony. A Daubert state's federal court always uses Daubert, but the same state's courts may use Frye or a hybrid standard.
+</div>
+`
+);
+
 // ── Page component ────────────────────────────────────────────────────────────
 
 const RESOURCES = [
@@ -648,6 +748,14 @@ const RESOURCES = [
     icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
     generate: resource4Html,
   },
+  {
+    id: 'r5',
+    title: 'State-by-State Admissibility Standards',
+    description:
+      'All 50 states, D.C., and territories — which jurisdictions use Daubert, Frye, or a hybrid standard, with adoption dates, key cases, and practice notes.',
+    icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
+    generate: resource5Html,
+  },
 ];
 
 export default function AdmissibilityResourcesPage() {
@@ -662,7 +770,7 @@ export default function AdmissibilityResourcesPage() {
     <div>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
-        <p className="portal-page__subtitle">4 reference guides — available anytime, open in a new tab</p>
+        <p className="portal-page__subtitle">5 reference guides — available anytime, open in a new tab</p>
       </div>
 
       <div className="training-resources">
