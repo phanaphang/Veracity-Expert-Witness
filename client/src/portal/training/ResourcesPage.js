@@ -392,7 +392,7 @@ export default function ResourcesPage() {
 
   return (
     <div>
-      <Link to="/portal/resources" className="training-lesson__back" style={{ color: 'var(--color-orange)' }}>← All Training Resources</Link>
+      <Link to="/portal/resources" className="training-lesson__back" style={{ color: 'var(--color-accent)' }}>← All Training Resources</Link>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
         <p className="portal-page__subtitle">5 reference guides — available anytime, open in a new tab</p>
