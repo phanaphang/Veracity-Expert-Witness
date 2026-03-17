@@ -261,7 +261,7 @@ export default function AdmissibilityCertificatePage({ onProgressUpdate }) {
                   <div className="training-certificate__detail-row">
                     <span className="training-certificate__detail-label">Course Duration</span>
                     <span className="training-certificate__detail-value">
-                      ~20 minutes · 3 Lessons · 1 Scenario · 1 Knowledge Check
+                      ~30 minutes · 3 Lessons · 1 Scenario · 1 Knowledge Check
                     </span>
                   </div>
                   <div className="training-certificate__detail-row">

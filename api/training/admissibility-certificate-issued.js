@@ -102,7 +102,7 @@ module.exports = async (req, res) => {
           </tr>
           <tr>
             <td style="padding:10px 12px;font-weight:bold;background:#f9fafb;border:1px solid #e5e7eb;color:#1a1f3a;">Course</td>
-            <td style="padding:10px 12px;border:1px solid #e5e7eb;color:#374151;">${MODULE_TITLE} (~20 min)</td>
+            <td style="padding:10px 12px;border:1px solid #e5e7eb;color:#374151;">${MODULE_TITLE} (~30 min)</td>
           </tr>
         </table>
         <p style="color:#374151;">Your certificate of completion is available in your expert portal under <strong>Training &gt; Certificate</strong>.</p>

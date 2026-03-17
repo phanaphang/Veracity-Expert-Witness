@@ -174,7 +174,7 @@ export default function TrainingHome() {
             )}
           </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', margin: '0 0 12px' }}>
-            ~20 min &middot; 3 lessons &middot; 1 scenario &middot; 1 knowledge check
+            ~30 min &middot; 3 lessons &middot; 1 scenario &middot; 1 knowledge check
           </p>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-600)', margin: '0 0 16px', lineHeight: 1.5 }}>
             Frye, Kelly, and Daubert -- the standards that determine whether your testimony is

@@ -18,7 +18,7 @@
 // ============================================================
 
 export const MODULE_TITLE = 'Standards of Admissibility: Frye, Kelly, and Daubert';
-export const MODULE_SUBTITLE = '~20 minutes · 3 Lessons · 1 Scenario · 1 Knowledge Check';
+export const MODULE_SUBTITLE = '~30 minutes · 3 Lessons · 1 Scenario · 1 Knowledge Check';
 
 export const LESSON_SEQUENCE = ['1', '2', '3'];
 export const TOTAL_LESSONS = 3;
@@ -39,7 +39,7 @@ export function getLessonIndex(lessonId) {
 export const LESSONS = {
   '1': {
     title: 'The Landscape of Admissibility Standards',
-    estimatedMinutes: 7,
+    estimatedMinutes: 10,
     sections: [
       {
         subheading: null,
@@ -84,7 +84,7 @@ export const LESSONS = {
 
   '2': {
     title: 'Frye & Kelly: General Acceptance in California',
-    estimatedMinutes: 7,
+    estimatedMinutes: 10,
     sections: [
       {
         subheading: 'Frye v. United States (1923)',
@@ -157,7 +157,7 @@ export const LESSONS = {
 
   '3': {
     title: 'Daubert: The Federal Standard & Multi-Industry Application',
-    estimatedMinutes: 6,
+    estimatedMinutes: 10,
     sections: [
       {
         subheading: 'Daubert v. Merrell Dow Pharmaceuticals (1993)',

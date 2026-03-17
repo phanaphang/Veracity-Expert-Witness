@@ -169,7 +169,7 @@ export default function Dashboard() {
             )}
           </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 8 }}>
-            ~20 min · Frye, Kelly, and Daubert
+            ~30 min · Frye, Kelly, and Daubert
           </p>
         </Link>
         <Link to="/training/report-writing" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>

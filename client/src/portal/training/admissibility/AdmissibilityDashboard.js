@@ -107,7 +107,7 @@ export default function AdmissibilityDashboard() {
           <div className="training-progress-bar__fill" style={{ width: `${pct}%` }} />
         </div>
         <div className="training-progress-card__meta">
-          {completedSteps} of {TOTAL_STEPS} steps complete &middot; ~20 min total
+          {completedSteps} of {TOTAL_STEPS} steps complete &middot; ~30 min total
         </div>
         {!loading && (
           <Link to={nextAction.to} className="btn btn--primary training-progress-card__cta">
