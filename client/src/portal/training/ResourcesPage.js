@@ -10,11 +10,11 @@ const pageStyles = `
   .page-wrap { max-width: 820px; margin: 0 auto; padding: 0 24px 60px; }
   .header-bar { background: #3e442b; color: white; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
   .header-bar .brand { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
-  .header-bar .tag { font-size: 11px; color: #d36622; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
+  .header-bar .tag { font-size: 12px; color: #d36622; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
   .content-card { background: #ffffff; border: 1px solid #e8dab2; border-radius: 12px; padding: 40px 48px; }
   h1 { font-size: 24px; font-weight: 700; color: #3e442b; margin: 0 0 4px; letter-spacing: -0.01em; }
-  .subtitle { font-size: 11px; color: #d36622; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin: 0 0 32px; padding-bottom: 16px; border-bottom: 1px solid #e8dab2; }
-  h2 { font-size: 11px; font-weight: 700; color: #d36622; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: 0.07em; padding-left: 12px; border-left: 3px solid #d36622; }
+  .subtitle { font-size: 12px; color: #d36622; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin: 0 0 32px; padding-bottom: 16px; border-bottom: 1px solid #e8dab2; }
+  h2 { font-size: 12px; font-weight: 700; color: #d36622; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: 0.07em; padding-left: 12px; border-left: 3px solid #d36622; }
   ul { padding-left: 20px; margin: 0 0 16px; }
   li { margin-bottom: 7px; font-size: 14px; color: #4e5538; line-height: 1.6; }
   p { font-size: 14px; color: #4e5538; margin: 0 0 12px; line-height: 1.6; }
@@ -22,7 +22,7 @@ const pageStyles = `
   em { font-style: normal; font-size: 13px; color: #676d5f; background: #f0ece3; padding: 2px 6px; border-radius: 4px; display: inline-block; margin: 4px 0 8px; line-height: 1.5; }
   .note { background: #f0ece3; border: 1px solid #e8dab2; border-radius: 8px; padding: 14px 18px; font-size: 12px; color: #676d5f; margin-top: 40px; line-height: 1.5; }
   table { width: 100%; border-collapse: collapse; margin: 10px 0 24px; font-size: 13px; border-radius: 8px; overflow: hidden; }
-  th { background: #3e442b; color: white; padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  th { background: #3e442b; color: white; padding: 10px 14px; text-align: left; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
   td { padding: 10px 14px; border-bottom: 1px solid #e8dab2; color: #4e5538; vertical-align: top; }
   tr:last-child td { border-bottom: none; }
   tr:nth-child(even) td { background: #f7f5f0; }
@@ -405,7 +405,7 @@ export default function ResourcesPage() {
         {RESOURCES.map((res) => (
           <div key={res.id} className="portal-card training-resource-card">
             <div className="training-resource-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+              <svg viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
                 <path d={res.icon} stroke="var(--color-navy)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
@@ -416,6 +416,7 @@ export default function ResourcesPage() {
             <button
               className="btn btn--secondary training-resource-card__btn"
               onClick={() => openResource(res)}
+              aria-label={`Open ${res.title}`}
             >
               Open →
             </button>

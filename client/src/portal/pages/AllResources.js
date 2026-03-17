@@ -61,7 +61,7 @@ export default function AllResources() {
             style={{ textDecoration: 'none' }}
           >
             <div className="training-resource-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+              <svg viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
                 <path d={mod.icon} stroke="var(--color-navy)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </div>
