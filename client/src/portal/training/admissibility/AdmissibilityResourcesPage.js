@@ -1,59 +1,61 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-
 // ── Shared HTML shell ──────────────────────────────────────────────────────────
 const htmlShell = (title, body) => `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>${title} - Veracity Expert Witness</title>
+<title>${title} | Veracity Expert Witness</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
   *, *::before, *::after { box-sizing: border-box; }
-  body { font-family: Georgia, 'Times New Roman', serif; color: #1a1a2e; background: #fff;
-    margin: 0; padding: 0; font-size: 14px; line-height: 1.7; }
-  .page { max-width: 900px; margin: 0 auto; padding: 40px 32px 60px; }
-  .brand-bar { background: #1a1f3a; color: #fff; padding: 16px 32px;
-    display: flex; align-items: center; gap: 12px; }
-  .brand-bar span { font-size: 18px; font-weight: 700; font-family: Arial, sans-serif; }
-  .brand-bar small { color: #d36622; font-size: 12px; font-family: Arial, sans-serif; }
-  h1 { font-size: 22px; color: #1a1f3a; margin: 32px 0 8px; line-height: 1.3; }
-  h2 { font-size: 17px; color: #1a1f3a; margin: 28px 0 8px; border-bottom: 2px solid #d36622;
-    padding-bottom: 4px; font-family: Arial, sans-serif; }
-  h3 { font-size: 14px; color: #d36622; margin: 18px 0 6px; font-family: Arial, sans-serif;
-    font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
-  p { margin: 0 0 10px; }
-  ul, ol { margin: 6px 0 14px; padding-left: 22px; }
-  li { margin-bottom: 6px; }
-  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13px;
-    font-family: Arial, sans-serif; }
-  th { background: #1a1f3a; color: #fff; padding: 9px 12px; text-align: left;
-    font-weight: 600; border: 1px solid #c0c4cc; }
-  td { padding: 8px 12px; border: 1px solid #dde0e7; vertical-align: top; }
-  tr:nth-child(even) td { background: #f6f7fb; }
-  .alert { background: #fff8ee; border-left: 4px solid #d36622; padding: 12px 16px;
-    margin: 14px 0; font-family: Arial, sans-serif; font-size: 13px; }
-  .callout { background: #1a1f3a; color: #fff; padding: 16px 20px; border-radius: 4px;
-    margin: 20px 0; font-family: Arial, sans-serif; font-size: 13px; line-height: 1.6; }
+  body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; margin: 0; padding: 0; background: #f7f5f0; color: #3e442b; line-height: 1.6; }
+  .page-wrap { max-width: 820px; margin: 0 auto; padding: 0 24px 60px; }
+  .header-bar { background: #3e442b; color: white; padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+  .header-bar .brand { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .header-bar .tag { font-size: 11px; color: #d36622; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 3px; }
+  .content-card { background: #ffffff; border: 1px solid #e8dab2; border-radius: 12px; padding: 40px 48px; }
+  h1 { font-size: 24px; font-weight: 700; color: #3e442b; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .subtitle { font-size: 11px; color: #d36622; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; margin: 0 0 32px; padding-bottom: 16px; border-bottom: 1px solid #e8dab2; }
+  h2 { font-size: 11px; font-weight: 700; color: #d36622; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: 0.07em; padding-left: 12px; border-left: 3px solid #d36622; }
+  h3 { font-size: 11px; font-weight: 700; color: #d36622; margin: 18px 0 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  p { font-size: 14px; color: #4e5538; margin: 0 0 12px; line-height: 1.6; }
+  strong { color: #3e442b; }
+  em { font-style: normal; font-size: 13px; color: #676d5f; background: #f0ece3; padding: 2px 6px; border-radius: 4px; display: inline-block; margin: 4px 0 8px; line-height: 1.5; }
+  ul, ol { padding-left: 20px; margin: 0 0 16px; }
+  li { margin-bottom: 7px; font-size: 14px; color: #4e5538; line-height: 1.6; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 24px; font-size: 13px; border-radius: 8px; overflow: hidden; }
+  th { background: #3e442b; color: white; padding: 10px 14px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+  td { padding: 10px 14px; border-bottom: 1px solid #e8dab2; color: #4e5538; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: #f7f5f0; }
+  .alert { background: #f0ece3; border-left: 3px solid #d36622; padding: 12px 16px; margin: 14px 0; font-size: 13px; color: #676d5f; line-height: 1.5; }
+  .callout { background: #3e442b; color: #fff; padding: 16px 20px; border-radius: 8px; margin: 20px 0; font-size: 13px; line-height: 1.6; }
   .callout strong { color: #d36622; }
-  .check-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px;
-    font-family: Arial, sans-serif; font-size: 13px; }
-  .check-item::before { content: "☐"; flex-shrink: 0; color: #d36622; font-size: 16px;
-    line-height: 1.2; }
-  .divider { border: none; border-top: 1px solid #dde0e7; margin: 24px 0; }
-  .print-btn { position: fixed; bottom: 24px; right: 24px; background: #d36622; color: #fff;
-    border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer;
-    font-family: Arial, sans-serif; font-size: 13px; font-weight: 600; }
-  @media print { .print-btn { display: none; } }
+  .check-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; color: #4e5538; }
+  .check-item::before { content: "\\2610"; flex-shrink: 0; color: #d36622; font-size: 16px; line-height: 1.2; }
+  .divider { border: none; border-top: 1px solid #e8dab2; margin: 24px 0; }
+  .note { background: #f0ece3; border: 1px solid #e8dab2; border-radius: 8px; padding: 14px 18px; font-size: 12px; color: #676d5f; margin-top: 40px; line-height: 1.5; }
+  .pdf-btn { display: inline-block; margin: 0 0 24px; padding: 9px 20px; background: #d36622; color: #fff; font-family: inherit; font-size: 13px; font-weight: 700; border: none; border-radius: 8px; cursor: pointer; letter-spacing: 0.02em; }
+  .pdf-btn:hover { background: #b8551a; }
+  @page { margin: 0; }
+  @media print { .pdf-btn { display: none; } body { padding: 0.45in; } }
 </style>
 </head>
 <body>
-<div class="brand-bar">
-  <span>Veracity Expert Witness</span>
-  <small>Standards of Admissibility: Frye, Kelly, and Daubert</small>
-</div>
-<div class="page">${body}</div>
-<button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+  <div class="header-bar">
+    <div>
+      <div class="brand">Veracity Expert Witness</div>
+      <div class="tag">Standards of Admissibility: Frye, Kelly, and Daubert</div>
+    </div>
+  </div>
+  <div class="page-wrap">
+    <div class="content-card">
+      <button class="pdf-btn" onclick="window.print()">PDF</button>
+      ${body}
+      <div class="note">This document is provided by Veracity Expert Witness as a training reference. It is for educational purposes only and does not constitute legal advice.</div>
+    </div>
+  </div>
 </body>
 </html>`;
 
@@ -618,6 +620,7 @@ const RESOURCES = [
     title: 'Frye vs. Kelly vs. Daubert Quick Reference Card',
     description:
       'Side-by-side comparison table, Kelly three-prong checklist, Daubert five-factor checklist, Sargon summary, and industry application examples across all eight disciplines.',
+    icon: 'M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3',
     generate: resource1Html,
   },
   {
@@ -625,6 +628,7 @@ const RESOURCES = [
     title: 'California Expert Admissibility Checklist',
     description:
       'Pre-retention checklist, Kelly challenge preparation guide with industry-specific notes, and red flags by discipline for California state court testimony.',
+    icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4',
     generate: resource2Html,
   },
   {
@@ -632,6 +636,7 @@ const RESOURCES = [
     title: 'Federal Court Daubert Preparation Guide',
     description:
       'Daubert hearing overview, what federal judges look for, methodology documentation guide, and common exclusion patterns - with field-specific guidance for all eight industries.',
+    icon: 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2m-2 0l-3-3m-9 3l3-3m0 0h6',
     generate: resource3Html,
   },
   {
@@ -639,64 +644,46 @@ const RESOURCES = [
     title: 'Admissibility Standards - Full Module Summary',
     description:
       'Condensed reference notes from all three lessons covering Frye, Kelly, and Daubert - including jurisdiction rules, Kelly scope limitations, Sargon, and multi-industry application.',
+    icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
     generate: resource4Html,
   },
 ];
 
 export default function AdmissibilityResourcesPage() {
-  const handleOpen = (generateHtml) => {
+  const openResource = (resource) => {
     const win = window.open('', '_blank');
-    if (win) {
-      win.document.write(generateHtml());
-      win.document.close();
-    }
+    if (!win) return;
+    win.document.write(resource.generate());
+    win.document.close();
   };
 
   return (
     <div>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
-        <p className="portal-page__subtitle">
-          Standards of Admissibility: Frye, Kelly, and Daubert - 4 reference guides
-        </p>
+        <p className="portal-page__subtitle">4 reference guides — available anytime, open in a new tab</p>
       </div>
 
-      <div className="training-units">
-        {RESOURCES.map((resource, i) => (
-          <div key={resource.id} className="portal-card training-unit-card">
-            <div className="training-unit-card__header">
-              <div>
-                <div className="training-unit-card__number">Resource {i + 1}</div>
-                <h2 className="training-unit-card__title">{resource.title}</h2>
-              </div>
+      <div className="training-resources">
+        {RESOURCES.map((res) => (
+          <div key={res.id} className="portal-card training-resource-card">
+            <div className="training-resource-card__icon">
+              <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+                <path d={res.icon} stroke="var(--color-navy)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
             </div>
-            <p
-              style={{
-                color: 'var(--color-gray-500)',
-                fontSize: 14,
-                lineHeight: 1.6,
-                margin: '8px 0 20px',
-              }}
-            >
-              {resource.description}
-            </p>
+            <div className="training-resource-card__body">
+              <h2 className="training-resource-card__title">{res.title}</h2>
+              <p className="training-resource-card__desc">{res.description}</p>
+            </div>
             <button
-              className="btn btn--secondary training-unit-card__btn"
-              onClick={() => handleOpen(resource.generate)}
+              className="btn btn--secondary training-resource-card__btn"
+              onClick={() => openResource(res)}
             >
-              Open Resource →
+              Open →
             </button>
           </div>
         ))}
-      </div>
-
-      <div style={{ marginTop: 24, display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-        <Link to="/training/admissibility" className="btn btn--secondary">
-          ← Back to Training Home
-        </Link>
-        <Link to="/training" className="btn btn--secondary">
-          All Training Modules
-        </Link>
       </div>
     </div>
   );
