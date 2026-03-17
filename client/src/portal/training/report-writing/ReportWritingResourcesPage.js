@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 // -- Shared HTML shell --
 const htmlShell = (title, body) => `<!DOCTYPE html>
 <html lang="en">
@@ -717,6 +718,7 @@ export default function ReportWritingResourcesPage() {
 
   return (
     <div>
+      <Link to="/portal/resources" className="training-lesson__back">← All Training Resources</Link>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
         <p className="portal-page__subtitle">4 reference guides — available anytime, open in a new tab</p>
