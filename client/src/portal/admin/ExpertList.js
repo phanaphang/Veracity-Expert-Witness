@@ -261,14 +261,15 @@ export default function ExpertList() {
       </div>
 
       <div className="portal-stats" style={{ marginBottom: 24 }}>
-        <div
+        <button
+          type="button"
           className="portal-stat"
           style={{ cursor: 'pointer', transition: 'border-color 0.15s', borderColor: filterSpecialties.size === 0 ? 'var(--color-accent)' : undefined }}
           onClick={() => setFilterSpecialties(new Set())}
         >
           <div className="portal-stat__value">{experts.length}</div>
           <div className="portal-stat__label">All Experts</div>
-        </div>
+        </button>
         {parents.map(parent => {
           const childIds = subsOf(parent.id);
           const ids = [parent.id, ...childIds];
@@ -276,7 +277,8 @@ export default function ExpertList() {
             exp.expert_specialties?.some(es => ids.includes(es.specialty_id))
           ).length;
           return (
-            <div
+            <button
+              type="button"
               key={parent.id}
               className="portal-stat"
               style={{ cursor: 'pointer', transition: 'border-color 0.15s', borderColor: filterSpecialties.has(parent.id) ? 'var(--color-accent)' : undefined }}
@@ -284,7 +286,7 @@ export default function ExpertList() {
             >
               <div className="portal-stat__value">{count}</div>
               <div className="portal-stat__label">{parent.name}</div>
-            </div>
+            </button>
           );
         })}
       </div>
@@ -295,6 +297,7 @@ export default function ExpertList() {
           placeholder="Search by name or email..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search experts by name or email"
         />
 
         {/* Multi-select specialty/subspecialty dropdown */}
@@ -304,6 +307,8 @@ export default function ExpertList() {
             className="portal-field__select"
             style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer', width: '100%', textAlign: 'left', background: '#fff' }}
             onClick={() => setFilterPanelOpen(p => !p)}
+            aria-haspopup="listbox"
+            aria-expanded={filterPanelOpen}
           >
             <span style={{ flex: 1 }}>
               {filterSpecialties.size === 0 ? 'All Specialties' : `Specialties (${filterSpecialties.size})`}
@@ -340,6 +345,7 @@ export default function ExpertList() {
                           onClick={() => toggleExpandInFilter(parent.id)}
                           style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-gray-400)', fontSize: '0.7rem', padding: '2px 4px', lineHeight: 1 }}
                           title={isExpanded ? 'Collapse subspecialties' : 'Expand subspecialties'}
+                          aria-label={isExpanded ? `Collapse ${parent.name} subspecialties` : `Expand ${parent.name} subspecialties`}
                         >
                           {isExpanded ? '▲' : '▼'}
                         </button>
@@ -365,7 +371,7 @@ export default function ExpertList() {
           )}
         </div>
 
-        <select className="portal-field__select" value={filterAvailability} onChange={(e) => setFilterAvailability(e.target.value)}>
+        <select className="portal-field__select" value={filterAvailability} onChange={(e) => setFilterAvailability(e.target.value)} aria-label="Filter by availability">
           <option value="">All Availability</option>
           <option value="available">Available</option>
           <option value="limited">Limited</option>
@@ -376,6 +382,7 @@ export default function ExpertList() {
           placeholder="Search for additional subspecialties..."
           value={filterTag}
           onChange={(e) => setFilterTag(e.target.value)}
+          aria-label="Search for additional subspecialties"
         />
       </div>
 
@@ -388,7 +395,7 @@ export default function ExpertList() {
             return (
               <span key={id} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#e0e7ff', color: '#3730a3', borderRadius: 999, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 500 }}>
                 {spec.name}
-                <button type="button" onClick={() => toggleFilterSpecialty(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3730a3', fontSize: '1rem', lineHeight: 1, padding: 0, marginLeft: 2 }}>×</button>
+                <button type="button" onClick={() => toggleFilterSpecialty(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3730a3', fontSize: '1rem', lineHeight: 1, padding: 0, marginLeft: 2 }} aria-label={`Remove ${spec.name} filter`}>×</button>
               </span>
             );
           })}
@@ -469,9 +476,9 @@ export default function ExpertList() {
       )}
 
       {exportConfirm && (
-        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+        <div className="portal-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="export-modal-title" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
-            <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>Export Experts</h3>
+            <h3 id="export-modal-title" style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>Export Experts</h3>
             <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
               Are you sure you want to export the Experts database to an Excel file?
             </p>
@@ -492,9 +499,9 @@ export default function ExpertList() {
       )}
 
       {deleteTarget && (
-        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+        <div className="portal-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
           <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
-            <h3 style={{ margin: '0 0 8px', color: 'var(--color-error, #e53e3e)' }}>Delete Expert</h3>
+            <h3 id="delete-modal-title" style={{ margin: '0 0 8px', color: 'var(--color-error, #e53e3e)' }}>Delete Expert</h3>
             <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
               Are you sure you want to permanently delete <strong>{deleteTarget.first_name ? `${deleteTarget.first_name} ${deleteTarget.last_name || ''}`.trim() : deleteTarget.email}</strong>? This will remove their account, profile, documents, and all associated data. This action cannot be undone.
             </p>

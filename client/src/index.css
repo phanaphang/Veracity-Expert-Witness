@@ -230,7 +230,7 @@ img {
 }
 
 .navbar__link {
-  color: rgba(255,255,255,0.75);
+  color: rgba(255,255,255,0.85);
   font-size: 0.9rem;
   font-weight: 500;
   transition: color var(--transition);
@@ -253,6 +253,14 @@ img {
 }
 
 .navbar__link:hover::after {
+  width: 100%;
+}
+
+.navbar__link:focus-visible {
+  color: var(--color-white);
+}
+
+.navbar__link:focus-visible::after {
   width: 100%;
 }
 
@@ -456,7 +464,7 @@ img {
 
 .hero__subtitle {
   font-size: 1.15rem;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.85);
   line-height: 1.8;
   margin-bottom: 36px;
   max-width: 600px;
@@ -499,7 +507,7 @@ img {
 
 .hero__stat-label {
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.85);
   font-weight: 500;
 }
 
@@ -526,6 +534,12 @@ img {
 }
 
 .services__card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-xl);
+  border-color: rgba(211, 102, 34, 0.2);
+}
+
+.services__card:focus-visible {
   transform: translateY(-6px);
   box-shadow: var(--shadow-xl);
   border-color: rgba(211, 102, 34, 0.2);
@@ -587,6 +601,18 @@ img {
 }
 
 .categories__card:hover .categories__icon {
+  color: var(--color-accent);
+  background: rgba(211, 102, 34, 0.1);
+}
+
+.categories__card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--color-accent);
+  background: var(--color-white);
+}
+
+.categories__card:focus-visible .categories__icon {
   color: var(--color-accent);
   background: rgba(211, 102, 34, 0.1);
 }
@@ -703,6 +729,11 @@ img {
   box-shadow: var(--shadow-lg);
 }
 
+.testimonials__card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
 .testimonials__quote-mark {
   font-size: 4rem;
   font-weight: 800;
@@ -807,7 +838,7 @@ img {
 
 .cta__subtitle {
   font-size: 1.1rem;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.85);
   margin-bottom: 32px;
   line-height: 1.7;
 }
@@ -964,7 +995,7 @@ img {
 
 .legal-header__back {
   display: inline-block;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.85);
   font-size: 0.9rem;
   font-weight: 500;
   margin-bottom: 24px;
@@ -983,7 +1014,7 @@ img {
 }
 
 .legal-header__date {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.75);
   font-size: 0.95rem;
 }
 
@@ -1061,11 +1092,11 @@ img {
   align-items: center;
   justify-content: space-between;
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.7);
 }
 
 .legal-footer__inner a {
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.75);
   transition: color var(--transition);
 }
 
@@ -1077,7 +1108,7 @@ img {
    SPECIALTY PAGES
    ============================================ */
 .legal-header__subtitle {
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.85);
   font-size: 1.1rem;
   line-height: 1.7;
   max-width: 600px;
@@ -1164,7 +1195,7 @@ img {
 }
 
 .specialty-cta p {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.85);
   font-size: 1rem;
   margin-bottom: 24px;
 }
@@ -1180,7 +1211,7 @@ img {
 .footer {
   background: var(--color-navy);
   padding: 64px 0 32px;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.85);
 }
 
 .footer__grid {
@@ -1198,7 +1229,7 @@ img {
 .footer__brand-text {
   font-size: 0.9rem;
   line-height: 1.7;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.75);
   max-width: 280px;
 }
 
@@ -1217,7 +1248,7 @@ img {
 
 .footer__links a {
   font-size: 0.9rem;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.75);
   transition: color var(--transition);
 }
 
@@ -1235,7 +1266,7 @@ img {
   justify-content: space-between;
   padding-top: 24px;
   font-size: 0.85rem;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.7);
 }
 
 .footer__social {
@@ -1244,7 +1275,7 @@ img {
 }
 
 .footer__social a {
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.7);
   transition: color var(--transition);
 }
 
@@ -1688,5 +1719,19 @@ img {
   .join-panel-steps {
     flex-direction: column;
     align-items: center;
+  }
+}
+
+/* --- Reduced Motion --- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }

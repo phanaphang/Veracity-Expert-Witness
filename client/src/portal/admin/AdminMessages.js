@@ -115,6 +115,7 @@ export default function AdminMessages() {
             className="portal-field__input"
             placeholder="Search experts by name or email..."
             onChange={(e) => searchExperts(e.target.value)}
+            aria-label="Search experts by name or email"
           />
           {experts.length > 0 && (
             <div style={{ marginTop: 8 }}>
@@ -141,7 +142,8 @@ export default function AdminMessages() {
             {conversations.map(conv => {
               const other = getOtherParticipant(conv);
               return (
-                <div
+                <button
+                  type="button"
                   key={conv.id}
                   className={`portal-messages__item ${activeConv?.id === conv.id ? 'portal-messages__item--active' : ''}`}
                   onClick={() => setActiveConv(conv)}
@@ -150,7 +152,7 @@ export default function AdminMessages() {
                   <div className="portal-messages__item-preview">
                     {conv.last_message_at ? new Date(conv.last_message_at).toLocaleDateString() : ''}
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -190,6 +192,7 @@ export default function AdminMessages() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Type a message..."
                     maxLength={5000}
+                    aria-label="Type a message"
                   />
                   <button type="submit" className="btn btn--primary" style={{ padding: '10px 20px' }}>Send</button>
                 </form>

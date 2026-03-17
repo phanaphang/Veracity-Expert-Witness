@@ -188,9 +188,11 @@ function FAQ() {
                 return (
                   <div key={key} className={`faq-item${isOpen ? ' faq-item--open' : ''}`}>
                     <button
+                      id={`faq-question-${key}`}
                       className="faq-item__question"
                       onClick={() => toggleItem(key)}
                       aria-expanded={isOpen}
+                      aria-controls={`faq-answer-${key}`}
                     >
                       <span>{item.question}</span>
                       <svg
@@ -209,7 +211,7 @@ function FAQ() {
                         />
                       </svg>
                     </button>
-                    <div className="faq-item__answer">
+                    <div className="faq-item__answer" id={`faq-answer-${key}`} role="region" aria-labelledby={`faq-question-${key}`}>
                       <p>{item.answer}</p>
                     </div>
                   </div>

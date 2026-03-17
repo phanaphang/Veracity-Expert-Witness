@@ -72,7 +72,8 @@ export default function Messages() {
             {conversations.map(conv => {
               const other = getOtherParticipant(conv);
               return (
-                <div
+                <button
+                  type="button"
                   key={conv.id}
                   className={`portal-messages__item ${activeConv?.id === conv.id ? 'portal-messages__item--active' : ''}`}
                   onClick={() => setActiveConv(conv)}
@@ -81,7 +82,7 @@ export default function Messages() {
                   <div className="portal-messages__item-preview">
                     {conv.last_message_at ? new Date(conv.last_message_at).toLocaleDateString() : ''}
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -121,6 +122,7 @@ export default function Messages() {
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder="Type a message..."
                     maxLength={5000}
+                    aria-label="Type a message"
                   />
                   <button type="submit" className="btn btn--primary" style={{ padding: '10px 20px' }}>Send</button>
                 </form>

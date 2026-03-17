@@ -64,11 +64,11 @@ function EventModal({ event, slot, expertId, cases, onClose, onSaved, onDeleted 
   };
 
   return (
-    <div className="cal-modal-backdrop" onClick={onClose}>
+    <div className="cal-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label={isNew ? 'New Event' : 'Edit Event'}>
       <div className="cal-modal" onClick={e => e.stopPropagation()}>
         <div className="cal-modal__header">
           <span className="cal-modal__title">{isNew ? 'New Event' : 'Edit Event'}</span>
-          <button className="cal-modal__close" onClick={onClose}>&#x2715;</button>
+          <button className="cal-modal__close" onClick={onClose} aria-label="Close">&#x2715;</button>
         </div>
 
         {error && <p style={{ color: 'var(--color-error)', fontSize: '0.85rem', marginBottom: 8 }}>{error}</p>}
