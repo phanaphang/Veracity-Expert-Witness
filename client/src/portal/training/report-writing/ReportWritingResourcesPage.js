@@ -32,6 +32,7 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
   .alert { background: #f0ece3; border-left: 3px solid #d36622; padding: 12px 16px; margin: 14px 0; font-size: 13px; color: #676d5f; line-height: 1.5; }
   .callout { background: #3e442b; color: #fff; padding: 16px 20px; border-radius: 8px; margin: 20px 0; font-size: 13px; line-height: 1.6; }
   .callout strong { color: #d36622; }
+  .callout li, .callout p, .callout ol, .callout ul { color: #fff; }
   .check-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 8px; font-size: 13px; color: #4e5538; }
   .check-item::before { content: "\\2610"; flex-shrink: 0; color: #d36622; font-size: 16px; line-height: 1.2; }
   .divider { border: none; border-top: 1px solid #e8dab2; margin: 24px 0; }
