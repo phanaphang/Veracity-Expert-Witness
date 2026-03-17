@@ -41,6 +41,7 @@ const AuthCallback = lazy(() => import('./portal/pages/AuthCallback'));
 const ForgotPassword = lazy(() => import('./portal/pages/ForgotPassword'));
 
 // Portal — Expert pages
+const AllResources = lazy(() => import('./portal/pages/AllResources'));
 const Dashboard = lazy(() => import('./portal/pages/Dashboard'));
 const Profile = lazy(() => import('./portal/pages/Profile'));
 const Documents = lazy(() => import('./portal/pages/Documents'));
@@ -213,6 +214,7 @@ const router = createBrowserRouter([
       { path: '/portal/messages', element: <ProtectedRoute><PortalLayout><Messages /></PortalLayout></ProtectedRoute> },
       { path: '/portal/change-password', element: <ProtectedRoute><PortalLayout><ChangePassword /></PortalLayout></ProtectedRoute> },
       { path: '/portal/calendar', element: <ProtectedRoute><PortalLayout><CalendarPage /></PortalLayout></ProtectedRoute> },
+      { path: '/portal/resources', element: <ProtectedRoute><PortalLayout><AllResources /></PortalLayout></ProtectedRoute> },
 
       // Training module (expert, admin, staff)
       { path: '/training', element: <ProtectedRoute><PortalLayout><TrainingHome /></PortalLayout></ProtectedRoute> },
