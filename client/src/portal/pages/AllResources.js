@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import TrainingDisclaimer from '../components/TrainingDisclaimer';
 
 const MODULES = [
   {
@@ -48,6 +49,8 @@ export default function AllResources() {
           {MODULES.reduce((sum, m) => sum + m.count, 0)} downloadable reference guides across {MODULES.length} training modules
         </p>
       </div>
+
+      <TrainingDisclaimer />
 
       <div className="training-resources">
         {MODULES.map((mod) => (

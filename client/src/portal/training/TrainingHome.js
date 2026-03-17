@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
 import { TOTAL_LESSONS } from './courseData';
+import TrainingTermsModal from '../components/TrainingTermsModal';
+import TrainingDisclaimer from '../components/TrainingDisclaimer';
 
 export default function TrainingHome() {
   const { user } = useAuth();
+  const handleTermsAccepted = useCallback(() => {}, []);
   const [foundationsPct, setFoundationsPct] = useState(null);
   const [admissibilityPct, setAdmissibilityPct] = useState(null);
   const [reportWritingPct, setReportWritingPct] = useState(null);
@@ -92,6 +95,7 @@ export default function TrainingHome() {
 
   return (
     <div>
+      <TrainingTermsModal onAccepted={handleTermsAccepted} />
       <div className="portal-page__header">
         <h1 className="portal-page__title">
           Training
@@ -100,6 +104,8 @@ export default function TrainingHome() {
           Choose a module below to continue your expert witness training.
         </p>
       </div>
+
+      <TrainingDisclaimer />
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
         {/* Expert Witness Foundations */}

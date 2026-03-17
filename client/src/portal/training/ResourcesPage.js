@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import TrainingDisclaimer from '../components/TrainingDisclaimer';
 
 // Shared inline styles for generated HTML resource pages
 const pageStyles = `
@@ -53,7 +54,7 @@ function makeHtml(title, subtitle, bodyHtml) {
       <h1>${title}</h1>
       <div class="subtitle">${subtitle}</div>
       ${bodyHtml}
-      <div class="note">This document is provided by Veracity Expert Witness as a training reference. It is for educational purposes only and does not constitute legal advice.</div>
+      <div class="note">This document is provided by Veracity Expert Witness LLC as a training reference. It is for educational purposes only and does not constitute legal advice. Veracity Expert Witness LLC assumes no liability for how this content is applied. You remain solely responsible for your own professional conduct and testimony.</div>
     </div>
   </div>
 </body>
@@ -397,6 +398,8 @@ export default function ResourcesPage() {
         <h1 className="portal-page__title">Downloadable Resources</h1>
         <p className="portal-page__subtitle">5 reference guides - available anytime, open in a new tab</p>
       </div>
+
+      <TrainingDisclaimer />
 
       <div className="training-resources">
         {RESOURCES.map((res) => (
