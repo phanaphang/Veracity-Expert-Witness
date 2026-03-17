@@ -10,11 +10,12 @@ export default function TrainingHome() {
   const [admissibilityPct, setAdmissibilityPct] = useState(null);
   const [reportWritingPct, setReportWritingPct] = useState(null);
   const [depositionPct, setDepositionPct] = useState(null);
+  const [trialTestimonyPct, setTrialTestimonyPct] = useState(null);
 
   useEffect(() => {
     if (!user) return;
     const load = async () => {
-      const [{ data: foundations }, { data: admissibility }, { data: reportWriting }, { data: deposition }] = await Promise.all([
+      const [{ data: foundations }, { data: admissibility }, { data: reportWriting }, { data: deposition }, { data: trialTestimony }] = await Promise.all([
         supabase
           .from('training_progress')
           .select('lesson_id, completed')
@@ -29,6 +30,10 @@ export default function TrainingHome() {
           .eq('user_id', user.id),
         supabase
           .from('deposition_progress')
+          .select('lesson_id, completed, quiz_score')
+          .eq('user_id', user.id),
+        supabase
+          .from('trial_testimony_progress')
           .select('lesson_id, completed, quiz_score')
           .eq('user_id', user.id),
       ]);
@@ -69,6 +74,17 @@ export default function TrainingHome() {
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6
         ) ? 1 : 0;
         setDepositionPct(Math.round(((lessons + scenario + quiz) / 10) * 100));
+      }
+
+      if (trialTestimony) {
+        const lessons = trialTestimony.filter(
+          (r) => r.completed && ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'].includes(r.lesson_id)
+        ).length;
+        const scenario = trialTestimony.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
+        const quiz = trialTestimony.some(
+          (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 8
+        ) ? 1 : 0;
+        setTrialTestimonyPct(Math.round(((lessons + scenario + quiz) / 12) * 100));
       }
     };
     load();
@@ -263,6 +279,51 @@ export default function TrainingHome() {
           )}
           <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
             {depositionPct === 0 || depositionPct === null ? 'Start Module' : depositionPct === 100 ? 'Review Module' : 'Continue'}
+          </span>
+        </Link>
+
+        {/* Trial Testimony as an Expert Witness */}
+        <Link
+          to="/training/trial-testimony"
+          className="portal-card portal-card--clickable"
+          style={{ textDecoration: 'none' }}
+        >
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-navy)', margin: 0 }}>
+              Trial Testimony
+            </h2>
+            {trialTestimonyPct !== null && (
+              <span style={{
+                background: trialTestimonyPct === 100 ? '#16a34a' : 'var(--color-accent)',
+                color: '#fff',
+                fontSize: '0.65rem',
+                fontWeight: 700,
+                padding: '2px 7px',
+                borderRadius: 999,
+                whiteSpace: 'nowrap',
+                marginLeft: 8,
+                flexShrink: 0,
+              }}>
+                {trialTestimonyPct === 100 ? 'Complete' : `${trialTestimonyPct}%`}
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', margin: '0 0 12px' }}>
+            ~75 min &middot; 10 lessons &middot; 1 scenario &middot; 1 knowledge check
+          </p>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-600)', margin: '0 0 16px', lineHeight: 1.5 }}>
+            Mastering courtroom testimony -- qualification, direct and cross examination, jury
+            communication, visual aids, ethical boundaries, and continuous improvement.
+          </p>
+          {trialTestimonyPct !== null && trialTestimonyPct > 0 && trialTestimonyPct < 100 && (
+            <div style={{ marginBottom: 14 }}>
+              <div style={{ height: 5, background: 'var(--color-gray-100)', borderRadius: 999, overflow: 'hidden' }}>
+                <div style={{ width: `${trialTestimonyPct}%`, height: '100%', background: 'var(--color-accent)', borderRadius: 999 }} />
+              </div>
+            </div>
+          )}
+          <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
+            {trialTestimonyPct === 0 || trialTestimonyPct === null ? 'Start Module' : trialTestimonyPct === 100 ? 'Review Module' : 'Continue'}
           </span>
         </Link>
       </div>

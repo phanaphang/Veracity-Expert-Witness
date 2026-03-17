@@ -87,6 +87,15 @@ const DepositionQuizPage = lazy(() => import('./portal/training/deposition/Depos
 const DepositionCertificatePage = lazy(() => import('./portal/training/deposition/DepositionCertificatePage'));
 const DepositionResourcesPage = lazy(() => import('./portal/training/deposition/DepositionResourcesPage'));
 
+// Training module — Trial Testimony as an Expert Witness
+const TrialTestimonyLayout = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyLayout'));
+const TrialTestimonyDashboard = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyDashboard'));
+const TrialTestimonyLessonPage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyLessonPage'));
+const TrialTestimonyScenarioPage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyScenarioPage'));
+const TrialTestimonyQuizPage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyQuizPage'));
+const TrialTestimonyCertificatePage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyCertificatePage'));
+const TrialTestimonyResourcesPage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyResourcesPage'));
+
 // Admin pages — includes heavy libs (xlsx, jspdf, pdf-lib) only when visited
 const AdminDashboard = lazy(() => import('./portal/admin/AdminDashboard'));
 const ExpertList = lazy(() => import('./portal/admin/ExpertList'));
@@ -238,6 +247,14 @@ const router = createBrowserRouter([
       { path: '/training/deposition/quiz', element: <ProtectedRoute><DepositionLayout><DepositionQuizPage /></DepositionLayout></ProtectedRoute> },
       { path: '/training/deposition/certificate', element: <ProtectedRoute><DepositionLayout><DepositionCertificatePage /></DepositionLayout></ProtectedRoute> },
       { path: '/training/deposition/resources', element: <ProtectedRoute><DepositionLayout><DepositionResourcesPage /></DepositionLayout></ProtectedRoute> },
+
+      // Training module — Trial Testimony as an Expert Witness (expert, admin, staff)
+      { path: '/training/trial-testimony', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyDashboard /></TrialTestimonyLayout></ProtectedRoute> },
+      { path: '/training/trial-testimony/lesson/:lessonId', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyLessonPage /></TrialTestimonyLayout></ProtectedRoute> },
+      { path: '/training/trial-testimony/scenario', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyScenarioPage /></TrialTestimonyLayout></ProtectedRoute> },
+      { path: '/training/trial-testimony/quiz', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyQuizPage /></TrialTestimonyLayout></ProtectedRoute> },
+      { path: '/training/trial-testimony/certificate', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyCertificatePage /></TrialTestimonyLayout></ProtectedRoute> },
+      { path: '/training/trial-testimony/resources', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyResourcesPage /></TrialTestimonyLayout></ProtectedRoute> },
 
       // Admin (protected, admin only)
       { path: '/admin/dashboard', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute> },

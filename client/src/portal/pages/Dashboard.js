@@ -13,6 +13,7 @@ export default function Dashboard() {
   const [admissibilityPct, setAdmissibilityPct] = useState(null);
   const [reportWritingPct, setReportWritingPct] = useState(null);
   const [depositionPct, setDepositionPct] = useState(null);
+  const [trialTestimonyPct, setTrialTestimonyPct] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -20,7 +21,7 @@ export default function Dashboard() {
       try {
         const now = new Date().toISOString();
         const weekOut = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
-        const [cases, msgs, docs, events, training, admissibility, reportWriting, deposition] = await Promise.all([
+        const [cases, msgs, docs, events, training, admissibility, reportWriting, deposition, trialTestimony] = await Promise.all([
           supabase.from('case_invitations').select('*', { count: 'exact', head: true }).eq('expert_id', user.id).eq('status', 'pending'),
           supabase.from('messages').select('*', { count: 'exact', head: true }).eq('recipient_id', user.id).eq('is_read', false),
           supabase.from('documents').select('document_type').eq('expert_id', user.id),
@@ -29,6 +30,7 @@ export default function Dashboard() {
           supabase.from('admissibility_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
           supabase.from('report_writing_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
           supabase.from('deposition_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
+          supabase.from('trial_testimony_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
         ]);
         setStats({
           pendingCases: cases.count || 0,
@@ -59,6 +61,13 @@ export default function Dashboard() {
           const dpScenario = deposition.data.some(r => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
           const dpQuiz = deposition.data.some(r => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6) ? 1 : 0;
           setDepositionPct(Math.round(((dpLessons + dpScenario + dpQuiz) / 10) * 100));
+        }
+        // Trial Testimony: 10 lessons + scenario + quiz = 12 completable steps
+        if (trialTestimony.data) {
+          const ttLessons = trialTestimony.data.filter(r => r.completed && ['1','2','3','4','5','6','7','8','9','10'].includes(r.lesson_id)).length;
+          const ttScenario = trialTestimony.data.some(r => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
+          const ttQuiz = trialTestimony.data.some(r => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 8) ? 1 : 0;
+          setTrialTestimonyPct(Math.round(((ttLessons + ttScenario + ttQuiz) / 12) * 100));
         }
       } catch (e) {
         console.error('Dashboard load error', e);
@@ -187,6 +196,19 @@ export default function Dashboard() {
           </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 8 }}>
             ~60 min · Expert deposition skills
+          </p>
+        </Link>
+        <Link to="/training/trial-testimony" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Trial Testimony</h3>
+            {trialTestimonyPct !== null && (
+              <span style={{ background: trialTestimonyPct === 100 ? '#16a34a' : 'var(--color-accent)', color: '#fff', fontSize: '0.65rem', fontWeight: 700, padding: '2px 7px', borderRadius: 999, whiteSpace: 'nowrap', marginLeft: 8 }}>
+                {trialTestimonyPct === 100 ? 'Complete' : `${trialTestimonyPct}%`}
+              </span>
+            )}
+          </div>
+          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 8 }}>
+            ~75 min · Courtroom testimony skills
           </p>
         </Link>
       </div>
