@@ -86,8 +86,12 @@ export default function TrialTestimonyQuizPage({ onProgressUpdate }) {
         if (onProgressUpdate) onProgressUpdate();
 
         if (isPassing) {
-          // Brief delay so user can read the pass banner before redirect
-          setTimeout(() => navigate('/training/trial-testimony/certificate'), 1800);
+          const missed = QUIZ_DATA.questions.filter(
+            (q) => answers[q.id] !== q.options.find((o) => o.correct)?.id
+          ).length;
+          if (missed === 0) {
+            setTimeout(() => navigate('/training/trial-testimony/certificate'), 1800);
+          }
         }
       } catch (e) {
         console.error('Quiz save error', e);
@@ -133,9 +137,15 @@ export default function TrialTestimonyQuizPage({ onProgressUpdate }) {
           {saving && (
             <p style={{ color: 'var(--color-gray-400)', fontSize: 14 }}>Saving...</p>
           )}
-          <p style={{ color: 'var(--color-gray-500)', fontSize: 14 }}>
-            Redirecting to your certificate...
-          </p>
+          {score === TOTAL_QUESTIONS ? (
+            <p style={{ color: 'var(--color-gray-500)', fontSize: 14 }}>
+              Redirecting to your certificate...
+            </p>
+          ) : (
+            <p style={{ color: 'var(--color-gray-500)', fontSize: 14 }}>
+              Review the questions you missed below.
+            </p>
+          )}
           <div className="training-quiz__result-actions">
             <Link to="/training/trial-testimony/certificate" className="btn btn--primary">
               Get Your Certificate &rarr;
@@ -144,6 +154,49 @@ export default function TrialTestimonyQuizPage({ onProgressUpdate }) {
               Back to Dashboard
             </Link>
           </div>
+        </div>
+      )}
+
+      {/* Missed questions review (shown after passing with wrong answers) */}
+      {passed && score < TOTAL_QUESTIONS && (
+        <div className="training-quiz__review" style={{ marginTop: 24 }}>
+          <h3 style={{ marginBottom: 16, color: 'var(--color-gray-700)' }}>
+            Review: Questions You Missed
+          </h3>
+          {QUIZ_DATA.questions
+            .map((q, qi) => ({ q, qi }))
+            .filter(({ q }) => answers[q.id] !== q.options.find((o) => o.correct)?.id)
+            .map(({ q, qi }) => {
+              const correctOption = q.options.find((o) => o.correct);
+              return (
+                <div key={q.id} className="training-quiz__question portal-card">
+                  <div className="training-quiz__q-number">Question {qi + 1}</div>
+                  <p className="training-quiz__q-text">{q.text}</p>
+                  <div className="training-quiz__options">
+                    {q.options.map((opt) => {
+                      const isSelected = answers[q.id] === opt.id;
+                      let cls = 'training-quiz__option';
+                      if (opt.correct) cls += ' training-quiz__option--correct';
+                      else if (isSelected) cls += ' training-quiz__option--wrong';
+                      return (
+                        <button key={opt.id} className={cls} disabled>
+                          <span className="training-quiz__option-letter">
+                            {opt.id.toUpperCase()}
+                          </span>
+                          <span>{opt.text}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="training-quiz__explanation training-quiz__explanation--wrong">
+                    <strong>
+                      The correct answer is ({correctOption?.id.toUpperCase()}).
+                    </strong>{' '}
+                    {q.explanation}
+                  </div>
+                </div>
+              );
+            })}
         </div>
       )}
 

@@ -156,6 +156,49 @@ export default function QuizPage({ onProgressUpdate }) {
         </div>
       )}
 
+      {/* Missed questions review (shown after passing with wrong answers) */}
+      {passed && score < quiz.questions.length && (
+        <div className="training-quiz__review" style={{ marginTop: 24 }}>
+          <h3 style={{ marginBottom: 16, color: 'var(--color-gray-700)' }}>
+            Review: Questions You Missed
+          </h3>
+          {quiz.questions
+            .map((q, qi) => ({ q, qi }))
+            .filter(({ q }) => answers[q.id] !== q.options.find((o) => o.correct)?.id)
+            .map(({ q, qi }) => {
+              const correctOption = q.options.find((o) => o.correct);
+              return (
+                <div key={q.id} className="training-quiz__question portal-card">
+                  <div className="training-quiz__q-number">Question {qi + 1}</div>
+                  <p className="training-quiz__q-text">{q.text}</p>
+                  <div className="training-quiz__options">
+                    {q.options.map((opt) => {
+                      const isSelected = answers[q.id] === opt.id;
+                      let cls = 'training-quiz__option';
+                      if (opt.correct) cls += ' training-quiz__option--correct';
+                      else if (isSelected) cls += ' training-quiz__option--wrong';
+                      return (
+                        <button key={opt.id} className={cls} disabled>
+                          <span className="training-quiz__option-letter">
+                            {opt.id.toUpperCase()}
+                          </span>
+                          <span>{opt.text}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="training-quiz__explanation training-quiz__explanation--wrong">
+                    <strong>
+                      The correct answer is ({correctOption?.id.toUpperCase()}).
+                    </strong>{' '}
+                    {q.explanation}
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      )}
+
       {/* Out of retries */}
       {outOfRetries && (
         <div className="training-quiz__result training-quiz__result--fail">
