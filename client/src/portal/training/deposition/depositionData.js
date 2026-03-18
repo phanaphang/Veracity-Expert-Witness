@@ -667,27 +667,27 @@ export const QUIZ_DATA = {
     },
     {
       id: 'q5',
-      text: 'Under FRE 803(18), how should an expert handle a request to acknowledge a textbook as "authoritative"?',
+      text: 'Opposing counsel poses a hypothetical that changes several key facts of the case and asks: "Would that change your opinion?" What is the best approach?',
       options: [
-        { id: 'a', text: 'Agree that the textbook is authoritative if it is widely recognized in the field', correct: false },
-        { id: 'b', text: 'Deny any familiarity with the textbook to avoid the learned treatise rule', correct: false },
-        { id: 'c', text: 'Acknowledge familiarity but require the specific passage before commenting on whether you agree with it', correct: true },
-        { id: 'd', text: 'Ask retaining counsel to object before answering', correct: false },
+        { id: 'a', text: 'Refuse to answer hypothetical questions as they are speculative and outside the scope of your report', correct: false },
+        { id: 'b', text: 'Answer within the hypothetical framework, but if the hypothetical omits critical facts or is unrealistic, note those deficiencies before answering', correct: true },
+        { id: 'c', text: 'Always agree that different facts would change your opinion, to appear reasonable and open-minded', correct: false },
+        { id: 'd', text: 'Ask retaining counsel to object to all hypothetical questions', correct: false },
       ],
       explanation:
-        'Under the learned treatise rule, acknowledging an entire publication as authoritative allows opposing counsel to read any passage as substantive evidence. The correct approach is to acknowledge familiarity with the work but require the attorney to identify the specific passage before commenting on agreement or authority.',
+        'Hypothetical questions are a legitimate and common deposition technique. You can engage with the hypothetical, but you should ensure you understand the full hypothetical before answering, and note if it omits critical facts or is unrealistic. Refusing to engage makes you appear evasive, while blindly agreeing to every hypothetical hands opposing counsel ammunition for trial.',
     },
     {
       id: 'q6',
-      text: 'An expert is asked a question that falls outside the scope of their engagement. What is the best response?',
+      text: 'After you finish answering a deposition question, opposing counsel remains silent for an extended pause. What is the best response?',
       options: [
-        { id: 'a', text: 'Answer the question based on your professional expertise, noting it was not in your report', correct: false },
-        { id: 'b', text: 'State that the question is outside the scope of your engagement and that you have no opinion on that matter', correct: true },
-        { id: 'c', text: 'Say "I\'m not qualified to answer that question"', correct: false },
-        { id: 'd', text: 'Provide a preliminary opinion with the caveat that further analysis would be needed', correct: false },
+        { id: 'a', text: 'Fill the silence by elaborating on your answer to ensure the record is complete', correct: false },
+        { id: 'b', text: 'Ask opposing counsel if they have another question', correct: false },
+        { id: 'c', text: 'Sit comfortably and wait - the silence is opposing counsel\'s responsibility, not yours', correct: true },
+        { id: 'd', text: 'Use the pause to voluntarily clarify any potential ambiguity in your prior answers', correct: false },
       ],
       explanation:
-        'The correct response is to clearly establish the boundary of your engagement. Offering off-the-cuff opinions outside your scope creates Daubert vulnerability because those opinions were not supported by the systematic analysis behind your disclosed opinions.',
+        'Silence after your answer is one of the most effective techniques in a deposing attorney\'s toolkit. The instinct is to fill the silence by continuing to talk - adding qualifications, explanations, or context you were not asked for. When you have answered the question, stop. The next move is the attorney\'s, not yours. Every additional word you volunteer beyond what the question requires is a gift to opposing counsel.',
     },
     {
       id: 'q7',

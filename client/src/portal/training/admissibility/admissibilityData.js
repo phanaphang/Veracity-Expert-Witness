@@ -379,43 +379,43 @@ export const QUIZ_DATA = {
   questions: [
     {
       id: 'q1',
-      text: 'In which court systems does the Daubert standard apply?',
+      text: 'Under General Electric v. Joiner (1997), what standard do appellate courts apply when reviewing a trial court\'s decision to exclude expert testimony?',
       options: [
-        { id: 'a', text: 'California state courts only', correct: false },
+        { id: 'a', text: 'De novo review - the appellate court evaluates the methodology independently', correct: false },
         {
           id: 'b',
-          text: 'Federal courts and the majority of state courts nationwide',
-          correct: true,
+          text: 'Clear error - the appellate court reverses only if the trial court made a clear factual mistake',
+          correct: false,
         },
-        { id: 'c', text: 'Federal courts only', correct: false },
-        { id: 'd', text: 'Only in criminal proceedings', correct: false },
+        { id: 'c', text: 'Abuse of discretion - a highly deferential standard that makes exclusions very difficult to overturn on appeal', correct: true },
+        { id: 'd', text: 'Preponderance of the evidence - the appellate court weighs whether exclusion was more likely correct than not', correct: false },
       ],
       explanation:
-        'Daubert v. Merrell Dow (1993) replaced Frye in federal courts and has since been adopted by the majority of U.S. states as their standard - or they apply a Daubert-influenced standard. California is a notable exception: California state courts apply the Kelly standard, not Daubert. A number of other states, including Illinois, Pennsylvania, and Washington, also retain Frye or Frye-influenced standards. Experts should always confirm which standard applies in the specific jurisdiction where they are testifying.',
+        'General Electric v. Joiner (1997) established that appellate courts review Daubert rulings for abuse of discretion - a highly deferential standard. The practical consequence is significant: if your expert opinion is excluded at the trial court level, you are very unlikely to recover that ground on appeal. This makes pre-trial methodology documentation and admissibility preparation essential.',
     },
     {
       id: 'q2',
-      text: 'A structural engineer plans to testify in a California state court construction defect case using a proprietary finite element analysis software he developed. The software has not been validated by independent engineers or adopted by others in his field. What is his greatest admissibility risk?',
+      text: 'Which of the following expert opinions would be subject to a Kelly challenge in California state court?',
       options: [
-        { id: 'a', text: 'A Daubert challenge to his error rate', correct: false },
+        { id: 'a', text: 'A physician offering a standard clinical diagnosis based on established medical criteria', correct: false },
         {
           id: 'b',
-          text: 'A Kelly challenge to the general acceptance of his novel methodology',
-          correct: true,
-        },
-        {
-          id: 'c',
-          text: 'A Sargon challenge to the relevance of his opinion',
+          text: 'An engineer applying well-established structural analysis principles to evaluate a building deficiency',
           correct: false,
         },
         {
+          id: 'c',
+          text: 'A forensic analyst using a novel pattern-matching technique she developed but that has not yet been adopted by the forensic science community',
+          correct: true,
+        },
+        {
           id: 'd',
-          text: 'A Frye challenge to his qualifications as an engineer',
+          text: 'A forensic accountant applying standard valuation methodology to calculate damages',
           correct: false,
         },
       ],
       explanation:
-        'Under Kelly, general acceptance in the relevant professional community is required for novel scientific techniques. A proprietary software methodology developed by the expert but not independently validated or adopted by peers is a novel technique directly vulnerable to a Kelly challenge on the first prong. Note that Kelly applies here because the testimony relies on a novel analytical tool - not simply on the engineer\'s professional opinion.',
+        'The Kelly test applies specifically to novel scientific techniques and methods - new instruments, tools, or processes offered as the basis for expert opinion. Standard professional opinions, clinical diagnoses, and experience-based analyses are not subject to Kelly unless they rest on a novel scientific technique. The forensic analyst\'s novel, unadopted pattern-matching technique is the type of methodology Kelly is designed to evaluate.',
     },
     {
       id: 'q3',

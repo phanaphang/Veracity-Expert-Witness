@@ -627,19 +627,19 @@ export const QUIZ_DATA = {
     },
     {
       id: 'q2',
-      text: 'A structural engineer\'s report states: "The defendant\'s reckless disregard for basic construction standards clearly caused catastrophic structural failure." What is the primary problem with this language?',
+      text: 'An expert report contains the following opinion: "It is possible that the water intrusion was caused by defective flashing installation." What is the primary weakness of this statement?',
       options: [
-        { id: 'a', text: 'It does not state the opinion to a reasonable degree of engineering certainty', correct: false },
+        { id: 'a', text: 'It fails to identify the applicable building code', correct: false },
         {
           id: 'b',
-          text: 'It uses advocacy language that signals bias rather than neutral professional analysis',
+          text: 'It uses hedge language ("it is possible") rather than stating a committed professional conclusion to a reasonable degree of certainty',
           correct: true,
         },
-        { id: 'c', text: 'It fails to identify the specific building code that was violated', correct: false },
-        { id: 'd', text: 'It does not include the engineer\'s qualifications', correct: false },
+        { id: 'c', text: 'It does not include a citation to peer-reviewed literature', correct: false },
+        { id: 'd', text: 'It is too short and should include the full methodology in the opinion statement', correct: false },
       ],
       explanation:
-        'Words like "reckless disregard," "clearly," and "catastrophic" are rhetorical characterizations, not professional analysis. Expert reports must be written in a neutral tone. Advocacy language signals bias and gives opposing counsel a credibility weapon at deposition and trial. The expert should state their causation opinion using specific factual findings and methodology rather than emotional characterizations.',
+        'Hedge words like "might," "could," and "possibly" weaken opinions and invite challenge. A well-stated opinion should be expressed to a "reasonable degree of professional certainty" and tied to the methodology and evidence that supports it. The stronger formulation would be: "It is my opinion, to a reasonable degree of engineering certainty, that the water intrusion was caused by defective installation of the roof-to-wall flashing, based on my site inspection, destructive testing, and code analysis."',
     },
     {
       id: 'q3',
@@ -659,19 +659,19 @@ export const QUIZ_DATA = {
     },
     {
       id: 'q4',
-      text: 'A forensic accountant\'s damages report states: "Total damages are $5.2 million based on my professional experience." The report contains no breakdown, no calculation methodology, and no identification of assumptions. How will this opinion likely be evaluated under Daubert?',
+      text: 'An expert discovers that his current report contains a paragraph describing "the October 2019 site inspection of the Elm Street property" - but his current case involves a different property and his inspection occurred in March 2024. What most likely happened, and what is the consequence?',
       options: [
-        { id: 'a', text: 'Favorably, because the expert is relying on professional experience', correct: false },
-        { id: 'b', text: 'Favorably, because the dollar figure is specific', correct: false },
+        { id: 'a', text: 'A typographical error that can be corrected with a supplemental report and will have minimal impact', correct: false },
         {
-          id: 'c',
-          text: 'Unfavorably, because it states a conclusion without documenting a reliable analytical methodology',
+          id: 'b',
+          text: 'Language was copy-pasted from a prior report, and opposing counsel will use this to argue that the expert\'s entire analysis is recycled rather than case-specific',
           correct: true,
         },
-        { id: 'd', text: 'It will not be evaluated under Daubert because damages opinions are exempt', correct: false },
+        { id: 'c', text: 'The court reporter made a transcription error from the expert\'s dictation', correct: false },
+        { id: 'd', text: 'Retaining counsel inserted the wrong information, which shields the expert from responsibility', correct: false },
       ],
       explanation:
-        'After Kumho Tire v. Carmichael (1999), all expert testimony, including financial opinions, is subject to Daubert scrutiny. Experience is a qualification, not a methodology. The court will ask how the expert arrived at $5.2 million specifically, what analytical process was applied, and what assumptions were used. An opinion that states a conclusion without documenting its methodology is an ipse dixit opinion and is highly vulnerable to exclusion.',
+        'Reusing language from prior reports is efficient but dangerous. Case-specific details from a prior engagement that appear in your current report will be found by opposing counsel, and the resulting deposition questioning will be devastating. Every report should be drafted from scratch for the specific case. Use templates for structure, but write the substance fresh each time.',
     },
     {
       id: 'q5',
