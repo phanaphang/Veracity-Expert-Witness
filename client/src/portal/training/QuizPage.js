@@ -18,7 +18,7 @@ export default function QuizPage({ onProgressUpdate }) {
   const [answers, setAnswers] = useState({});         // { questionId: optionId }
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
-  const [attempts, setAttempts] = useState(0);        // 0 = first try, 1 = one retry used
+  const [attempts, setAttempts] = useState(0);        // number of failed attempts
   const [saving, setSaving] = useState(false);
   const [alreadyPassed, setAlreadyPassed] = useState(false);
 
@@ -48,8 +48,8 @@ export default function QuizPage({ onProgressUpdate }) {
 
   const passed = submitted && score >= PASS_SCORE;
   const failed = submitted && score < PASS_SCORE;
-  const canRetry = failed && attempts === 0;
-  const outOfRetries = failed && attempts >= 1;
+  const canRetry = failed && attempts < 2;
+  const outOfRetries = failed && attempts >= 2;
 
   const allAnswered = quiz.questions.every((q) => answers[q.id]);
 
@@ -67,8 +67,8 @@ export default function QuizPage({ onProgressUpdate }) {
 
     const isPassing = correct >= PASS_SCORE;
 
-    // Save score on pass, or on second attempt (regardless of result)
-    if (isPassing || attempts >= 1) {
+    // Save score on pass, or on final attempt (regardless of result)
+    if (isPassing || attempts >= 2) {
       setSaving(true);
       try {
         const { data: existing } = await supabase
@@ -106,7 +106,7 @@ export default function QuizPage({ onProgressUpdate }) {
     setAnswers({});
     setSubmitted(false);
     setScore(0);
-    setAttempts(1);
+    setAttempts((a) => a + 1);
   };
 
   // Determine next destination after passing
@@ -278,7 +278,7 @@ export default function QuizPage({ onProgressUpdate }) {
           ) : canRetry ? (
             <div className="training-quiz__retry-bar">
               <div>
-                <strong>Score: {score} / {quiz.questions.length}.</strong> You need {PASS_SCORE} to pass. Review the explanations above and try once more.
+                <strong>Score: {score} / {quiz.questions.length}.</strong> You need {PASS_SCORE} to pass. Review the explanations above. {2 - attempts} {2 - attempts === 1 ? 'retry' : 'retries'} remaining.
               </div>
               <button className="btn btn--primary" onClick={handleRetry}>Try Again</button>
             </div>

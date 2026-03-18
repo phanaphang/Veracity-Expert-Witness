@@ -11,7 +11,7 @@ export default function ReportWritingQuizPage({ onProgressUpdate }) {
   const [answers, setAnswers] = useState({});       // { questionId: optionId }
   const [submitted, setSubmitted] = useState(false);
   const [score, setScore] = useState(0);
-  const [attempts, setAttempts] = useState(0);      // 0 = first try, 1 = one retry used
+  const [attempts, setAttempts] = useState(0);      // number of failed attempts
   const [saving, setSaving] = useState(false);
   const [alreadyPassed, setAlreadyPassed] = useState(false);
 
@@ -32,8 +32,8 @@ export default function ReportWritingQuizPage({ onProgressUpdate }) {
 
   const passed = submitted && score >= PASS_SCORE;
   const failed = submitted && score < PASS_SCORE;
-  const canRetry = failed && attempts === 0;
-  const outOfRetries = failed && attempts >= 1;
+  const canRetry = failed && attempts < 2;
+  const outOfRetries = failed && attempts >= 2;
 
   const allAnswered = QUIZ_DATA.questions.every((q) => answers[q.id]);
 
@@ -52,7 +52,7 @@ export default function ReportWritingQuizPage({ onProgressUpdate }) {
     const isPassing = correct >= PASS_SCORE;
 
     // Save on pass or on final attempt
-    if (isPassing || attempts >= 1) {
+    if (isPassing || attempts >= 2) {
       setSaving(true);
       try {
         const now = new Date().toISOString();
@@ -105,7 +105,7 @@ export default function ReportWritingQuizPage({ onProgressUpdate }) {
     setAnswers({});
     setSubmitted(false);
     setScore(0);
-    setAttempts(1);
+    setAttempts((a) => a + 1);
   };
 
   return (
@@ -114,7 +114,7 @@ export default function ReportWritingQuizPage({ onProgressUpdate }) {
         <div className="training-lesson__unit-badge">Knowledge Check</div>
         <h1 className="portal-page__title">Report Writing Quiz</h1>
         <p className="portal-page__subtitle">
-          {TOTAL_QUESTIONS} questions &middot; Pass score: {PASS_SCORE} out of {TOTAL_QUESTIONS} &middot; One retry allowed
+          {TOTAL_QUESTIONS} questions &middot; Pass score: {PASS_SCORE} out of {TOTAL_QUESTIONS} &middot; Two retries allowed
         </p>
       </div>
 
@@ -296,7 +296,7 @@ export default function ReportWritingQuizPage({ onProgressUpdate }) {
                 <strong>
                   Score: {score} / {TOTAL_QUESTIONS}.
                 </strong>{' '}
-                You need {PASS_SCORE} to pass. Review the explanations above and try once more.
+                You need {PASS_SCORE} to pass. Review the explanations above. {2 - attempts} {2 - attempts === 1 ? 'retry' : 'retries'} remaining.
               </div>
               <button className="btn btn--primary" onClick={handleRetry}>
                 Try Again
