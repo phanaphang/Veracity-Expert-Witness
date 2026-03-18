@@ -3,11 +3,11 @@ import LegalPage from '../components/LegalPage';
 
 function CookiePolicy() {
   return (
-    <LegalPage title="Cookie Policy" effectiveDate="February 11, 2026" description="Learn how Veracity Expert Witness uses cookies and similar technologies on our website, and how you can manage your cookie preferences." path="/cookie-policy">
+    <LegalPage title="Cookie Policy" effectiveDate="February 11, 2026" description="Learn how Veracity Expert Witness LLC uses cookies and similar technologies on our website, and how you can manage your cookie preferences." path="/cookie-policy">
       <section className="legal-section">
         <h2>1. About This Policy</h2>
         <p>
-          This Cookie Policy explains how Veracity Expert Witness (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;)
+          This Cookie Policy explains how Veracity Expert Witness LLC (&ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;)
           uses cookies on veracityexpertwitness.com. Please read this alongside our{' '}
           <a href="/privacy-policy">Privacy Policy</a>.
         </p>
@@ -108,7 +108,7 @@ function CookiePolicy() {
           Questions about cookies? Contact us:
         </p>
         <div className="contact-info-box">
-          <p><strong>Veracity Expert Witness</strong></p>
+          <p><strong>Veracity Expert Witness LLC</strong></p>
           <p>Los Angeles, California</p>
           <p>Email: <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a></p>
           <p>Website: veracityexpertwitness.com</p>

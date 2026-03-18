@@ -7,7 +7,7 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>${title} | Veracity Expert Witness</title>
+<title>${title} | Veracity Expert Witness LLC</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
   *, *::before, *::after { box-sizing: border-box; }
@@ -48,7 +48,7 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
 <body>
   <div class="header-bar">
     <div>
-      <div class="brand">Veracity Expert Witness</div>
+      <div class="brand">Veracity Expert Witness LLC</div>
       <div class="tag">Writing an Expert Witness Testimony Report</div>
     </div>
   </div>
@@ -56,7 +56,7 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
     <div class="content-card">
       <button class="pdf-btn" onclick="window.print()">PDF</button>
       ${body}
-      <div class="note">This document is provided by Veracity Expert Witness LLC as a training reference. It is for educational purposes only and does not constitute legal advice. Veracity Expert Witness LLC assumes no liability for how this content is applied. You remain solely responsible for your own professional conduct and testimony.</div>
+      <div class="note">This document is provided by Veracity Expert Witness LLC LLC as a training reference. It is for educational purposes only and does not constitute legal advice. Veracity Expert Witness LLC LLC assumes no liability for how this content is applied. You remain solely responsible for your own professional conduct and testimony.</div>
     </div>
   </div>
 </body>

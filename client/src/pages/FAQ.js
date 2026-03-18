@@ -16,8 +16,8 @@ const faqData = [
     category: 'General',
     items: [
       {
-        question: 'What is Veracity Expert Witness?',
-        answer: 'Veracity Expert Witness is an expert witness agency based in Los Angeles, California. We handle the sourcing, engagement, scheduling, logistics, and compliance needs for expert witness testimony, connecting attorneys and legal professionals with qualified experts across a wide range of specialties.',
+        question: 'What is Veracity Expert Witness LLC?',
+        answer: 'Veracity Expert Witness LLC is an expert witness agency based in Los Angeles, California. We handle the sourcing, engagement, scheduling, logistics, and compliance needs for expert witness testimony, connecting attorneys and legal professionals with qualified experts across a wide range of specialties.',
       },
       {
         question: 'Who does Veracity serve?',
@@ -25,7 +25,7 @@ const faqData = [
       },
       {
         question: 'Is Veracity a law firm or lawyer referral service?',
-        answer: 'No. Veracity Expert Witness is not a law firm, does not provide legal advice, and is not a lawyer referral service. We are not certified by the State Bar of California. We are an expert witness agency that connects legal professionals with qualified expert witnesses.',
+        answer: 'No. Veracity Expert Witness LLC is not a law firm, does not provide legal advice, and is not a lawyer referral service. We are not certified by the State Bar of California. We are an expert witness agency that connects legal professionals with qualified expert witnesses.',
       },
       {
         question: 'What geographic areas do you cover?',
@@ -147,7 +147,7 @@ function FAQ() {
     <div className="legal-page">
       <SEO
         title="Frequently Asked Questions"
-        description="Find answers to common questions about Veracity Expert Witness services, how expert matching works, pricing, confidentiality, and our Expert Portal."
+        description="Find answers to common questions about Veracity Expert Witness LLC services, how expert matching works, pricing, confidentiality, and our Expert Portal."
         path="/faq"
       />
       <Helmet>
@@ -240,7 +240,7 @@ function FAQ() {
       <footer className="footer">
         <div className="section__container">
           <div className="legal-footer__inner">
-            <p>&copy; {currentYear} Veracity Expert Witness. All rights reserved.</p>
+            <p>&copy; {currentYear} Veracity Expert Witness LLC. All rights reserved.</p>
             <Link to="/">Back to Home</Link>
           </div>
         </div>

@@ -154,7 +154,7 @@ function HomePage() {
   return (
     <>
       <SEO
-        description="Veracity Expert Witness connects legal professionals with qualified expert witnesses across medical, financial, technology, engineering, and more. HIPAA-compliant. Fast response."
+        description="Veracity Expert Witness LLC connects legal professionals with qualified expert witnesses across medical, financial, technology, engineering, and more. HIPAA-compliant. Fast response."
         path="/"
       />
       <Navbar />

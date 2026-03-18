@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-const SITE_NAME = 'Veracity Expert Witness';
+const SITE_NAME = 'Veracity Expert Witness LLC';
 const BASE_URL = 'https://veracityexpertwitness.com';
 const DEFAULT_IMAGE = `${BASE_URL}/logo-dark.svg`;
 

@@ -3,12 +3,12 @@ import LegalPage from '../components/LegalPage';
 
 function TermsOfService() {
   return (
-    <LegalPage title="Terms of Service" effectiveDate="February 11, 2026" description="Review the terms of service for Veracity Expert Witness. Understand the terms and conditions governing use of our expert witness services and website." path="/terms-of-service">
+    <LegalPage title="Terms of Service" effectiveDate="February 11, 2026" description="Review the terms of service for Veracity Expert Witness LLC. Understand the terms and conditions governing use of our expert witness services and website." path="/terms-of-service">
       <section className="legal-section">
         <h2>1. Agreement to Terms</h2>
         <p>
           By using veracityexpertwitness.com (the &ldquo;Site&rdquo;) or the expert witness
-          services provided by Veracity Expert Witness (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;),
+          services provided by Veracity Expert Witness LLC (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;),
           you agree to these Terms of Service. If you do not agree, please do not use the Site
           or Services.
         </p>
@@ -17,7 +17,7 @@ function TermsOfService() {
       <section className="legal-section">
         <h2>2. What We Do</h2>
         <p>
-          Veracity Expert Witness is an expert witness agency. We handle
+          Veracity Expert Witness LLC is an expert witness agency. We handle
           the sourcing, vetting, engagement, scheduling, logistics, and compliance requirements
           for expert witness testimony on behalf of legal professionals. Our Services include
           coordinating all aspects of expert witness engagements from initial case assessment
@@ -126,7 +126,7 @@ function TermsOfService() {
         <h2>7. Intellectual Property</h2>
         <p>
           All content on the Site, including text, graphics, logos, and software, belongs to
-          Veracity Expert Witness or our licensors. You may not copy, distribute, or create
+          Veracity Expert Witness LLC or our licensors. You may not copy, distribute, or create
           derivative works from our content without written permission.
         </p>
       </section>
@@ -134,7 +134,7 @@ function TermsOfService() {
       <section className="legal-section">
         <h2>8. Limitation of Liability</h2>
         <p>
-          To the fullest extent allowed by law, Veracity Expert Witness is not liable for any
+          To the fullest extent allowed by law, Veracity Expert Witness LLC is not liable for any
           indirect, incidental, or consequential damages arising from your use of the Site or
           Services, including:
         </p>
@@ -153,7 +153,7 @@ function TermsOfService() {
       <section className="legal-section">
         <h2>9. Indemnification</h2>
         <p>
-          You agree to defend and hold harmless Veracity Expert Witness from any claims,
+          You agree to defend and hold harmless Veracity Expert Witness LLC from any claims,
           damages, or expenses (including reasonable attorney fees) arising from your use of
           the Services, your violation of these Terms, or your violation of any third-party
           rights.
@@ -213,7 +213,7 @@ function TermsOfService() {
           If you have questions about these Terms, contact us:
         </p>
         <div className="contact-info-box">
-          <p><strong>Veracity Expert Witness</strong></p>
+          <p><strong>Veracity Expert Witness LLC</strong></p>
           <p>Los Angeles, California</p>
           <p>Email: <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a></p>
           <p>Website: veracityexpertwitness.com</p>

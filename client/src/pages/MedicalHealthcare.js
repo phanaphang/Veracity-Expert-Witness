@@ -202,7 +202,7 @@ function MedicalHealthcare() {
       <footer className="footer">
         <div className="section__container">
           <div className="legal-footer__inner">
-            <p>&copy; {currentYear} Veracity Expert Witness. All rights reserved.</p>
+            <p>&copy; {currentYear} Veracity Expert Witness LLC. All rights reserved.</p>
             <Link to="/">Back to Home</Link>
           </div>
         </div>

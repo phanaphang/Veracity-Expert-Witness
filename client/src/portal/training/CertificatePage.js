@@ -211,7 +211,7 @@ export default function CertificatePage({ onProgressUpdate }) {
                       <path d="M2 17l10 5 10-5" stroke="#d36622" strokeWidth="2" fill="none" />
                       <path d="M2 12l10 5 10-5" stroke="#d36622" strokeWidth="2" fill="none" />
                     </svg>
-                    <span className="training-certificate__org">Veracity Expert Witness</span>
+                    <span className="training-certificate__org">Veracity Expert Witness LLC</span>
                   </div>
                   <div className="training-certificate__presents">presents this</div>
                 </div>
@@ -239,7 +239,7 @@ export default function CertificatePage({ onProgressUpdate }) {
                   </div>
                   <div className="training-certificate__detail-row">
                     <span className="training-certificate__detail-label">Issued by</span>
-                    <span className="training-certificate__detail-value">Veracity Expert Witness · California</span>
+                    <span className="training-certificate__detail-value">Veracity Expert Witness LLC · California</span>
                   </div>
                 </div>
 

@@ -3,11 +3,11 @@ import LegalPage from '../components/LegalPage';
 
 function PrivacyPolicy() {
   return (
-    <LegalPage title="Privacy Policy" effectiveDate="February 11, 2026" description="Read the Veracity Expert Witness privacy policy. Learn how we collect, use, and protect your personal information, including HIPAA compliance for medical data." path="/privacy-policy">
+    <LegalPage title="Privacy Policy" effectiveDate="February 11, 2026" description="Read the Veracity Expert Witness LLC privacy policy. Learn how we collect, use, and protect your personal information, including HIPAA compliance for medical data." path="/privacy-policy">
       <section className="legal-section">
         <h2>1. Introduction</h2>
         <p>
-          Veracity Expert Witness (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is committed to
+          Veracity Expert Witness LLC (&ldquo;Company,&rdquo; &ldquo;we,&rdquo; &ldquo;us,&rdquo; or &ldquo;our&rdquo;) is committed to
           protecting your privacy. This Privacy Policy explains how we collect, use, and
           safeguard your information when you visit veracityexpertwitness.com (the &ldquo;Site&rdquo;) or
           use our expert witness services (the &ldquo;Services&rdquo;).
@@ -18,7 +18,7 @@ function PrivacyPolicy() {
           Act (CMIA), and all other applicable privacy laws.
         </p>
         <p>
-          Veracity Expert Witness is an expert witness agency operating
+          Veracity Expert Witness LLC is an expert witness agency operating
           in Los Angeles, California. We handle the sourcing, engagement, scheduling, logistics,
           and compliance needs for expert witness testimony. We are not a lawyer referral service
           and are not certified by the State Bar of California.
@@ -242,7 +242,7 @@ function PrivacyPolicy() {
           rights, contact us:
         </p>
         <div className="contact-info-box">
-          <p><strong>Veracity Expert Witness</strong></p>
+          <p><strong>Veracity Expert Witness LLC</strong></p>
           <p>Los Angeles, California</p>
           <p>Email: <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a></p>
           <p>Website: veracityexpertwitness.com</p>

@@ -3,11 +3,11 @@ import LegalPage from '../components/LegalPage';
 
 function Compliance() {
   return (
-    <LegalPage title="Compliance" effectiveDate="February 11, 2026" description="Veracity Expert Witness compliance policies including HIPAA, data protection, ethical standards, and regulatory requirements for expert witness services." path="/compliance">
+    <LegalPage title="Compliance" effectiveDate="February 11, 2026" description="Veracity Expert Witness LLC compliance policies including HIPAA, data protection, ethical standards, and regulatory requirements for expert witness services." path="/compliance">
       <section className="legal-section">
         <h2>1. Our Commitment</h2>
         <p>
-          Veracity Expert Witness is committed to operating in full compliance with all
+          Veracity Expert Witness LLC is committed to operating in full compliance with all
           applicable laws and industry standards. This page outlines how we approach
           compliance across the key areas of our expert witness services,
           operating in Los Angeles, California.
@@ -180,7 +180,7 @@ function Compliance() {
           all reports seriously and will investigate promptly.
         </p>
         <div className="contact-info-box">
-          <p><strong>Veracity Expert Witness</strong></p>
+          <p><strong>Veracity Expert Witness LLC</strong></p>
           <p>Los Angeles, California</p>
           <p>Email: <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a></p>
           <p>Website: veracityexpertwitness.com</p>
