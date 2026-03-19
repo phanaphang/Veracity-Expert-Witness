@@ -1,4 +1,5 @@
 const { rateLimit } = require('./_lib/rateLimit');
+const supabase = require('./_lib/supabaseAdmin');
 
 const escapeHtml = (str) =>
   String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -16,7 +17,7 @@ module.exports = async (req, res) => {
     return res.status(429).json({ error: 'Too many requests. Please try again later.' });
   }
 
-  const { name, firm, email, phone, expertise, details, website, _elapsed } = req.body;
+  const { name, firm, email, phone, expertise, details, website, _elapsed, tos_accepted_at } = req.body;
 
   // Anti-bot: honeypot field filled
   if (website) {
@@ -41,6 +42,23 @@ module.exports = async (req, res) => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: 'Invalid email address.' });
+  }
+
+  // Log TOS acceptance
+  if (tos_accepted_at) {
+    const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
+    const userAgent = req.headers['user-agent'] || '';
+    const { error: tosError } = await supabase.from('tos_acceptances').insert({
+      name: name.slice(0, MAX_LEN.short),
+      email: email.slice(0, MAX_LEN.short),
+      ip_address: ip.slice(0, 100),
+      user_agent: userAgent.slice(0, 500),
+      tos_version: '1.0',
+      accepted_at: tos_accepted_at,
+    });
+    if (tosError) {
+      console.error('TOS acceptance log error:', tosError.message);
+    }
   }
 
   const htmlContent = `

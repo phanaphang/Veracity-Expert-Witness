@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
 const expertiseOptions = [
   'Medical & Healthcare',
@@ -11,6 +11,113 @@ const expertiseOptions = [
   'Forensic Analysis',
   'Other',
 ];
+
+function TermsOfServiceModal({ open, onAccept, onDecline }) {
+  const acceptBtnRef = useRef(null);
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    if (open && acceptBtnRef.current) {
+      acceptBtnRef.current.focus();
+    }
+  }, [open]);
+
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Escape') {
+      onDecline();
+    }
+    if (e.key === 'Tab' && modalRef.current) {
+      const focusable = modalRef.current.querySelectorAll('button, a[href]');
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }, [onDecline]);
+
+  useEffect(() => {
+    if (open) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [open, handleKeyDown]);
+
+  if (!open) return null;
+
+  return (
+    <div className="tos-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="tos-title">
+      <div className="tos-modal" ref={modalRef}>
+        <h3 className="tos-modal__title" id="tos-title">Terms of Service</h3>
+        <p className="tos-modal__subtitle">Please review and accept our terms before submitting.</p>
+        <div className="tos-modal__content">
+          <h4>1. Services</h4>
+          <p>
+            Veracity Expert Witness, LLC (&quot;Veracity,&quot; &quot;we,&quot; &quot;us&quot;) provides expert witness
+            sourcing and management services. By submitting this form, you are requesting that Veracity
+            identify and propose qualified expert witnesses for your matter.
+          </p>
+
+          <h4>2. No Attorney-Client Relationship</h4>
+          <p>
+            Submitting a request through this form does not create an attorney-client relationship
+            between you and Veracity. Veracity is not a law firm and does not provide legal advice.
+          </p>
+
+          <h4>3. Confidentiality</h4>
+          <p>
+            We treat all information submitted through this form as confidential. Your case details
+            will only be shared with potential expert witnesses under consideration for your engagement
+            and with Veracity personnel involved in fulfilling your request.
+          </p>
+
+          <h4>4. No Guarantee of Results</h4>
+          <p>
+            While we strive to match you with the most qualified experts, Veracity does not guarantee
+            any particular outcome for your case or that an expert will be available for your specific needs.
+          </p>
+
+          <h4>5. Use of Information</h4>
+          <p>
+            The information you provide will be used solely for the purpose of processing your expert
+            witness request and communicating with you about our services. We will not sell or share
+            your information with unrelated third parties.
+          </p>
+
+          <h4>6. Communication Consent</h4>
+          <p>
+            By submitting this form, you consent to receive communications from Veracity regarding
+            your request via the email address and phone number provided. You may opt out of
+            non-essential communications at any time.
+          </p>
+
+          <h4>7. Limitation of Liability</h4>
+          <p>
+            Veracity&apos;s liability in connection with services provided shall be limited to the fees
+            paid for such services. Veracity shall not be liable for any indirect, incidental, or
+            consequential damages.
+          </p>
+        </div>
+        <div className="tos-modal__actions">
+          <button type="button" className="btn btn--secondary" onClick={onDecline}>
+            Cancel
+          </button>
+          <button type="button" className="btn btn--primary" ref={acceptBtnRef} onClick={onAccept}>
+            I Agree &amp; Submit
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function ContactForm() {
   const [formData, setFormData] = useState({
@@ -25,6 +132,7 @@ function ContactForm() {
   const [website, setWebsite] = useState('');
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(null); // null | 'sending' | 'success' | 'error'
+  const [showTos, setShowTos] = useState(false);
   const renderTime = useRef(Date.now());
 
   const validate = () => {
@@ -52,13 +160,18 @@ function ContactForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+    setShowTos(true);
+  };
+
+  const submitForm = async () => {
+    setShowTos(false);
     setStatus('sending');
     try {
       const res = await fetch('/api/contact', {
@@ -68,6 +181,7 @@ function ContactForm() {
         ...formData,
         website,
         _elapsed: (Date.now() - renderTime.current) / 1000,
+        tos_accepted_at: new Date().toISOString(),
       }),
       });
       if (res.ok) {
@@ -226,6 +340,12 @@ function ContactForm() {
             )}
           </button>
         </form>
+
+        <TermsOfServiceModal
+          open={showTos}
+          onAccept={submitForm}
+          onDecline={() => setShowTos(false)}
+        />
       </div>
     </section>
   );
