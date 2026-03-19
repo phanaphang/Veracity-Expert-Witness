@@ -44,20 +44,24 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Invalid email address.' });
   }
 
-  // Log TOS acceptance
+  // Log TOS acceptance (non-blocking — must never prevent form submission)
   if (tos_accepted_at) {
-    const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
-    const userAgent = req.headers['user-agent'] || '';
-    const { error: tosError } = await supabase.from('tos_acceptances').insert({
-      name: name.slice(0, MAX_LEN.short),
-      email: email.slice(0, MAX_LEN.short),
-      ip_address: ip.slice(0, 100),
-      user_agent: userAgent.slice(0, 500),
-      tos_version: '1.0',
-      accepted_at: tos_accepted_at,
-    });
-    if (tosError) {
-      console.error('TOS acceptance log error:', tosError.message);
+    try {
+      const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
+      const userAgent = req.headers['user-agent'] || '';
+      const { error: tosError } = await supabase.from('tos_acceptances').insert({
+        name: name.slice(0, MAX_LEN.short),
+        email: email.slice(0, MAX_LEN.short),
+        ip_address: ip.slice(0, 100),
+        user_agent: userAgent.slice(0, 500),
+        tos_version: '1.0',
+        accepted_at: tos_accepted_at,
+      });
+      if (tosError) {
+        console.error('TOS acceptance log error:', tosError.message);
+      }
+    } catch (tosErr) {
+      console.error('TOS acceptance log exception:', tosErr.message);
     }
   }
 
