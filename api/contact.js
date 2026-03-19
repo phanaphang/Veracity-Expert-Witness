@@ -1,5 +1,4 @@
 const { rateLimit } = require('./_lib/rateLimit');
-const supabase = require('./_lib/supabaseAdmin');
 
 const escapeHtml = (str) =>
   String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -47,6 +46,7 @@ module.exports = async (req, res) => {
   // Log TOS acceptance (non-blocking — must never prevent form submission)
   if (tos_accepted_at) {
     try {
+      const supabase = require('./_lib/supabaseAdmin');
       const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
       const userAgent = req.headers['user-agent'] || '';
       const { error: tosError } = await supabase.from('tos_acceptances').insert({
