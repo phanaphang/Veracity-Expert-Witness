@@ -108,7 +108,7 @@ export default function DepositionDashboard() {
           <span className="training-progress-card__label">Overall Progress</span>
           <span className="training-progress-card__pct">{pct}%</span>
         </div>
-        <div className="training-progress-bar">
+        <div className="training-progress-bar" role="progressbar" aria-valuenow={pct} aria-valuemin={0} aria-valuemax={100} aria-label="Overall progress">
           <div className="training-progress-bar__fill" style={{ width: `${pct}%` }} />
         </div>
         <div className="training-progress-card__meta">

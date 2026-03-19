@@ -99,7 +99,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
 
   if (loading) {
     return (
-      <div className="portal-loading">
+      <div className="portal-loading" role="status" aria-label="Loading">
         <div className="portal-loading__spinner"></div>
         <p>Loading...</p>
       </div>
@@ -111,7 +111,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
   // Wait for profile to load before rendering anything
   if (!profile) {
     return (
-      <div className="portal-loading">
+      <div className="portal-loading" role="status" aria-label="Loading">
         <div className="portal-loading__spinner"></div>
         <p>Loading...</p>
       </div>

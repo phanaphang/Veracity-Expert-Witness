@@ -303,7 +303,7 @@ export default function AdmissibilityLessonPage({ onProgressUpdate }) {
     <div className="training-lesson">
       {/* Top progress bar */}
       <div className="training-lesson__course-progress">
-        <div className="training-lesson__course-progress-bar">
+        <div className="training-lesson__course-progress-bar" role="progressbar" aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100} aria-label="Course progress">
           <div
             className="training-lesson__course-progress-fill"
             style={{ width: `${progressPct}%` }}

@@ -1,4 +1,5 @@
 const supabaseAdmin = require('../_lib/supabaseAdmin');
+const { rateLimit } = require('../_lib/rateLimit');
 
 // Server-side HTML escaping (DOMPurify is browser-only;
 // all user content is escaped before insertion into HTML email)
@@ -80,6 +81,10 @@ module.exports = async (req, res) => {
   const safeDate = escapeHtml(completionDate);
   const safeEmail = escapeHtml(expertEmail);
 
+  const expertPlainText = `Congratulations, ${certificateName}!\n\nYou have successfully completed the Expert Witness Foundations training module.\n\nCertificate Name: ${certificateName}\nCompletion Date: ${completionDate}\nCourse: Expert Witness Foundations (~60 min)\n\nYour certificate of completion is available in your expert portal under Training > Certificate.\n\nThis email was sent by Veracity Expert Witness. Please do not reply to this message.`;
+
+  const adminPlainText = `Panel Member Training Completed\n\nA panel member has completed the Expert Witness Foundations training module.\n\nCertificate Name: ${certificateName}\nEmail: ${expertEmail}\nCompletion Date: ${completionDate}\n\nVeracity Expert Witness — Internal Notification`;
+
   const expertHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
       <div style="background:#1a1f3a;padding:24px 32px;border-radius:8px 8px 0 0;">
@@ -158,7 +163,7 @@ module.exports = async (req, res) => {
                 subject: 'You\'ve completed Expert Witness Foundations — Veracity',
                 from: 'noreply@veracityexpertwitness.com',
               },
-              content: { 'text/html': expertHtml },
+              content: { 'text/html': expertHtml, 'text/plain': expertPlainText },
             },
           },
         }),
@@ -191,7 +196,7 @@ module.exports = async (req, res) => {
                 subject: `Training Complete: ${escapeHtml(certificateName)} — Expert Witness Foundations`,
                 from: 'noreply@veracityexpertwitness.com',
               },
-              content: { 'text/html': adminHtml },
+              content: { 'text/html': adminHtml, 'text/plain': adminPlainText },
             },
           },
         }),

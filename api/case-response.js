@@ -1,4 +1,5 @@
 const supabaseAdmin = require('./_lib/supabaseAdmin');
+const { rateLimit } = require('./_lib/rateLimit');
 
 const escapeHtml = (str) =>
   String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -22,6 +23,24 @@ module.exports = async (req, res) => {
     return res.status(401).json({ error: 'Invalid token' });
   }
 
+  const rl = rateLimit(req, { maxRequests: 10 });
+  if (rl.limited) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+  }
+
+  // Verify caller role and identity
+  const { data: callerProfile } = await supabaseAdmin
+    .from('profiles')
+    .select('role, email')
+    .eq('id', user.id)
+    .single();
+
+  if (!callerProfile || !['expert', 'admin', 'staff'].includes(callerProfile.role)) {
+    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | case-response | insufficient role: ${callerProfile?.role}`);
+    return res.status(403).json({ error: 'Access denied' });
+  }
+
   const { expertName, expertEmail, caseTitle, action } = req.body;
 
   if (!expertName || !expertEmail || !caseTitle || !action) {
@@ -38,6 +57,8 @@ module.exports = async (req, res) => {
   if (!label) {
     return res.status(400).json({ error: 'Invalid action.' });
   }
+
+  const plainText = `Case Response Notification\n\nAn expert has responded to a case invitation.\n\nExpert: ${expertName}\nEmail: ${expertEmail}\nCase: ${caseTitle}\nResponse: ${label}`;
 
   const htmlContent = `
     <h2>Case Response Notification</h2>
@@ -70,9 +91,11 @@ module.exports = async (req, res) => {
             headers: {
               subject: `Case Response: ${escapeHtml(expertName)} ${label} — ${escapeHtml(caseTitle)}`,
               from: 'noreply@veracityexpertwitness.com',
+              'List-Unsubscribe': '<mailto:admin@veracityexpertwitness.com?subject=Unsubscribe>',
             },
             content: {
               'text/html': htmlContent,
+              'text/plain': plainText,
             },
           },
         },

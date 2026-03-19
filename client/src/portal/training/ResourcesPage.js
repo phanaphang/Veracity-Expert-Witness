@@ -30,6 +30,14 @@ const pageStyles = `
   .pdf-btn:hover { background: #b8551a; }
   @page { margin: 0; }
   @media print { .pdf-btn { display: none; } body { padding: 0.45in; } }
+  @media (max-width: 600px) {
+    .page-wrap { padding: 0 12px 40px; }
+    .header-bar { padding: 16px 16px; flex-direction: column; align-items: flex-start; gap: 4px; }
+    .content-card { padding: 20px 16px; }
+    h1 { font-size: 20px; }
+    table { font-size: 12px; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    th, td { padding: 8px 10px; }
+  }
 `;
 
 function makeHtml(title, subtitle, bodyHtml) {

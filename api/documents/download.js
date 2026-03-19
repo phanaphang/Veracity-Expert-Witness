@@ -1,4 +1,5 @@
 const supabaseAdmin = require('../_lib/supabaseAdmin');
+const { rateLimit } = require('../_lib/rateLimit');
 
 module.exports = async (req, res) => {
   if (req.method !== 'GET') {
@@ -17,6 +18,12 @@ module.exports = async (req, res) => {
   if (authError || !user) {
     console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | documents/download | invalid token`);
     return res.status(401).json({ error: 'Invalid token' });
+  }
+
+  const rl = rateLimit(req, { maxRequests: 20 });
+  if (rl.limited) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
   }
 
   const { path: rawPath } = req.query;

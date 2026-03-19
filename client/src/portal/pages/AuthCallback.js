@@ -51,7 +51,7 @@ export default function AuthCallback() {
   }, [navigate]);
 
   return (
-    <div className="portal-loading">
+    <div className="portal-loading" role="status" aria-label="Loading">
       <div className="portal-loading__spinner"></div>
       <p>Verifying your identity...</p>
     </div>

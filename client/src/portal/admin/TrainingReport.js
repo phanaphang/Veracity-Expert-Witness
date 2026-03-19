@@ -351,7 +351,7 @@ export default function TrainingReport() {
 
   if (loading) {
     return (
-      <div className="portal-loading">
+      <div className="portal-loading" role="status" aria-label="Loading">
         <div className="portal-loading__spinner" />
         <p>Loading training data...</p>
       </div>

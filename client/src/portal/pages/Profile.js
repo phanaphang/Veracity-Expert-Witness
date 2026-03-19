@@ -259,25 +259,25 @@ export default function Profile() {
           <h2 className="portal-card__title">Basic Information</h2>
           <div className="portal-list-item__row">
             <div className="portal-field">
-              <label className="portal-field__label">First Name</label>
-              <input className="portal-field__input" name="first_name" value={form.first_name} onChange={handleChange} required maxLength={50} readOnly={!editing} />
+              <label className="portal-field__label" htmlFor="profile-first-name">First Name</label>
+              <input id="profile-first-name" className="portal-field__input" name="first_name" value={form.first_name} onChange={handleChange} required maxLength={50} readOnly={!editing} />
             </div>
             <div className="portal-field">
-              <label className="portal-field__label">Last Name</label>
-              <input className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required maxLength={50} readOnly={!editing} />
+              <label className="portal-field__label" htmlFor="profile-last-name">Last Name</label>
+              <input id="profile-last-name" className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required maxLength={50} readOnly={!editing} />
             </div>
           </div>
           <div className="portal-field">
-            <label className="portal-field__label">Email</label>
-            <input className="portal-field__input" name="email" type="email" value={form.email} onChange={handleChange} maxLength={254} readOnly={!editing} />
+            <label className="portal-field__label" htmlFor="profile-email">Email</label>
+            <input id="profile-email" className="portal-field__input" name="email" type="email" value={form.email} onChange={handleChange} maxLength={254} readOnly={!editing} />
           </div>
           <div className="portal-field">
-            <label className="portal-field__label">Phone</label>
-            <input className="portal-field__input" name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="1-xxx-xxx-xxxx" maxLength={14} readOnly={!editing} />
+            <label className="portal-field__label" htmlFor="profile-phone">Phone</label>
+            <input id="profile-phone" className="portal-field__input" name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="1-xxx-xxx-xxxx" maxLength={14} readOnly={!editing} />
           </div>
           <div className="portal-field">
-            <label className="portal-field__label">Bio</label>
-            <textarea className="portal-field__textarea" name="bio" value={form.bio} onChange={handleChange} rows="4" placeholder="Describe your expertise and experience..." maxLength={2000} readOnly={!editing} />
+            <label className="portal-field__label" htmlFor="profile-bio">Bio</label>
+            <textarea id="profile-bio" className="portal-field__textarea" name="bio" value={form.bio} onChange={handleChange} rows="4" placeholder="Describe your expertise and experience..." maxLength={2000} readOnly={!editing} />
           </div>
         </div>
 
@@ -448,16 +448,16 @@ export default function Profile() {
           <h2 className="portal-card__title">Rates</h2>
           <div className="portal-list-item__row">
             <div className="portal-field">
-              <label className="portal-field__label">Review & Report Rate ($/hr)</label>
-              <input className="portal-field__input" name="rate_review_report" type="number" value={form.rate_review_report} onChange={handleChange} placeholder="e.g. 500" min={0} max={9999} readOnly={!editing} />
+              <label className="portal-field__label" htmlFor="profile-rate-review">Review & Report Rate ($/hr)</label>
+              <input id="profile-rate-review" className="portal-field__input" name="rate_review_report" type="number" value={form.rate_review_report} onChange={handleChange} placeholder="e.g. 500" min={0} max={9999} readOnly={!editing} />
             </div>
             <div className="portal-field">
-              <label className="portal-field__label">Deposition Rate ($/hr)</label>
-              <input className="portal-field__input" name="rate_deposition" type="number" value={form.rate_deposition} onChange={handleChange} placeholder="e.g. 600" min={0} max={9999} readOnly={!editing} />
+              <label className="portal-field__label" htmlFor="profile-rate-deposition">Deposition Rate ($/hr)</label>
+              <input id="profile-rate-deposition" className="portal-field__input" name="rate_deposition" type="number" value={form.rate_deposition} onChange={handleChange} placeholder="e.g. 600" min={0} max={9999} readOnly={!editing} />
             </div>
             <div className="portal-field">
-              <label className="portal-field__label">Trial Testimony Rate ($/hr)</label>
-              <input className="portal-field__input" name="rate_trial_testimony" type="number" value={form.rate_trial_testimony} onChange={handleChange} placeholder="e.g. 750" min={0} max={9999} readOnly={!editing} />
+              <label className="portal-field__label" htmlFor="profile-rate-trial">Trial Testimony Rate ($/hr)</label>
+              <input id="profile-rate-trial" className="portal-field__input" name="rate_trial_testimony" type="number" value={form.rate_trial_testimony} onChange={handleChange} placeholder="e.g. 750" min={0} max={9999} readOnly={!editing} />
             </div>
           </div>
         </div>

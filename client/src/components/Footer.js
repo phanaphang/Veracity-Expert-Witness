@@ -13,7 +13,7 @@ function Footer() {
               e.preventDefault();
               document.querySelector('#hero')?.scrollIntoView({ behavior: 'smooth' });
             }}>
-              <svg className="navbar__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28">
+              <svg className="navbar__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
                 <path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--color-accent)" />
                 <path d="M2 17l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
                 <path d="M2 12l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />

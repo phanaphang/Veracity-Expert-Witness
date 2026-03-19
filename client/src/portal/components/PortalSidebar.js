@@ -54,10 +54,10 @@ export default function PortalSidebar({ isAdmin, onNavigate }) {
   const links = isAdmin ? filteredAdminLinks : expertLinks;
 
   return (
-    <aside className="portal-sidebar">
+    <nav className="portal-sidebar" aria-label="Main navigation">
       <div className="portal-sidebar__header">
-        <NavLink to="/" className="portal-sidebar__logo">
-          <svg viewBox="0 0 24 24" fill="none" width="24" height="24">
+        <NavLink to="/" className="portal-sidebar__logo" aria-label="Veracity home">
+          <svg viewBox="0 0 24 24" fill="none" width="24" height="24" aria-hidden="true">
             <path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--color-accent)" />
             <path d="M2 17l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
             <path d="M2 12l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
@@ -73,20 +73,23 @@ export default function PortalSidebar({ isAdmin, onNavigate }) {
             <button
               className={`portal-sidebar__link portal-sidebar__group-toggle ${isTrainingActive ? 'portal-sidebar__link--active' : ''}`}
               onClick={() => setTrainingOpen(!trainingOpen)}
+              aria-expanded={trainingOpen}
+              aria-controls="training-group-children"
             >
-              <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+              <svg viewBox="0 0 24 24" fill="none" width="20" height="20" aria-hidden="true">
                 <path d={link.icon} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span>{link.label}</span>
               <svg
                 className={`portal-sidebar__chevron ${trainingOpen ? 'portal-sidebar__chevron--open' : ''}`}
                 viewBox="0 0 24 24" fill="none" width="16" height="16"
+                aria-hidden="true"
               >
                 <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </button>
             {trainingOpen && (
-              <div className="portal-sidebar__group-children">
+              <div className="portal-sidebar__group-children" id="training-group-children">
                 {link.children.map((child) => (
                   <NavLink
                     key={child.to}
@@ -97,7 +100,7 @@ export default function PortalSidebar({ isAdmin, onNavigate }) {
                     }
                     onClick={onNavigate}
                   >
-                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16">
+                    <svg viewBox="0 0 24 24" fill="none" width="16" height="16" aria-hidden="true">
                       <path d={child.icon} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                     <span>{child.label}</span>
@@ -116,7 +119,7 @@ export default function PortalSidebar({ isAdmin, onNavigate }) {
             }
             onClick={onNavigate}
           >
-            <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20" aria-hidden="true">
               <path d={link.icon} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             <span>{link.label}</span>
@@ -134,18 +137,18 @@ export default function PortalSidebar({ isAdmin, onNavigate }) {
           </span>
         </div>
         <button className="portal-sidebar__signout" style={{ marginBottom: 24 }} onClick={() => navigate('/')}>
-          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true">
             <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Back to Home
         </button>
         <button className="portal-sidebar__signout" onClick={async () => { await signOut(); navigate('/portal/login'); }}>
-          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18" aria-hidden="true">
             <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           Sign Out
         </button>
       </div>
-    </aside>
+    </nav>
   );
 }

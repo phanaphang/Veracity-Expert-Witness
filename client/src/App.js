@@ -158,11 +158,13 @@ function HomePage() {
         path="/"
       />
       <Navbar />
-      <Hero />
-      <Services />
-      <Categories />
-      <HowItWorks />
-      <ContactForm />
+      <main id="main-content">
+        <Hero />
+        <Services />
+        <Categories />
+        <HowItWorks />
+        <ContactForm />
+      </main>
       <Footer />
     </>
   );
@@ -172,6 +174,7 @@ function Root() {
   return (
     <AuthProvider>
       <div className="app">
+        <a href="#main-content" className="skip-link">Skip to main content</a>
         <Outlet />
       </div>
     </AuthProvider>

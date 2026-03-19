@@ -73,7 +73,7 @@ function Navbar() {
     <nav className={`navbar ${scrolled ? 'navbar--scrolled' : ''}`}>
       <div className="navbar__container">
         <a href="#hero" className="navbar__logo" onClick={(e) => handleNavClick(e, '#hero')}>
-          <svg className="navbar__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28">
+          <svg className="navbar__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
             <path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--color-accent)" />
             <path d="M2 17l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
             <path d="M2 12l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
@@ -105,6 +105,7 @@ function Navbar() {
           className={`navbar__hamburger ${mobileOpen ? 'navbar__hamburger--open' : ''}`}
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
         >
           <span></span>
           <span></span>

@@ -71,7 +71,7 @@ export default function ExpertDetail() {
     setExpert(prev => ({ ...prev, profile_status: status }));
   };
 
-  if (loading) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
+  if (loading) return <div className="portal-loading" role="status" aria-label="Loading"><div className="portal-loading__spinner"></div></div>;
   if (!expert) return <div className="portal-empty"><p className="portal-empty__text">Expert not found</p></div>;
 
   return (

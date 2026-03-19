@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
 
@@ -12,6 +12,7 @@ export default function TrainingTermsModal({ onAccepted }) {
   const [error, setError] = useState('');
   const [scrolledToBottom, setScrolledToBottom] = useState(false);
   const contentRef = useRef(null);
+  const modalRef = useRef(null);
 
   // Check if user has already accepted this version
   useEffect(() => {
@@ -58,12 +59,48 @@ export default function TrainingTermsModal({ onAccepted }) {
     onAccepted();
   };
 
+  // Focus trap and Escape key
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Escape') return;
+    if (e.key !== 'Tab' || !modalRef.current) return;
+    const focusable = modalRef.current.querySelectorAll('button:not([disabled]), a[href], input, [tabindex]:not([tabindex="-1"])');
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }, []);
+
+  // Lock body scroll and set initial focus when modal opens
+  useEffect(() => {
+    if (checking || accepted) return;
+    document.body.style.overflow = 'hidden';
+    const timer = setTimeout(() => {
+      if (contentRef.current) contentRef.current.focus();
+    }, 50);
+    return () => {
+      document.body.style.overflow = '';
+      clearTimeout(timer);
+    };
+  }, [checking, accepted]);
+
   if (checking || accepted) return null;
 
   return (
-    <div className="training-terms-overlay">
-      <div className="training-terms-modal">
-        <h2 className="training-terms-modal__title">Training Materials - Terms of Use</h2>
+    <div
+      className="training-terms-overlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="training-terms-title"
+      onKeyDown={handleKeyDown}
+    >
+      <div className="training-terms-modal" ref={modalRef}>
+        <h2 id="training-terms-title" className="training-terms-modal__title">Training Materials - Terms of Use</h2>
         <p className="training-terms-modal__subtitle">
           Please review and accept the following terms before accessing training materials and resources.
         </p>
@@ -72,6 +109,7 @@ export default function TrainingTermsModal({ onAccepted }) {
           className="training-terms-modal__content"
           ref={contentRef}
           onScroll={handleScroll}
+          tabIndex={-1}
         >
           <h3>1. Educational Purpose</h3>
           <p>

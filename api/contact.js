@@ -55,6 +55,8 @@ module.exports = async (req, res) => {
     </table>
   `;
 
+  const plainText = `New Expert Witness Request\n\nName: ${name}\nFirm: ${firm}\nEmail: ${email}\nPhone: ${phone}\nExpertise: ${expertise}\nCase Details: ${details}`;
+
   const apiUser = (process.env.PAUBOX_API_USER || '').trim();
   const apiKey = (process.env.PAUBOX_API_KEY || '').trim();
 
@@ -76,6 +78,7 @@ module.exports = async (req, res) => {
             },
             content: {
               'text/html': htmlContent,
+              'text/plain': plainText,
             },
           },
         },

@@ -197,7 +197,7 @@ export default function CaseDetail() {
     await loadCase();
   };
 
-  if (loading) return <div className="portal-loading"><div className="portal-loading__spinner"></div></div>;
+  if (loading) return <div className="portal-loading" role="status" aria-label="Loading"><div className="portal-loading__spinner"></div></div>;
   if (!caseData) return <div className="portal-empty"><p className="portal-empty__text">Case not found</p></div>;
 
   return (

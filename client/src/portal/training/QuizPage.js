@@ -225,9 +225,9 @@ export default function QuizPage({ onProgressUpdate }) {
             return (
               <div key={q.id} className="training-quiz__question portal-card">
                 <div className="training-quiz__q-number">Question {qi + 1}</div>
-                <p className="training-quiz__q-text">{q.text}</p>
+                <p id={`q-label-${q.id}`} className="training-quiz__q-text">{q.text}</p>
 
-                <div className="training-quiz__options">
+                <div className="training-quiz__options" role="radiogroup" aria-labelledby={`q-label-${q.id}`}>
                   {q.options.map((opt) => {
                     const isSelected = selectedId === opt.id;
                     const isTheCorrect = opt.correct;
@@ -243,6 +243,8 @@ export default function QuizPage({ onProgressUpdate }) {
                       <button
                         key={opt.id}
                         className={cls}
+                        role="radio"
+                        aria-checked={isSelected}
                         onClick={() => handleSelect(q.id, opt.id)}
                         disabled={submitted}
                       >

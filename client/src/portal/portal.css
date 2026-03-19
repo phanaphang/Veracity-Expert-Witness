@@ -184,6 +184,17 @@
   cursor: pointer;
   color: var(--color-navy);
   padding: 10px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portal-topbar__menu:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 .portal-topbar__title {
@@ -245,6 +256,7 @@
   align-items: center;
   gap: 12px;
   padding: 10px 12px;
+  min-height: 44px;
   border-radius: var(--radius-sm);
   color: rgba(255,255,255,0.8);
   text-decoration: none;
@@ -261,6 +273,8 @@
 .portal-sidebar__link:focus-visible {
   background: rgba(255,255,255,0.08);
   color: var(--color-white);
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
 }
 
 .portal-sidebar__link--active {
@@ -296,6 +310,7 @@
 .portal-sidebar__link--child {
   font-size: 0.82rem;
   padding: 7px 12px;
+  min-height: 40px;
 }
 
 .portal-sidebar__link--child svg {
@@ -373,6 +388,8 @@
 .portal-btn-action:focus-visible {
   background: var(--color-accent);
   color: var(--color-white);
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 /* --- Form Fields --- */
@@ -764,8 +781,11 @@
   cursor: pointer;
   color: var(--color-gray-400);
   padding: 8px;
-  min-width: 36px;
-  min-height: 36px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: color var(--transition);
 }
 
@@ -971,7 +991,7 @@
 
   .portal-messages__list {
     width: 100%;
-    max-height: 160px;
+    max-height: 220px;
     flex-shrink: 0;
     border-right: none;
     border-bottom: 1px solid var(--color-gray-200);
@@ -1025,6 +1045,11 @@
   background: var(--color-accent);
   border-color: var(--color-accent);
   color: #fff;
+}
+
+.rbc-toolbar button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .rbc-toolbar button.rbc-active,
@@ -1125,13 +1150,23 @@
   color: var(--color-gray-400);
   cursor: pointer;
   line-height: 1;
-  padding: 4px;
+  padding: 8px;
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: var(--radius-sm);
   transition: color 0.15s;
 }
 
 .cal-modal__close:hover {
   color: var(--color-navy);
+}
+
+.cal-modal__close:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
 .cal-modal__actions {
@@ -1297,6 +1332,7 @@
   align-items: center;
   gap: 10px;
   padding: 8px 20px;
+  min-height: 40px;
   font-size: 13px;
   color: rgba(255,255,255,0.75);
   text-decoration: none;
@@ -2170,7 +2206,7 @@
 }
 
 .training-certificate {
-  width: 760px;
+  width: min(760px, 100%);
   min-width: 640px;
   background: #ffffff;
   border: 2px solid var(--color-gray-100);

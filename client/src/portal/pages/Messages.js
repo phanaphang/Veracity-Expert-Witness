@@ -95,7 +95,7 @@ export default function Messages() {
                 </div>
                 <div className="portal-messages__thread-body" ref={threadRef}>
                   {msgsLoading ? (
-                    <div className="portal-loading"><div className="portal-loading__spinner"></div></div>
+                    <div className="portal-loading" role="status" aria-label="Loading"><div className="portal-loading__spinner"></div></div>
                   ) : messages.length === 0 ? (
                     <div className="portal-empty"><p className="portal-empty__text">No messages yet</p></div>
                   ) : (

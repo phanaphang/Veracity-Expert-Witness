@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useContext } from 'react';
 import { AuthContext } from '../../../contexts/AuthContext';
 import { supabase } from '../../../lib/supabase';
@@ -7,6 +7,7 @@ import AdmissibilitySidebar from './AdmissibilitySidebar';
 export default function AdmissibilityLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user, idleWarning, resetIdleTimer } = useContext(AuthContext);
+  const menuBtnRef = useRef(null);
 
   const [completedLessons, setCompletedLessons] = useState([]);
   const [scenarioComplete, setScenarioComplete] = useState(false);
@@ -41,12 +42,26 @@ export default function AdmissibilityLayout({ children }) {
     loadProgress();
   }, [loadProgress]);
 
+  // Close sidebar on Escape key
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setSidebarOpen(false);
+        menuBtnRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [sidebarOpen]);
+
   return (
     <div className="training-layout">
       {/* Mobile overlay */}
       <div
         className={`portal-overlay${sidebarOpen ? ' portal-overlay--visible' : ''}`}
-        onClick={() => setSidebarOpen(false)}
+        onClick={() => { setSidebarOpen(false); menuBtnRef.current?.focus(); }}
+        aria-hidden="true"
       />
 
       {/* Sidebar */}
@@ -72,11 +87,13 @@ export default function AdmissibilityLayout({ children }) {
 
         <header className="portal-topbar">
           <button
+            ref={menuBtnRef}
             className="portal-topbar__menu"
             onClick={() => setSidebarOpen(!sidebarOpen)}
             aria-label="Toggle navigation"
+            aria-expanded={sidebarOpen}
           >
-            <svg viewBox="0 0 24 24" fill="none" width="28" height="28">
+            <svg viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
               <path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>

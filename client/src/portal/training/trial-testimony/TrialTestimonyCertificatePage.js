@@ -168,7 +168,7 @@ export default function TrialTestimonyCertificatePage({ onProgressUpdate }) {
 
   if (loading) {
     return (
-      <div className="portal-loading">
+      <div className="portal-loading" role="status" aria-label="Loading">
         <div className="portal-loading__spinner" />
         <p>Loading...</p>
       </div>

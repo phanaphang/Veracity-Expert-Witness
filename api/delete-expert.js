@@ -1,4 +1,5 @@
 const supabaseAdmin = require('./_lib/supabaseAdmin');
+const { rateLimit } = require('./_lib/rateLimit');
 
 module.exports = async (req, res) => {
   if (req.method !== 'DELETE') {
@@ -30,6 +31,12 @@ module.exports = async (req, res) => {
   if (profile?.role !== 'admin') {
     console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | delete-expert | insufficient role: ${profile?.role}`);
     return res.status(403).json({ error: 'Admin access required' });
+  }
+
+  const rl = rateLimit(req, { maxRequests: 10 });
+  if (rl.limited) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
   }
 
   const { expertId } = req.body;

@@ -15,15 +15,15 @@ function getClientIp(req) {
   );
 }
 
-function rateLimit(req) {
+function rateLimit(req, { maxRequests = MAX_REQUESTS, windowMs = WINDOW_MS } = {}) {
   const ip = getClientIp(req);
   const now = Date.now();
-  const windowStart = now - WINDOW_MS;
+  const windowStart = now - windowMs;
 
   const timestamps = (store.get(ip) || []).filter((t) => t > windowStart);
 
-  if (timestamps.length >= MAX_REQUESTS) {
-    const retryAfter = Math.ceil((timestamps[0] + WINDOW_MS - now) / 1000);
+  if (timestamps.length >= maxRequests) {
+    const retryAfter = Math.ceil((timestamps[0] + windowMs - now) / 1000);
     return { limited: true, retryAfter };
   }
 

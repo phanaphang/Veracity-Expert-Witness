@@ -1,4 +1,5 @@
 const supabaseAdmin = require('./_lib/supabaseAdmin');
+const { rateLimit } = require('./_lib/rateLimit');
 
 const escapeHtml = (str) =>
   String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -33,6 +34,12 @@ module.exports = async (req, res) => {
     return res.status(403).json({ error: 'Admin or staff access required' });
   }
 
+  const rl = rateLimit(req, { maxRequests: 10 });
+  if (rl.limited) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+  }
+
   const { expertId, eventTitle, startTime, endTime, action } = req.body;
   if (!expertId || !eventTitle || !startTime || !endTime || !action) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -64,6 +71,8 @@ module.exports = async (req, res) => {
 
   const actionLabel = action === 'created' ? 'added a new event' : 'updated an event';
   const calendarUrl = 'https://veracityexpertwitness.com/portal/calendar';
+
+  const plainText = `Calendar Update\n\nHi ${expertName},\n\n${adminName} has ${actionLabel} on your calendar:\n\n${eventTitle}\n${formatDate(startTime)}\n${formatTime(startTime)} – ${formatTime(endTime)}\n\nView your calendar: ${calendarUrl}\n\n— Veracity Expert Witness Portal`;
 
   const htmlContent = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -110,9 +119,11 @@ module.exports = async (req, res) => {
             headers: {
               subject: `Calendar ${action === 'created' ? 'event added' : 'event updated'}: ${eventTitle}`,
               from: 'noreply@veracityexpertwitness.com',
+              'List-Unsubscribe': '<mailto:admin@veracityexpertwitness.com?subject=Unsubscribe>',
             },
             content: {
               'text/html': htmlContent,
+              'text/plain': plainText,
             },
           },
         },

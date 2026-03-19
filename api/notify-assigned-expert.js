@@ -1,4 +1,5 @@
 const supabaseAdmin = require('./_lib/supabaseAdmin');
+const { rateLimit } = require('./_lib/rateLimit');
 
 const escapeHtml = (str) =>
   String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -34,6 +35,12 @@ module.exports = async (req, res) => {
     return res.status(403).json({ error: 'Admin or staff access required' });
   }
 
+  const rl = rateLimit(req, { maxRequests: 10 });
+  if (rl.limited) {
+    res.setHeader('Retry-After', String(rl.retryAfter));
+    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+  }
+
   const { expertId, caseTitle, caseId, caseNumber } = req.body;
   if (!expertId || !caseTitle) {
     return res.status(400).json({ error: 'Expert ID and case title are required' });
@@ -54,6 +61,8 @@ module.exports = async (req, res) => {
     ? `${expert.first_name} ${expert.last_name ? expert.last_name.charAt(0) + '.' : ''}`.trim()
     : 'there';
   const caseUrl = 'https://veracityexpertwitness.com/expert/cases';
+
+  const plainText = `Expert Assignment\n\nHi ${expertName},\n\nYou have been assigned to the following case:\n\n#${caseNumber || ''} — ${caseTitle}\n\nView your case invitations: ${caseUrl}\n\n— Veracity Expert Witness Portal`;
 
   const htmlContent = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -98,9 +107,11 @@ module.exports = async (req, res) => {
             headers: {
               subject: `You have been assigned to case: #${escapeHtml(caseNumber || '')} — ${escapeHtml(caseTitle)}`,
               from: 'noreply@veracityexpertwitness.com',
+              'List-Unsubscribe': '<mailto:admin@veracityexpertwitness.com?subject=Unsubscribe>',
             },
             content: {
               'text/html': htmlContent,
+              'text/plain': plainText,
             },
           },
         },
