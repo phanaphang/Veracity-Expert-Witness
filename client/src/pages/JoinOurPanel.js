@@ -16,8 +16,8 @@ const specialtyOptions = [
 
 const benefits = [
   {
-    title: 'Steady Case Referrals',
-    description: 'Receive a consistent stream of case referrals and build new client relationships with attorneys and law firms nationwide.',
+    title: 'Training Resources',
+    description: 'Access curated training materials, deposition preparation guides, and courtroom best practices to sharpen your skills as an expert witness.',
   },
   {
     title: 'Full Administrative Support',
