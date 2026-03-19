@@ -44,7 +44,7 @@ const benefits = [
 const steps = [
   { number: '1', title: 'Apply', description: 'Submit your application with your credentials and area of expertise.' },
   { number: '2', title: 'Get Vetted', description: 'Our team reviews your qualifications, experience, and professional background.' },
-  { number: '3', title: 'Receive Cases', description: 'Once approved, start receiving case referrals matched to your specialty.' },
+  { number: '3', title: 'Receive Cases', description: 'Once approved, start receiving case assignment opportunities matched to your specialty.' },
 ];
 
 function JoinOurPanel() {
@@ -124,7 +124,7 @@ function JoinOurPanel() {
     <div className="legal-page">
       <SEO
         title="Join Our Expert Panel"
-        description="Join the Veracity expert witness network. Receive steady case referrals, full administrative support, and access to a secure Expert Portal. Apply today."
+        description="Join the Veracity expert witness network. Receive case assignment opportunities, full administrative support, and access to a secure Expert Portal. Apply today."
         path="/join-our-panel"
       />
       <nav className="navbar navbar--scrolled">
@@ -146,7 +146,7 @@ function JoinOurPanel() {
           <Link to="/" className="legal-header__back">&larr; Back to Home</Link>
           <h1 className="legal-header__title">Join Our Expert Panel</h1>
           <p className="legal-header__subtitle">
-            Grow your practice by joining our network of expert witnesses. Receive case referrals, administrative support, and a secure platform to manage your engagements.
+            Grow your practice by joining our network of expert witnesses. Receive case assignment opportunities, administrative support, and a secure platform to manage your engagements.
           </p>
         </div>
       </header>
