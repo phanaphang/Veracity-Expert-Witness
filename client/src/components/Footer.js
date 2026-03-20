@@ -25,23 +25,25 @@ function Footer() {
             </p>
           </div>
 
-          <div className="footer__col">
-            <h4 className="footer__col-title">Legal</h4>
-            <ul className="footer__links">
-              <li><Link to="/privacy-policy">Privacy Policy</Link></li>
-              <li><Link to="/terms-of-service">Terms of Service</Link></li>
-              <li><Link to="/cookie-policy">Cookie Policy</Link></li>
-              <li><Link to="/compliance">Compliance</Link></li>
-            </ul>
-          </div>
+          <nav className="footer__nav" aria-label="Footer navigation">
+            <div className="footer__col">
+              <h4 className="footer__col-title">Legal</h4>
+              <ul className="footer__links">
+                <li><Link to="/privacy-policy">Privacy Policy</Link></li>
+                <li><Link to="/terms-of-service">Terms of Service</Link></li>
+                <li><Link to="/cookie-policy">Cookie Policy</Link></li>
+                <li><Link to="/compliance">Compliance</Link></li>
+              </ul>
+            </div>
 
-          <div className="footer__col">
-            <h4 className="footer__col-title">Resources</h4>
-            <ul className="footer__links">
-              <li><Link to="/faq">FAQ</Link></li>
-              <li><Link to="/join-our-panel">Join Our Panel</Link></li>
-            </ul>
-          </div>
+            <div className="footer__col">
+              <h4 className="footer__col-title">Resources</h4>
+              <ul className="footer__links">
+                <li><Link to="/faq">FAQ</Link></li>
+                <li><Link to="/join-our-panel">Join Our Panel</Link></li>
+              </ul>
+            </div>
+          </nav>
         </div>
 
         <button

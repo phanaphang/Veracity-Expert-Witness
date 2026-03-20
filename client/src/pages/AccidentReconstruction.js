@@ -98,11 +98,12 @@ function AccidentReconstruction() {
         title="Accident Reconstruction Expert Witnesses"
         description="Connect with accident reconstruction specialists who use science and engineering to determine how and why vehicle, workplace, and industrial incidents occurred."
         path="/accident-reconstruction"
+        serviceSchema={{ serviceType: 'Accident Reconstruction Expert Witness Services' }}
       />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">
-            <svg className="navbar__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28">
+            <svg className="navbar__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
               <path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--color-accent)" />
               <path d="M2 17l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
               <path d="M2 12l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />

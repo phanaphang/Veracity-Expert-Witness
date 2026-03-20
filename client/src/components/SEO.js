@@ -4,7 +4,7 @@ const SITE_NAME = 'Veracity Expert Witness LLC';
 const BASE_URL = 'https://veracityexpertwitness.com';
 const DEFAULT_IMAGE = `${BASE_URL}/logo-dark.svg`;
 
-function SEO({ title, description, path = '/', image = DEFAULT_IMAGE }) {
+function SEO({ title, description, path = '/', image = DEFAULT_IMAGE, serviceSchema }) {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} | Qualified Expert Witnesses for Legal Cases`;
   const canonical = `${BASE_URL}${path}`;
 
@@ -15,6 +15,20 @@ function SEO({ title, description, path = '/', image = DEFAULT_IMAGE }) {
       { '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE_URL}/` },
       { '@type': 'ListItem', position: 2, name: title, item: canonical },
     ],
+  }) : null;
+
+  const serviceJsonLd = serviceSchema ? JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    serviceType: serviceSchema.serviceType,
+    provider: {
+      '@type': 'ProfessionalService',
+      name: SITE_NAME,
+      url: BASE_URL,
+    },
+    areaServed: { '@type': 'Country', name: 'United States' },
+    description: description,
+    url: canonical,
   }) : null;
 
   return (
@@ -38,6 +52,9 @@ function SEO({ title, description, path = '/', image = DEFAULT_IMAGE }) {
 
       {breadcrumbSchema && (
         <script type="application/ld+json">{breadcrumbSchema}</script>
+      )}
+      {serviceJsonLd && (
+        <script type="application/ld+json">{serviceJsonLd}</script>
       )}
     </Helmet>
   );
