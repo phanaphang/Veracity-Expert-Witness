@@ -62,7 +62,7 @@ function makeHtml(title, subtitle, bodyHtml) {
       <h1>${title}</h1>
       <div class="subtitle">${subtitle}</div>
       ${bodyHtml}
-      <div class="note">This document is provided by Veracity Expert Witness LLC LLC as a training reference. It is for educational purposes only and does not constitute legal advice. Veracity Expert Witness LLC LLC assumes no liability for how this content is applied. You remain solely responsible for your own professional conduct and testimony.</div>
+      <div class="note">This document is provided by Veracity Expert Witness LLC as a training reference. It is for educational purposes only and does not constitute legal advice. Veracity Expert Witness LLC assumes no liability for how this content is applied. You remain solely responsible for your own professional conduct and testimony.</div>
     </div>
   </div>
 </body>
@@ -217,9 +217,9 @@ const RESOURCES = [
         <tr><td><strong>Evidence Code § 801</strong></td><td>Expert Opinion Admissibility</td><td>Opinion must relate to subject sufficiently beyond common experience and be based on matter reasonably relied upon by experts in the field.</td></tr>
         <tr><td><strong>Evidence Code § 802</strong></td><td>Basis of Opinion</td><td>Expert may state the basis for their opinion on direct examination. Court may require disclosure of underlying data.</td></tr>
         <tr><td><strong>CCP § 2034</strong></td><td>Expert Disclosure</td><td>Expert lists exchanged ~50 days before trial. Includes expert name, qualifications, and general substance of opinion. Late or non-disclosure → potential exclusion.</td></tr>
-        <tr><td><strong>CCP § 2034.415</strong></td><td>Deposition Duration</td><td>Expert deposition limited to 7 hours on the record absent agreement or court order.</td></tr>
+        <tr><td><strong>CCP § 2025.290</strong></td><td>Deposition Duration</td><td>Depositions limited to 7 hours on the record absent agreement or court order. Applies to expert depositions as well.</td></tr>
         <tr><td><strong>Sargon Enterprises v. USC (2012)</strong></td><td>Gatekeeping Standard</td><td>Trial courts must exclude speculative, unfounded, or methodologically unsound expert opinions - even from qualified experts. California's Daubert equivalent.</td></tr>
-        <tr><td><strong>B&P Code § 6152</strong></td><td>Fee Arrangements</td><td>Contingency fee arrangements for expert witnesses are prohibited in California.</td></tr>
+        <tr><td><strong>Case Law / Ethics</strong></td><td>Fee Arrangements</td><td>Contingency fee arrangements for expert witnesses are prohibited in California under case law and professional ethical standards.</td></tr>
         <tr><td><strong>Evidence Code § 721</strong></td><td>Cross-Examination</td><td>Expert may be cross-examined on any matter disclosed during direct, and on the content of published treatises if used during cross.</td></tr>
         <tr><td><strong>Evidence Code § 722</strong></td><td>Bias / Compensation</td><td>Expert's compensation is admissible to attack credibility. Expert can be asked about fees, frequency of testimony, and percentage of work for each side.</td></tr>
       </table>
@@ -284,7 +284,7 @@ const RESOURCES = [
         <li><strong>Retainer:</strong> Amount and replenishment terms</li>
         <li><strong>Cancellation policy:</strong> Minimum notice required to avoid cancellation fee for depositions and trial</li>
         <li><strong>Independence clause:</strong> "Expert's opinions will reflect expert's independent professional judgment based on the materials reviewed and expert's training and experience."</li>
-        <li><strong>No contingency:</strong> "Compensation is not contingent on the outcome of the matter." (Required by B&P Code § 6152)</li>
+        <li><strong>No contingency:</strong> "Compensation is not contingent on the outcome of the matter." (Required under California case law and ethical standards)</li>
       </ul>
       `
     ),
@@ -320,7 +320,7 @@ const RESOURCES = [
       <p><strong>Lesson 2.1 - Deposition Basics: Anatomy & Preparation</strong></p>
       <ul>
         <li>Depositions are sworn discovery proceedings - your testimony can be used for impeachment at trial</li>
-        <li>California limits expert depositions to 7 hours on the record (CCP § 2034.415)</li>
+        <li>California limits expert depositions to 7 hours on the record (CCP § 2025.290)</li>
         <li>Pre-deposition preparation is mandatory: re-read your report, review all relied-upon materials, meet with counsel</li>
         <li>Never review new materials the night before - only what you have already relied upon</li>
       </ul>
@@ -382,7 +382,7 @@ const RESOURCES = [
       <ul>
         <li>CCP § 2034: expert disclosures required ~50 days before trial; failure can result in exclusion</li>
         <li>Sargon (2012): California courts gatekeep speculative or methodologically unsound opinions</li>
-        <li>Contingency fee arrangements for experts are prohibited in California (B&P Code § 6152)</li>
+        <li>Contingency fee arrangements for experts are prohibited in California under case law and ethical standards</li>
         <li>Only disclosed experts may testify at trial - unlisted experts are generally excluded</li>
         <li>JCCP proceedings may modify standard expert witness rules</li>
       </ul>

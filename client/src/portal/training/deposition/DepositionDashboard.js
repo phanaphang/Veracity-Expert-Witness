@@ -230,7 +230,7 @@ export default function DepositionDashboard() {
               <p style={{ color: 'var(--color-gray-500)', fontSize: 14, margin: '8px 0 16px' }}>
                 Covers all eight lessons -- deposition purpose, preparation, answering technique,
                 learned treatises, scope of engagement, transcript review, and composure.
-                One retry allowed.
+                Two retries allowed.
               </p>
               {accessible && (
                 <Link

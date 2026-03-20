@@ -56,7 +56,7 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
     <div class="content-card">
       <button class="pdf-btn" onclick="window.print()">PDF</button>
       ${body}
-      <div class="note">This document is provided by Veracity Expert Witness LLC LLC as a training reference. It is for educational purposes only and does not constitute legal advice. Veracity Expert Witness LLC LLC assumes no liability for how this content is applied. You remain solely responsible for your own professional conduct and testimony.</div>
+      <div class="note">This document is provided by Veracity Expert Witness LLC as a training reference. It is for educational purposes only and does not constitute legal advice. Veracity Expert Witness LLC assumes no liability for how this content is applied. You remain solely responsible for your own professional conduct and testimony.</div>
     </div>
   </div>
 </body>

@@ -56,7 +56,7 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
     <div class="content-card">
       <button class="pdf-btn" onclick="window.print()">PDF</button>
       ${body}
-      <div class="note">This document is provided by Veracity Expert Witness LLC LLC as a training reference. It is for educational purposes only and does not constitute legal advice. Veracity Expert Witness LLC LLC assumes no liability for how this content is applied. You remain solely responsible for your own professional conduct and testimony.</div>
+      <div class="note">This document is provided by Veracity Expert Witness LLC as a training reference. It is for educational purposes only and does not constitute legal advice. Veracity Expert Witness LLC assumes no liability for how this content is applied. You remain solely responsible for your own professional conduct and testimony.</div>
     </div>
   </div>
 </body>
@@ -189,7 +189,7 @@ const resource1Html = () => htmlShell(
     <tr>
       <td><strong>Written report</strong></td>
       <td>Required: full written report signed by expert</td>
-      <td>CCP 2034.260: brief narrative summary signed by attorney. But CCP 2034.210(c) allows demand for producible reports</td>
+      <td>CCP 2034.260: brief narrative summary signed by attorney. But the CCP 2034 framework allows demand for producible reports</td>
     </tr>
     <tr>
       <td><strong>Opinions and bases</strong></td>
@@ -548,7 +548,7 @@ const resource4Html = () => htmlShell(
 </ul>
 <p>
   <strong>Federal disclosure:</strong> FRCP 26(a)(2)(B) requires a full written report signed by the expert.
-  <strong>California:</strong> CCP 2034.260 requires only a brief narrative summary, but CCP 2034.210(c)
+  <strong>California:</strong> CCP 2034.260 requires only a brief narrative summary, but the CCP 2034 framework
   allows demand for producible reports, so comprehensive reports are standard practice.
 </p>
 

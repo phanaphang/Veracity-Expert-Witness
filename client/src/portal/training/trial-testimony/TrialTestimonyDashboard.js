@@ -232,7 +232,7 @@ export default function TrialTestimonyDashboard() {
               <p style={{ color: 'var(--color-gray-500)', fontSize: 14, margin: '8px 0 16px' }}>
                 Covers all ten lessons -- trial vs. deposition, qualification, direct and cross
                 examination, jury communication, visual aids, ethics, and post-testimony.
-                One retry allowed.
+                Two retries allowed.
               </p>
               {accessible && (
                 <Link

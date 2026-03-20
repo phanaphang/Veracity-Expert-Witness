@@ -224,7 +224,7 @@ export default function AdmissibilityDashboard() {
               <div className="training-unit-card__meta">~5 min &middot; Pass score: 4 out of 5</div>
               <p style={{ color: 'var(--color-gray-500)', fontSize: 14, margin: '8px 0 16px' }}>
                 Covers all three lessons - jurisdiction, Kelly, Daubert, and multi-industry
-                application. One retry allowed.
+                application. Two retries allowed.
               </p>
               {accessible && (
                 <Link
@@ -245,8 +245,8 @@ export default function AdmissibilityDashboard() {
           <div>
             <h3 className="training-resources-card__title">Downloadable Resources</h3>
             <p className="training-resources-card__sub">
-              4 reference guides - quick reference, checklists, preparation guides, and module
-              summary
+              5 reference guides - quick reference, checklists, preparation guides, state-by-state
+              standards, and module summary
             </p>
           </div>
           <Link to="/training/admissibility/resources" className="btn btn--secondary">

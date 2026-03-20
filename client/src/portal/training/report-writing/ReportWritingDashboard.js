@@ -217,7 +217,7 @@ export default function ReportWritingDashboard() {
               <div className="training-unit-card__header">
                 <div>
                   <div className="training-unit-card__number">Knowledge Check</div>
-                  <h2 className="training-unit-card__title">5-Question Quiz</h2>
+                  <h2 className="training-unit-card__title">8-Question Quiz</h2>
                 </div>
                 {quizPassed && (
                   <span className="portal-badge portal-badge--approved">Passed</span>
@@ -229,7 +229,7 @@ export default function ReportWritingDashboard() {
               <div className="training-unit-card__meta">~5 min &middot; Pass score: 6 out of 8</div>
               <p style={{ color: 'var(--color-gray-500)', fontSize: 14, margin: '8px 0 16px' }}>
                 Covers all eight lessons - report structure, opinion writing, materials reviewed,
-                methodology, deposition defense, formatting, and common pitfalls. One retry allowed.
+                methodology, deposition defense, formatting, and common pitfalls. Two retries allowed.
               </p>
               {accessible && (
                 <Link

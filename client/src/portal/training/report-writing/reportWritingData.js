@@ -62,7 +62,7 @@ export const LESSONS = {
         subheading: 'Disclosure Requirements Shape What You Write',
         body: [
           'In federal court, FRCP 26(a)(2)(B) requires a written report signed by the expert containing: a complete statement of all opinions and their bases, the facts or data considered, any exhibits, qualifications including publications from the preceding 10 years, a list of cases in which the expert testified at trial or by deposition in the preceding 4 years, and a statement of compensation.',
-          'In California, CCP 2034.260 requires only a brief narrative summary of qualifications and the general substance of expected testimony, signed by the attorney (not the expert). This is far less than a full federal-style report. However, CCP 2034.210(c) allows opposing parties to demand production of all discoverable expert reports and writings, and experienced litigators commonly include this demand. The practical result is that California experts often prepare comprehensive written reports even though the statute does not strictly require them.',
+          'In California, CCP 2034.260 requires only a brief narrative summary of qualifications and the general substance of expected testimony, signed by the attorney (not the expert). This is far less than a full federal-style report. However, the CCP 2034 framework allows opposing parties to demand production of all discoverable expert reports and writings, and experienced litigators commonly include this demand. The practical result is that California experts often prepare comprehensive written reports even though the statute does not strictly require them.',
         ],
       },
       {

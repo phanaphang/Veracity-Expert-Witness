@@ -61,13 +61,13 @@ export const LESSONS = {
       'A deposition is sworn out-of-court testimony taken before trial, transcribed by a certified court reporter, and often recorded on video. For an expert witness, the deposition is both an opportunity and a minefield: an opportunity to lock in your opinion clearly and consistently, and a minefield because anything you say can be used to impeach your trial testimony.',
       'The typical deposition room contains: retaining counsel (present, sometimes participating), opposing counsel (asking questions), a certified court reporter, and frequently a videographer. Some depositions include the client, paralegals, or additional counsel. In California, depositions of expert witnesses are governed by CCP § 2034.410–2034.470 and are typically limited to the substance of the expert\'s opinion and the materials reviewed.',
       'Before any deposition, preparation is mandatory. You must: re-read your expert report cover to cover; review every document you relied upon; revisit your notes, calculations, and methodology; meet with retaining counsel to understand the likely attack areas; and review any prior testimony you have given in similar cases. Never enter a deposition room with a document you have not personally reviewed.',
-      'On the day of the deposition: arrive early, bring copies of your report and CV, and confirm with retaining counsel what materials opposing counsel is entitled to review. In California, an expert\'s deposition cannot exceed seven hours on the record absent agreement or court order (CCP § 2034.415).',
+      'On the day of the deposition: arrive early, bring copies of your report and CV, and confirm with retaining counsel what materials opposing counsel is entitled to review. In California, an expert\'s deposition cannot exceed seven hours on the record absent agreement or court order (CCP § 2025.290).',
     ],
     bullets: [
       'Your deposition transcript becomes the baseline against which your trial testimony is measured',
       'Opposing counsel\'s goal is discovery: understanding your opinion so they can attack it at trial',
       'Never review new materials the night before a deposition; review only what you\'ve already relied upon',
-      'California limits expert depositions to 7 hours on the record (CCP § 2034.415)',
+      'California limits expert depositions to 7 hours on the record (CCP § 2025.290)',
       'Video depositions are increasingly common; composure and eye contact matter on camera',
     ],
     keyTakeaway:
@@ -203,7 +203,7 @@ export const LESSONS = {
     body: [
       'California Evidence Code § 720 provides: "A person is qualified to testify as an expert if he has special knowledge, skill, experience, training, or education sufficient to qualify him as an expert on the subject to which his testimony relates. Against the objection of a party, such special knowledge, skill, experience, training, or education must be shown before the witness may testify as an expert."',
       'The California standard is deliberately broad. A formal academic degree is not required; extensive practical experience in a trade, craft, or industry can be sufficient. Courts have qualified mechanics, contractors, farmers, and tradespeople as experts in their respective fields without requiring graduate credentials. The key is that your specific background must qualify you to give the specific opinion you are offering in this specific case.',
-      'Voir dire on qualifications typically occurs at the beginning of trial testimony when opposing counsel challenges your qualifications. The challenge is called a "Sands" motion (from People v. Sands). Be prepared to explain, concisely and without arrogance, how your background directly relates to the opinion you are offering. Generic qualifications ("I have 20 years of experience in medicine") are far less effective than specific connections ("My 20 years of experience in emergency medicine, including 5 years as department chief at a Level I trauma center, is directly relevant to the standard of care question at issue here").',
+      'Voir dire on qualifications typically occurs at the beginning of trial testimony when opposing counsel challenges your qualifications under Evidence Code § 720. Be prepared to explain, concisely and without arrogance, how your background directly relates to the opinion you are offering. Generic qualifications ("I have 20 years of experience in medicine") are far less effective than specific connections ("My 20 years of experience in emergency medicine, including 5 years as department chief at a Level I trauma center, is directly relevant to the standard of care question at issue here").',
     ],
     bullets: [
       'CEC § 720: qualifications include knowledge, skill, experience, training, or education, not necessarily a degree',
@@ -226,12 +226,12 @@ export const LESSONS = {
     body: [
       'California Code of Civil Procedure § 2034 governs the exchange of expert witness information in California civil litigation. The statute requires parties to exchange expert witness lists and a declaration specifying each expert\'s qualifications and the general substance of their anticipated testimony. This exchange typically occurs no later than 50 days before the initial trial date. Failure to comply (late disclosure, failure to disclose, or material deviation from disclosed opinions at trial) can result in the expert\'s exclusion. This is not a procedural technicality; California courts enforce it strictly.',
       'California\'s admissibility standard for expert opinion testimony is governed by Evidence Code § 801(b) as interpreted by the California Supreme Court in Sargon Enterprises, Inc. v. University of Southern California (2012) 55 Cal.4th 747. Under Sargon, trial courts act as gatekeepers with broad authority to exclude expert opinions that are speculative, lack adequate foundation, or are based on unsound methodology or reasoning, even if the expert is otherwise qualified. Sargon is California\'s functional equivalent of the federal Daubert standard.',
-      'Additional California-specific considerations: (1) California prohibits contingency-fee arrangements for expert witnesses (Business & Professions Code § 6152). (2) Experts must be listed on the expert witness disclosure form; unlisted experts generally cannot testify. (3) California allows expert depositions to be taken after the expert exchange, typically within the period set by the court. (4) In JCCP (Judicial Council Coordinated Proceedings), expert witness rules may be modified by coordination orders.',
+      'Additional California-specific considerations: (1) California prohibits contingency-fee arrangements for expert witnesses under case law and professional ethical standards. (2) Experts must be listed on the expert witness disclosure form; unlisted experts generally cannot testify. (3) California allows expert depositions to be taken after the expert exchange, typically within the period set by the court. (4) In JCCP (Judicial Council Coordinated Proceedings), expert witness rules may be modified by coordination orders.',
     ],
     bullets: [
       'CCP § 2034: expert disclosures due ~50 days before trial; late disclosure can result in exclusion',
       'Sargon (2012): California courts gatekeep speculative or unfounded expert opinions; stricter than many think',
-      'Contingency fee arrangements for experts are prohibited in California (B&P Code § 6152)',
+      'Contingency fee arrangements for experts are prohibited in California under case law and ethical standards',
       'Only experts listed on the § 2034 exchange form may testify at trial',
       'JCCP proceedings may modify standard expert witness rules via coordination orders',
     ],
