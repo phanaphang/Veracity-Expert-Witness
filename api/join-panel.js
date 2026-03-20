@@ -95,7 +95,7 @@ module.exports = async (req, res) => {
     // Log TOS acceptance
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || '';
     const ua = req.headers['user-agent'] || '';
-    await supabase.from('tos_acceptances').insert({
+    await supabase.from('expert_tos_acceptances').insert({
       name,
       email,
       ip_address: ip,

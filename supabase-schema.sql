@@ -452,9 +452,10 @@ CREATE POLICY "Admins manage all events"
   USING (is_admin());
 
 -- ============================================================
--- 9. TOS ACCEPTANCES (Join Our Panel application form)
+-- 9. TOS ACCEPTANCES
 -- ============================================================
 
+-- Client TOS acceptances (contact form)
 CREATE TABLE tos_acceptances (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name        TEXT NOT NULL,
@@ -465,8 +466,19 @@ CREATE TABLE tos_acceptances (
   accepted_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Expert TOS acceptances (Join Our Panel application form)
+CREATE TABLE expert_tos_acceptances (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  name        TEXT NOT NULL,
+  email       TEXT NOT NULL,
+  ip_address  TEXT,
+  user_agent  TEXT,
+  tos_version TEXT NOT NULL DEFAULT '1.0',
+  accepted_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 -- No RLS — inserts come from the serverless API using the service role key.
--- Admins query this table directly via the Supabase dashboard.
+-- Admins query these tables directly via the Supabase dashboard.
 
 -- ============================================================
 -- DONE! Next steps:
