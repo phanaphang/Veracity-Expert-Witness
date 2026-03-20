@@ -452,7 +452,7 @@ CREATE POLICY "Admins manage all events"
   USING (is_admin());
 
 -- ============================================================
--- 9. TOS ACCEPTANCES (landing page contact form)
+-- 9. TOS ACCEPTANCES (Join Our Panel application form)
 -- ============================================================
 
 CREATE TABLE tos_acceptances (

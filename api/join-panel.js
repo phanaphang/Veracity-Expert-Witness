@@ -1,4 +1,5 @@
 const { rateLimit } = require('./_lib/rateLimit');
+const supabase = require('./_lib/supabaseAdmin');
 
 const escapeHtml = (str) =>
   String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -90,6 +91,19 @@ module.exports = async (req, res) => {
       console.error('Paubox API error:', response.status, errorText);
       return res.status(500).json({ error: 'Failed to send your application. Please try again.' });
     }
+
+    // Log TOS acceptance
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || '';
+    const ua = req.headers['user-agent'] || '';
+    await supabase.from('tos_acceptances').insert({
+      name,
+      email,
+      ip_address: ip,
+      user_agent: ua,
+      tos_version: '1.0',
+    }).then(({ error: dbErr }) => {
+      if (dbErr) console.error('TOS log error:', dbErr.message);
+    });
 
     res.json({
       success: true,
