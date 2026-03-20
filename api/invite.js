@@ -6,61 +6,61 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Verify the caller is an admin
-  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
-  const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith('Bearer ')) {
-    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | missing token`);
-    return res.status(401).json({ error: 'Missing authorization token' });
-  }
-
-  const token = authHeader.replace('Bearer ', '');
-  const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
-  if (authError || !user) {
-    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | invalid token`);
-    return res.status(401).json({ error: 'Invalid token' });
-  }
-
-  // Check admin role
-  const { data: profile } = await supabaseAdmin
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single();
-
-  if (profile?.role !== 'admin') {
-    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | insufficient role: ${profile?.role}`);
-    return res.status(403).json({ error: 'Admin access required' });
-  }
-
-  const rl = rateLimit(req, { maxRequests: 10 });
-  if (rl.limited) {
-    res.setHeader('Retry-After', String(rl.retryAfter));
-    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
-  }
-
-  const { email, first_name, last_name } = req.body;
-  if (!email) {
-    return res.status(400).json({ error: 'Email is required' });
-  }
-
-  // Email format validation
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ error: 'Invalid email address.' });
-  }
-
-  // Input length limits
-  if (email.length > 500 || (first_name && first_name.length > 200) || (last_name && last_name.length > 200)) {
-    return res.status(400).json({ error: 'Input exceeds maximum allowed length.' });
-  }
-
-  // Whitelist allowed redirect origins
-  const allowedOrigins = ['https://veracityexpertwitness.com', 'https://www.veracityexpertwitness.com', 'http://localhost:3000'];
-  const origin = req.headers.origin;
-  const redirectBase = allowedOrigins.includes(origin) ? origin : 'https://veracityexpertwitness.com';
-
   try {
+    // Verify the caller is an admin
+    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+      console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | missing token`);
+      return res.status(401).json({ error: 'Missing authorization token' });
+    }
+
+    const token = authHeader.replace('Bearer ', '');
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    if (authError || !user) {
+      console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | invalid token`);
+      return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    // Check admin role
+    const { data: profile } = await supabaseAdmin
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single();
+
+    if (profile?.role !== 'admin') {
+      console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | insufficient role: ${profile?.role}`);
+      return res.status(403).json({ error: 'Admin access required' });
+    }
+
+    const rl = rateLimit(req, { maxRequests: 10 });
+    if (rl.limited) {
+      res.setHeader('Retry-After', String(rl.retryAfter));
+      return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    }
+
+    const { email, first_name, last_name } = req.body;
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    // Email format validation
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email address.' });
+    }
+
+    // Input length limits
+    if (email.length > 500 || (first_name && first_name.length > 200) || (last_name && last_name.length > 200)) {
+      return res.status(400).json({ error: 'Input exceeds maximum allowed length.' });
+    }
+
+    // Whitelist allowed redirect origins
+    const allowedOrigins = ['https://veracityexpertwitness.com', 'https://www.veracityexpertwitness.com', 'http://localhost:3000'];
+    const origin = req.headers.origin;
+    const redirectBase = allowedOrigins.includes(origin) ? origin : 'https://veracityexpertwitness.com';
+
     // Invite user via Supabase Auth
     const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
       redirectTo: `${redirectBase}/portal/auth/callback`,
@@ -102,6 +102,7 @@ module.exports = async (req, res) => {
 
     return res.status(200).json({ success: true, message: `Invitation sent to ${email}` });
   } catch (err) {
-    return res.status(500).json({ error: 'Failed to send invitation' });
+    console.error('Invite handler error:', err.message, err.stack);
+    return res.status(500).json({ error: `Failed to send invitation: ${err.message}` });
   }
 };
