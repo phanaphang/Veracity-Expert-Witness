@@ -86,14 +86,14 @@ export default function AdminMessages() {
 
   const sanitizeSearch = (term) => term.replace(/[%_(),.\\]/g, '');
 
-  const searchExperts = async (term) => {
+  const searchUsers = async (term) => {
     if (term.length < 2) { setExperts([]); return; }
     const safe = sanitizeSearch(term);
     if (!safe) { setExperts([]); return; }
     const { data } = await supabase
       .from('profiles')
-      .select('id, first_name, last_name, email')
-      .eq('role', 'expert')
+      .select('id, first_name, last_name, email, role')
+      .neq('id', user.id)
       .or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`)
       .limit(10);
     setExperts(data || []);
@@ -113,15 +113,15 @@ export default function AdminMessages() {
           <h3 className="portal-card__title">Start New Conversation</h3>
           <input
             className="portal-field__input"
-            placeholder="Search experts by name or email..."
-            onChange={(e) => searchExperts(e.target.value)}
-            aria-label="Search experts by name or email"
+            placeholder="Search users by name or email..."
+            onChange={(e) => searchUsers(e.target.value)}
+            aria-label="Search users by name or email"
           />
           {experts.length > 0 && (
             <div style={{ marginTop: 8 }}>
               {experts.map(exp => (
                 <div key={exp.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--color-gray-100)' }}>
-                  <span>{formatName(exp)} <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)' }}>{exp.email}</span></span>
+                  <span>{formatName(exp)} <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)' }}>{exp.email} · {exp.role}</span></span>
                   <button className="portal-btn-action" onClick={() => startNewChat(exp.id)}>
                     Message
                   </button>
