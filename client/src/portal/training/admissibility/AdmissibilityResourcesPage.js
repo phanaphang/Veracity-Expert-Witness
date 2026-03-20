@@ -631,13 +631,13 @@ const resource5Html = () => htmlShell(
   <tbody>
     <tr><td><strong>Federal Courts</strong></td><td>1993 (Daubert); codified FRE 702</td><td>Applies in all federal districts nationwide. Amended 2023 to clarify preponderance standard.</td></tr>
     <tr><td><strong>Alaska</strong></td><td>State v. Coon (1999)</td><td>Adopted Daubert factors.</td></tr>
-    <tr><td><strong>Arizona</strong></td><td>Logerquist v. McVey (2000)</td><td>Adopted Daubert reliability framework under Ariz. R. Evid. 702.</td></tr>
+    <tr><td><strong>Arizona</strong></td><td>Ariz. R. Evid. 702 amendment (effective Jan. 1, 2012)</td><td>Adopted Daubert reliability framework via court rule amendment. (Note: Logerquist v. McVey (2000) had rejected Daubert.)</td></tr>
     <tr><td><strong>Arkansas</strong></td><td>Farm Bureau Mut. Ins. v. Foote (2001)</td><td>Legislatively adopted via Ark. R. Evid. 702.</td></tr>
     <tr><td><strong>Colorado</strong></td><td>People v. Shreck (2001)</td><td>CRE 702 - applies Daubert-like reliability analysis.</td></tr>
     <tr><td><strong>Connecticut</strong></td><td>State v. Porter (2007)</td><td>Adopted Daubert, replacing prior general acceptance approach.</td></tr>
     <tr><td><strong>Delaware</strong></td><td>M.G. Bancorporation v. Le Beau (1999)</td><td>DRE 702 follows Daubert.</td></tr>
-    <tr><td><strong>Florida</strong></td><td>2013 legislation (Fla. Stat. § 90.702)</td><td>Legislatively adopted Daubert, effective 2013. Reaffirmed by constitutional amendment in 2019.</td></tr>
-    <tr><td><strong>Georgia</strong></td><td>2005 legislation, effective 2013 (O.C.G.A. § 24-7-702)</td><td>Legislatively moved from Harper (Frye-like) to Daubert. Enacted 2005, effective January 1, 2013.</td></tr>
+    <tr><td><strong>Florida</strong></td><td>2013 legislation (Fla. Stat. § 90.702)</td><td>Legislatively adopted Daubert, effective 2013. Florida Supreme Court adopted Daubert as court rule in 2019, reversing its prior refusal to adopt the legislative amendments.</td></tr>
+    <tr><td><strong>Georgia</strong></td><td>HB 24 (enacted 2011), effective Jan. 1, 2013 (O.C.G.A. § 24-7-702)</td><td>Legislatively moved from Harper (Frye-like) to Daubert. New Evidence Code enacted 2011, effective January 1, 2013.</td></tr>
     <tr><td><strong>Hawaii</strong></td><td>State v. Vliet (2002)</td><td>HRE 702 - reliability-focused analysis.</td></tr>
     <tr><td><strong>Idaho</strong></td><td>State v. Merwin (2004)</td><td>IRE 702 follows Daubert.</td></tr>
     <tr><td><strong>Indiana</strong></td><td>Turner v. State (2000)</td><td>Adopted Daubert factors under IRE 702.</td></tr>
@@ -653,7 +653,7 @@ const resource5Html = () => htmlShell(
     <tr><td><strong>Nebraska</strong></td><td>Schafersman v. Agland Coop (2002)</td><td>Adopted Daubert, replacing Frye.</td></tr>
     <tr><td><strong>Nevada</strong></td><td>Higgs v. State (1997)</td><td>NRS 50.275 - Daubert factors.</td></tr>
     <tr><td><strong>New Hampshire</strong></td><td>Baker Valley Lumber v. Ingersoll-Rand (2005)</td><td>NRE 702 - Daubert framework.</td></tr>
-    <tr><td><strong>New Jersey</strong></td><td>Kemp v. State (2016)</td><td>N.J.R.E. 702 - applies a reliability standard consistent with Daubert principles.</td></tr>
+    <tr><td><strong>New Jersey</strong></td><td>Kemp v. State (2002)</td><td>N.J.R.E. 702 - applies a reliability standard consistent with Daubert principles.</td></tr>
     <tr><td><strong>New Mexico</strong></td><td>State v. Alberico (1993)</td><td>Early adopter - NMRA 11-702.</td></tr>
     <tr><td><strong>North Carolina</strong></td><td>2011 legislation (N.C.G.S. § 8C-1, Rule 702)</td><td>Legislatively adopted Daubert, effective 2011.</td></tr>
     <tr><td><strong>Ohio</strong></td><td>Miller v. Bike Athletic Co. (1998)</td><td>ORC 2743.43 - Daubert reliability standard.</td></tr>
@@ -669,7 +669,7 @@ const resource5Html = () => htmlShell(
     <tr><td><strong>West Virginia</strong></td><td>Wilt v. Buracker (1993)</td><td>Early adopter - WRE 702.</td></tr>
     <tr><td><strong>Wisconsin</strong></td><td>State v. Giese (2014)</td><td>Wis. Stat. § 907.02 - reliability-based standard.</td></tr>
     <tr><td><strong>Wyoming</strong></td><td>Bunting v. Jamieson (2004)</td><td>WRE 702 - Daubert factors applied.</td></tr>
-    <tr><td><strong>D.C.</strong></td><td>Motorola Inc. v. Murray (2004)</td><td>Adopted Daubert for D.C. Superior Court.</td></tr>
+    <tr><td><strong>D.C.</strong></td><td>Motorola Inc. v. Murray (2016)</td><td>Adopted Daubert for D.C. Superior Court.</td></tr>
     <tr><td><strong>Guam</strong></td><td>GRE 702</td><td>Follows federal Daubert standard.</td></tr>
     <tr><td><strong>Puerto Rico</strong></td><td>P.R. R. Evid. 702</td><td>Follows federal Daubert standard.</td></tr>
     <tr><td><strong>U.S. Virgin Islands</strong></td><td>V.I. R. Evid. 702</td><td>Follows federal Daubert standard.</td></tr>
@@ -686,8 +686,8 @@ const resource5Html = () => htmlShell(
     <tr><td><strong>Maryland</strong></td><td>Frye-Reed (Reed v. State, 1978)</td><td>General acceptance - legislature has considered but not adopted Daubert.</td></tr>
     <tr><td><strong>Minnesota</strong></td><td>Frye-Mack (State v. Mack, 1980)</td><td>General acceptance for novel scientific evidence.</td></tr>
     <tr><td><strong>New York</strong></td><td>Frye (People v. Wesley, 1994)</td><td>General acceptance. Court of Appeals has repeatedly declined to adopt Daubert.</td></tr>
-    <tr><td><strong>Pennsylvania</strong></td><td>Frye (Grady v. Frito-Lay, 2014)</td><td>General acceptance. PA Supreme Court reaffirmed Frye in 2014.</td></tr>
-    <tr><td><strong>Washington</strong></td><td>Frye (State v. Copeland, 1993)</td><td>General acceptance for novel scientific evidence. ER 702 for non-scientific.</td></tr>
+    <tr><td><strong>Pennsylvania</strong></td><td>Frye (Grady v. Frito-Lay, 2003)</td><td>General acceptance. PA Supreme Court reaffirmed Frye in 2003.</td></tr>
+    <tr><td><strong>Washington</strong></td><td>Frye (State v. Copeland, 1996)</td><td>General acceptance for novel scientific evidence. ER 702 for non-scientific.</td></tr>
   </tbody>
 </table>
 

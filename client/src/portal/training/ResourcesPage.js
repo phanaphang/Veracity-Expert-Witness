@@ -217,10 +217,10 @@ const RESOURCES = [
         <tr><td><strong>Evidence Code § 801</strong></td><td>Expert Opinion Admissibility</td><td>Opinion must relate to subject sufficiently beyond common experience and be based on matter reasonably relied upon by experts in the field.</td></tr>
         <tr><td><strong>Evidence Code § 802</strong></td><td>Basis of Opinion</td><td>Expert may state the basis for their opinion on direct examination. Court may require disclosure of underlying data.</td></tr>
         <tr><td><strong>CCP § 2034</strong></td><td>Expert Disclosure</td><td>Expert lists exchanged ~50 days before trial. Includes expert name, qualifications, and general substance of opinion. Late or non-disclosure → potential exclusion.</td></tr>
-        <tr><td><strong>CCP § 2025.290</strong></td><td>Deposition Duration</td><td>Depositions limited to 7 hours on the record absent agreement or court order. Applies to expert depositions as well.</td></tr>
+        <tr><td><strong>CCP § 2025.290</strong></td><td>Deposition Duration</td><td>General depositions limited to 7 hours on the record absent agreement or court order. Expert witness depositions are expressly exempt under § 2025.290(b).</td></tr>
         <tr><td><strong>Sargon Enterprises v. USC (2012)</strong></td><td>Gatekeeping Standard</td><td>Trial courts must exclude speculative, unfounded, or methodologically unsound expert opinions - even from qualified experts. California's Daubert equivalent.</td></tr>
         <tr><td><strong>Case Law / Ethics</strong></td><td>Fee Arrangements</td><td>Contingency fee arrangements for expert witnesses are prohibited in California under case law and professional ethical standards.</td></tr>
-        <tr><td><strong>Evidence Code § 721</strong></td><td>Cross-Examination</td><td>Expert may be cross-examined on any matter disclosed during direct, and on the content of published treatises if used during cross.</td></tr>
+        <tr><td><strong>Evidence Code § 721</strong></td><td>Cross-Examination</td><td>Expert may be cross-examined on qualifications, subject matter, and the basis and reasons for the opinion. Under § 721(b), an expert may not be cross-examined on the content of a treatise unless the expert relied on it, it was admitted in evidence, or it was established as a reliable authority.</td></tr>
         <tr><td><strong>Evidence Code § 722</strong></td><td>Bias / Compensation</td><td>Expert's compensation is admissible to attack credibility. Expert can be asked about fees, frequency of testimony, and percentage of work for each side.</td></tr>
       </table>
 
@@ -310,7 +310,7 @@ const RESOURCES = [
       <p><strong>Lesson 1.2 - Ethics, Independence & the Hired Gun Problem</strong></p>
       <ul>
         <li>The "hired gun" label follows experts throughout their careers and is professionally fatal</li>
-        <li>Your obligations arise from your licensing board, professional codes, and FRCP Rule 26 / CCP § 2034.505</li>
+        <li>Your obligations arise from your licensing board, professional codes, and FRCP Rule 26 / CCP § 2034.260</li>
         <li>Acknowledging limitations in your opinion strengthens your credibility with the jury</li>
         <li>An opinion that is honest but 70% favorable is worth more than one that is 100% favorable but dishonest</li>
       </ul>
@@ -320,7 +320,7 @@ const RESOURCES = [
       <p><strong>Lesson 2.1 - Deposition Basics: Anatomy & Preparation</strong></p>
       <ul>
         <li>Depositions are sworn discovery proceedings - your testimony can be used for impeachment at trial</li>
-        <li>California limits expert depositions to 7 hours on the record (CCP § 2025.290)</li>
+        <li>California's general 7-hour deposition limit (CCP § 2025.290) does not apply to expert witnesses; expert depositions have no statutory time cap</li>
         <li>Pre-deposition preparation is mandatory: re-read your report, review all relied-upon materials, meet with counsel</li>
         <li>Never review new materials the night before - only what you have already relied upon</li>
       </ul>

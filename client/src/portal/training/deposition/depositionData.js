@@ -185,7 +185,7 @@ export const LESSONS = {
         bullets: [
           '"Objection, form" -- the question is ambiguous, compound, assumes facts, or is otherwise defective. You typically still answer after this objection.',
           '"Objection, asked and answered" -- the question has already been asked. You typically still answer.',
-          '"Instruction not to answer" -- retaining counsel directs you not to answer. This is permitted only in narrow circumstances: to preserve privilege, to enforce a court-ordered limitation, or to protect against harassment. If instructed not to answer, follow the instruction.',
+          '"Instruction not to answer" -- retaining counsel directs you not to answer. This is permitted only in narrow circumstances: to preserve privilege, to enforce a court-ordered limitation, or to present a motion under Rule 30(d)(3) to terminate or limit the deposition. If instructed not to answer, follow the instruction.',
         ],
         afterList: 'When counsel objects, pause. Wait for the objection to be stated. If no instruction not to answer follows, answer the question. This pause-and-wait rhythm is important -- it gives your attorney time to protect the record.',
       },
@@ -465,10 +465,10 @@ export const LESSONS = {
       {
         subheading: 'Reviewing the Transcript: FRCP 30(e)',
         body: [
-          'Under FRCP 30(e), you have the right to review the transcript and submit an errata sheet noting changes in "form or substance" within 30 days of being notified that the transcript is available. This is commonly known as "reading and signing."',
+          'Under FRCP 30(e), the deponent or a party may request, before the deposition is completed, the right to review the transcript and submit an errata sheet noting changes in "form or substance" within 30 days of being notified that the transcript is available. This is commonly known as "reading and signing." If no request is made before the deposition concludes, the right to review is waived.',
         ],
         bullets: [
-          'Always exercise your right to review. Transcription errors are common, especially with technical terminology.',
+          'Always ensure counsel requests transcript review before the deposition concludes. Transcription errors are common, especially with technical terminology.',
           'Errata sheets for typographical corrections are routine and non-controversial.',
           'Substantive changes -- altering the meaning of an answer -- are permitted but will be heavily scrutinized. Opposing counsel will highlight every substantive change and argue that your original answer was more truthful.',
           'If you discover a substantive error, discuss with retaining counsel before filing the errata. A well-explained correction is far less damaging than an unexplained one.',
@@ -515,7 +515,7 @@ export const LESSONS = {
       },
     ],
     keyTakeaway:
-      'The transcript is permanent and will follow you to trial. Always review it under FRCP 30(e), maintain consistency across every stage of litigation, and treat each deposition as a learning experience for the next.',
+      'The transcript is permanent and will follow you to trial. Always ensure review is requested before the deposition concludes under FRCP 30(e), maintain consistency across every stage of litigation, and treat each deposition as a learning experience for the next.',
   },
 };
 
@@ -694,12 +694,12 @@ export const QUIZ_DATA = {
       text: 'What does FRCP 30(e) allow an expert to do after a deposition?',
       options: [
         { id: 'a', text: 'Withdraw testimony they regret giving', correct: false },
-        { id: 'b', text: 'Review the transcript and submit an errata sheet noting changes in form or substance within 30 days', correct: true },
+        { id: 'b', text: 'If review was requested before the deposition concluded, review the transcript and submit an errata sheet noting changes in form or substance within 30 days', correct: true },
         { id: 'c', text: 'File a motion to seal the deposition transcript from public access', correct: false },
         { id: 'd', text: 'Refuse to sign the transcript if they disagree with how questions were asked', correct: false },
       ],
       explanation:
-        'FRCP 30(e) allows the deponent to review the transcript and submit changes in "form or substance" within 30 days. Typographical corrections are routine, but substantive changes will be heavily scrutinized by opposing counsel.',
+        'FRCP 30(e) allows the deponent to review the transcript and submit changes in "form or substance" within 30 days, provided that review was requested by the deponent or a party before the deposition was completed. Typographical corrections are routine, but substantive changes will be heavily scrutinized by opposing counsel.',
     },
     {
       id: 'q8',

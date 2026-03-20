@@ -200,14 +200,14 @@ export const LESSONS = {
         ],
       },
       {
-        subheading: 'Surviving a Daubert or Kelly Challenge',
+        subheading: 'Surviving a Daubert or Kelly/Frye Challenge',
         body: [
           'In some cases, a formal motion to exclude your testimony (Daubert motion in federal court, Kelly/Frye in certain state courts) will have been decided before trial. But in others, the challenge occurs during voir dire. If the judge permits you to testify despite the challenge, the jury never knows it happened.',
         ],
         bullets: [
           'Be prepared to articulate why your methodology is reliable and generally accepted.',
           'Know the error rate, testing procedures, and peer review status of your methods.',
-          'Understand whether you are in a Daubert or Frye/Kelly jurisdiction -- the standard is different.',
+          'Understand whether you are in a Daubert or Kelly/Frye jurisdiction -- the standard is different.',
           'If you completed the Admissibility Standards module, review those materials before trial.',
         ],
       },
@@ -295,7 +295,7 @@ export const LESSONS = {
       {
         subheading: 'The Rules of Cross-Examination',
         body: [
-          'At trial, cross-examination is limited to the scope of direct examination and matters affecting the witness\'s credibility (FRE 611(b)). This is a critical protection: opposing counsel cannot ask you about topics you did not cover on direct. However, credibility is always fair game.',
+          'At trial, cross-examination should not go beyond the subject matter of direct examination and matters affecting the witness\'s credibility (FRE 611(b)), though the court may permit inquiry into additional matters. This is a critical protection: opposing counsel cannot ask you about topics you did not cover on direct. However, credibility is always fair game.',
         ],
         bullets: [
           'Leading questions are permitted and expected on cross -- the attorney controls the framing.',
@@ -397,7 +397,7 @@ export const LESSONS = {
         ],
         bullets: [
           'FRE 106 prevents misleading use of partial documents.',
-          'The rule applies to writings and recorded statements.',
+          'As amended in 2023, the rule now applies to all statements in any form, including oral statements.',
           'Retaining counsel raises the issue -- you do not invoke FRE 106 yourself.',
           'Understanding this rule helps you remain calm when counsel cherry-picks from your report.',
         ],
@@ -635,7 +635,7 @@ export const LESSONS = {
       {
         subheading: 'The Rule on Witnesses (FRE 615)',
         body: [
-          'Under FRE 615 (the "rule on witnesses"), the court may order witnesses excluded from the courtroom so they cannot hear other witnesses\' testimony. Expert witnesses are often exempt from this rule under FRE 615(c), which permits a party to designate an essential person. However, this is not automatic -- counsel must request the exemption.',
+          'Under FRE 615 (the "rule on witnesses"), the court must order witnesses excluded from the courtroom at a party\'s request so they cannot hear other witnesses\' testimony. The court may also do so on its own initiative. Expert witnesses are often exempt from this rule under an exception in FRE 615 that permits a party to designate a person whose presence is essential to presenting their claim or defense. However, this exemption is not automatic -- counsel must request it.',
         ],
         bullets: [
           'If exempt, you may remain in the courtroom during other testimony.',

@@ -222,7 +222,7 @@ export const LESSONS = {
       {
         subheading: 'Email and Communication Pitfalls',
         body: [
-          'Communications between you and retaining counsel deserve particular care. FRCP 26(b)(4)(C) protects most attorney-expert communications from discovery, but carves out exceptions for facts or data provided by counsel that you considered in forming your opinions, and assumptions provided by counsel that you relied on.',
+          'Communications between you and retaining counsel deserve particular care. FRCP 26(b)(4)(C) protects most attorney-expert communications from discovery, but carves out three exceptions: communications relating to compensation for the expert\'s study or testimony, facts or data provided by counsel that you considered in forming your opinions, and assumptions provided by counsel that you relied on.',
           'If counsel sent you an email containing factual data that you considered, the content of that communication (though not necessarily the communication itself) may be discoverable. Draft communications with counsel carefully, and confirm with counsel which facts and assumptions should be documented in the report itself.',
         ],
       },

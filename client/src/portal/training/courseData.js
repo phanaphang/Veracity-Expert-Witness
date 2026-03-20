@@ -35,13 +35,13 @@ export const LESSONS = {
     heading: 'Staying Independent in an Adversarial System',
     body: [
       'The "hired gun" problem refers to experts who are perceived, or who actually function, as advocates for the hiring party rather than as independent educators for the court. This reputation, once earned, follows an expert through their career and can permanently diminish their usefulness to retaining counsel and the judicial system alike.',
-      'Your ethical obligations as an expert witness flow from multiple sources: your professional licensing board, applicable codes of conduct (AMA for physicians, NSPE for engineers, state bar rules for attorney-experts), and foundational legal requirements under FRCP Rule 26(a)(2) and California Code of Civil Procedure § 2034.505.',
+      'Your ethical obligations as an expert witness flow from multiple sources: your professional licensing board, applicable codes of conduct (AMA for physicians, NSPE for engineers, state bar rules for attorney-experts), and foundational legal requirements under FRCP Rule 26(a)(2) and California Code of Civil Procedure § 2034.260.',
       'California Evidence Code § 801 requires that an expert opinion be based on matter reasonably relied upon by experts in the field. An opinion offered not because it reflects your genuine analysis, but because the retaining party wants to hear it, cannot survive serious scrutiny, and it should not. Courts increasingly scrutinize experts under Sargon Enterprises, Inc. v. University of Southern California (2012), which empowers trial judges to exclude speculative or unfounded opinions.',
       'Practically, independence means three things: you will share your honest assessment with retaining counsel even when it hurts their case; you will not materially change your opinion in response to attorney pressure; and you will acknowledge limitations and contrary evidence in your report and testimony.',
     ],
     bullets: [
       'The "hired gun" label is career-ending. Courts and opposing counsel share information about unreliable experts',
-      'FRCP Rule 26 and CCP § 2034.505 impose affirmative duties of candor on testifying experts',
+      'FRCP Rule 26 and CCP § 2034.260 impose disclosure and supplementation obligations regarding testifying experts',
       'Independence requires sharing bad news with retaining counsel, not just good news',
       'Acknowledging limitations in your opinion actually strengthens your credibility, not weakens it',
       'Veracity selects experts specifically for their track record of intellectual independence',
@@ -61,13 +61,13 @@ export const LESSONS = {
       'A deposition is sworn out-of-court testimony taken before trial, transcribed by a certified court reporter, and often recorded on video. For an expert witness, the deposition is both an opportunity and a minefield: an opportunity to lock in your opinion clearly and consistently, and a minefield because anything you say can be used to impeach your trial testimony.',
       'The typical deposition room contains: retaining counsel (present, sometimes participating), opposing counsel (asking questions), a certified court reporter, and frequently a videographer. Some depositions include the client, paralegals, or additional counsel. In California, depositions of expert witnesses are governed by CCP § 2034.410–2034.470 and are typically limited to the substance of the expert\'s opinion and the materials reviewed.',
       'Before any deposition, preparation is mandatory. You must: re-read your expert report cover to cover; review every document you relied upon; revisit your notes, calculations, and methodology; meet with retaining counsel to understand the likely attack areas; and review any prior testimony you have given in similar cases. Never enter a deposition room with a document you have not personally reviewed.',
-      'On the day of the deposition: arrive early, bring copies of your report and CV, and confirm with retaining counsel what materials opposing counsel is entitled to review. In California, an expert\'s deposition cannot exceed seven hours on the record absent agreement or court order (CCP § 2025.290).',
+      'On the day of the deposition: arrive early, bring copies of your report and CV, and confirm with retaining counsel what materials opposing counsel is entitled to review. In California, the general 7-hour deposition limit under CCP § 2025.290 does not apply to expert witnesses, who are expressly exempt under § 2025.290(b). Expert deposition length is governed by party agreement or court order.',
     ],
     bullets: [
       'Your deposition transcript becomes the baseline against which your trial testimony is measured',
       'Opposing counsel\'s goal is discovery: understanding your opinion so they can attack it at trial',
       'Never review new materials the night before a deposition; review only what you\'ve already relied upon',
-      'California limits expert depositions to 7 hours on the record (CCP § 2025.290)',
+      'California\'s general 7-hour deposition limit (CCP § 2025.290) does not apply to expert witnesses; expert depositions have no statutory time cap',
       'Video depositions are increasingly common; composure and eye contact matter on camera',
     ],
     keyTakeaway:
