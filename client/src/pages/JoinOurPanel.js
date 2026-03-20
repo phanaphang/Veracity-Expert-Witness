@@ -60,6 +60,7 @@ function JoinOurPanel() {
   const [website, setWebsite] = useState('');
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(null);
+  const [showTosModal, setShowTosModal] = useState(false);
   const renderTime = useRef(Date.now());
 
   useEffect(() => {
@@ -91,13 +92,18 @@ function JoinOurPanel() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const newErrors = validate();
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
+    setShowTosModal(true);
+  };
+
+  const handleConfirmSubmit = async () => {
+    setShowTosModal(false);
     setStatus('sending');
     try {
       const res = await fetch('/api/join-panel', {
@@ -326,6 +332,64 @@ function JoinOurPanel() {
           </div>
         </div>
       </footer>
+
+      {showTosModal && (
+        <div className="tos-modal-overlay" onClick={() => setShowTosModal(false)}>
+          <div className="tos-modal" onClick={(e) => e.stopPropagation()}>
+            <h2 className="tos-modal__title">Terms of Service</h2>
+            <p className="tos-modal__subtitle">Please review and accept the terms before submitting your application.</p>
+            <div className="tos-modal__content">
+              <h4>1. Panel Membership</h4>
+              <p>
+                By submitting this application, you are applying to join the Veracity Expert Witness panel.
+                Acceptance is at the sole discretion of Veracity Expert Witness LLC. Panel membership does not
+                guarantee case assignments or compensation.
+              </p>
+              <h4>2. Accuracy of Information</h4>
+              <p>
+                You confirm that all information provided in this application is accurate and complete.
+                You agree to promptly notify Veracity of any changes to your credentials, contact information,
+                or professional standing.
+              </p>
+              <h4>3. Confidentiality</h4>
+              <p>
+                You agree to maintain strict confidentiality regarding all case information, client details,
+                and proprietary materials shared with you through Veracity. This obligation survives the
+                termination of your panel membership.
+              </p>
+              <h4>4. Professional Conduct</h4>
+              <p>
+                You agree to maintain the highest standards of professional conduct and ethics in all
+                engagements coordinated through Veracity. You will provide honest, objective, and unbiased
+                expert opinions based on your professional expertise.
+              </p>
+              <h4>5. Conflict of Interest</h4>
+              <p>
+                You agree to disclose any potential conflicts of interest before accepting a case assignment.
+                You will not accept engagements where a conflict exists or could reasonably be perceived.
+              </p>
+              <h4>6. Independent Contractor Status</h4>
+              <p>
+                Panel members are independent contractors, not employees of Veracity Expert Witness LLC.
+                You are responsible for your own taxes, insurance, and professional licensing.
+              </p>
+              <h4>7. Full Terms</h4>
+              <p>
+                This summary highlights key terms. The complete <Link to="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</Link> and <Link to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link> govern
+                your use of our services and platform.
+              </p>
+            </div>
+            <div className="tos-modal__actions">
+              <button className="btn btn--outline" type="button" onClick={() => setShowTosModal(false)}>
+                Cancel
+              </button>
+              <button className="btn btn--primary" type="button" onClick={handleConfirmSubmit}>
+                Agree &amp; Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
