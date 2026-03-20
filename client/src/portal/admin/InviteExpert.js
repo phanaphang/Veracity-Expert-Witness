@@ -36,7 +36,15 @@ export default function InviteExpert() {
         body: JSON.stringify(form),
       });
 
-      const data = await res.json();
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        setError(`Server error (${res.status}): ${text.slice(0, 200)}`);
+        setSending(false);
+        return;
+      }
       if (!res.ok) {
         setError(data.error || 'Failed to send invitation');
         setSending(false);
@@ -46,7 +54,7 @@ export default function InviteExpert() {
       setMessage(`Invitation sent to ${form.email}`);
       setForm({ email: '', first_name: '', last_name: '' });
     } catch (err) {
-      setError('Failed to send invitation. Please try again.');
+      setError(`Failed to send invitation: ${err.message}`);
     }
 
     setSending(false);
