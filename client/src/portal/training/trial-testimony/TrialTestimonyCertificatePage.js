@@ -113,7 +113,7 @@ export default function TrialTestimonyCertificatePage({ onProgressUpdate }) {
         const token = sessionData?.session?.access_token;
         if (token && profile?.email) {
           try {
-            await fetch('/api/training/trial-testimony-certificate-issued', {
+            await fetch('/api/training/certificate-issued', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -123,6 +123,8 @@ export default function TrialTestimonyCertificatePage({ onProgressUpdate }) {
                 certificateName: sanitized,
                 completionDate: displayDate,
                 expertEmail: profile.email,
+                moduleTitle: 'Trial Testimony Best Practices',
+                moduleDuration: '~60 min',
               }),
             });
             setEmailSent(true);

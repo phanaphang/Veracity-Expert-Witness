@@ -56,7 +56,13 @@ module.exports = async (req, res) => {
     return res.status(403).json({ error: 'Access denied' });
   }
 
-  const { certificateName, completionDate, expertEmail } = req.body;
+  const {
+    certificateName,
+    completionDate,
+    expertEmail,
+    moduleTitle = 'Expert Witness Foundations',
+    moduleDuration = '~60 min',
+  } = req.body;
 
   if (!certificateName || !completionDate || !expertEmail) {
     return res.status(400).json({ error: 'Missing required fields.' });
@@ -80,20 +86,22 @@ module.exports = async (req, res) => {
   const safeName = escapeHtml(certificateName);
   const safeDate = escapeHtml(completionDate);
   const safeEmail = escapeHtml(expertEmail);
+  const safeTitle = escapeHtml(moduleTitle);
+  const safeDuration = escapeHtml(moduleDuration);
 
-  const expertPlainText = `Congratulations, ${certificateName}!\n\nYou have successfully completed the Expert Witness Foundations training module.\n\nCertificate Name: ${certificateName}\nCompletion Date: ${completionDate}\nCourse: Expert Witness Foundations (~60 min)\n\nYour certificate of completion is available in your expert portal under Training > Certificate.\n\nThis email was sent by Veracity Expert Witness. Please do not reply to this message.`;
+  const expertPlainText = `Congratulations, ${certificateName}!\n\nYou have successfully completed the ${moduleTitle} training module.\n\nCertificate Name: ${certificateName}\nCompletion Date: ${completionDate}\nCourse: ${moduleTitle} (${moduleDuration})\n\nYour certificate of completion is available in your expert portal under Training > Certificate.\n\nThis email was sent by Veracity Expert Witness. Please do not reply to this message.`;
 
-  const adminPlainText = `Panel Member Training Completed\n\nA panel member has completed the Expert Witness Foundations training module.\n\nCertificate Name: ${certificateName}\nEmail: ${expertEmail}\nCompletion Date: ${completionDate}\n\nVeracity Expert Witness — Internal Notification`;
+  const adminPlainText = `Panel Member Training Completed\n\nA panel member has completed the ${moduleTitle} training module.\n\nCertificate Name: ${certificateName}\nEmail: ${expertEmail}\nCompletion Date: ${completionDate}\n\nVeracity Expert Witness — Internal Notification`;
 
   const expertHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
       <div style="background:#1a1f3a;padding:24px 32px;border-radius:8px 8px 0 0;">
         <h1 style="color:#ffffff;margin:0;font-size:22px;">Veracity Expert Witness</h1>
-        <p style="color:#d36622;margin:4px 0 0;font-size:14px;">Expert Witness Foundations</p>
+        <p style="color:#d36622;margin:4px 0 0;font-size:14px;">${safeTitle}</p>
       </div>
       <div style="background:#ffffff;padding:32px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;">
         <h2 style="color:#1a1f3a;margin-top:0;">Congratulations, ${safeName}!</h2>
-        <p style="color:#374151;">You have successfully completed the <strong>Expert Witness Foundations</strong> training module.</p>
+        <p style="color:#374151;">You have successfully completed the <strong>${safeTitle}</strong> training module.</p>
         <table style="border-collapse:collapse;width:100%;margin:24px 0;">
           <tr>
             <td style="padding:10px 12px;font-weight:bold;background:#f9fafb;border:1px solid #e5e7eb;color:#1a1f3a;">Certificate Name</td>
@@ -105,7 +113,7 @@ module.exports = async (req, res) => {
           </tr>
           <tr>
             <td style="padding:10px 12px;font-weight:bold;background:#f9fafb;border:1px solid #e5e7eb;color:#1a1f3a;">Course</td>
-            <td style="padding:10px 12px;border:1px solid #e5e7eb;color:#374151;">Expert Witness Foundations (~60 min)</td>
+            <td style="padding:10px 12px;border:1px solid #e5e7eb;color:#374151;">${safeTitle} (${safeDuration})</td>
           </tr>
         </table>
         <p style="color:#374151;">Your certificate of completion is available in your expert portal under <strong>Training &gt; Certificate</strong>.</p>
@@ -122,7 +130,7 @@ module.exports = async (req, res) => {
       </div>
       <div style="background:#ffffff;padding:32px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px;">
         <h2 style="color:#1a1f3a;margin-top:0;">Panel Member Training Completed</h2>
-        <p style="color:#374151;">A panel member has completed the Expert Witness Foundations training module.</p>
+        <p style="color:#374151;">A panel member has completed the ${safeTitle} training module.</p>
         <table style="border-collapse:collapse;width:100%;margin:24px 0;">
           <tr>
             <td style="padding:10px 12px;font-weight:bold;background:#f9fafb;border:1px solid #e5e7eb;color:#1a1f3a;">Certificate Name</td>
@@ -160,7 +168,7 @@ module.exports = async (req, res) => {
             message: {
               recipients: [expertEmail],
               headers: {
-                subject: 'You\'ve completed Expert Witness Foundations — Veracity',
+                subject: `You've completed ${moduleTitle} — Veracity`,
                 from: 'noreply@veracityexpertwitness.com',
               },
               content: { 'text/html': expertHtml, 'text/plain': expertPlainText },
@@ -193,7 +201,7 @@ module.exports = async (req, res) => {
                 process.env.ADMIN_EMAIL || 'admin@veracityexpertwitness.com',
               ],
               headers: {
-                subject: `Training Complete: ${escapeHtml(certificateName)} — Expert Witness Foundations`,
+                subject: `Training Complete: ${escapeHtml(certificateName)} — ${escapeHtml(moduleTitle)}`,
                 from: 'noreply@veracityexpertwitness.com',
               },
               content: { 'text/html': adminHtml, 'text/plain': adminPlainText },

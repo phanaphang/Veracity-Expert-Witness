@@ -113,7 +113,7 @@ export default function AdmissibilityCertificatePage({ onProgressUpdate }) {
         const token = sessionData?.session?.access_token;
         if (token && profile?.email) {
           try {
-            await fetch('/api/training/admissibility-certificate-issued', {
+            await fetch('/api/training/certificate-issued', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -123,6 +123,8 @@ export default function AdmissibilityCertificatePage({ onProgressUpdate }) {
                 certificateName: sanitized,
                 completionDate: displayDate,
                 expertEmail: profile.email,
+                moduleTitle: 'Standards of Admissibility: Frye, Kelly, and Daubert',
+                moduleDuration: '~30 min',
               }),
             });
             setEmailSent(true);
