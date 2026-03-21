@@ -5,7 +5,7 @@ import { useMessages } from '../../hooks/useMessages';
 import { formatName } from '../../utils/formatName';
 
 export default function Messages() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [conversations, setConversations] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
   const [newMessage, setNewMessage] = useState('');
@@ -51,7 +51,7 @@ export default function Messages() {
   const handleSend = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !activeConv) return;
-    await sendMessage(newMessage.trim(), user.id, getRecipientId(activeConv));
+    await sendMessage(newMessage.trim(), user.id, getRecipientId(activeConv), formatName(profile));
     setNewMessage('');
   };
 

@@ -34,7 +34,7 @@ export function useMessages(conversationId) {
     return () => { supabase.removeChannel(channel); };
   }, [conversationId]);
 
-  const sendMessage = useCallback(async (content, senderId, recipientId) => {
+  const sendMessage = useCallback(async (content, senderId, recipientId, senderName) => {
     const { error } = await supabase.from('messages').insert({
       conversation_id: conversationId,
       sender_id: senderId,
@@ -45,6 +45,23 @@ export function useMessages(conversationId) {
       await supabase.from('conversations')
         .update({ last_message_at: new Date().toISOString() })
         .eq('id', conversationId);
+
+      // Send email notification (non-blocking)
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (!session) return;
+        fetch('/api/notify-message', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            recipientId,
+            senderName: senderName || 'Someone',
+            messagePreview: content,
+          }),
+        }).catch(() => {});
+      });
     }
     return { error };
   }, [conversationId]);

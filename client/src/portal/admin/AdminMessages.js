@@ -5,7 +5,7 @@ import { useMessages } from '../../hooks/useMessages';
 import { formatName } from '../../utils/formatName';
 
 export default function AdminMessages() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [conversations, setConversations] = useState([]);
   const [experts, setExperts] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
@@ -54,7 +54,7 @@ export default function AdminMessages() {
   const handleSend = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !activeConv) return;
-    await sendMessage(newMessage.trim(), user.id, getRecipientId(activeConv));
+    await sendMessage(newMessage.trim(), user.id, getRecipientId(activeConv), formatName(profile));
     setNewMessage('');
   };
 
