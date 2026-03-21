@@ -264,7 +264,7 @@ export default function Profile() {
             </div>
             <div className="portal-field">
               <label className="portal-field__label" htmlFor="profile-last-name">Last Name</label>
-              <input id="profile-last-name" className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required maxLength={50} readOnly={!editing} />
+              <input id="profile-last-name" className="portal-field__input" name="last_name" value={form.last_name} onChange={handleChange} required={profile?.role !== 'admin'} maxLength={50} readOnly={!editing} />
             </div>
           </div>
           <div className="portal-field">
