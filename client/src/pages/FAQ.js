@@ -84,7 +84,7 @@ const faqData = [
       },
       {
         question: 'What are the benefits of joining the panel?',
-        answer: <>Panel members receive steady case referrals, full administrative and logistics support, scheduling and compliance coordination, access to our secure Expert Portal, and the flexibility to choose cases that match their expertise. Learn more and apply on our <Link to="/join-our-panel">Join Our Panel</Link> page.</>,
+        answer: <>Panel members receive case assignment opportunities, full administrative and logistics support, scheduling and compliance coordination, access to our secure Expert Portal, and the flexibility to choose cases that match their expertise. Learn more and apply on our <Link to="/join-our-panel">Join Our Panel</Link> page.</>,
       },
       {
         question: 'What qualifications do I need to apply?',
