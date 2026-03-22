@@ -3,6 +3,7 @@ import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { generateExpertPdf } from './generateExpertPdf';
 import CalendarView from '../components/CalendarView';
+import { useToast } from '../../contexts/ToastContext';
 
 function formatPhone(value) {
   if (!value) return '—';
@@ -24,6 +25,7 @@ export default function ExpertDetail() {
   const [documents, setDocuments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [generating, setGenerating] = useState(false);
+  const toast = useToast();
 
   useEffect(() => {
     Promise.all([
@@ -67,8 +69,13 @@ export default function ExpertDetail() {
   };
 
   const updateStatus = async (status) => {
-    await supabase.from('profiles').update({ profile_status: status }).eq('id', id);
-    setExpert(prev => ({ ...prev, profile_status: status }));
+    const { error: statusErr } = await supabase.from('profiles').update({ profile_status: status }).eq('id', id);
+    if (statusErr) {
+      toast.error('Failed to update status');
+    } else {
+      setExpert(prev => ({ ...prev, profile_status: status }));
+      toast.success(`Expert ${status}`);
+    }
   };
 
   if (loading) return <div className="portal-loading" role="status" aria-label="Loading"><div className="portal-loading__spinner"></div></div>;

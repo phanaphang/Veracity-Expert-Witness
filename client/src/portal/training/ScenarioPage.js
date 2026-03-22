@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
+import { useToast } from '../../contexts/ToastContext';
 import { SCENARIO_DATA, UNITS } from './courseData';
 
 export default function ScenarioPage({ onProgressUpdate }) {
   const { scenarioId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { error: toastError } = useToast();
 
   const scenario = SCENARIO_DATA[scenarioId];
   const unit = scenario ? UNITS.find((u) => u.scenarioId === scenarioId) : null;
@@ -80,6 +82,7 @@ export default function ScenarioPage({ onProgressUpdate }) {
       if (onProgressUpdate) onProgressUpdate();
     } catch (e) {
       console.error('Scenario save error', e);
+      toastError('Failed to save your choice. Please try again.');
     } finally {
       setSaving(false);
     }

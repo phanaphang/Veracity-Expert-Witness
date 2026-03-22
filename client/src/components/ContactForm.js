@@ -324,6 +324,7 @@ function ContactForm() {
               onChange={handleChange}
               maxLength={5000}
             />
+            <span className={`portal-char-count${formData.details.length >= 4500 ? (formData.details.length >= 5000 ? ' portal-char-count--limit' : ' portal-char-count--warn') : ''}`}>{formData.details.length} / 5000</span>
             {errors.details && <span className="contact__error">{errors.details}</span>}
           </div>
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
-import { TOTAL_LESSONS } from './courseData';
+import { UNITS, TOTAL_LESSONS } from './courseData';
 import TrainingTermsModal from '../components/TrainingTermsModal';
 import TrainingDisclaimer from '../components/TrainingDisclaimer';
 
@@ -14,6 +14,11 @@ export default function TrainingHome() {
   const [reportWritingPct, setReportWritingPct] = useState(null);
   const [depositionPct, setDepositionPct] = useState(null);
   const [trialTestimonyPct, setTrialTestimonyPct] = useState(null);
+  const [foundationsNext, setFoundationsNext] = useState(null);
+  const [admissibilityNext, setAdmissibilityNext] = useState(null);
+  const [reportWritingNext, setReportWritingNext] = useState(null);
+  const [depositionNext, setDepositionNext] = useState(null);
+  const [trialTestimonyNext, setTrialTestimonyNext] = useState(null);
 
   useEffect(() => {
     if (!user) return;
@@ -42,52 +47,66 @@ export default function TrainingHome() {
       ]);
 
       if (foundations) {
-        const completed = foundations.filter((r) => r.completed && r.lesson_id).length;
-        setFoundationsPct(Math.round((completed / TOTAL_LESSONS) * 100));
+        const completedIds = foundations.filter((r) => r.completed && r.lesson_id).map((r) => r.lesson_id);
+        setFoundationsPct(Math.round((completedIds.length / TOTAL_LESSONS) * 100));
+        const allLessons = UNITS.flatMap((u) => u.lessons);
+        const nextId = allLessons.find((lid) => !completedIds.includes(lid));
+        if (nextId) setFoundationsNext(`/training/lesson/${nextId}`);
       }
 
       if (admissibility) {
-        const lessons = admissibility.filter(
+        const completedIds = admissibility.filter(
           (r) => r.completed && ['1', '2', '3'].includes(r.lesson_id)
-        ).length;
+        ).map((r) => r.lesson_id);
         const scenario = admissibility.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
         const quiz = admissibility.some(
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 4
         ) ? 1 : 0;
-        setAdmissibilityPct(Math.round(((lessons + scenario + quiz) / 5) * 100));
+        setAdmissibilityPct(Math.round(((completedIds.length + scenario + quiz) / 5) * 100));
+        const nextId = ['1', '2', '3'].find((lid) => !completedIds.includes(lid));
+        if (nextId) setAdmissibilityNext(`/training/admissibility/lesson/${nextId}`);
       }
 
       if (reportWriting) {
-        const lessons = reportWriting.filter(
-          (r) => r.completed && ['1', '2', '3', '4', '5', '6', '7', '8'].includes(r.lesson_id)
-        ).length;
+        const rwSeq = ['1', '2', '3', '4', '5', '6', '7', '8'];
+        const completedIds = reportWriting.filter(
+          (r) => r.completed && rwSeq.includes(r.lesson_id)
+        ).map((r) => r.lesson_id);
         const scenario = reportWriting.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
         const quiz = reportWriting.some(
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6
         ) ? 1 : 0;
-        setReportWritingPct(Math.round(((lessons + scenario + quiz) / 10) * 100));
+        setReportWritingPct(Math.round(((completedIds.length + scenario + quiz) / 10) * 100));
+        const nextId = rwSeq.find((lid) => !completedIds.includes(lid));
+        if (nextId) setReportWritingNext(`/training/report-writing/lesson/${nextId}`);
       }
 
       if (deposition) {
-        const lessons = deposition.filter(
-          (r) => r.completed && ['1', '2', '3', '4', '5', '6', '7', '8'].includes(r.lesson_id)
-        ).length;
+        const depSeq = ['1', '2', '3', '4', '5', '6', '7', '8'];
+        const completedIds = deposition.filter(
+          (r) => r.completed && depSeq.includes(r.lesson_id)
+        ).map((r) => r.lesson_id);
         const scenario = deposition.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
         const quiz = deposition.some(
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6
         ) ? 1 : 0;
-        setDepositionPct(Math.round(((lessons + scenario + quiz) / 10) * 100));
+        setDepositionPct(Math.round(((completedIds.length + scenario + quiz) / 10) * 100));
+        const nextId = depSeq.find((lid) => !completedIds.includes(lid));
+        if (nextId) setDepositionNext(`/training/deposition/lesson/${nextId}`);
       }
 
       if (trialTestimony) {
-        const lessons = trialTestimony.filter(
-          (r) => r.completed && ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'].includes(r.lesson_id)
-        ).length;
+        const ttSeq = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+        const completedIds = trialTestimony.filter(
+          (r) => r.completed && ttSeq.includes(r.lesson_id)
+        ).map((r) => r.lesson_id);
         const scenario = trialTestimony.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
         const quiz = trialTestimony.some(
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 8
         ) ? 1 : 0;
-        setTrialTestimonyPct(Math.round(((lessons + scenario + quiz) / 12) * 100));
+        setTrialTestimonyPct(Math.round(((completedIds.length + scenario + quiz) / 12) * 100));
+        const nextId = ttSeq.find((lid) => !completedIds.includes(lid));
+        if (nextId) setTrialTestimonyNext(`/training/trial-testimony/lesson/${nextId}`);
       }
     };
     load();
@@ -110,7 +129,7 @@ export default function TrainingHome() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
         {/* Expert Witness Foundations */}
         <Link
-          to="/training/foundations"
+          to={foundationsNext || '/training/foundations'}
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
@@ -149,13 +168,13 @@ export default function TrainingHome() {
             </div>
           )}
           <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {foundationsPct === 0 || foundationsPct === null ? 'Start Module' : foundationsPct === 100 ? 'Review Module' : 'Continue'}
+            {foundationsPct === 0 || foundationsPct === null ? 'Start Module' : foundationsPct === 100 ? 'Review Module' : foundationsNext ? 'Continue Lesson' : 'Continue'}
           </span>
         </Link>
 
         {/* Standards of Admissibility */}
         <Link
-          to="/training/admissibility"
+          to={admissibilityNext || '/training/admissibility'}
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
@@ -194,13 +213,13 @@ export default function TrainingHome() {
             </div>
           )}
           <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {admissibilityPct === 0 || admissibilityPct === null ? 'Start Module' : admissibilityPct === 100 ? 'Review Module' : 'Continue'}
+            {admissibilityPct === 0 || admissibilityPct === null ? 'Start Module' : admissibilityPct === 100 ? 'Review Module' : admissibilityNext ? 'Continue Lesson' : 'Continue'}
           </span>
         </Link>
 
         {/* Writing an Expert Witness Testimony Report */}
         <Link
-          to="/training/report-writing"
+          to={reportWritingNext || '/training/report-writing'}
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
@@ -239,13 +258,13 @@ export default function TrainingHome() {
             </div>
           )}
           <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {reportWritingPct === 0 || reportWritingPct === null ? 'Start Module' : reportWritingPct === 100 ? 'Review Module' : 'Continue'}
+            {reportWritingPct === 0 || reportWritingPct === null ? 'Start Module' : reportWritingPct === 100 ? 'Review Module' : reportWritingNext ? 'Continue Lesson' : 'Continue'}
           </span>
         </Link>
 
         {/* Deposition as an Expert Witness */}
         <Link
-          to="/training/deposition"
+          to={depositionNext || '/training/deposition'}
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
@@ -284,13 +303,13 @@ export default function TrainingHome() {
             </div>
           )}
           <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {depositionPct === 0 || depositionPct === null ? 'Start Module' : depositionPct === 100 ? 'Review Module' : 'Continue'}
+            {depositionPct === 0 || depositionPct === null ? 'Start Module' : depositionPct === 100 ? 'Review Module' : depositionNext ? 'Continue Lesson' : 'Continue'}
           </span>
         </Link>
 
         {/* Trial Testimony as an Expert Witness */}
         <Link
-          to="/training/trial-testimony"
+          to={trialTestimonyNext || '/training/trial-testimony'}
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
@@ -329,7 +348,7 @@ export default function TrainingHome() {
             </div>
           )}
           <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {trialTestimonyPct === 0 || trialTestimonyPct === null ? 'Start Module' : trialTestimonyPct === 100 ? 'Review Module' : 'Continue'}
+            {trialTestimonyPct === 0 || trialTestimonyPct === null ? 'Start Module' : trialTestimonyPct === 100 ? 'Review Module' : trialTestimonyNext ? 'Continue Lesson' : 'Continue'}
           </span>
         </Link>
       </div>

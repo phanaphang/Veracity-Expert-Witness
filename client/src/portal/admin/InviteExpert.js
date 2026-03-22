@@ -2,18 +2,30 @@ import React, { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
 import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
+import { useToast } from '../../contexts/ToastContext';
 
 export default function InviteExpert() {
   const { session } = useAuth();
+  const toast = useToast();
   const [form, setForm] = useState({ email: '', first_name: '', last_name: '' });
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [emailError, setEmailError] = useState('');
   const isDirty = form.email !== '' || form.first_name !== '' || form.last_name !== '';
   const { UnsavedModal } = useUnsavedChanges(isDirty);
 
   const handleChange = (e) => {
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    if (e.target.name === 'email' && emailError) setEmailError('');
+  };
+
+  const handleEmailBlur = () => {
+    if (form.email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email)) {
+      setEmailError('Please enter a valid email address');
+    } else {
+      setEmailError('');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -41,20 +53,21 @@ export default function InviteExpert() {
       try {
         data = JSON.parse(text);
       } catch {
-        setError(`Server error (${res.status}): ${text.slice(0, 200)}`);
+        toast.error('Server error — please try again');
         setSending(false);
         return;
       }
       if (!res.ok) {
-        setError(data.error || 'Failed to send invitation');
+        toast.error(data.error || 'Failed to send invitation');
         setSending(false);
         return;
       }
 
+      toast.success(`Invitation sent to ${form.email}`);
       setMessage(`Invitation sent to ${form.email}`);
       setForm({ email: '', first_name: '', last_name: '' });
     } catch (err) {
-      setError(`Failed to send invitation: ${err.message}`);
+      toast.error('Failed to send invitation');
     }
 
     setSending(false);
@@ -79,9 +92,11 @@ export default function InviteExpert() {
               type="email"
               value={form.email}
               onChange={handleChange}
+              onBlur={handleEmailBlur}
               required
               placeholder="expert@example.com"
             />
+            {emailError && <span style={{ fontSize: '0.75rem', color: 'var(--color-error)', marginTop: 4, display: 'block' }}>{emailError}</span>}
           </div>
           <div className="portal-list-item__row">
             <div className="portal-field">

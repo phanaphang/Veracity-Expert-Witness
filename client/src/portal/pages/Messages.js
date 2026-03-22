@@ -2,11 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { useMessages } from '../../hooks/useMessages';
+import { useToast } from '../../contexts/ToastContext';
 import { formatName } from '../../utils/formatName';
 
 export default function Messages() {
   const { user, profile } = useAuth();
+  const { error: toastError } = useToast();
   const [conversations, setConversations] = useState([]);
+  const [unreadCounts, setUnreadCounts] = useState({});
+  const [lastMessages, setLastMessages] = useState({});
   const [activeConv, setActiveConv] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const { messages, loading: msgsLoading, sendMessage } = useMessages(activeConv?.id);
@@ -19,7 +23,22 @@ export default function Messages() {
       .select('*, participant_1_profile:profiles!conversations_participant_1_fkey(id, first_name, last_name, email, role), participant_2_profile:profiles!conversations_participant_2_fkey(id, first_name, last_name, email, role)')
       .or(`participant_1.eq.${user.id},participant_2.eq.${user.id}`)
       .order('last_message_at', { ascending: false })
-      .then(({ data }) => setConversations(data || []));
+      .then(async ({ data }) => {
+        const convs = data || [];
+        setConversations(convs);
+        if (convs.length === 0) return;
+        const convIds = convs.map(c => c.id);
+        const [unreadRes, lastMsgRes] = await Promise.all([
+          supabase.from('messages').select('conversation_id').eq('recipient_id', user.id).eq('is_read', false).in('conversation_id', convIds),
+          supabase.from('messages').select('conversation_id, content').in('conversation_id', convIds).order('created_at', { ascending: false }),
+        ]);
+        const counts = {};
+        (unreadRes.data || []).forEach(m => { counts[m.conversation_id] = (counts[m.conversation_id] || 0) + 1; });
+        setUnreadCounts(counts);
+        const last = {};
+        (lastMsgRes.data || []).forEach(m => { if (!last[m.conversation_id]) last[m.conversation_id] = m.content; });
+        setLastMessages(last);
+      });
   }, [user]);
 
   useEffect(() => {
@@ -37,6 +56,7 @@ export default function Messages() {
       .eq('recipient_id', user.id)
       .eq('is_read', false)
       .then();
+    setUnreadCounts(prev => ({ ...prev, [activeConv.id]: 0 }));
   }, [activeConv, user, messages]);
 
   const getOtherParticipant = (conv) => {
@@ -51,7 +71,11 @@ export default function Messages() {
   const handleSend = async (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !activeConv) return;
-    await sendMessage(newMessage.trim(), user.id, getRecipientId(activeConv), formatName(profile));
+    const { error } = await sendMessage(newMessage.trim(), user.id, getRecipientId(activeConv), formatName(profile));
+    if (error) {
+      toastError('Failed to send message');
+      return;
+    }
     setNewMessage('');
   };
 
@@ -78,9 +102,14 @@ export default function Messages() {
                   className={`portal-messages__item ${activeConv?.id === conv.id ? 'portal-messages__item--active' : ''}`}
                   onClick={() => setActiveConv(conv)}
                 >
-                  <div className="portal-messages__item-name">{formatName(other)}</div>
-                  <div className="portal-messages__item-preview">
-                    {conv.last_message_at ? new Date(conv.last_message_at).toLocaleDateString() : ''}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div className="portal-messages__item-name">{formatName(other)}</div>
+                    {unreadCounts[conv.id] > 0 && (
+                      <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--color-accent)', display: 'inline-block', flexShrink: 0 }} />
+                    )}
+                  </div>
+                  <div className="portal-messages__item-preview" style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {lastMessages[conv.id] ? (lastMessages[conv.id].length > 50 ? lastMessages[conv.id].slice(0, 50) + '...' : lastMessages[conv.id]) : (conv.last_message_at ? new Date(conv.last_message_at).toLocaleDateString() : '')}
                   </div>
                 </button>
               );

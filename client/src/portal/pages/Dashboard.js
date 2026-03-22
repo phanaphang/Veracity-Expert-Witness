@@ -2,13 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { useToast } from '../../contexts/ToastContext';
 import { TOTAL_LESSONS } from '../training/courseData';
 
 export default function Dashboard() {
   const { user, profile } = useAuth();
+  const { error: toastError } = useToast();
   const [stats, setStats] = useState({ pendingCases: 0, unreadMessages: 0, documents: 0 });
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [hasCv, setHasCv] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [trainingPct, setTrainingPct] = useState(null);
   const [admissibilityPct, setAdmissibilityPct] = useState(null);
   const [reportWritingPct, setReportWritingPct] = useState(null);
@@ -69,12 +72,15 @@ export default function Dashboard() {
           const ttQuiz = trialTestimony.data.some(r => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 8) ? 1 : 0;
           setTrialTestimonyPct(Math.round(((ttLessons + ttScenario + ttQuiz) / 12) * 100));
         }
+        setLoading(false);
       } catch (e) {
         console.error('Dashboard load error', e);
+        toastError('Failed to load dashboard data');
+        setLoading(false);
       }
     };
     load();
-  }, [user]);
+  }, [user, toastError]);
 
   const profileComplete = profile?.first_name && profile?.last_name && profile?.bio;
 
@@ -96,20 +102,33 @@ export default function Dashboard() {
       )}
 
 
-      <div className="portal-stats">
-        <div className="portal-stat">
-          <div className="portal-stat__value">{stats.pendingCases}</div>
-          <div className="portal-stat__label">Pending Case Invitations</div>
+      {loading ? (
+        <div className="portal-stats">
+          <div className="skeleton skeleton--stat" />
+          <div className="skeleton skeleton--stat" />
+          <div className="skeleton skeleton--stat" />
+          <div className="skeleton skeleton--stat" />
         </div>
-        <div className="portal-stat">
-          <div className="portal-stat__value">{stats.unreadMessages}</div>
-          <div className="portal-stat__label">Unread Messages</div>
+      ) : (
+        <div className="portal-stats">
+          <Link to="/portal/cases" className="portal-stat" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+            <div className="portal-stat__value">{stats.pendingCases}</div>
+            <div className="portal-stat__label">Pending Case Invitations</div>
+          </Link>
+          <Link to="/portal/messages" className="portal-stat" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+            <div className="portal-stat__value">{stats.unreadMessages}</div>
+            <div className="portal-stat__label">Unread Messages</div>
+          </Link>
+          <Link to="/portal/documents" className="portal-stat" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+            <div className="portal-stat__value">{stats.documents}</div>
+            <div className="portal-stat__label">Documents Uploaded</div>
+          </Link>
+          <Link to="/training" className="portal-stat" style={{ textDecoration: 'none', cursor: 'pointer' }}>
+            <div className="portal-stat__value">{trainingPct !== null ? `${trainingPct}%` : '—'}</div>
+            <div className="portal-stat__label">Training Progress</div>
+          </Link>
         </div>
-        <div className="portal-stat">
-          <div className="portal-stat__value">{stats.documents}</div>
-          <div className="portal-stat__label">Documents Uploaded</div>
-        </div>
-      </div>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 16 }}>
         <Link to="/portal/profile" className="portal-card portal-card--clickable" style={{ textDecoration: 'none' }}>

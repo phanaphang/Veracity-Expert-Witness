@@ -3,14 +3,18 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { useMessages } from '../../hooks/useMessages';
 import { formatName } from '../../utils/formatName';
+import { useToast } from '../../contexts/ToastContext';
 
 export default function AdminMessages() {
   const { user, profile } = useAuth();
+  const toast = useToast();
   const [conversations, setConversations] = useState([]);
   const [experts, setExperts] = useState([]);
   const [activeConv, setActiveConv] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const [showNewChat, setShowNewChat] = useState(false);
+  const [userSearch, setUserSearch] = useState('');
+  const [sending, setSending] = useState(false);
   const { messages, loading: msgsLoading, sendMessage } = useMessages(activeConv?.id);
   const threadRef = useRef();
 
@@ -53,9 +57,15 @@ export default function AdminMessages() {
 
   const handleSend = async (e) => {
     e.preventDefault();
-    if (!newMessage.trim() || !activeConv) return;
-    await sendMessage(newMessage.trim(), user.id, getRecipientId(activeConv), formatName(profile));
-    setNewMessage('');
+    if (!newMessage.trim() || !activeConv || sending) return;
+    setSending(true);
+    try {
+      await sendMessage(newMessage.trim(), user.id, getRecipientId(activeConv), formatName(profile));
+      setNewMessage('');
+    } catch (err) {
+      toast.error('Failed to send message');
+    }
+    setSending(false);
   };
 
   const startNewChat = async (expertId) => {
@@ -80,24 +90,27 @@ export default function AdminMessages() {
     if (data) {
       setConversations(prev => [data, ...prev]);
       setActiveConv(data);
+    } else {
+      toast.error('Failed to create conversation');
     }
     setShowNewChat(false);
   };
 
-  const sanitizeSearch = (term) => term.replace(/[%_(),.\\]/g, '');
-
-  const searchUsers = async (term) => {
-    if (term.length < 2) { setExperts([]); return; }
-    const safe = sanitizeSearch(term);
-    if (!safe) { setExperts([]); return; }
-    const { data } = await supabase
-      .from('profiles')
-      .select('id, first_name, last_name, email, role')
-      .neq('id', user.id)
-      .or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`)
-      .limit(10);
-    setExperts(data || []);
-  };
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (userSearch.length < 2) { setExperts([]); return; }
+      const safe = userSearch.replace(/[%_(),.\\]/g, '');
+      if (!safe) { setExperts([]); return; }
+      supabase
+        .from('profiles')
+        .select('id, first_name, last_name, email, role')
+        .neq('id', user.id)
+        .or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`)
+        .limit(10)
+        .then(({ data }) => setExperts(data || []));
+    }, 300);
+    return () => clearTimeout(t);
+  }, [userSearch, user]);
 
   return (
     <div>
@@ -114,7 +127,8 @@ export default function AdminMessages() {
           <input
             className="portal-field__input"
             placeholder="Search users by name or email..."
-            onChange={(e) => searchUsers(e.target.value)}
+            value={userSearch}
+            onChange={(e) => setUserSearch(e.target.value)}
             aria-label="Search users by name or email"
           />
           {experts.length > 0 && (
@@ -194,7 +208,7 @@ export default function AdminMessages() {
                     maxLength={5000}
                     aria-label="Type a message"
                   />
-                  <button type="submit" className="btn btn--primary" style={{ padding: '10px 20px' }}>Send</button>
+                  <button type="submit" className="btn btn--primary" style={{ padding: '10px 20px' }} disabled={sending}>{sending ? 'Sending...' : 'Send'}</button>
                 </form>
               </>
             ) : (

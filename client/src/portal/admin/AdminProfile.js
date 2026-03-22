@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
+import { useToast } from '../../contexts/ToastContext';
 
 export default function AdminProfile() {
   const { user, profile, fetchProfile } = useAuth();
+  const toast = useToast();
   const [form, setForm] = useState({ first_name: '', last_name: '', phone: '' });
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
@@ -32,17 +34,20 @@ export default function AdminProfile() {
       const { error } = await supabase.from('profiles').update(form).eq('id', user.id);
       if (error) {
         setMessage('Error: ' + error.message);
+        toast.error('Failed to save profile');
         setSaving(false);
         return false;
       } else {
         await fetchProfile(user.id);
         setMessage('Profile saved successfully');
+        toast.success('Profile saved');
         setEditing(false);
         setSaving(false);
         return true;
       }
     } catch (err) {
       setMessage('Error: ' + err.message);
+      toast.error('Failed to save profile');
       setSaving(false);
       return false;
     }

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { useToast } from '../../contexts/ToastContext';
 
 export default function CaseInvitations() {
   const { user, profile } = useAuth();
+  const { success: toastSuccess, error: toastError } = useToast();
   const [invitations, setInvitations] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -22,32 +25,44 @@ export default function CaseInvitations() {
     if (user) loadInvitations();
   }, [user]); // eslint-disable-line
 
+  useEffect(() => {
+    const t = setTimeout(() => setSearchTerm(searchInput), 300);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
   const respond = async (invitationId, status, notes) => {
-    const inv = invitations.find(i => i.id === invitationId);
-    await supabase
-      .from('case_invitations')
-      .update({ status, expert_notes: notes || null, responded_at: new Date().toISOString() })
-      .eq('id', invitationId);
+    try {
+      const inv = invitations.find(i => i.id === invitationId);
+      const { error } = await supabase
+        .from('case_invitations')
+        .update({ status, expert_notes: notes || null, responded_at: new Date().toISOString() })
+        .eq('id', invitationId);
 
-    // Send notification email (fire-and-forget)
-    const expertName = profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : user.email;
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      fetch('/api/case-response', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.access_token}`,
-        },
-        body: JSON.stringify({
-          expertName: expertName || user.email,
-          expertEmail: user.email,
-          caseTitle: inv?.cases?.title || 'Untitled Case',
-          action: status,
-        }),
-      }).catch(() => {});
-    });
+      if (error) throw error;
 
-    await loadInvitations();
+      // Send notification email (fire-and-forget)
+      const expertName = profile ? `${profile.first_name || ''} ${profile.last_name || ''}`.trim() : user.email;
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        fetch('/api/case-response', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session?.access_token}`,
+          },
+          body: JSON.stringify({
+            expertName: expertName || user.email,
+            expertEmail: user.email,
+            caseTitle: inv?.cases?.title || 'Untitled Case',
+            action: status,
+          }),
+        }).catch(() => {});
+      });
+
+      await loadInvitations();
+      toastSuccess('Response submitted');
+    } catch (e) {
+      toastError('Failed to submit response');
+    }
   };
 
   if (loading) return <div className="portal-loading" role="status" aria-label="Loading"><div className="portal-loading__spinner"></div></div>;
@@ -63,8 +78,8 @@ export default function CaseInvitations() {
           <input
             className="portal-field__input"
             placeholder="Search by title or case number..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
             style={{ maxWidth: 300 }}
           />
         </div>
@@ -89,7 +104,7 @@ export default function CaseInvitations() {
                   <span className="portal-badge portal-badge--open">{inv.cases.specialties.name}</span>
                 )}
               </div>
-              <span className={`portal-badge portal-badge--${inv.status}`}>{inv.status === 'accepted' ? 'interested' : inv.status.replace('_', ' ')}</span>
+              <span className={`portal-badge portal-badge--${inv.status}`}>{inv.status === 'accepted' ? 'Accepted' : inv.status.replace('_', ' ')}</span>
             </div>
             <p style={{ fontSize: '0.9rem', color: 'var(--color-gray-600)', marginBottom: 16, lineHeight: 1.6 }}>
               {inv.cases?.description || 'No description provided.'}

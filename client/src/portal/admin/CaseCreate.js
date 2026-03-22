@@ -4,10 +4,12 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { formatName } from '../../utils/formatName';
 import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
+import { useToast } from '../../contexts/ToastContext';
 
 export default function CaseCreate() {
   const navigate = useNavigate();
   const { session } = useAuth();
+  const toast = useToast();
   const [allSpecialties, setAllSpecialties] = useState([]);
   const [managers, setManagers] = useState([]);
   const [form, setForm] = useState({
@@ -97,10 +99,13 @@ export default function CaseCreate() {
     }
 
     if (selectedSpecialties.length > 0) {
-      await supabase.from('case_specialties').insert(
+      const { error: specErr } = await supabase.from('case_specialties').insert(
         selectedSpecialties.map(sid => ({ case_id: data.id, specialty_id: sid }))
       );
+      if (specErr) toast.error('Failed to save case specialties');
     }
+
+    toast.success('Case created');
 
     if (data.case_manager) {
       fetch('/api/notify-case-manager', {

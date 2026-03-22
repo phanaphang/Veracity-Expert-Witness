@@ -40,8 +40,20 @@ export default function ForgotPassword() {
         <h1 className="portal-auth__title">Reset Password</h1>
 
         {sent ? (
-          <div className="portal-alert portal-alert--success">
-            Check your email for a password reset link.
+          <div>
+            <div className="portal-alert portal-alert--success">
+              Check your email for a password reset link.
+            </div>
+            <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', marginTop: 12 }}>
+              Didn&apos;t receive it?{' '}
+              <button
+                type="button"
+                onClick={() => { setSent(false); setError(''); }}
+                style={{ background: 'none', border: 'none', color: 'var(--color-accent)', cursor: 'pointer', padding: 0, fontSize: 'inherit', textDecoration: 'underline' }}
+              >
+                Send again
+              </button>
+            </p>
           </div>
         ) : (
           <>

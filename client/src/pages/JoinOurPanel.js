@@ -305,6 +305,7 @@ function JoinOurPanel() {
                 onChange={handleChange}
                 maxLength={5000}
               />
+              <span className={`portal-char-count${formData.bio.length >= 4500 ? (formData.bio.length >= 5000 ? ' portal-char-count--limit' : ' portal-char-count--warn') : ''}`}>{formData.bio.length} / 5000</span>
               {errors.bio && <span className="contact__error">{errors.bio}</span>}
             </div>
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { useToast } from '../../contexts/ToastContext';
 
 function highlight(text, terms) {
   if (!text) return text;
@@ -19,10 +20,12 @@ function highlight(text, terms) {
 
 export default function ExpertList() {
   const { profile, session } = useAuth();
+  const toast = useToast();
   const isAdmin = profile?.role === 'admin';
   const [experts, setExperts] = useState([]);
   const [specialties, setSpecialties] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [filterSpecialties, setFilterSpecialties] = useState(new Set());
   const [filterPanelOpen, setFilterPanelOpen] = useState(false);
@@ -33,6 +36,8 @@ export default function ExpertList() {
   const filterPanelRef = useRef(null);
   const [deleting, setDeleting] = useState(false);
   const [exportConfirm, setExportConfirm] = useState(false);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 25;
 
   useEffect(() => {
     Promise.all([
@@ -44,6 +49,11 @@ export default function ExpertList() {
       setLoading(false);
     });
   }, []);
+
+  useEffect(() => {
+    const t = setTimeout(() => setSearch(searchInput), 300);
+    return () => clearTimeout(t);
+  }, [searchInput]);
 
   useEffect(() => {
     const handler = (e) => {
@@ -98,6 +108,11 @@ export default function ExpertList() {
     return true;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginatedExperts = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  useEffect(() => { setPage(1); }, [search, filterSpecialties, filterAvailability, filterTag]);
+
   const handleDelete = async () => {
     if (!deleteTarget) return;
     setDeleting(true);
@@ -112,9 +127,12 @@ export default function ExpertList() {
       });
       if (res.ok) {
         setExperts(prev => prev.filter(e => e.id !== deleteTarget.id));
+        toast.success('Expert deleted');
+      } else {
+        toast.error('Failed to delete expert');
       }
     } catch (err) {
-      // silent fail
+      toast.error('Failed to delete expert');
     }
     setDeleting(false);
     setDeleteTarget(null);
@@ -235,6 +253,9 @@ export default function ExpertList() {
       XLSX.utils.book_append_sheet(wb, ws2, 'Documents');
 
       XLSX.writeFile(wb, `Experts_${new Date().toISOString().split('T')[0]}.xlsx`);
+      toast.success('Export complete');
+    } catch (err) {
+      toast.error('Export failed');
     } finally {
       setExporting(false);
     }
@@ -295,8 +316,8 @@ export default function ExpertList() {
         <input
           className="portal-field__input"
           placeholder="Search by name or email..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           aria-label="Search experts by name or email"
         />
 
@@ -424,7 +445,7 @@ export default function ExpertList() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map(exp => (
+              {paginatedExperts.map(exp => (
                 <tr key={exp.id}>
                   <td>{exp.first_name ? highlight(`${exp.first_name} ${exp.last_name || ''}`.trim(), search ? [search] : []) : '—'}</td>
                   <td>{highlight(exp.email || '', search ? [search] : [])}</td>
@@ -472,6 +493,17 @@ export default function ExpertList() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {filtered.length > PAGE_SIZE && (
+        <div className="portal-pagination">
+          <button className="portal-pagination__btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Prev</button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+            <button key={p} className={`portal-pagination__btn ${p === page ? 'portal-pagination__btn--active' : ''}`} onClick={() => setPage(p)}>{p}</button>
+          ))}
+          <button className="portal-pagination__btn" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>Next</button>
+          <span className="portal-pagination__info">Page {page} of {totalPages}</span>
         </div>
       )}
 

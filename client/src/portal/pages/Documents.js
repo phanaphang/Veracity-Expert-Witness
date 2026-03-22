@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { useToast } from '../../contexts/ToastContext';
 
 const DOC_TYPES = [
   { value: 'license', label: 'License' },
@@ -14,6 +15,7 @@ const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
 export default function Documents() {
   const { user } = useAuth();
+  const { success: toastSuccess, error: toastError } = useToast();
   const [documents, setDocuments] = useState([]);
   const [uploading, setUploading] = useState(false);
   const [selectedType, setSelectedType] = useState('cv');
@@ -57,6 +59,7 @@ export default function Documents() {
 
     if (uploadError) {
       setError('Failed to upload file. Please try again.');
+      toastError('Failed to upload document');
       setUploading(false);
       return;
     }
@@ -72,6 +75,7 @@ export default function Documents() {
 
     await loadDocuments();
     setUploading(false);
+    toastSuccess('Document uploaded successfully');
     if (fileRef.current) fileRef.current.value = '';
   };
 
@@ -91,6 +95,7 @@ export default function Documents() {
     await supabase.storage.from('expert-documents').remove([doc.file_path]);
     await supabase.from('documents').delete().eq('id', doc.id);
     await loadDocuments();
+    toastSuccess('Document deleted');
   };
 
   const formatSize = (bytes) => {

@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { supabase } from '../../../lib/supabase';
+import { useToast } from '../../../contexts/ToastContext';
 import { QUIZ_DATA, PASS_SCORE, TOTAL_QUESTIONS } from './admissibilityData';
 
 export default function AdmissibilityQuizPage({ onProgressUpdate }) {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { error: toastError } = useToast();
 
   const [answers, setAnswers] = useState({});       // { questionId: optionId }
   const [submitted, setSubmitted] = useState(false);
@@ -14,6 +16,7 @@ export default function AdmissibilityQuizPage({ onProgressUpdate }) {
   const [attempts, setAttempts] = useState(0);      // number of failed attempts
   const [saving, setSaving] = useState(false);
   const [alreadyPassed, setAlreadyPassed] = useState(false);
+  const [correctIds, setCorrectIds] = useState(new Set());
 
   // Check if already passed
   useEffect(() => {
@@ -38,14 +41,19 @@ export default function AdmissibilityQuizPage({ onProgressUpdate }) {
   const allAnswered = QUIZ_DATA.questions.every((q) => answers[q.id]);
 
   const handleSelect = (questionId, optionId) => {
-    if (submitted) return;
+    if (submitted || correctIds.has(questionId)) return;
     setAnswers((prev) => ({ ...prev, [questionId]: optionId }));
   };
 
   const handleSubmit = async () => {
-    const correct = QUIZ_DATA.questions.filter(
-      (q) => answers[q.id] === q.options.find((o) => o.correct)?.id
-    ).length;
+    const newCorrectIds = new Set(correctIds);
+    QUIZ_DATA.questions.forEach((q) => {
+      if (answers[q.id] === q.options.find((o) => o.correct)?.id) {
+        newCorrectIds.add(q.id);
+      }
+    });
+    setCorrectIds(newCorrectIds);
+    const correct = newCorrectIds.size;
     setScore(correct);
     setSubmitted(true);
 
@@ -96,6 +104,7 @@ export default function AdmissibilityQuizPage({ onProgressUpdate }) {
         }
       } catch (e) {
         console.error('Quiz save error', e);
+        toastError('Failed to save quiz results. Please try again.');
       } finally {
         setSaving(false);
       }
@@ -103,7 +112,13 @@ export default function AdmissibilityQuizPage({ onProgressUpdate }) {
   };
 
   const handleRetry = () => {
-    setAnswers({});
+    const kept = {};
+    QUIZ_DATA.questions.forEach((q) => {
+      if (correctIds.has(q.id)) {
+        kept[q.id] = answers[q.id];
+      }
+    });
+    setAnswers(kept);
     setSubmitted(false);
     setScore(0);
     setAttempts((a) => a + 1);
@@ -227,17 +242,23 @@ export default function AdmissibilityQuizPage({ onProgressUpdate }) {
             const selectedId = answers[q.id];
             const correctOption = q.options.find((o) => o.correct);
             const isCorrect = submitted && selectedId === correctOption?.id;
+            const lockedCorrect = !submitted && correctIds.has(q.id);
 
             return (
-              <div key={q.id} className="training-quiz__question portal-card">
-                <div className="training-quiz__q-number">Question {qi + 1}</div>
+              <div key={q.id} className={`training-quiz__question portal-card${lockedCorrect ? ' training-quiz__question--locked' : ''}`}>
+                <div className="training-quiz__q-number">
+                  Question {qi + 1}
+                  {lockedCorrect && <span style={{ color: 'var(--color-accent)', marginLeft: 8, fontSize: '0.8em' }}>(Correct)</span>}
+                </div>
                 <p id={`q-label-${q.id}`} className="training-quiz__q-text">{q.text}</p>
 
                 <div className="training-quiz__options" role="radiogroup" aria-labelledby={`q-label-${q.id}`}>
                   {q.options.map((opt) => {
                     const isSelected = selectedId === opt.id;
                     let cls = 'training-quiz__option';
-                    if (submitted) {
+                    if (lockedCorrect) {
+                      if (isSelected) cls += ' training-quiz__option--correct';
+                    } else if (submitted) {
                       if (opt.correct) cls += ' training-quiz__option--correct';
                       else if (isSelected && !opt.correct) cls += ' training-quiz__option--wrong';
                     } else if (isSelected) {
@@ -251,7 +272,7 @@ export default function AdmissibilityQuizPage({ onProgressUpdate }) {
                         role="radio"
                         aria-checked={isSelected}
                         onClick={() => handleSelect(q.id, opt.id)}
-                        disabled={submitted}
+                        disabled={submitted || lockedCorrect}
                       >
                         <span className="training-quiz__option-letter">
                           {opt.id.toUpperCase()}

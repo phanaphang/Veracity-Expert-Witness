@@ -2,12 +2,14 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
+import { useToast } from '../../contexts/ToastContext';
 
 const ALLOWED_TYPES = ['application/pdf'];
 const MAX_SIZE = 5 * 1024 * 1024;
 
 export default function Profile() {
   const { user, profile, fetchProfile } = useAuth();
+  const { success: toastSuccess, error: toastError } = useToast();
   const [form, setForm] = useState({ first_name: '', last_name: '', email: '', phone: '', bio: '', rate_review_report: '', rate_deposition: '', rate_trial_testimony: '' });
   const [allSpecialties, setAllSpecialties] = useState([]);
   const [selectedSpecialties, setSelectedSpecialties] = useState([]);
@@ -179,7 +181,7 @@ export default function Profile() {
 
     try {
       if (form.phone && !/^1-\d{3}-\d{3}-\d{4}$/.test(form.phone)) {
-        setMessage('Phone number must be in the format 1-xxx-xxx-xxxx.');
+        toastError('Phone number must be in the format 1-xxx-xxx-xxxx.');
         setSaving(false);
         return false;
       }
@@ -222,11 +224,12 @@ export default function Profile() {
     }
 
     if (errors.length > 0) {
-      setMessage('Errors: ' + errors.join('; '));
+      toastError('Failed to save profile. Please check the form and try again.');
       setSaving(false);
       return false;
     } else {
-      setMessage('Profile saved successfully');
+      toastSuccess('Profile saved successfully');
+      setMessage('');
       setEditing(false);
       setSaving(false);
       return true;
@@ -251,7 +254,7 @@ export default function Profile() {
         </div>
       </div>
 
-      {message && <div className={`portal-alert ${message.startsWith('Errors') ? 'portal-alert--error' : 'portal-alert--success'}`}>{message}</div>}
+      {message && <div className="portal-alert portal-alert--success">{message}</div>}
 
       <form id="profile-form" onSubmit={handleSubmit}>
         {/* Basic Info */}
@@ -274,6 +277,7 @@ export default function Profile() {
           <div className="portal-field">
             <label className="portal-field__label" htmlFor="profile-phone">Phone</label>
             <input id="profile-phone" className="portal-field__input" name="phone" type="tel" value={form.phone} onChange={handleChange} placeholder="1-xxx-xxx-xxxx" maxLength={14} readOnly={!editing} />
+            <span style={{ fontSize: '0.75rem', color: 'var(--color-gray-400)', marginTop: 4, display: 'block' }}>Format: 1-xxx-xxx-xxxx</span>
           </div>
           <div className="portal-field">
             <label className="portal-field__label" htmlFor="profile-bio">Bio</label>
@@ -369,6 +373,9 @@ export default function Profile() {
                   placeholder="Type and press Enter..."
                   disabled={tags.length >= TAG_MAX_COUNT}
                 />
+                {tags.length >= TAG_MAX_COUNT && (
+                  <span style={{ fontSize: '0.75rem', color: 'var(--color-error)', marginTop: 4, display: 'block' }}>Maximum of {TAG_MAX_COUNT} tags reached</span>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--color-gray-400)', marginTop: 4 }}>
                   <span>{tags.length}/{TAG_MAX_COUNT} added</span>
                   <span>{tagInput.length}/{TAG_MAX_LENGTH} characters</span>

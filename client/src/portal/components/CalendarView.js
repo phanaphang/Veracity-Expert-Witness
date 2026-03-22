@@ -3,6 +3,7 @@ import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import { format, parse, startOfWeek, getDay } from 'date-fns';
 import { enUS } from 'date-fns/locale';
 import { supabase } from '../../lib/supabase';
+import { useToast } from '../../contexts/ToastContext';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 const locales = { 'en-US': enUS };
@@ -15,7 +16,7 @@ function toDatetimeLocal(date) {
   return new Date(d - off).toISOString().slice(0, 16);
 }
 
-function EventModal({ event, slot, expertId, cases, onClose, onSaved, onDeleted }) {
+function EventModal({ event, slot, expertId, cases, onClose, onSaved, onDeleted, onError }) {
   const isNew = !event?.id;
   const [title, setTitle] = useState(event?.title || '');
   const [start, setStart] = useState(
@@ -51,7 +52,7 @@ function EventModal({ event, slot, expertId, cases, onClose, onSaved, onDeleted 
       result = await supabase.from('calendar_events').update(payload).eq('id', event.id).select().single();
     }
     setSaving(false);
-    if (result.error) { setError(result.error.message); return; }
+    if (result.error) { setError(result.error.message); onError(); return; }
     onSaved(result.data, isNew);
   };
 
@@ -155,6 +156,7 @@ function EventModal({ event, slot, expertId, cases, onClose, onSaved, onDeleted 
 }
 
 export default function CalendarView({ expertId, readOnly = false }) {
+  const { success: toastSuccess, error: toastError } = useToast();
   const [events, setEvents] = useState([]);
   const [cases, setCases] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -206,6 +208,7 @@ export default function CalendarView({ expertId, readOnly = false }) {
   const handleSaved = async (row, isNew) => {
     setModalOpen(false);
     loadEvents();
+    toastSuccess(isNew ? 'Event created' : 'Event updated');
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session || session.user.id === expertId) return;
@@ -231,10 +234,11 @@ export default function CalendarView({ expertId, readOnly = false }) {
   const handleDeleted = (id) => {
     setModalOpen(false);
     setEvents(prev => prev.filter(e => e.id !== id));
+    toastSuccess('Event deleted');
   };
 
   return (
-    <div style={{ height: 600 }}>
+    <div style={{ minHeight: 400, height: 'calc(100vh - 250px)' }}>
       <Calendar
         localizer={localizer}
         events={events}
@@ -257,6 +261,7 @@ export default function CalendarView({ expertId, readOnly = false }) {
           onClose={() => setModalOpen(false)}
           onSaved={handleSaved}
           onDeleted={handleDeleted}
+          onError={() => toastError('Failed to save event')}
         />
       )}
     </div>

@@ -4,10 +4,12 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { formatName } from '../../utils/formatName';
 import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
+import { useToast } from '../../contexts/ToastContext';
 
 export default function CaseDetail() {
   const { id } = useParams();
   const { profile, session } = useAuth();
+  const toast = useToast();
   const isAdmin = profile?.role === 'admin';
   const [caseData, setCaseData] = useState(null);
   const [invitations, setInvitations] = useState([]);
@@ -69,56 +71,72 @@ export default function CaseDetail() {
   };
 
   const saveDetails = async () => {
-    await supabase.from('cases').update({
-      description: descValue,
-      client: clientValue,
-      case_type: caseTypeValue,
-      jurisdiction: jurisdictionValue,
-      additional_notes: notesValue,
-      specialty_tags: editingTags,
-    }).eq('id', id);
-    await supabase.from('case_specialties').delete().eq('case_id', id);
-    if (editingSpecialties.length > 0) {
-      await supabase.from('case_specialties').insert(
-        editingSpecialties.map(sid => ({ case_id: id, specialty_id: sid }))
-      );
+    try {
+      await supabase.from('cases').update({
+        description: descValue,
+        client: clientValue,
+        case_type: caseTypeValue,
+        jurisdiction: jurisdictionValue,
+        additional_notes: notesValue,
+        specialty_tags: editingTags,
+      }).eq('id', id);
+      await supabase.from('case_specialties').delete().eq('case_id', id);
+      if (editingSpecialties.length > 0) {
+        await supabase.from('case_specialties').insert(
+          editingSpecialties.map(sid => ({ case_id: id, specialty_id: sid }))
+        );
+      }
+      const { data: newCs } = await supabase.from('case_specialties').select('specialty_id, specialties(id, name, parent_id)').eq('case_id', id);
+      setCaseSpecialties(newCs || []);
+      setCaseData(prev => ({ ...prev, description: descValue, client: clientValue, case_type: caseTypeValue, jurisdiction: jurisdictionValue, additional_notes: notesValue }));
+      setDetailsEditing(false);
+      toast.success('Case details saved');
+      return true;
+    } catch (err) {
+      toast.error('Failed to save case details');
+      return false;
     }
-    const { data: newCs } = await supabase.from('case_specialties').select('specialty_id, specialties(id, name, parent_id)').eq('case_id', id);
-    setCaseSpecialties(newCs || []);
-    setCaseData(prev => ({ ...prev, description: descValue, client: clientValue, case_type: caseTypeValue, jurisdiction: jurisdictionValue, additional_notes: notesValue }));
-    setDetailsEditing(false);
-    return true;
   };
   setSaveHandler(saveDetails);
 
   const loadCase = async () => {
-    const [caseRes, invRes, mgrRes, csRes, specRes] = await Promise.all([
-      supabase.from('cases').select('*, specialties(name), manager:case_manager(id, first_name, last_name, email, role), assignedExpert:assigned_expert(id, first_name, last_name, email, role)').eq('id', id).single(),
-      supabase.from('case_invitations').select('*, profiles:expert_id(id, first_name, last_name, email)').eq('case_id', id).order('invited_at', { ascending: false }),
-      supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
-      supabase.from('case_specialties').select('specialty_id, specialties(id, name, parent_id)').eq('case_id', id),
-      supabase.from('specialties').select('*').order('name'),
-    ]);
-    setCaseData(caseRes.data);
-    setDescValue(caseRes.data?.description || '');
-    setClientValue(caseRes.data?.client || '');
-    setCaseTypeValue(caseRes.data?.case_type || '');
-    setJurisdictionValue(caseRes.data?.jurisdiction || '');
-    setNotesValue(caseRes.data?.additional_notes || '');
-    setInvitations(invRes.data || []);
-    setManagers(mgrRes.data || []);
-    const loadedCs = csRes.data || [];
-    setCaseSpecialties(loadedCs);
-    setAllSpecialties(specRes.data || []);
-    const loadedIds = loadedCs.map(cs => cs.specialty_id);
-    setEditingSpecialties(loadedIds);
-    setEditingTags(caseRes.data?.specialty_tags || []);
-    const autoExpanded = new Set();
-    for (const cs of loadedCs) {
-      if (cs.specialties?.parent_id) autoExpanded.add(cs.specialties.parent_id);
+    try {
+      const [caseRes, invRes, mgrRes, csRes, specRes] = await Promise.all([
+        supabase.from('cases').select('*, specialties(name), manager:case_manager(id, first_name, last_name, email, role), assignedExpert:assigned_expert(id, first_name, last_name, email, role)').eq('id', id).single(),
+        supabase.from('case_invitations').select('*, profiles:expert_id(id, first_name, last_name, email)').eq('case_id', id).order('invited_at', { ascending: false }),
+        supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
+        supabase.from('case_specialties').select('specialty_id, specialties(id, name, parent_id)').eq('case_id', id),
+        supabase.from('specialties').select('*').order('name'),
+      ]);
+      if (caseRes.error) {
+        toast.error('Failed to load case');
+        setLoading(false);
+        return;
+      }
+      setCaseData(caseRes.data);
+      setDescValue(caseRes.data?.description || '');
+      setClientValue(caseRes.data?.client || '');
+      setCaseTypeValue(caseRes.data?.case_type || '');
+      setJurisdictionValue(caseRes.data?.jurisdiction || '');
+      setNotesValue(caseRes.data?.additional_notes || '');
+      setInvitations(invRes.data || []);
+      setManagers(mgrRes.data || []);
+      const loadedCs = csRes.data || [];
+      setCaseSpecialties(loadedCs);
+      setAllSpecialties(specRes.data || []);
+      const loadedIds = loadedCs.map(cs => cs.specialty_id);
+      setEditingSpecialties(loadedIds);
+      setEditingTags(caseRes.data?.specialty_tags || []);
+      const autoExpanded = new Set();
+      for (const cs of loadedCs) {
+        if (cs.specialties?.parent_id) autoExpanded.add(cs.specialties.parent_id);
+      }
+      setExpandedParents(autoExpanded);
+      setLoading(false);
+    } catch (err) {
+      toast.error('Failed to load case');
+      setLoading(false);
     }
-    setExpandedParents(autoExpanded);
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -143,19 +161,29 @@ export default function CaseDetail() {
   };
 
   const inviteExpert = async (expertId) => {
-    await supabase.from('case_invitations').insert({
+    const { error: invErr } = await supabase.from('case_invitations').insert({
       case_id: id,
       expert_id: expertId,
       status: 'pending',
     });
+    if (invErr) {
+      toast.error('Failed to send invitation');
+    } else {
+      toast.success('Invitation sent');
+    }
     setSearchTerm('');
     setExperts([]);
     await loadCase();
   };
 
   const updateStatus = async (status) => {
-    await supabase.from('cases').update({ status }).eq('id', id);
-    setCaseData(prev => ({ ...prev, status }));
+    const { error: statusErr } = await supabase.from('cases').update({ status }).eq('id', id);
+    if (statusErr) {
+      toast.error('Failed to update case status');
+    } else {
+      setCaseData(prev => ({ ...prev, status }));
+      toast.success(status === 'closed' ? 'Case closed' : 'Case reopened');
+    }
   };
 
   const searchAssignExpert = async (term) => {

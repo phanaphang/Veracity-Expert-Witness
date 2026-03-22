@@ -72,6 +72,23 @@ export default function AcceptInvite() {
               placeholder="At least 8 characters"
               required
             />
+            {password.length > 0 && (
+              <div className="pw-requirements">
+                <div className="pw-requirements__title">Password requirements:</div>
+                <div className={`pw-requirements__item ${password.length >= 8 ? 'pw-requirements__item--met' : ''}`}>
+                  <span className="pw-requirements__check">{password.length >= 8 ? '✓' : '○'}</span> At least 8 characters
+                </div>
+                <div className={`pw-requirements__item ${/[A-Z]/.test(password) ? 'pw-requirements__item--met' : ''}`}>
+                  <span className="pw-requirements__check">{/[A-Z]/.test(password) ? '✓' : '○'}</span> One uppercase letter
+                </div>
+                <div className={`pw-requirements__item ${/[a-z]/.test(password) ? 'pw-requirements__item--met' : ''}`}>
+                  <span className="pw-requirements__check">{/[a-z]/.test(password) ? '✓' : '○'}</span> One lowercase letter
+                </div>
+                <div className={`pw-requirements__item ${/[0-9]/.test(password) ? 'pw-requirements__item--met' : ''}`}>
+                  <span className="pw-requirements__check">{/[0-9]/.test(password) ? '✓' : '○'}</span> One number
+                </div>
+              </div>
+            )}
           </div>
           <div className="portal-field">
             <label className="portal-field__label" htmlFor="confirmPassword">Confirm Password</label>
@@ -83,6 +100,9 @@ export default function AcceptInvite() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+            {confirmPassword.length > 0 && password !== confirmPassword && (
+              <div style={{ color: 'var(--color-error)', fontSize: '0.8rem', marginTop: 4 }}>Passwords do not match</div>
+            )}
           </div>
           <button type="submit" className="btn btn--primary portal-auth__submit" disabled={submitting}>
             {submitting ? 'Setting password...' : 'Set Password & Continue'}

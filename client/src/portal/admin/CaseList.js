@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { formatName } from '../../utils/formatName';
+import { useToast } from '../../contexts/ToastContext';
 
 function highlight(text, term) {
   if (!text || !term) return text;
@@ -18,6 +19,7 @@ function highlight(text, term) {
 
 export default function CaseList() {
   const { profile } = useAuth();
+  const toast = useToast();
   const isStaff = profile?.role === 'staff';
   const isAdmin = profile?.role === 'admin';
   const [cases, setCases] = useState([]);
@@ -26,6 +28,8 @@ export default function CaseList() {
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [page, setPage] = useState(1);
+  const PAGE_SIZE = 25;
 
   useEffect(() => {
     supabase
@@ -47,12 +51,20 @@ export default function CaseList() {
     return true;
   });
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const paginatedCases = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  useEffect(() => { setPage(1); }, [filterStatus, searchTerm]);
+
   const handleDelete = async () => {
     if (!deleteTarget) return;
     setDeleting(true);
     const { error } = await supabase.from('cases').delete().eq('id', deleteTarget.id);
     if (!error) {
       setCases(prev => prev.filter(c => c.id !== deleteTarget.id));
+      toast.success('Case deleted');
+    } else {
+      toast.error('Failed to delete case');
     }
     setDeleting(false);
     setDeleteTarget(null);
@@ -107,7 +119,7 @@ export default function CaseList() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map(c => (
+              {paginatedCases.map(c => (
                 <tr key={c.id}>
                   <td><strong>#{highlight(c.case_number || '', searchTerm)} — {highlight(c.title, searchTerm)}</strong></td>
                   <td>{c.specialties?.name || '—'}</td>
@@ -138,6 +150,17 @@ export default function CaseList() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {filtered.length > PAGE_SIZE && (
+        <div className="portal-pagination">
+          <button className="portal-pagination__btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Prev</button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+            <button key={p} className={`portal-pagination__btn ${p === page ? 'portal-pagination__btn--active' : ''}`} onClick={() => setPage(p)}>{p}</button>
+          ))}
+          <button className="portal-pagination__btn" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>Next</button>
+          <span className="portal-pagination__info">Page {page} of {totalPages}</span>
         </div>
       )}
 

@@ -1,6 +1,7 @@
 import React, { lazy, Suspense } from 'react';
 import { createBrowserRouter, RouterProvider, Outlet, useRouteError, isRouteErrorResponse } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { ToastProvider } from './contexts/ToastContext';
 import ErrorBoundary from './components/ErrorBoundary';
 
 // Home page components — always needed on first load
@@ -173,10 +174,12 @@ function HomePage() {
 function Root() {
   return (
     <AuthProvider>
-      <div className="app">
-        <a href="#main-content" className="skip-link">Skip to main content</a>
-        <Outlet />
-      </div>
+      <ToastProvider>
+        <div className="app">
+          <a href="#main-content" className="skip-link">Skip to main content</a>
+          <Outlet />
+        </div>
+      </ToastProvider>
     </AuthProvider>
   );
 }

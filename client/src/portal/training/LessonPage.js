@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { supabase } from '../../lib/supabase';
+import { useToast } from '../../contexts/ToastContext';
 import {
   LESSONS,
   TOTAL_LESSONS,
@@ -76,6 +77,7 @@ export default function LessonPage({ onProgressUpdate }) {
   const { lessonId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { error: toastError } = useToast();
 
   const lesson = LESSONS[lessonId];
   const unit = lesson ? getUnitForLesson(lessonId) : null;
@@ -176,6 +178,7 @@ export default function LessonPage({ onProgressUpdate }) {
     } catch (e) {
       console.error('Mark complete error', e);
       setError('Could not save progress. Please try again.');
+      toastError('Could not save progress. Please try again.');
     } finally {
       setCompleting(false);
     }
@@ -217,7 +220,7 @@ export default function LessonPage({ onProgressUpdate }) {
       </div>
 
       {/* Audio player placeholder */}
-      <AudioPlayer />
+      {false && <AudioPlayer />}
 
       {/* Content */}
       <div className="training-lesson__content portal-card">

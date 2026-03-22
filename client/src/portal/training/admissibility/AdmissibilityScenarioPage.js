@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth';
 import { supabase } from '../../../lib/supabase';
+import { useToast } from '../../../contexts/ToastContext';
 import { SCENARIO_DATA } from './admissibilityData';
 
 export default function AdmissibilityScenarioPage({ onProgressUpdate }) {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { error: toastError } = useToast();
 
   // Which choice is currently displayed (may change during exploration)
   const [viewCP1, setViewCP1] = useState(null);
@@ -92,6 +94,7 @@ export default function AdmissibilityScenarioPage({ onProgressUpdate }) {
       setSavedCP1(choiceId);
     } catch (e) {
       console.error('Scenario CP1 save error', e);
+      toastError('Failed to save your choice. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -107,6 +110,7 @@ export default function AdmissibilityScenarioPage({ onProgressUpdate }) {
       if (onProgressUpdate) onProgressUpdate();
     } catch (e) {
       console.error('Scenario CP2 save error', e);
+      toastError('Failed to save your choice. Please try again.');
     } finally {
       setSaving(false);
     }
