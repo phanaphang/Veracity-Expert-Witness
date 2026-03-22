@@ -211,7 +211,7 @@ function ContactForm() {
         <form className="contact__form" onSubmit={handleSubmit} noValidate>
           {status === 'success' && (
             <div className="contact__alert contact__alert--success">
-              Thank you! Your request has been submitted. We&apos;ll be in touch within 24 hours.
+              Thank you! Your request has been submitted. We&apos;ll be in touch within 1-2 business days.
             </div>
           )}
           {status === 'error' && (

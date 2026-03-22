@@ -115,7 +115,7 @@ module.exports = async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Your request has been submitted successfully. We will be in touch within 24 hours.',
+      message: 'Your request has been submitted successfully. We will be in touch within 1-2 business days.',
     });
   } catch (error) {
     console.error('Email send error:', error.message);

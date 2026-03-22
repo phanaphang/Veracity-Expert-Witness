@@ -192,7 +192,7 @@ function JoinOurPanel() {
           <form className="contact__form" onSubmit={handleSubmit} noValidate>
             {status === 'success' && (
               <div className="contact__alert contact__alert--success">
-                Thank you for your application! Our team will review your information and be in touch soon.
+                Thank you for your application! Our team will review your information and be in touch within 1-2 business days.
               </div>
             )}
             {status === 'error' && (
