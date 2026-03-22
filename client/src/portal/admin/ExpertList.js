@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
 import { useToast } from '../../contexts/ToastContext';
+import { getCached } from '../../utils/queryCache';
 
 function highlight(text, terms) {
   if (!text) return text;
@@ -42,13 +43,16 @@ export default function ExpertList() {
   useEffect(() => {
     Promise.all([
       supabase.from('profiles').select('*, expert_specialties(specialty_id, specialties(name))').eq('role', 'expert').order('created_at', { ascending: false }),
-      supabase.from('specialties').select('*').order('name'),
+      getCached('specialties', () => supabase.from('specialties').select('*').order('name').then(r => r)),
     ]).then(([expRes, specRes]) => {
       setExperts(expRes.data || []);
       setSpecialties(specRes.data || []);
       setLoading(false);
+    }).catch(() => {
+      toast.error('Failed to load experts');
+      setLoading(false);
     });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const t = setTimeout(() => setSearch(searchInput), 300);
@@ -65,7 +69,7 @@ export default function ExpertList() {
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const parents = specialties.filter(s => !s.parent_id);
+  const parents = useMemo(() => specialties.filter(s => !s.parent_id), [specialties]);
   const subsOf = (parentId) => specialties.filter(s => s.parent_id === parentId).map(s => s.id);
 
   const toggleFilterSpecialty = (id) => {
@@ -84,7 +88,7 @@ export default function ExpertList() {
     });
   };
 
-  const filtered = experts.filter(exp => {
+  const filtered = useMemo(() => experts.filter(exp => {
     const name = `${exp.first_name || ''} ${exp.last_name || ''} ${exp.email || ''}`.toLowerCase();
     if (search && !name.includes(search.toLowerCase())) return false;
     if (filterAvailability && exp.availability !== filterAvailability) return false;
@@ -92,7 +96,6 @@ export default function ExpertList() {
       const matchesAny = [...filterSpecialties].some(filterId => {
         const spec = specialties.find(s => s.id === filterId);
         if (spec && !spec.parent_id) {
-          // Parent: match experts with the parent itself OR any of its subspecialties
           const ids = [filterId, ...subsOf(filterId)];
           return exp.expert_specialties?.some(es => ids.includes(es.specialty_id));
         }
@@ -106,7 +109,7 @@ export default function ExpertList() {
       if (!words.every(word => tagText.includes(word))) return false;
     }
     return true;
-  });
+  }), [experts, search, filterAvailability, filterSpecialties, specialties, filterTag]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginatedExperts = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -175,11 +178,17 @@ export default function ExpertList() {
       const credByExpert = groupBy(credRes.data, 'expert_id');
       const testByExpert = groupBy(testRes.data, 'expert_id');
 
-      // Generate signed URLs for all documents (1 hour expiry)
+      // Generate signed URLs for all documents in parallel (1 hour expiry)
       const signedUrlMap = {};
-      for (const doc of allDocs) {
-        const { data } = await supabase.storage.from('expert-documents').createSignedUrl(doc.file_path, 3600);
-        if (data?.signedUrl) signedUrlMap[doc.id] = data.signedUrl;
+      const BATCH_SIZE = 20;
+      for (let i = 0; i < allDocs.length; i += BATCH_SIZE) {
+        const batch = allDocs.slice(i, i + BATCH_SIZE);
+        const results = await Promise.all(
+          batch.map(doc => supabase.storage.from('expert-documents').createSignedUrl(doc.file_path, 3600))
+        );
+        results.forEach((r, idx) => {
+          if (r.data?.signedUrl) signedUrlMap[batch[idx].id] = r.data.signedUrl;
+        });
       }
 
       const rows = exportExperts.map(exp => {

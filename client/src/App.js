@@ -3,6 +3,7 @@ import { createBrowserRouter, RouterProvider, Outlet, useRouteError, isRouteErro
 import { AuthProvider } from './contexts/AuthContext';
 import { ToastProvider } from './contexts/ToastContext';
 import ErrorBoundary from './components/ErrorBoundary';
+import CookieConsent from './components/CookieConsent';
 
 // Home page components — always needed on first load
 import SEO from './components/SEO';
@@ -178,6 +179,7 @@ function Root() {
         <div className="app">
           <a href="#main-content" className="skip-link">Skip to main content</a>
           <Outlet />
+          <CookieConsent />
         </div>
       </ToastProvider>
     </AuthProvider>

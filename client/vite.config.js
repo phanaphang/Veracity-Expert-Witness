@@ -25,5 +25,16 @@ export default defineConfig({
   },
   build: {
     outDir: 'build',
+    target: 'es2020',
+    cssMinify: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'vendor-calendar': ['react-big-calendar', 'date-fns'],
+        },
+      },
+    },
   },
 });

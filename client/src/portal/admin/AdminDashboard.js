@@ -31,7 +31,7 @@ export default function AdminDashboard() {
           unreadMessages: msgs.count || 0,
         });
       }
-    });
+    }).catch(() => {});
   }, [isStaff]);
 
   return (

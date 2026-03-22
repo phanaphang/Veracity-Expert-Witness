@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
@@ -36,20 +36,25 @@ export default function CaseList() {
       .from('cases')
       .select('*, specialties(name), case_invitations(count), manager:case_manager(first_name, last_name, email, role), assignedExpert:assigned_expert(first_name, last_name, email, role)')
       .order('created_at', { ascending: false })
+      .limit(500)
       .then(({ data }) => {
         setCases(data || []);
         setLoading(false);
+      })
+      .catch(() => {
+        toast.error('Failed to load cases');
+        setLoading(false);
       });
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const filtered = cases.filter(c => {
+  const filtered = useMemo(() => cases.filter(c => {
     if (filterStatus && c.status !== filterStatus) return false;
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       if (!c.title.toLowerCase().includes(term) && !(c.case_number || '').toLowerCase().includes(term)) return false;
     }
     return true;
-  });
+  }), [cases, filterStatus, searchTerm]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const paginatedCases = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);

@@ -481,6 +481,44 @@ CREATE TABLE expert_tos_acceptances (
 -- Admins query these tables directly via the Supabase dashboard.
 
 -- ============================================================
+-- PERFORMANCE INDEXES
+-- Run these in Supabase SQL Editor to optimize common queries.
+-- ============================================================
+
+-- Profiles: filtered by role on admin pages (ExpertList, AdminDashboard)
+CREATE INDEX IF NOT EXISTS idx_profiles_role ON profiles(role);
+
+-- Case invitations: dashboard counts, expert case list
+CREATE INDEX IF NOT EXISTS idx_case_invitations_expert_status ON case_invitations(expert_id, status);
+CREATE INDEX IF NOT EXISTS idx_case_invitations_case_id ON case_invitations(case_id);
+
+-- Messages: unread count on dashboards
+CREATE INDEX IF NOT EXISTS idx_messages_recipient_read ON messages(recipient_id, is_read);
+
+-- Documents: per-expert document listing
+CREATE INDEX IF NOT EXISTS idx_documents_expert_id ON documents(expert_id);
+
+-- Training progress: dashboard training percentage lookups
+CREATE INDEX IF NOT EXISTS idx_training_progress_user_id ON training_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_admissibility_progress_user_id ON admissibility_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_report_writing_progress_user_id ON report_writing_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_deposition_progress_user_id ON deposition_progress(user_id);
+CREATE INDEX IF NOT EXISTS idx_trial_testimony_progress_user_id ON trial_testimony_progress(user_id);
+
+-- Cases: filtered by status on admin pages
+CREATE INDEX IF NOT EXISTS idx_cases_status ON cases(status);
+
+-- Calendar events: upcoming events query on dashboard
+CREATE INDEX IF NOT EXISTS idx_calendar_events_expert_time ON calendar_events(expert_id, start_time);
+
+-- Expert specialties: join lookups
+CREATE INDEX IF NOT EXISTS idx_expert_specialties_expert_id ON expert_specialties(expert_id);
+
+-- Conversations: participant lookups for messaging
+CREATE INDEX IF NOT EXISTS idx_conversations_p1 ON conversations(participant_1);
+CREATE INDEX IF NOT EXISTS idx_conversations_p2 ON conversations(participant_2);
+
+-- ============================================================
 -- DONE! Next steps:
 -- 1. Add your first admin user in Supabase Auth > Users
 -- 2. Run: UPDATE profiles SET role = 'admin' WHERE email = 'your-admin@veracityexpertwitness.com';

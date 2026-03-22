@@ -20,6 +20,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!user) return;
+    let cancelled = false;
     const load = async () => {
       try {
         const now = new Date().toISOString();
@@ -35,6 +36,7 @@ export default function Dashboard() {
           supabase.from('deposition_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
           supabase.from('trial_testimony_progress').select('lesson_id, completed, quiz_score').eq('user_id', user.id),
         ]);
+        if (cancelled) return;
         setStats({
           pendingCases: cases.count || 0,
           unreadMessages: msgs.count || 0,
@@ -80,6 +82,7 @@ export default function Dashboard() {
       }
     };
     load();
+    return () => { cancelled = true; };
   }, [user, toastError]);
 
   const profileComplete = profile?.first_name && profile?.last_name && profile?.bio;

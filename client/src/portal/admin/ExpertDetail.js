@@ -28,6 +28,7 @@ export default function ExpertDetail() {
   const toast = useToast();
 
   useEffect(() => {
+    let cancelled = false;
     Promise.all([
       supabase.from('profiles').select('*').eq('id', id).single(),
       supabase.from('expert_specialties').select('specialties(id, name, parent_id)').eq('expert_id', id),
@@ -35,6 +36,7 @@ export default function ExpertDetail() {
       supabase.from('documents').select('*').eq('expert_id', id).order('uploaded_at', { ascending: false }),
       supabase.from('specialties').select('id, name').is('parent_id', null).order('name'),
     ]).then(([prof, specs, test, docs, parents]) => {
+      if (cancelled) return;
       const specObjs = specs.data?.map(s => s.specialties).filter(Boolean) || [];
       setExpert(prof.data);
       setSpecialties(specObjs.map(s => s.name));
@@ -43,8 +45,13 @@ export default function ExpertDetail() {
       setTestimony(test.data || []);
       setDocuments(docs.data || []);
       setLoading(false);
+    }).catch(() => {
+      if (cancelled) return;
+      toast.error('Failed to load expert details');
+      setLoading(false);
     });
-  }, [id]);
+    return () => { cancelled = true; };
+  }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleDownload = async (doc) => {
     const win = window.open('', '_blank');

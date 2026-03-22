@@ -61,12 +61,15 @@ module.exports = async (req, res) => {
     const origin = req.headers.origin;
     const redirectBase = allowedOrigins.includes(origin) ? origin : 'https://veracityexpertwitness.com';
 
+    // Sanitize name fields before storing in auth metadata
+    const safeName = (val) => String(val || '').replace(/[<>]/g, '').slice(0, 200).trim();
+
     // Invite user via Supabase Auth
     const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
       redirectTo: `${redirectBase}/portal/auth/callback`,
       data: {
-        first_name: first_name || '',
-        last_name: last_name || '',
+        first_name: safeName(first_name),
+        last_name: safeName(last_name),
         role: 'expert',
       },
     });
@@ -77,15 +80,15 @@ module.exports = async (req, res) => {
       if (msg.includes('already registered') || msg.includes('already been registered') || msg.includes('duplicate') || msg.includes('already exists')) {
         return res.status(409).json({ error: 'This email is already registered. If the expert needs a new invite, delete their account from Supabase Auth first.' });
       }
-      return res.status(400).json({ error: `Failed to send invitation: ${inviteError.message}` });
+      return res.status(400).json({ error: 'Failed to send invitation. Please try again.' });
     }
 
     // Record invitation
     await supabaseAdmin.from('invitations').insert({
       email,
       invited_by: user.id,
-      first_name: first_name || null,
-      last_name: last_name || null,
+      first_name: safeName(first_name) || null,
+      last_name: safeName(last_name) || null,
     });
 
     // Update profile with name if provided
@@ -93,8 +96,8 @@ module.exports = async (req, res) => {
       await supabaseAdmin
         .from('profiles')
         .update({
-          first_name: first_name || null,
-          last_name: last_name || null,
+          first_name: safeName(first_name) || null,
+          last_name: safeName(last_name) || null,
           invited_at: new Date().toISOString(),
         })
         .eq('id', inviteData.user.id);
@@ -103,6 +106,6 @@ module.exports = async (req, res) => {
     return res.status(200).json({ success: true, message: `Invitation sent to ${email}` });
   } catch (err) {
     console.error('Invite handler error:', err.message, err.stack);
-    return res.status(500).json({ error: `Failed to send invitation: ${err.message}` });
+    return res.status(500).json({ error: 'Failed to send invitation. Please try again.' });
   }
 };

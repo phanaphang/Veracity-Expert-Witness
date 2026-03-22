@@ -63,7 +63,7 @@ module.exports = async (req, res) => {
     // Delete from auth (cascades to profiles and related tables)
     const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(expertId);
     if (deleteError) {
-      return res.status(400).json({ error: `Failed to delete expert: ${deleteError.message}` });
+      return res.status(400).json({ error: 'Failed to delete expert. Please try again.' });
     }
 
     return res.status(200).json({ success: true, message: `Expert ${expertProfile.email} has been deleted` });
