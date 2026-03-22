@@ -182,7 +182,7 @@ function Compliance() {
         <div className="contact-info-box">
           <p><strong>Veracity Expert Witness LLC</strong></p>
           <p>Los Angeles, California</p>
-          <p>Email: <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a></p>
+          <p>Email: <a href="mailto:support@veracityexpertwitness.com">support@veracityexpertwitness.com</a></p>
           <p>Website: veracityexpertwitness.com</p>
         </div>
       </section>

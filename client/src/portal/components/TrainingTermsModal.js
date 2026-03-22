@@ -226,7 +226,7 @@ export default function TrainingTermsModal({ onAccepted }) {
           <h3>11. Contact</h3>
           <p>
             If you have questions about these Terms of Use, contact us at{' '}
-            <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a>.
+            <a href="mailto:support@veracityexpertwitness.com">support@veracityexpertwitness.com</a>.
           </p>
         </div>
 

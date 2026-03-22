@@ -59,7 +59,7 @@ const faqData = [
     items: [
       {
         question: 'How do I get started?',
-        answer: 'Simply reach out through our contact form on the homepage or email us at info@veracityexpertwitness.com. Provide a brief description of your case and the type of expert you need, and our team will follow up to discuss your requirements in detail.',
+        answer: 'Simply reach out through our contact form on the homepage or email us at support@veracityexpertwitness.com. Provide a brief description of your case and the type of expert you need, and our team will follow up to discuss your requirements in detail.',
       },
       {
         question: 'How does pricing work?',
@@ -101,7 +101,7 @@ const faqData = [
       },
       {
         question: 'How do I access the Expert Portal?',
-        answer: 'Expert witnesses receive an invitation to join the portal when they are onboarded to our network. If you are an expert and have not received an invitation, please contact us at info@veracityexpertwitness.com.',
+        answer: 'Expert witnesses receive an invitation to join the portal when they are onboarded to our network. If you are an expert and have not received an invitation, please contact us at support@veracityexpertwitness.com.',
       },
       {
         question: 'Is the Expert Portal secure?',

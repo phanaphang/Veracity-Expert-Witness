@@ -197,7 +197,7 @@ function JoinOurPanel() {
             )}
             {status === 'error' && (
               <div className="contact__alert contact__alert--error">
-                Something went wrong. Please try again or email us at info@veracityexpertwitness.com.
+                Something went wrong. Please try again or email us at support@veracityexpertwitness.com.
               </div>
             )}
 

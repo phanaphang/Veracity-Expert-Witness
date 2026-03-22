@@ -197,7 +197,7 @@ module.exports = async (req, res) => {
           data: {
             message: {
               recipients: [
-                process.env.CONTACT_EMAIL || 'info@veracityexpertwitness.com',
+                process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com',
                 process.env.ADMIN_EMAIL || 'admin@veracityexpertwitness.com',
               ],
               headers: {

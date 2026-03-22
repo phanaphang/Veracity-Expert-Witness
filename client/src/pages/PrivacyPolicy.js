@@ -186,7 +186,7 @@ function PrivacyPolicy() {
 
         <h3>How to Exercise Your Rights</h3>
         <p>
-          Email us at <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a>.
+          Email us at <a href="mailto:support@veracityexpertwitness.com">support@veracityexpertwitness.com</a>.
           We will verify your identity and respond within 45 days. If we need more time (up to
           90 days), we will let you know. You may also have an authorized agent submit a request
           on your behalf.
@@ -244,7 +244,7 @@ function PrivacyPolicy() {
         <div className="contact-info-box">
           <p><strong>Veracity Expert Witness LLC</strong></p>
           <p>Los Angeles, California</p>
-          <p>Email: <a href="mailto:info@veracityexpertwitness.com">info@veracityexpertwitness.com</a></p>
+          <p>Email: <a href="mailto:support@veracityexpertwitness.com">support@veracityexpertwitness.com</a></p>
           <p>Website: veracityexpertwitness.com</p>
         </div>
       </section>
