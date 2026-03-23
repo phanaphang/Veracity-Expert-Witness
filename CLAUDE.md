@@ -40,21 +40,17 @@ supabase-schema.sql   # Database schema reference
 - Warnings may be left if they are intentional, but errors must be fixed.
 
 ## Deployment
-- Always deploy from the **repo root**: `cd /c/Users/phana/OneDrive/Desktop/Veracity_Expert_Witness && npx vercel --prod --yes`
+- Only deploy when explicitly asked. Do not deploy automatically after code changes.
+- Always deploy from the **repo root**: `npx vercel --prod --yes`
 - The correct Vercel project is `veracity-expert-witness`. Do NOT deploy to the `client` project.
 - Production URL: `https://veracityexpertwitness.com`
 
 ## Browser Verification
-- After UI changes, use the Chrome MCP browser to navigate to the affected page and visually verify the result.
-- Use `get_page_text` to confirm content renders correctly, or `read_page` for layout/visual checks.
-- Be specific about what to verify — check that the changed elements are visible, styled correctly, and functional.
-- For production verification, check `https://www.veracityexpertwitness.com` after deployment.
-- For local verification, use the dev server URL after starting it with `npm start` from `client/`.
-- For mobile verification, use `resize_window` to simulate mobile viewports (e.g., 375x812 for iPhone, 768x1024 for iPad) and verify responsive layout before resizing back to desktop.
+- After UI changes, verify in Chrome MCP: `get_page_text` for content, `read_page` for layout.
+- Production: `https://www.veracityexpertwitness.com` | Local: `npm start` from `client/`
+- Mobile: use `resize_window` (375x812 iPhone, 768x1024 iPad), then resize back to desktop.
 
 ## Do NOT
 - Do not remove or modify `eslint-plugin-react-hooks` v7 "off" rules — they suppress intentional patterns.
 - Do not delete the root-level `@supabase/supabase-js` — it is used by `api/_lib/supabaseAdmin.js`.
 - Do not commit `.env` files or secrets.
-- Do not create new files unless absolutely necessary.
-- Do not over-engineer — solve what was asked, nothing more.
