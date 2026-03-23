@@ -228,7 +228,7 @@ const router = createBrowserRouter([
       { path: '/portal/resources', element: <ProtectedRoute><PortalLayout><AllResources /></PortalLayout></ProtectedRoute> },
 
       // SOP Training Hub (staff)
-      { path: '/sop-training', element: <ProtectedRoute><PortalLayout><SOPTraining /></PortalLayout></ProtectedRoute> },
+      { path: '/sop-training', element: <ProtectedRoute requiredRole="admin"><AdminLayout><SOPTraining /></AdminLayout></ProtectedRoute> },
 
       // Training module (expert, admin, staff)
       { path: '/training', element: <ProtectedRoute><PortalLayout><TrainingHome /></PortalLayout></ProtectedRoute> },
