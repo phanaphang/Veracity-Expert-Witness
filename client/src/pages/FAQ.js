@@ -224,12 +224,12 @@ function FAQ() {
         <div className="faq-contact">
           <h2>Still have questions?</h2>
           <p>We are here to help. Reach out and our team will get back to you promptly.</p>
-          <a href="/#contact" className="btn btn--primary">
+          <Link to="/" state={{ scrollTo: '#contact' }} className="btn btn--primary">
             Contact Us
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
-          </a>
+          </Link>
         </div>
       </main>
 
