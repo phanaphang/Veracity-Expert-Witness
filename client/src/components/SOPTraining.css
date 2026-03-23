@@ -1,0 +1,722 @@
+/* ==========================================================================
+   SOP Training Hub
+   Uses existing design tokens from the project (--color-*, --radius-*, --shadow-*)
+   BEM naming with sop- prefix
+   ========================================================================== */
+
+/* Layout */
+.sop-training {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px 48px;
+}
+
+/* ---------- Navigation tabs ---------- */
+.sop-nav {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 32px;
+  border-bottom: 2px solid var(--color-gray-200);
+  padding-bottom: 0;
+}
+
+.sop-nav__btn {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: var(--color-gray-500);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.sop-nav__btn:hover {
+  color: var(--color-accent);
+}
+
+.sop-nav__btn--active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+/* ---------- Page header ---------- */
+.sop-header {
+  margin-bottom: 32px;
+}
+
+.sop-header__title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0 0 4px;
+}
+
+.sop-header__subtitle {
+  font-size: 0.9rem;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+/* ---------- Stat cards ---------- */
+.sop-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.sop-stat {
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.sop-stat__value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-navy);
+  line-height: 1;
+}
+
+.sop-stat__label {
+  font-size: 0.85rem;
+  color: var(--color-gray-500);
+  margin-top: 6px;
+}
+
+.sop-stat__bar {
+  height: 6px;
+  background: var(--color-gray-100);
+  border-radius: 999px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.sop-stat__bar-fill {
+  height: 100%;
+  background: var(--color-accent);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+.sop-stat--success .sop-stat__value {
+  color: var(--color-success);
+}
+
+.sop-stat--progress .sop-stat__value {
+  color: var(--color-accent);
+}
+
+/* ---------- Role filter ---------- */
+.sop-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.sop-filters__btn {
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: var(--color-gray-500);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.sop-filters__btn:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.sop-filters__btn--active {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+/* ---------- Module grid ---------- */
+.sop-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+/* ---------- Module card ---------- */
+.sop-card {
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  cursor: pointer;
+  transition: all var(--transition);
+  position: relative;
+  animation: sopFadeIn 0.4s ease both;
+}
+
+.sop-card:nth-child(2) { animation-delay: 0.06s; }
+.sop-card:nth-child(3) { animation-delay: 0.12s; }
+.sop-card:nth-child(4) { animation-delay: 0.18s; }
+.sop-card:nth-child(5) { animation-delay: 0.24s; }
+.sop-card:nth-child(6) { animation-delay: 0.30s; }
+
+.sop-card:hover {
+  border-color: var(--color-accent);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.sop-card__icon {
+  font-size: 1.75rem;
+  margin-bottom: 12px;
+}
+
+.sop-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0 0 8px;
+}
+
+.sop-card__desc {
+  font-size: 0.85rem;
+  color: var(--color-gray-500);
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+.sop-card__roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.sop-card__pill {
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-accent-dark);
+  background: rgba(211, 102, 34, 0.1);
+  border-radius: 50px;
+}
+
+.sop-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sop-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 12px;
+}
+
+.sop-card__badge--done {
+  background: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.sop-card__badge--pending {
+  background: var(--color-gray-50);
+  color: var(--color-gray-500);
+}
+
+.sop-card__score {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-gray-400);
+}
+
+/* ---------- Module detail ---------- */
+.sop-detail {
+  animation: sopFadeIn 0.3s ease both;
+}
+
+.sop-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: var(--color-accent);
+  background: none;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-bottom: 24px;
+}
+
+.sop-back:hover {
+  border-color: var(--color-accent);
+  background: rgba(211, 102, 34, 0.05);
+}
+
+.sop-detail__header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.sop-detail__icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.sop-detail__info {
+  flex: 1;
+}
+
+.sop-detail__title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0 0 6px;
+}
+
+.sop-detail__desc {
+  font-size: 0.9rem;
+  color: var(--color-gray-500);
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.sop-detail__roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* ---------- Phase toggle ---------- */
+.sop-toggle {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 28px;
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  width: fit-content;
+}
+
+.sop-toggle__btn {
+  padding: 8px 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: var(--color-gray-500);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.sop-toggle__btn--active {
+  background: #fff;
+  color: var(--color-navy);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---------- Section cards (content phase) ---------- */
+.sop-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sop-section {
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  animation: sopFadeIn 0.4s ease both;
+}
+
+.sop-section:nth-child(2) { animation-delay: 0.08s; }
+.sop-section:nth-child(3) { animation-delay: 0.16s; }
+
+.sop-section__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0 0 12px;
+}
+
+.sop-section__content {
+  font-size: 0.9rem;
+  color: var(--color-gray-600);
+  line-height: 1.7;
+  white-space: pre-line;
+  margin: 0;
+}
+
+.sop-cta {
+  margin-top: 28px;
+  text-align: center;
+}
+
+.sop-cta__btn {
+  padding: 12px 28px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(211, 102, 34, 0.35);
+  transition: all var(--transition);
+}
+
+.sop-cta__btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(211, 102, 34, 0.45);
+}
+
+/* ---------- Quiz ---------- */
+.sop-quiz {
+  max-width: 720px;
+  animation: sopFadeIn 0.3s ease both;
+}
+
+.sop-quiz__counter {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-gray-400);
+  margin-bottom: 8px;
+}
+
+.sop-quiz__question {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0 0 20px;
+  line-height: 1.5;
+}
+
+.sop-quiz__options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.sop-quiz__option {
+  padding: 14px 18px;
+  font-size: 0.9rem;
+  font-family: var(--font-family);
+  color: var(--color-navy);
+  background: #fff;
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition);
+  line-height: 1.5;
+}
+
+.sop-quiz__option:hover:not(:disabled) {
+  border-color: var(--color-accent);
+}
+
+.sop-quiz__option--selected {
+  border-color: var(--color-accent);
+  background: rgba(211, 102, 34, 0.05);
+}
+
+.sop-quiz__option--correct {
+  border-color: var(--color-success);
+  background: var(--color-success-light);
+}
+
+.sop-quiz__option--wrong {
+  border-color: var(--color-error);
+  background: var(--color-error-light);
+}
+
+.sop-quiz__option:disabled {
+  cursor: default;
+}
+
+.sop-quiz__explanation {
+  padding: 14px 18px;
+  background: var(--color-info-light);
+  border: 1px solid var(--color-info-border);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  color: var(--color-info-dark);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  animation: sopFadeIn 0.25s ease both;
+}
+
+.sop-quiz__actions {
+  display: flex;
+  gap: 12px;
+}
+
+.sop-quiz__btn {
+  padding: 10px 24px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.sop-quiz__btn--primary {
+  color: #fff;
+  background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
+  border: none;
+  box-shadow: 0 4px 14px rgba(211, 102, 34, 0.35);
+}
+
+.sop-quiz__btn--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(211, 102, 34, 0.45);
+}
+
+.sop-quiz__btn--primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.sop-quiz__btn--secondary {
+  color: var(--color-accent);
+  background: none;
+  border: 2px solid var(--color-accent);
+}
+
+.sop-quiz__btn--secondary:hover {
+  background: rgba(211, 102, 34, 0.05);
+}
+
+/* ---------- Quiz results ---------- */
+.sop-results {
+  text-align: center;
+  padding: 40px 24px;
+  animation: sopFadeIn 0.4s ease both;
+}
+
+.sop-results__emoji {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.sop-results__score {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--color-navy);
+  margin: 0 0 8px;
+}
+
+.sop-results__score--pass {
+  color: var(--color-success);
+}
+
+.sop-results__msg {
+  font-size: 1rem;
+  color: var(--color-gray-500);
+  margin: 0 0 28px;
+}
+
+.sop-results__actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* ---------- SOP Reference ---------- */
+.sop-ref {
+  animation: sopFadeIn 0.3s ease both;
+}
+
+.sop-ref__search {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.sop-ref__input {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  font-size: 0.9rem;
+  font-family: var(--font-family);
+  color: var(--color-navy);
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  transition: all var(--transition);
+  box-sizing: border-box;
+}
+
+.sop-ref__input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(211, 102, 34, 0.1);
+}
+
+.sop-ref__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  color: var(--color-gray-400);
+  pointer-events: none;
+}
+
+.sop-ref__count {
+  font-size: 0.85rem;
+  color: var(--color-gray-400);
+  margin-bottom: 16px;
+}
+
+.sop-ref__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sop-ref__card {
+  background: #fff;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  animation: sopFadeIn 0.3s ease both;
+}
+
+.sop-ref__card:nth-child(2) { animation-delay: 0.04s; }
+.sop-ref__card:nth-child(3) { animation-delay: 0.08s; }
+.sop-ref__card:nth-child(4) { animation-delay: 0.12s; }
+
+.sop-ref__tag {
+  display: inline-block;
+  padding: 2px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-accent-dark);
+  background: rgba(211, 102, 34, 0.1);
+  border-radius: 50px;
+  margin-bottom: 8px;
+}
+
+.sop-ref__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin: 0 0 8px;
+}
+
+.sop-ref__content {
+  font-size: 0.85rem;
+  color: var(--color-gray-600);
+  line-height: 1.7;
+  white-space: pre-line;
+  margin: 0;
+}
+
+/* ---------- Loading ---------- */
+.sop-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 24px;
+  color: var(--color-gray-400);
+  gap: 16px;
+}
+
+.sop-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--color-gray-200);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: sopSpin 0.7s linear infinite;
+}
+
+/* ---------- Animations ---------- */
+@keyframes sopFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sopSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .sop-training {
+    padding: 0 16px 32px;
+  }
+
+  .sop-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .sop-nav__btn {
+    white-space: nowrap;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+  }
+
+  .sop-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sop-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .sop-detail__header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .sop-results__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sop-quiz__actions {
+    flex-direction: column;
+  }
+
+  .sop-quiz__btn {
+    width: 100%;
+    text-align: center;
+  }
+}

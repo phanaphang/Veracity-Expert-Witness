@@ -52,6 +52,9 @@ const Messages = lazy(() => import('./portal/pages/Messages'));
 const ChangePassword = lazy(() => import('./portal/pages/ChangePassword'));
 const CalendarPage = lazy(() => import('./portal/pages/Calendar'));
 
+// SOP Training Hub (staff)
+const SOPTraining = lazy(() => import('./components/SOPTraining'));
+
 // Training module — home + Expert Witness Foundations
 const TrainingHome = lazy(() => import('./portal/training/TrainingHome'));
 const TrainingDashboard = lazy(() => import('./portal/training/TrainingDashboard'));
@@ -223,6 +226,9 @@ const router = createBrowserRouter([
       { path: '/portal/change-password', element: <ProtectedRoute><PortalLayout><ChangePassword /></PortalLayout></ProtectedRoute> },
       { path: '/portal/calendar', element: <ProtectedRoute><PortalLayout><CalendarPage /></PortalLayout></ProtectedRoute> },
       { path: '/portal/resources', element: <ProtectedRoute><PortalLayout><AllResources /></PortalLayout></ProtectedRoute> },
+
+      // SOP Training Hub (staff)
+      { path: '/sop-training', element: <ProtectedRoute><PortalLayout><SOPTraining /></PortalLayout></ProtectedRoute> },
 
       // Training module (expert, admin, staff)
       { path: '/training', element: <ProtectedRoute><PortalLayout><TrainingHome /></PortalLayout></ProtectedRoute> },
