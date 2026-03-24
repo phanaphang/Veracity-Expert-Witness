@@ -1,36 +1,34 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '../lib/supabase';
+import { useAuth } from './useAuth';
 
 export function useTrainingProgress() {
-  const [user, setUser] = useState(null);
+  const { user } = useAuth();
   const [progress, setProgress] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function init() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) return;
-
-      if (session?.user) {
-        setUser(session.user);
-        await loadProgress(session.user.id);
-      }
-      if (!cancelled) setLoading(false);
+    if (!user) {
+      setProgress({});
+      setLoading(false);
+      return;
     }
 
-    async function loadProgress(userId) {
+    let cancelled = false;
+    setLoading(true);
+
+    async function loadProgress() {
       const { data, error: fetchError } = await supabase
         .from('sop_training_progress')
         .select('module_id, completed, quiz_score, attempts')
-        .eq('user_id', userId);
+        .eq('user_id', user.id);
 
       if (cancelled) return;
 
       if (fetchError) {
         setError(fetchError.message);
+        setLoading(false);
         return;
       }
 
@@ -43,31 +41,13 @@ export function useTrainingProgress() {
         };
       });
       setProgress(map);
+      setLoading(false);
     }
 
-    init();
+    loadProgress();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
-        if (cancelled) return;
-        const u = session?.user || null;
-        setUser(u);
-        if (u) {
-          setLoading(true);
-          await loadProgress(u.id);
-          if (!cancelled) setLoading(false);
-        } else {
-          setProgress({});
-          setLoading(false);
-        }
-      }
-    );
-
-    return () => {
-      cancelled = true;
-      subscription.unsubscribe();
-    };
-  }, []);
+    return () => { cancelled = true; };
+  }, [user]);
 
   const saveQuizResult = useCallback(
     async (moduleId, score, answers) => {
