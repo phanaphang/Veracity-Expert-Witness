@@ -95,7 +95,7 @@ module.exports = async (req, res) => {
             recipients: [(process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com').trim()],
             headers: {
               subject: `New Expert Witness Request: ${escapeHtml(expertise)} - ${escapeHtml(name)}`,
-              from: 'noreply@veracityexpertwitness.com',
+              from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
               'reply-to': email.replace(/[\r\n]/g, ''),
             },
             content: {

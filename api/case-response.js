@@ -86,12 +86,12 @@ module.exports = async (req, res) => {
           message: {
             recipients: [
               process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com',
-              process.env.ADMIN_EMAIL || 'admin@veracityexpertwitness.com',
+              process.env.ADMIN_EMAIL || 'support@veracityexpertwitness.com',
             ],
             headers: {
               subject: `Case Response: ${escapeHtml(expertName)} ${label} — ${escapeHtml(caseTitle)}`,
-              from: 'noreply@veracityexpertwitness.com',
-              'List-Unsubscribe': '<mailto:admin@veracityexpertwitness.com?subject=Unsubscribe>',
+              from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
+              'List-Unsubscribe': `<mailto:${process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com'}?subject=Unsubscribe>`,
             },
             content: {
               'text/html': htmlContent,

@@ -95,8 +95,8 @@ module.exports = async (req, res) => {
             recipients: [recipient.email],
             headers: {
               subject: `New message from ${senderName}`,
-              from: 'noreply@veracityexpertwitness.com',
-              'List-Unsubscribe': '<mailto:admin@veracityexpertwitness.com?subject=Unsubscribe>',
+              from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
+              'List-Unsubscribe': `<mailto:${process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com'}?subject=Unsubscribe>`,
             },
             content: {
               'text/html': htmlContent,

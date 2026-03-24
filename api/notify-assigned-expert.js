@@ -106,8 +106,8 @@ module.exports = async (req, res) => {
             recipients: [expert.email],
             headers: {
               subject: `You have been assigned to case: #${escapeHtml(caseNumber || '')} — ${escapeHtml(caseTitle)}`,
-              from: 'noreply@veracityexpertwitness.com',
-              'List-Unsubscribe': '<mailto:admin@veracityexpertwitness.com?subject=Unsubscribe>',
+              from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
+              'List-Unsubscribe': `<mailto:${process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com'}?subject=Unsubscribe>`,
             },
             content: {
               'text/html': htmlContent,

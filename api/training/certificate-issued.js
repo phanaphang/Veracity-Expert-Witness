@@ -169,7 +169,7 @@ module.exports = async (req, res) => {
               recipients: [expertEmail],
               headers: {
                 subject: `You've completed ${moduleTitle} — Veracity`,
-                from: 'noreply@veracityexpertwitness.com',
+                from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
               },
               content: { 'text/html': expertHtml, 'text/plain': expertPlainText },
             },
@@ -198,11 +198,11 @@ module.exports = async (req, res) => {
             message: {
               recipients: [
                 process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com',
-                process.env.ADMIN_EMAIL || 'admin@veracityexpertwitness.com',
+                process.env.ADMIN_EMAIL || 'support@veracityexpertwitness.com',
               ],
               headers: {
                 subject: `Training Complete: ${escapeHtml(certificateName)} — ${escapeHtml(moduleTitle)}`,
-                from: 'noreply@veracityexpertwitness.com',
+                from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
               },
               content: { 'text/html': adminHtml, 'text/plain': adminPlainText },
             },
