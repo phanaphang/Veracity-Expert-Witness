@@ -54,3 +54,5 @@ supabase-schema.sql   # Database schema reference
 - Do not remove or modify `eslint-plugin-react-hooks` v7 "off" rules — they suppress intentional patterns.
 - Do not delete the root-level `@supabase/supabase-js` — it is used by `api/_lib/supabaseAdmin.js`.
 - Do not commit `.env` files or secrets.
+- Do not hardcode API keys, tokens, secrets, or credentials in source code — always use `process.env` with no hardcoded fallback.
+- Do not commit Supabase keys, Paubox keys, Resend keys, or any auth tokens — these must stay in `.env` files and Vercel env config only.
