@@ -38,11 +38,20 @@ async function handleGetOverview(req, res) {
     return res.status(500).json({ error: 'Failed to fetch training data' });
   }
 
+  const userIds = [...new Set((rows || []).map((r) => r.user_id))];
+  const { data: profileRows } = await supabaseAdmin
+    .from('profiles')
+    .select('id, email')
+    .in('id', userIds);
+  const emailMap = {};
+  (profileRows || []).forEach((p) => { emailMap[p.id] = p.email; });
+
   const staffMap = {};
   (rows || []).forEach((row) => {
     if (!staffMap[row.user_id]) {
       staffMap[row.user_id] = {
         name: row.full_name,
+        email: emailMap[row.user_id] || null,
         role: row.role,
         modules: [],
       };

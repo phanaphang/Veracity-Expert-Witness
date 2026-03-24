@@ -638,6 +638,109 @@
   margin: 0;
 }
 
+/* ---------- Staff Overview (Admin) ---------- */
+.sop-overview {
+  animation: sopFadeIn 0.3s ease both;
+}
+
+.sop-overview__empty {
+  text-align: center;
+  padding: 60px 24px;
+  color: var(--color-gray-400);
+  font-size: 0.95rem;
+}
+
+.sop-overview__table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  background: #fff;
+}
+
+.sop-overview__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.sop-overview__table th {
+  text-align: left;
+  padding: 14px 18px;
+  font-weight: 700;
+  color: var(--color-navy);
+  background: var(--color-gray-50);
+  border-bottom: 2px solid var(--color-gray-200);
+  white-space: nowrap;
+}
+
+.sop-overview__table td {
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--color-gray-100);
+  color: var(--color-gray-600);
+}
+
+.sop-overview__table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.sop-overview__table tbody tr:hover {
+  background: var(--color-gray-50);
+}
+
+.sop-overview__name {
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.sop-overview__progress {
+  font-weight: 600;
+}
+
+.sop-overview__progress--done {
+  color: var(--color-success);
+}
+
+.sop-overview__complete-tag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-success-dark);
+  background: var(--color-success-light);
+  padding: 4px 12px;
+  border-radius: 50px;
+}
+
+.sop-overview__sent-tag {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-info-dark);
+  background: var(--color-info-light);
+  padding: 4px 12px;
+  border-radius: 50px;
+}
+
+.sop-overview__remind-btn {
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-family);
+  color: #fff;
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.sop-overview__remind-btn:hover:not(:disabled) {
+  background: var(--color-accent-dark);
+}
+
+.sop-overview__remind-btn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 /* ---------- Loading ---------- */
 .sop-loading {
   display: flex;
@@ -718,5 +821,14 @@
   .sop-quiz__btn {
     width: 100%;
     text-align: center;
+  }
+
+  .sop-overview__table {
+    font-size: 0.8rem;
+  }
+
+  .sop-overview__table th,
+  .sop-overview__table td {
+    padding: 10px 12px;
   }
 }

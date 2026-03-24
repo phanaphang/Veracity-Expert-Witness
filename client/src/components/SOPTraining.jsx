@@ -1,14 +1,18 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { MODULES, ROLES } from '../data/trainingModules';
 import { useTrainingProgress } from '../hooks/useTrainingProgress';
+import { useAuth } from '../hooks/useAuth';
+import { supabase } from '../lib/supabase';
 import './SOPTraining.css';
 
-const VIEWS = { DASHBOARD: 'dashboard', DETAIL: 'detail', REFERENCE: 'reference' };
+const VIEWS = { DASHBOARD: 'dashboard', DETAIL: 'detail', REFERENCE: 'reference', OVERVIEW: 'overview' };
 const PHASES = { CONTENT: 'content', QUIZ: 'quiz' };
 const PASS_THRESHOLD = 80;
 
 export default function SOPTraining() {
   const { progress, loading, saveQuizResult } = useTrainingProgress();
+  const { profile } = useAuth();
+  const isAdmin = profile?.role === 'admin';
 
   const [view, setView] = useState(VIEWS.DASHBOARD);
   const [activeModuleId, setActiveModuleId] = useState(null);
@@ -25,6 +29,68 @@ export default function SOPTraining() {
 
   // Reference search
   const [search, setSearch] = useState('');
+
+  // Admin overview state
+  const [staffData, setStaffData] = useState([]);
+  const [overviewLoading, setOverviewLoading] = useState(false);
+  const [sendingReminder, setSendingReminder] = useState(null);
+  const [reminderStatus, setReminderStatus] = useState({});
+
+  const fetchStaffOverview = useCallback(async () => {
+    setOverviewLoading(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/training/sop', {
+        headers: { Authorization: `Bearer ${session?.access_token}` },
+      });
+      if (res.ok) {
+        const json = await res.json();
+        setStaffData(json.staff || []);
+      }
+    } catch (err) {
+      console.error('Failed to fetch staff overview:', err);
+    } finally {
+      setOverviewLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isAdmin && view === VIEWS.OVERVIEW) {
+      fetchStaffOverview();
+    }
+  }, [isAdmin, view, fetchStaffOverview]);
+
+  const sendReminder = useCallback(async (staff) => {
+    const incompleteModules = MODULES
+      .filter((m) => !staff.modules.find((sm) => sm.moduleId === m.id && sm.completed))
+      .map((m) => m.title);
+    if (!incompleteModules.length) return;
+
+    setSendingReminder(staff.name);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const res = await fetch('/api/training/sop', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session?.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          staffEmail: staff.email,
+          staffName: staff.name,
+          incompleteModules,
+        }),
+      });
+      setReminderStatus((prev) => ({
+        ...prev,
+        [staff.name]: res.ok ? 'sent' : 'failed',
+      }));
+    } catch {
+      setReminderStatus((prev) => ({ ...prev, [staff.name]: 'failed' }));
+    } finally {
+      setSendingReminder(null);
+    }
+  }, []);
 
   const activeModule = useMemo(
     () => MODULES.find((m) => m.id === activeModuleId),
@@ -157,6 +223,14 @@ export default function SOPTraining() {
         >
           SOP Reference
         </button>
+        {isAdmin && (
+          <button
+            className={`sop-nav__btn ${view === VIEWS.OVERVIEW ? 'sop-nav__btn--active' : ''}`}
+            onClick={() => { setView(VIEWS.OVERVIEW); setActiveModuleId(null); resetQuiz(); }}
+          >
+            Staff Overview
+          </button>
+        )}
       </nav>
 
       {/* ========== Dashboard ========== */}
@@ -454,6 +528,82 @@ export default function SOPTraining() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* ========== Staff Overview (Admin Only) ========== */}
+      {view === VIEWS.OVERVIEW && isAdmin && (
+        <div className="sop-overview">
+          <div className="sop-header">
+            <h1 className="sop-header__title">Staff Training Overview</h1>
+            <p className="sop-header__subtitle">
+              Monitor staff progress across all SOP modules.
+            </p>
+          </div>
+
+          {overviewLoading ? (
+            <div className="sop-loading">
+              <div className="sop-spinner" />
+              <span>Loading staff data…</span>
+            </div>
+          ) : staffData.length === 0 ? (
+            <div className="sop-overview__empty">No staff training data found.</div>
+          ) : (
+            <div className="sop-overview__table-wrap">
+              <table className="sop-overview__table">
+                <thead>
+                  <tr>
+                    <th>Staff Member</th>
+                    <th>Role</th>
+                    <th>Completed</th>
+                    <th>Avg Score</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {staffData.map((staff) => {
+                    const completedMods = staff.modules.filter((m) => m.completed).length;
+                    const scores = staff.modules
+                      .map((m) => m.quizScore)
+                      .filter((s) => s !== null && s > 0);
+                    const avg = scores.length
+                      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+                      : 0;
+                    const allDone = completedMods === MODULES.length;
+                    const status = reminderStatus[staff.name];
+
+                    return (
+                      <tr key={staff.name}>
+                        <td className="sop-overview__name">{staff.name}</td>
+                        <td>{staff.role || '\u2014'}</td>
+                        <td>
+                          <span className={`sop-overview__progress ${allDone ? 'sop-overview__progress--done' : ''}`}>
+                            {completedMods}/{MODULES.length}
+                          </span>
+                        </td>
+                        <td>{avg > 0 ? `${avg}%` : '\u2014'}</td>
+                        <td>
+                          {allDone ? (
+                            <span className="sop-overview__complete-tag">All complete</span>
+                          ) : status === 'sent' ? (
+                            <span className="sop-overview__sent-tag">Reminder sent</span>
+                          ) : (
+                            <button
+                              className="sop-overview__remind-btn"
+                              disabled={sendingReminder === staff.name}
+                              onClick={() => sendReminder(staff)}
+                            >
+                              {sendingReminder === staff.name ? 'Sending…' : 'Send Reminder'}
+                            </button>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
     </div>
