@@ -22,7 +22,7 @@ export const MODULES = [
       {
         title: "Conflict of Interest Check",
         content:
-          "Before any engagement proceeds, a mandatory conflict check must be completed. Cross-reference the opposing parties, related entities, and case subject matter against our active and historical case database. Conflicts are categorized as:\n\nHard Conflict \u2014 Expert has prior involvement with opposing party, engagement cannot proceed.\n\nSoft Conflict \u2014 Potential overlap exists, escalate to Director for review within 24 hours.\n\nClear \u2014 No conflicts identified, proceed to scope definition.",
+          "Before any engagement proceeds, a mandatory conflict check must be completed. Cross-reference the opposing parties, related entities, and case subject matter against our active and historical case database. Conflicts are categorized as:\n\nHard Conflict - Expert has prior involvement with opposing party, engagement cannot proceed.\n\nSoft Conflict - Potential overlap exists, escalate to Director for review within 24 hours.\n\nClear - No conflicts identified, proceed to scope definition.",
       },
       {
         title: "Scope Definition & Engagement Letters",
@@ -48,9 +48,9 @@ export const MODULES = [
         question:
           "During a conflict check, you discover a potential expert previously consulted with a subsidiary of the opposing party 3 years ago. How do you classify this?",
         options: [
-          "Clear \u2014 it was 3 years ago",
-          "Hard Conflict \u2014 prior involvement with opposing party",
-          "Soft Conflict \u2014 escalate to Director for review",
+          "Clear - it was 3 years ago",
+          "Hard Conflict - prior involvement with opposing party",
+          "Soft Conflict - escalate to Director for review",
           "No action needed if the expert doesn't remember",
         ],
         correct: 2,
@@ -100,7 +100,7 @@ export const MODULES = [
         question:
           "How many qualified candidates should you typically present to a client?",
         options: [
-          "1 \u2014 the best match only",
+          "1 - the best match only",
           "2\u20133 ranked by relevance",
           "5 or more to give maximum choice",
           "As many as are available",
@@ -113,9 +113,9 @@ export const MODULES = [
         question:
           "A highly qualified expert's CV on file is 18 months old. Can they be assigned to a new case?",
         options: [
-          "Yes \u2014 18 months is close enough",
-          "No \u2014 their CV must be updated before assignment",
-          "Yes \u2014 but only for cases under $50K",
+          "Yes - 18 months is close enough",
+          "No - their CV must be updated before assignment",
+          "Yes - but only for cases under $50K",
           "Only if the client doesn't ask for a current CV",
         ],
         correct: 1,
@@ -135,12 +135,12 @@ export const MODULES = [
       {
         title: "Document Management Standards",
         content:
-          "All case documents must be stored in the centralized case management system using our standard folder structure:\n\n/Intake \u2014 engagement letter, conflict check, intake form\n/Expert \u2014 CV, engagement agreement, qualifications\n/Case-Materials \u2014 documents provided by counsel\n/Work-Product \u2014 drafts, notes, reports\n/Correspondence \u2014 emails, call logs, meeting notes\n/Billing \u2014 invoices, expense reports, payment records\n\nDocuments must be named following convention: [CaseID]_[DocType]_[Date]_[Version]. Example: 2024-0847_Report_20240315_v2.pdf",
+          "All case documents must be stored in the centralized case management system using our standard folder structure:\n\n/Intake - engagement letter, conflict check, intake form\n/Expert - CV, engagement agreement, qualifications\n/Case-Materials - documents provided by counsel\n/Work-Product - drafts, notes, reports\n/Correspondence - emails, call logs, meeting notes\n/Billing - invoices, expense reports, payment records\n\nDocuments must be named following convention: [CaseID]_[DocType]_[Date]_[Version]. Example: 2024-0847_Report_20240315_v2.pdf",
       },
       {
         title: "Communication Protocols",
         content:
-          "All substantive communications regarding a case must be documented: Client calls \u2014 logged within 4 hours using Call Log Template CL-400. Expert communications \u2014 documented in case file within same business day. Internal handoffs \u2014 use the Case Transfer Form (CTF-410) with full status summary. Email communications must CC the case file email address for automatic archival. Never use personal email accounts for case communications. Privileged materials must be marked \u201CCONFIDENTIAL \u2014 ATTORNEY WORK PRODUCT\u201D in the subject line.",
+          "All substantive communications regarding a case must be documented: Client calls - logged within 4 hours using Call Log Template CL-400. Expert communications - documented in case file within same business day. Internal handoffs - use the Case Transfer Form (CTF-410) with full status summary. Email communications must CC the case file email address for automatic archival. Never use personal email accounts for case communications. Privileged materials must be marked \u201CCONFIDENTIAL - ATTORNEY WORK PRODUCT\u201D in the subject line.",
       },
       {
         title: "Deadline & Milestone Tracking",
@@ -167,13 +167,13 @@ export const MODULES = [
           "A client attorney sends you a privileged document via email. What must be included in your reply?",
         options: [
           "A thank you note and confirmation of receipt",
-          "CC the case file email and mark subject \u2018CONFIDENTIAL \u2014 ATTORNEY WORK PRODUCT\u2019",
+          "CC the case file email and mark subject \u2018CONFIDENTIAL - ATTORNEY WORK PRODUCT\u2019",
           "Forward it directly to the expert",
           "Print it and store the physical copy",
         ],
         correct: 1,
         explanation:
-          "All emails must CC the case file address for archival, and privileged materials require the \u2018CONFIDENTIAL \u2014 ATTORNEY WORK PRODUCT\u2019 marking in the subject line.",
+          "All emails must CC the case file address for archival, and privileged materials require the \u2018CONFIDENTIAL - ATTORNEY WORK PRODUCT\u2019 marking in the subject line.",
       },
     ],
   },
@@ -193,7 +193,7 @@ export const MODULES = [
       {
         title: "Quality Assurance Process",
         content:
-          "Every report undergoes a two-stage QA review before submission.\n\nStage 1 \u2014 Coordinator Review (within 2 business days): Verify all required sections are present, check formatting compliance, confirm all cited materials are listed, flag any unsupported opinions or logical gaps.\n\nStage 2 \u2014 Senior Review (within 3 business days): Substantive review of methodology and opinions, cross-check with engagement scope, verify jurisdictional requirements are met, final approval signature.\n\nReports returned for revision must be resubmitted for another full QA cycle.",
+          "Every report undergoes a two-stage QA review before submission.\n\nStage 1 - Coordinator Review (within 2 business days): Verify all required sections are present, check formatting compliance, confirm all cited materials are listed, flag any unsupported opinions or logical gaps.\n\nStage 2 - Senior Review (within 3 business days): Substantive review of methodology and opinions, cross-check with engagement scope, verify jurisdictional requirements are met, final approval signature.\n\nReports returned for revision must be resubmitted for another full QA cycle.",
       },
       {
         title: "Submission & Delivery",
@@ -213,7 +213,7 @@ export const MODULES = [
         ],
         correct: 2,
         explanation:
-          "Reports returned for revision must be resubmitted for a full QA cycle \u2014 both Stage 1 and Stage 2. No shortcuts.",
+          "Reports returned for revision must be resubmitted for a full QA cycle - both Stage 1 and Stage 2. No shortcuts.",
       },
       {
         question:
@@ -261,7 +261,7 @@ export const MODULES = [
         options: [
           "Standard 1-hour mock cross-examination is sufficient",
           "Extended preparation session (minimum 3 hours) is required",
-          "No special requirements \u2014 experience doesn't expire",
+          "No special requirements - experience doesn't expire",
           "The expert should be replaced with someone more active",
         ],
         correct: 1,
@@ -294,17 +294,17 @@ export const MODULES = [
       {
         title: "Rate Structures & Fee Schedules",
         content:
-          "Expert fees are structured according to our standard rate tiers:\n\nTier 1 (Standard) \u2014 Document review, research, analysis\nTier 2 (Elevated) \u2014 Report writing, affidavit preparation\nTier 3 (Premium) \u2014 Deposition testimony, trial testimony\nTier 4 (Expedited) \u2014 Rush assignments (< 10 business days), weekend/holiday work\n\nRates are set per expert at onboarding and reviewed annually. Any rate changes must be communicated to active clients 30 days in advance. The fee schedule for each engagement is documented in the engagement letter and cannot be altered without a signed amendment.",
+          "Expert fees are structured according to our standard rate tiers:\n\nTier 1 (Standard) - Document review, research, analysis\nTier 2 (Elevated) - Report writing, affidavit preparation\nTier 3 (Premium) - Deposition testimony, trial testimony\nTier 4 (Expedited) - Rush assignments (< 10 business days), weekend/holiday work\n\nRates are set per expert at onboarding and reviewed annually. Any rate changes must be communicated to active clients 30 days in advance. The fee schedule for each engagement is documented in the engagement letter and cannot be altered without a signed amendment.",
       },
       {
         title: "Expense Policies",
         content:
-          "Reimbursable expenses must be pre-approved and documented: Travel \u2014 economy class air, standard hotel, per diem meals per GSA rates. Materials \u2014 printing, binding, demonstratives (requires Account Manager approval over $500). Technology \u2014 specialized software licenses, database access (requires Director approval). Rush charges \u2014 clearly documented and pre-approved by client. All expenses must be submitted with receipts within 30 days. Expenses over 60 days old will not be reimbursed. The Billing Coordinator verifies all expenses against the pre-approval log before invoicing.",
+          "Reimbursable expenses must be pre-approved and documented: Travel - economy class air, standard hotel, per diem meals per GSA rates. Materials - printing, binding, demonstratives (requires Account Manager approval over $500). Technology - specialized software licenses, database access (requires Director approval). Rush charges - clearly documented and pre-approved by client. All expenses must be submitted with receipts within 30 days. Expenses over 60 days old will not be reimbursed. The Billing Coordinator verifies all expenses against the pre-approval log before invoicing.",
       },
       {
         title: "Invoice Generation & Collections",
         content:
-          "Invoicing follows a strict monthly cycle: Time entries due from experts by the 5th of each month, Billing Coordinator reviews and compiles by the 10th, Account Manager reviews and approves by the 12th, Invoices sent to clients by the 15th, Payment terms: Net 30.\n\nFirst reminder at 35 days, second at 45 days, escalation to Director at 60 days. All invoices must itemize: date of service, description of work, time spent, rate applied, and expenses with receipts. Block billing (e.g., \u201Cresearch and analysis \u2014 8 hours\u201D) is prohibited. Each task must be separately itemized.",
+          "Invoicing follows a strict monthly cycle: Time entries due from experts by the 5th of each month, Billing Coordinator reviews and compiles by the 10th, Account Manager reviews and approves by the 12th, Invoices sent to clients by the 15th, Payment terms: Net 30.\n\nFirst reminder at 35 days, second at 45 days, escalation to Director at 60 days. All invoices must itemize: date of service, description of work, time spent, rate applied, and expenses with receipts. Block billing (e.g., \u201Cresearch and analysis - 8 hours\u201D) is prohibited. Each task must be separately itemized.",
       },
     ],
     quiz: [
@@ -312,8 +312,8 @@ export const MODULES = [
         question:
           "An expert submits an expense receipt that is 45 days old. What is the correct action?",
         options: [
-          "Reject it \u2014 it's past the deadline",
-          "Process it \u2014 it's within the 60-day window",
+          "Reject it - it's past the deadline",
+          "Process it - it's within the 60-day window",
           "Ask the Account Manager to make an exception",
           "Deduct it from the expert's next payment",
         ],
@@ -323,11 +323,11 @@ export const MODULES = [
       },
       {
         question:
-          "A client invoice reads: \u2018Research and report preparation \u2014 12 hours.\u2019 Is this acceptable?",
+          "A client invoice reads: \u2018Research and report preparation - 12 hours.\u2019 Is this acceptable?",
         options: [
-          "Yes \u2014 it describes the work performed",
-          "No \u2014 this is block billing, each task must be separately itemized",
-          "Yes \u2014 as long as the total hours are correct",
+          "Yes - it describes the work performed",
+          "No - this is block billing, each task must be separately itemized",
+          "Yes - as long as the total hours are correct",
           "Only if the client has approved block billing in the engagement letter",
         ],
         correct: 1,
