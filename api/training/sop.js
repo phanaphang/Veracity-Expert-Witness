@@ -12,13 +12,13 @@ async function verifyAdmin(req) {
     return { error: 'Invalid token', status: 401 };
   }
 
-  const { data: staffProfile } = await supabaseAdmin
-    .from('staff_profiles')
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
     .select('role')
     .eq('id', user.id)
     .single();
 
-  if (staffProfile?.role !== 'Admin') {
+  if (profile?.role !== 'admin') {
     return { error: 'Admin access required', status: 403 };
   }
 
@@ -29,34 +29,45 @@ async function handleGetOverview(req, res) {
   const auth = await verifyAdmin(req);
   if (auth.error) return res.status(auth.status).json({ error: auth.error });
 
-  const { data: rows, error: fetchError } = await supabaseAdmin
-    .from('sop_training_overview')
-    .select('*');
+  const { data: profileRows, error: profileError } = await supabaseAdmin
+    .from('profiles')
+    .select('id, email, role, first_name, last_name')
+    .in('role', ['admin', 'staff']);
 
-  if (fetchError) {
-    console.error('[SOP OVERVIEW]', fetchError.message);
-    return res.status(500).json({ error: 'Failed to fetch training data' });
+  if (profileError) {
+    console.error('[SOP OVERVIEW]', profileError.message);
+    return res.status(500).json({ error: 'Failed to fetch staff data' });
   }
 
-  const userIds = [...new Set((rows || []).map((r) => r.user_id))];
-  const { data: profileRows } = await supabaseAdmin
-    .from('profiles')
-    .select('id, email')
-    .in('id', userIds);
-  const emailMap = {};
-  (profileRows || []).forEach((p) => { emailMap[p.id] = p.email; });
+  const userIds = (profileRows || []).map((p) => p.id);
+
+  let progressRows = [];
+  if (userIds.length > 0) {
+    const { data, error: progressError } = await supabaseAdmin
+      .from('sop_training_progress')
+      .select('user_id, module_id, completed, quiz_score, attempts, completed_at, last_attempt_at')
+      .in('user_id', userIds);
+
+    if (progressError) {
+      console.error('[SOP OVERVIEW]', progressError.message);
+      return res.status(500).json({ error: 'Failed to fetch training data' });
+    }
+    progressRows = data || [];
+  }
 
   const staffMap = {};
-  (rows || []).forEach((row) => {
-    if (!staffMap[row.user_id]) {
-      staffMap[row.user_id] = {
-        name: row.full_name,
-        email: emailMap[row.user_id] || null,
-        role: row.role,
-        modules: [],
-      };
-    }
-    if (row.module_id) {
+  (profileRows || []).forEach((p) => {
+    const name = [p.first_name, p.last_name].filter(Boolean).join(' ').trim() || p.email;
+    staffMap[p.id] = {
+      name,
+      email: p.email,
+      role: p.role,
+      modules: [],
+    };
+  });
+
+  progressRows.forEach((row) => {
+    if (staffMap[row.user_id]) {
       staffMap[row.user_id].modules.push({
         moduleId: row.module_id,
         completed: row.completed,
