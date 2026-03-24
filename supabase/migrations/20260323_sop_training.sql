@@ -12,27 +12,30 @@ create table if not exists public.staff_profiles (
 
 alter table public.staff_profiles enable row level security;
 
+-- Helper to check admin status without triggering RLS recursion
+create or replace function public.is_sop_admin()
+returns boolean
+language sql
+security definer
+set search_path = public
+as $$
+  select exists (
+    select 1 from public.staff_profiles
+    where id = auth.uid() and role = 'Admin'
+  );
+$$;
+
 create policy "Staff read own profile"
   on public.staff_profiles for select
   using (auth.uid() = id);
 
 create policy "Admins read all staff profiles"
   on public.staff_profiles for select
-  using (
-    exists (
-      select 1 from public.staff_profiles sp
-      where sp.id = auth.uid() and sp.role = 'Admin'
-    )
-  );
+  using (public.is_sop_admin());
 
 create policy "Admins insert staff profiles"
   on public.staff_profiles for insert
-  with check (
-    exists (
-      select 1 from public.staff_profiles sp
-      where sp.id = auth.uid() and sp.role = 'Admin'
-    )
-  );
+  with check (public.is_sop_admin());
 
 -- 2. sop_training_progress ---------------------------------------------------
 create table if not exists public.sop_training_progress (
@@ -65,12 +68,7 @@ create policy "Users update own sop training progress"
 
 create policy "Admins read all sop training progress"
   on public.sop_training_progress for select
-  using (
-    exists (
-      select 1 from public.staff_profiles sp
-      where sp.id = auth.uid() and sp.role = 'Admin'
-    )
-  );
+  using (public.is_sop_admin());
 
 -- Auto-update updated_at on row change
 create or replace function public.sop_set_updated_at()
@@ -107,12 +105,7 @@ create policy "Users insert own sop quiz attempts"
 
 create policy "Admins read all sop quiz attempts"
   on public.sop_quiz_attempts for select
-  using (
-    exists (
-      select 1 from public.staff_profiles sp
-      where sp.id = auth.uid() and sp.role = 'Admin'
-    )
-  );
+  using (public.is_sop_admin());
 
 -- 4. sop_training_overview view ----------------------------------------------
 create or replace view public.sop_training_overview as
