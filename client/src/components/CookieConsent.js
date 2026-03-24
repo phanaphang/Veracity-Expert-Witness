@@ -1,29 +1,29 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 
-const STORAGE_KEY = 'cookie-consent';
+const STORAGE_KEY = 'cookie-consent'
 
 export default function CookieConsent() {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
     if (!localStorage.getItem(STORAGE_KEY)) {
-      const timer = setTimeout(() => setVisible(true), 1000);
-      return () => clearTimeout(timer);
+      const timer = setTimeout(() => setVisible(true), 1000)
+      return () => clearTimeout(timer)
     }
-  }, []);
+  }, [])
 
   const accept = () => {
-    localStorage.setItem(STORAGE_KEY, 'accepted');
-    setVisible(false);
-  };
+    localStorage.setItem(STORAGE_KEY, 'accepted')
+    setVisible(false)
+  }
 
   const decline = () => {
-    localStorage.setItem(STORAGE_KEY, 'declined');
-    setVisible(false);
-  };
+    localStorage.setItem(STORAGE_KEY, 'declined')
+    setVisible(false)
+  }
 
-  if (!visible) return null;
+  if (!visible) return null
 
   return (
     <div
@@ -48,8 +48,14 @@ export default function CookieConsent() {
       }}
     >
       <p style={{ margin: 0, maxWidth: 600 }}>
-        We use essential cookies to keep the site running. No tracking or advertising cookies are used.{' '}
-        <Link to="/cookie-policy" style={{ color: '#93c5fd', textDecoration: 'underline' }}>Learn more</Link>
+        We use essential cookies to keep the site running. No tracking or
+        advertising cookies are used.{' '}
+        <Link
+          to="/cookie-policy"
+          style={{ color: '#93c5fd', textDecoration: 'underline' }}
+        >
+          Learn more
+        </Link>
       </p>
       <div style={{ display: 'flex', gap: 8 }}>
         <button
@@ -83,5 +89,5 @@ export default function CookieConsent() {
         </button>
       </div>
     </div>
-  );
+  )
 }

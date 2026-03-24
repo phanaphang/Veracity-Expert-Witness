@@ -17,19 +17,33 @@
 //   keyTakeaway     string
 // ============================================================
 
-export const MODULE_TITLE = 'Trial Testimony as an Expert Witness';
-export const MODULE_SUBTITLE = '~75 minutes \u00b7 10 Lessons \u00b7 1 Scenario \u00b7 1 Knowledge Check';
+export const MODULE_TITLE = 'Trial Testimony as an Expert Witness'
+export const MODULE_SUBTITLE =
+  '~75 minutes \u00b7 10 Lessons \u00b7 1 Scenario \u00b7 1 Knowledge Check'
 
-export const LESSON_SEQUENCE = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-export const TOTAL_LESSONS = 10;
+export const LESSON_SEQUENCE = [
+  '1',
+  '2',
+  '3',
+  '4',
+  '5',
+  '6',
+  '7',
+  '8',
+  '9',
+  '10',
+]
+export const TOTAL_LESSONS = 10
 
 export function getNextLesson(lessonId) {
-  const idx = LESSON_SEQUENCE.indexOf(lessonId);
-  return idx >= 0 && idx < LESSON_SEQUENCE.length - 1 ? LESSON_SEQUENCE[idx + 1] : null;
+  const idx = LESSON_SEQUENCE.indexOf(lessonId)
+  return idx >= 0 && idx < LESSON_SEQUENCE.length - 1
+    ? LESSON_SEQUENCE[idx + 1]
+    : null
 }
 
 export function getLessonIndex(lessonId) {
-  return LESSON_SEQUENCE.indexOf(lessonId) + 1; // 1-based
+  return LESSON_SEQUENCE.indexOf(lessonId) + 1 // 1-based
 }
 
 // ============================================================
@@ -37,7 +51,7 @@ export function getLessonIndex(lessonId) {
 // ============================================================
 
 export const LESSONS = {
-  '1': {
+  1: {
     title: 'The Role of an Expert Witness at Trial',
     estimatedMinutes: 7,
     sections: [
@@ -54,12 +68,22 @@ export const LESSONS = {
           'In a deposition, you are speaking to lawyers who already understand the case. At trial, you are speaking to jurors who may have no background in your field. This fundamental difference changes everything -- your vocabulary, your pace, your use of visual aids, and your communication style.',
         ],
         comparisonTable: [
-          { setting: 'Deposition', audience: 'Attorneys', purpose: 'Discovery and impeachment', tone: 'Precise, concise, defensive' },
-          { setting: 'Trial', audience: 'Judge and jury', purpose: 'Persuasion and education', tone: 'Clear, accessible, authoritative' },
+          {
+            setting: 'Deposition',
+            audience: 'Attorneys',
+            purpose: 'Discovery and impeachment',
+            tone: 'Precise, concise, defensive',
+          },
+          {
+            setting: 'Trial',
+            audience: 'Judge and jury',
+            purpose: 'Persuasion and education',
+            tone: 'Clear, accessible, authoritative',
+          },
         ],
       },
       {
-        subheading: 'The Expert\'s Dual Obligation',
+        subheading: "The Expert's Dual Obligation",
         body: [
           'An expert witness at trial serves two masters simultaneously. You are retained by one party, but your obligation is to the truth. Jurors are remarkably perceptive -- they can sense when a witness is advocating rather than educating. The most effective experts present their opinions with conviction while maintaining objectivity.',
         ],
@@ -84,10 +108,11 @@ export const LESSONS = {
         ],
       },
     ],
-    keyTakeaway: 'Trial testimony is not a repeat of your deposition. You are now speaking to jurors who need you to translate complex concepts into clear, accessible language while maintaining the precision and objectivity the court demands.',
+    keyTakeaway:
+      'Trial testimony is not a repeat of your deposition. You are now speaking to jurors who need you to translate complex concepts into clear, accessible language while maintaining the precision and objectivity the court demands.',
   },
 
-  '2': {
+  2: {
     title: 'Pre-Trial Preparation',
     estimatedMinutes: 8,
     sections: [
@@ -120,7 +145,7 @@ export const LESSONS = {
           'Identify the 3-5 key points the jury must understand from your testimony.',
           'Review demonstrative exhibits and practice explaining them to a non-technical audience.',
           'Discuss timing -- how long your direct is expected to last, when breaks will occur.',
-          'Ask about the judge\'s preferences and courtroom rules (standing vs. sitting, use of technology).',
+          "Ask about the judge's preferences and courtroom rules (standing vs. sitting, use of technology).",
         ],
       },
       {
@@ -149,10 +174,11 @@ export const LESSONS = {
         ],
       },
     ],
-    keyTakeaway: 'Preparation for trial is not just about knowing your opinions -- it is about knowing how to deliver them to a lay audience in a courtroom setting, while remaining perfectly consistent with everything you have said before.',
+    keyTakeaway:
+      'Preparation for trial is not just about knowing your opinions -- it is about knowing how to deliver them to a lay audience in a courtroom setting, while remaining perfectly consistent with everything you have said before.',
   },
 
-  '3': {
+  3: {
     title: 'Voir Dire and Qualification',
     estimatedMinutes: 7,
     sections: [
@@ -180,10 +206,34 @@ export const LESSONS = {
           'Opposing counsel will probe for gaps between your credentials and the specific opinions you intend to offer. Understanding their typical lines of attack allows you to prepare.',
         ],
         comparisonTable: [
-          { challenge: 'Lack of specific experience', example: '"You\'ve never worked on a case involving this exact type of failure, have you?"', response: 'Emphasize transferable expertise and the breadth of your training and methodology.' },
-          { challenge: 'No board certification', example: '"You are not board-certified in this subspecialty, correct?"', response: 'Explain that board certification is not the only measure of expertise; emphasize years of practice and case experience.' },
-          { challenge: 'Outdated credentials', example: '"Your last publication on this topic was twelve years ago."', response: 'Explain that your active practice keeps you current even without recent publications.' },
-          { challenge: 'Limited publications', example: '"You have never published a peer-reviewed article on this methodology."', response: 'Distinguish between academic publishing and applied professional expertise.' },
+          {
+            challenge: 'Lack of specific experience',
+            example:
+              '"You\'ve never worked on a case involving this exact type of failure, have you?"',
+            response:
+              'Emphasize transferable expertise and the breadth of your training and methodology.',
+          },
+          {
+            challenge: 'No board certification',
+            example:
+              '"You are not board-certified in this subspecialty, correct?"',
+            response:
+              'Explain that board certification is not the only measure of expertise; emphasize years of practice and case experience.',
+          },
+          {
+            challenge: 'Outdated credentials',
+            example:
+              '"Your last publication on this topic was twelve years ago."',
+            response:
+              'Explain that your active practice keeps you current even without recent publications.',
+          },
+          {
+            challenge: 'Limited publications',
+            example:
+              '"You have never published a peer-reviewed article on this methodology."',
+            response:
+              'Distinguish between academic publishing and applied professional expertise.',
+          },
         ],
       },
       {
@@ -212,10 +262,11 @@ export const LESSONS = {
         ],
       },
     ],
-    keyTakeaway: 'Qualification is not guaranteed. Prepare to defend your credentials with specificity and confidence, and connect every qualification directly to the opinions you are offering in this case.',
+    keyTakeaway:
+      'Qualification is not guaranteed. Prepare to defend your credentials with specificity and confidence, and connect every qualification directly to the opinions you are offering in this case.',
   },
 
-  '4': {
+  4: {
     title: 'Direct Examination',
     estimatedMinutes: 8,
     sections: [
@@ -250,7 +301,7 @@ export const LESSONS = {
           'Tell a story. Jurors remember narratives better than lists of facts.',
           'Use demonstrative exhibits to illustrate complex points -- photos, diagrams, timelines.',
           'Vary your pace. Slow down for critical opinions; speak naturally for background.',
-          'If you don\'t understand a question from retaining counsel, say so -- it helps the jury too.',
+          "If you don't understand a question from retaining counsel, say so -- it helps the jury too.",
         ],
       },
       {
@@ -259,10 +310,19 @@ export const LESSONS = {
           'The moment you state your opinions is the most important part of your testimony. Every word matters. Your opinions should be clear, specific, and stated with appropriate confidence.',
         ],
         comparisonTable: [
-          { quality: 'Weak', example: '"I think it\'s possible that the roof failed due to improper installation."' },
-          { quality: 'Better', example: '"Based on my inspection and analysis, it is my opinion to a reasonable degree of professional certainty that the roof system failed due to improper installation of the flashing at the wall-to-roof transition."' },
+          {
+            quality: 'Weak',
+            example:
+              '"I think it\'s possible that the roof failed due to improper installation."',
+          },
+          {
+            quality: 'Better',
+            example:
+              '"Based on my inspection and analysis, it is my opinion to a reasonable degree of professional certainty that the roof system failed due to improper installation of the flashing at the wall-to-roof transition."',
+          },
         ],
-        afterList: 'Notice the difference: the strong opinion identifies the specific failure, the specific location, and the standard of certainty. Jurors need specificity to make decisions.',
+        afterList:
+          'Notice the difference: the strong opinion identifies the specific failure, the specific location, and the standard of certainty. Jurors need specificity to make decisions.',
       },
       {
         subheading: 'Handling Exhibits on Direct',
@@ -272,16 +332,17 @@ export const LESSONS = {
         bullets: [
           'Practice with every exhibit before trial -- know them by number or letter.',
           'When counsel asks you to refer to an exhibit, orient the jury first: "This is a photograph I took on March 15, 2025, showing the north elevation of the building."',
-          'Use a pointer or annotation tool to direct the jury\'s attention to the specific area.',
+          "Use a pointer or annotation tool to direct the jury's attention to the specific area.",
           'Pause after displaying an exhibit -- give the jury time to absorb what they are seeing.',
           'Relate the exhibit back to your opinion: "This photograph shows the condition I described as improper installation."',
         ],
       },
     ],
-    keyTakeaway: 'Direct examination is your opportunity to teach the jury. Speak clearly, use exhibits effectively, and state your opinions with specificity and confidence. The jury should leave your direct understanding exactly what you concluded and why.',
+    keyTakeaway:
+      'Direct examination is your opportunity to teach the jury. Speak clearly, use exhibits effectively, and state your opinions with specificity and confidence. The jury should leave your direct understanding exactly what you concluded and why.',
   },
 
-  '5': {
+  5: {
     title: 'Cross-Examination Survival',
     estimatedMinutes: 9,
     sections: [
@@ -295,11 +356,11 @@ export const LESSONS = {
       {
         subheading: 'The Rules of Cross-Examination',
         body: [
-          'At trial, cross-examination should not go beyond the subject matter of direct examination and matters affecting the witness\'s credibility (FRE 611(b)), though the court may permit inquiry into additional matters. This is a critical protection: opposing counsel cannot ask you about topics you did not cover on direct. However, credibility is always fair game.',
+          "At trial, cross-examination should not go beyond the subject matter of direct examination and matters affecting the witness's credibility (FRE 611(b)), though the court may permit inquiry into additional matters. This is a critical protection: opposing counsel cannot ask you about topics you did not cover on direct. However, credibility is always fair game.",
         ],
         bullets: [
           'Leading questions are permitted and expected on cross -- the attorney controls the framing.',
-          'You are not required to accept the attorney\'s framing. If a question misstates your opinion, correct it.',
+          "You are not required to accept the attorney's framing. If a question misstates your opinion, correct it.",
           'Your answers should be responsive but not volunteered -- answer what was asked, then stop.',
           'If a question is compound, ambiguous, or contains an incorrect assumption, say so.',
         ],
@@ -315,7 +376,8 @@ export const LESSONS = {
           'Counsel highlights the inconsistency with your current testimony.',
           'The jury draws its own conclusion about your credibility.',
         ],
-        afterList: 'The best defense against impeachment is consistency. If your testimony at trial is identical to your deposition testimony, there is nothing to impeach.',
+        afterList:
+          'The best defense against impeachment is consistency. If your testimony at trial is identical to your deposition testimony, there is nothing to impeach.',
       },
       {
         subheading: 'Common Cross-Examination Techniques at Trial',
@@ -323,10 +385,34 @@ export const LESSONS = {
           'Opposing counsel will employ a range of techniques designed to extract concessions or undermine your credibility in front of the jury.',
         ],
         comparisonTable: [
-          { technique: 'Looping', description: 'Using your own concession from the previous answer as the premise for the next question', defense: 'Listen to each question independently. Do not let your prior answer lock you into a position you did not intend.' },
-          { technique: 'Cherry-picking', description: 'Selecting one piece of evidence that supports their theory while ignoring the rest', defense: '"My opinion is based on the totality of the evidence, not any single document in isolation."' },
-          { technique: 'The concession cascade', description: 'Getting you to agree to small, seemingly harmless points that build to a damaging conclusion', defense: 'Before agreeing to any premise, consider where the line of questioning is heading.' },
-          { technique: 'Reading from your report', description: 'Reading a sentence from your report out of context to suggest a different meaning', defense: '"That sentence should be read in the context of the full paragraph [or section]."' },
+          {
+            technique: 'Looping',
+            description:
+              'Using your own concession from the previous answer as the premise for the next question',
+            defense:
+              'Listen to each question independently. Do not let your prior answer lock you into a position you did not intend.',
+          },
+          {
+            technique: 'Cherry-picking',
+            description:
+              'Selecting one piece of evidence that supports their theory while ignoring the rest',
+            defense:
+              '"My opinion is based on the totality of the evidence, not any single document in isolation."',
+          },
+          {
+            technique: 'The concession cascade',
+            description:
+              'Getting you to agree to small, seemingly harmless points that build to a damaging conclusion',
+            defense:
+              'Before agreeing to any premise, consider where the line of questioning is heading.',
+          },
+          {
+            technique: 'Reading from your report',
+            description:
+              'Reading a sentence from your report out of context to suggest a different meaning',
+            defense:
+              '"That sentence should be read in the context of the full paragraph [or section]."',
+          },
         ],
       },
       {
@@ -341,17 +427,18 @@ export const LESSONS = {
         ],
       },
     ],
-    keyTakeaway: 'Cross-examination is a test of preparation, not a test of intelligence. If you have prepared thoroughly, maintained consistency with your deposition, and refuse to accept false premises, you will emerge with your credibility intact.',
+    keyTakeaway:
+      'Cross-examination is a test of preparation, not a test of intelligence. If you have prepared thoroughly, maintained consistency with your deposition, and refuse to accept false premises, you will emerge with your credibility intact.',
   },
 
-  '6': {
+  6: {
     title: 'Redirect and Rehabilitation',
     estimatedMinutes: 6,
     sections: [
       {
         subheading: null,
         body: [
-          'Redirect examination is retaining counsel\'s opportunity to repair any damage done during cross-examination. It is limited to topics raised during cross -- counsel cannot introduce entirely new subject matter. For the expert, redirect is the chance to clarify, complete, and contextualize answers that may have been cut short or taken out of context.',
+          "Redirect examination is retaining counsel's opportunity to repair any damage done during cross-examination. It is limited to topics raised during cross -- counsel cannot introduce entirely new subject matter. For the expert, redirect is the chance to clarify, complete, and contextualize answers that may have been cut short or taken out of context.",
         ],
       },
       {
@@ -403,10 +490,11 @@ export const LESSONS = {
         ],
       },
     ],
-    keyTakeaway: 'Redirect is your opportunity to have the last word on the most important issues. Be prepared for it, but let retaining counsel lead. On redirect, return to teaching mode and give the jury the complete picture.',
+    keyTakeaway:
+      'Redirect is your opportunity to have the last word on the most important issues. Be prepared for it, but let retaining counsel lead. On redirect, return to teaching mode and give the jury the complete picture.',
   },
 
-  '7': {
+  7: {
     title: 'Communicating with the Jury',
     estimatedMinutes: 8,
     sections: [
@@ -419,7 +507,7 @@ export const LESSONS = {
       {
         subheading: 'The Curse of Knowledge',
         body: [
-          'The biggest barrier to effective expert testimony is not nerves or cross-examination -- it is the curse of knowledge. You are so deeply embedded in your field that you have lost the ability to see it from an outsider\'s perspective. Terms that are second nature to you are foreign to the jury.',
+          "The biggest barrier to effective expert testimony is not nerves or cross-examination -- it is the curse of knowledge. You are so deeply embedded in your field that you have lost the ability to see it from an outsider's perspective. Terms that are second nature to you are foreign to the jury.",
         ],
         bullets: [
           'Assume the jury knows nothing about your field. You will never be penalized for being too clear.',
@@ -431,11 +519,20 @@ export const LESSONS = {
       {
         subheading: 'Analogies and Everyday Comparisons',
         body: [
-          'The most effective expert witnesses translate complex concepts into everyday analogies. Analogies create bridges between the juror\'s existing knowledge and the new information you are asking them to process.',
+          "The most effective expert witnesses translate complex concepts into everyday analogies. Analogies create bridges between the juror's existing knowledge and the new information you are asking them to process.",
         ],
         comparisonTable: [
-          { technical: 'Thermal bridging causes condensation in the wall cavity', analogy: '"Think of a cold glass of water on a hot day. The glass sweats because the cold surface meets warm, moist air. The same thing happens inside a wall when metal studs create a cold path through the insulation."' },
-          { technical: 'The load path was compromised by improper connections', analogy: '"Imagine a chain. Every link must hold for the chain to work. If one connection fails, the load has nowhere to go -- and the structure fails at that point."' },
+          {
+            technical:
+              'Thermal bridging causes condensation in the wall cavity',
+            analogy:
+              '"Think of a cold glass of water on a hot day. The glass sweats because the cold surface meets warm, moist air. The same thing happens inside a wall when metal studs create a cold path through the insulation."',
+          },
+          {
+            technical: 'The load path was compromised by improper connections',
+            analogy:
+              '"Imagine a chain. Every link must hold for the chain to work. If one connection fails, the load has nowhere to go -- and the structure fails at that point."',
+          },
         ],
       },
       {
@@ -471,17 +568,18 @@ export const LESSONS = {
           'A common question is when to look at the jury and when to look at the questioning attorney. The answer depends on the phase of testimony.',
         ],
         bullets: [
-          'Direct examination: Listen to the attorney\'s question, then turn to the jury to deliver your answer.',
+          "Direct examination: Listen to the attorney's question, then turn to the jury to deliver your answer.",
           'Cross-examination: Face the attorney while listening, but turn to the jury when delivering substantive answers.',
           'When using exhibits: Face the exhibit while pointing, then turn to the jury to explain what you are showing them.',
           'Never stare at one juror -- make eye contact with different jurors throughout your testimony.',
         ],
       },
     ],
-    keyTakeaway: 'Your job is not to impress the jury with your expertise -- it is to help them understand. The most effective expert witnesses are teachers, not performers. Speak plainly, use analogies, make eye contact, and remember that clarity is more persuasive than complexity.',
+    keyTakeaway:
+      'Your job is not to impress the jury with your expertise -- it is to help them understand. The most effective expert witnesses are teachers, not performers. Speak plainly, use analogies, make eye contact, and remember that clarity is more persuasive than complexity.',
   },
 
-  '8': {
+  8: {
     title: 'Visual Aids and Demonstrative Exhibits',
     estimatedMinutes: 7,
     sections: [
@@ -497,11 +595,35 @@ export const LESSONS = {
           'Demonstrative exhibits fall into several categories, each serving a different purpose in trial testimony.',
         ],
         comparisonTable: [
-          { type: 'Photographs', purpose: 'Show actual conditions -- damage, defects, site conditions', tips: 'High resolution, properly labeled, taken during your inspection if possible' },
-          { type: 'Diagrams / Drawings', purpose: 'Illustrate concepts, systems, or spatial relationships', tips: 'Simple, clean lines, large labels visible from the jury box' },
-          { type: 'Timelines', purpose: 'Show sequence of events, construction history, or failure progression', tips: 'Horizontal format, key dates highlighted, readable from 15+ feet' },
-          { type: 'Comparison charts', purpose: 'Compare standards vs. actual conditions, or two competing theories', tips: 'Side-by-side format, color-coded, limited text' },
-          { type: 'Animations / Models', purpose: 'Demonstrate dynamic processes (collapse, water intrusion, force distribution)', tips: 'Pre-approved by the court; expensive but powerful for complex mechanisms' },
+          {
+            type: 'Photographs',
+            purpose:
+              'Show actual conditions -- damage, defects, site conditions',
+            tips: 'High resolution, properly labeled, taken during your inspection if possible',
+          },
+          {
+            type: 'Diagrams / Drawings',
+            purpose: 'Illustrate concepts, systems, or spatial relationships',
+            tips: 'Simple, clean lines, large labels visible from the jury box',
+          },
+          {
+            type: 'Timelines',
+            purpose:
+              'Show sequence of events, construction history, or failure progression',
+            tips: 'Horizontal format, key dates highlighted, readable from 15+ feet',
+          },
+          {
+            type: 'Comparison charts',
+            purpose:
+              'Compare standards vs. actual conditions, or two competing theories',
+            tips: 'Side-by-side format, color-coded, limited text',
+          },
+          {
+            type: 'Animations / Models',
+            purpose:
+              'Demonstrate dynamic processes (collapse, water intrusion, force distribution)',
+            tips: 'Pre-approved by the court; expensive but powerful for complex mechanisms',
+          },
         ],
       },
       {
@@ -527,7 +649,7 @@ export const LESSONS = {
           'Always have a backup plan -- if the projector fails, can you testify with printed enlargements?',
           'Practice with the specific technology you will use. Fumbling with equipment undermines credibility.',
           'If using a tablet for annotation, ensure the annotations are visible on the main screen.',
-          'Ask counsel about the court\'s rules for electronic exhibits -- some judges require pre-approval.',
+          "Ask counsel about the court's rules for electronic exhibits -- some judges require pre-approval.",
         ],
       },
       {
@@ -543,10 +665,11 @@ export const LESSONS = {
         ],
       },
     ],
-    keyTakeaway: 'A picture is worth a thousand words, but only if the jury can see it, understand it, and connect it to your opinion. Plan your visual aids carefully, test them in advance, and always have a backup plan.',
+    keyTakeaway:
+      'A picture is worth a thousand words, but only if the jury can see it, understand it, and connect it to your opinion. Plan your visual aids carefully, test them in advance, and always have a backup plan.',
   },
 
-  '9': {
+  9: {
     title: 'Ethical Boundaries on the Stand',
     estimatedMinutes: 7,
     sections: [
@@ -606,10 +729,11 @@ export const LESSONS = {
         ],
       },
     ],
-    keyTakeaway: 'The most powerful expert witnesses are the ones the jury trusts. Trust is earned through objectivity, candor, and respect for the boundaries of your role. An expert who concedes fair points is far more credible than one who fights every question.',
+    keyTakeaway:
+      'The most powerful expert witnesses are the ones the jury trusts. Trust is earned through objectivity, candor, and respect for the boundaries of your role. An expert who concedes fair points is far more credible than one who fights every question.',
   },
 
-  '10': {
+  10: {
     title: 'Post-Testimony and Continuous Improvement',
     estimatedMinutes: 6,
     sections: [
@@ -655,14 +779,14 @@ export const LESSONS = {
           'Were there any surprises -- questions you did not anticipate?',
           'Did your demonstrative exhibits work effectively?',
           'Were you consistent with your deposition testimony?',
-          'Were there moments when you felt you lost the jury\'s attention?',
+          "Were there moments when you felt you lost the jury's attention?",
           'What would you do differently next time?',
         ],
       },
       {
         subheading: 'Debrief with Counsel',
         body: [
-          'After the trial concludes (or your testimony is complete), request a debrief with retaining counsel. Their perspective on your performance is invaluable -- they observed the jury\'s reactions and know which points landed.',
+          "After the trial concludes (or your testimony is complete), request a debrief with retaining counsel. Their perspective on your performance is invaluable -- they observed the jury's reactions and know which points landed.",
         ],
         bullets: [
           'Ask which parts of your testimony were most effective.',
@@ -686,9 +810,10 @@ export const LESSONS = {
         ],
       },
     ],
-    keyTakeaway: 'Every trial teaches you something. The difference between a good expert and a great expert is the willingness to honestly assess your performance and commit to getting better. Trial testimony is a craft -- treat it as one.',
+    keyTakeaway:
+      'Every trial teaches you something. The difference between a good expert and a great expert is the willingness to honestly assess your performance and commit to getting better. Trial testimony is a craft -- treat it as one.',
   },
-};
+}
 
 // ============================================================
 // SCENARIO DATA - "The Unexpected Objection"
@@ -712,7 +837,7 @@ export const SCENARIO_DATA = {
           consequence:
             'You have just told the jury that your opinion might be unreliable without this document. Opposing counsel will use your own words in closing argument: "Even the plaintiff\'s own expert admitted his testimony was incomplete." You have also inappropriately addressed the judge on an evidentiary matter -- that is counsel\'s job.',
           takeaway:
-            'Never express frustration about evidentiary rulings. You are not an advocate. Accept the ruling and work within it. Addressing the judge directly about objections is the attorney\'s role, not yours.',
+            "Never express frustration about evidentiary rulings. You are not an advocate. Accept the ruling and work within it. Addressing the judge directly about objections is the attorney's role, not yours.",
         },
         {
           id: 'b',
@@ -728,9 +853,9 @@ export const SCENARIO_DATA = {
           text: 'Try to reference the document indirectly: "Well, based on certain information I reviewed that I can\'t specifically name..."',
           correct: false,
           consequence:
-            'The judge sustained the objection for a reason. Attempting to indirectly reference excluded evidence violates the court\'s ruling and may result in a contempt warning, a mistrial motion, or an instruction to the jury to disregard your testimony. You have also undermined your credibility with the judge.',
+            "The judge sustained the objection for a reason. Attempting to indirectly reference excluded evidence violates the court's ruling and may result in a contempt warning, a mistrial motion, or an instruction to the jury to disregard your testimony. You have also undermined your credibility with the judge.",
           takeaway:
-            'When the court excludes evidence, the ruling is final (unless reversed on appeal). Never attempt to circumvent an evidentiary ruling through indirect references. Respect the court\'s authority.',
+            "When the court excludes evidence, the ruling is final (unless reversed on appeal). Never attempt to circumvent an evidentiary ruling through indirect references. Respect the court's authority.",
         },
       ],
     },
@@ -773,20 +898,20 @@ export const SCENARIO_DATA = {
   ],
 
   summaryPrinciples: [
-    'Evidentiary rulings are the attorney\'s problem, not yours. Accept them gracefully and work within the constraints.',
+    "Evidentiary rulings are the attorney's problem, not yours. Accept them gracefully and work within the constraints.",
     'A well-prepared expert has multiple independent bases for every opinion. If one is excluded, the opinion should still stand.',
-    'Never attempt to circumvent a court\'s evidentiary ruling through indirect references or workarounds.',
+    "Never attempt to circumvent a court's evidentiary ruling through indirect references or workarounds.",
     'On cross-examination, acknowledge facts honestly but provide context. Denial of obvious facts destroys credibility.',
     'Never undermine your own opinion on the stand. If you have concerns about the strength of your analysis, resolve them before trial, not during testimony.',
   ],
-};
+}
 
 // ============================================================
 // QUIZ DATA
 // ============================================================
 
-export const PASS_SCORE = 8;
-export const TOTAL_QUESTIONS = 10;
+export const PASS_SCORE = 8
+export const TOTAL_QUESTIONS = 10
 
 export const QUIZ_DATA = {
   questions: [
@@ -795,9 +920,21 @@ export const QUIZ_DATA = {
       text: 'What is the most significant difference between deposition testimony and trial testimony?',
       options: [
         { id: 'a', text: 'Trial testimony is not under oath', correct: false },
-        { id: 'b', text: 'At trial, you are speaking to jurors who need complex concepts translated into plain language', correct: true },
-        { id: 'c', text: 'Cross-examination is not permitted at trial', correct: false },
-        { id: 'd', text: 'The expert may refuse to answer questions at trial', correct: false },
+        {
+          id: 'b',
+          text: 'At trial, you are speaking to jurors who need complex concepts translated into plain language',
+          correct: true,
+        },
+        {
+          id: 'c',
+          text: 'Cross-examination is not permitted at trial',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'The expert may refuse to answer questions at trial',
+          correct: false,
+        },
       ],
       explanation:
         'The fundamental difference is the audience. At deposition, you speak to attorneys who understand the case. At trial, you speak to jurors who may have no background in your field, which changes your vocabulary, pace, and communication style.',
@@ -806,10 +943,26 @@ export const QUIZ_DATA = {
       id: 'q2',
       text: 'Under FRE 702, what must the court determine before allowing an expert to testify?',
       options: [
-        { id: 'a', text: 'That the expert has published at least one peer-reviewed article on the topic', correct: false },
-        { id: 'b', text: 'That the expert has testified in at least three prior cases', correct: false },
-        { id: 'c', text: 'That the expert has specialized knowledge that will help the trier of fact understand the evidence', correct: true },
-        { id: 'd', text: 'That the expert agrees with the retaining party\'s legal theory', correct: false },
+        {
+          id: 'a',
+          text: 'That the expert has published at least one peer-reviewed article on the topic',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'That the expert has testified in at least three prior cases',
+          correct: false,
+        },
+        {
+          id: 'c',
+          text: 'That the expert has specialized knowledge that will help the trier of fact understand the evidence',
+          correct: true,
+        },
+        {
+          id: 'd',
+          text: "That the expert agrees with the retaining party's legal theory",
+          correct: false,
+        },
       ],
       explanation:
         'FRE 702 requires that the expert be qualified by knowledge, skill, experience, training, or education, and that their testimony will help the trier of fact. There is no requirement for publications or prior testimony.',
@@ -824,16 +977,32 @@ export const QUIZ_DATA = {
         { id: 'd', text: 'To the jury', correct: true },
       ],
       explanation:
-        'On direct examination, you should listen to the attorney\'s question, then turn to the jury to deliver your answer. The jury is your audience -- they are the ones who need to understand your opinions.',
+        "On direct examination, you should listen to the attorney's question, then turn to the jury to deliver your answer. The jury is your audience -- they are the ones who need to understand your opinions.",
     },
     {
       id: 'q4',
       text: 'What is the most effective defense against impeachment by prior inconsistent statement?',
       options: [
-        { id: 'a', text: 'Denying that you gave the prior testimony', correct: false },
-        { id: 'b', text: 'Explaining that depositions are not as important as trial testimony', correct: false },
-        { id: 'c', text: 'Maintaining consistency between your deposition testimony and your trial testimony', correct: true },
-        { id: 'd', text: 'Asking the judge to exclude your deposition transcript', correct: false },
+        {
+          id: 'a',
+          text: 'Denying that you gave the prior testimony',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Explaining that depositions are not as important as trial testimony',
+          correct: false,
+        },
+        {
+          id: 'c',
+          text: 'Maintaining consistency between your deposition testimony and your trial testimony',
+          correct: true,
+        },
+        {
+          id: 'd',
+          text: 'Asking the judge to exclude your deposition transcript',
+          correct: false,
+        },
       ],
       explanation:
         'The best defense against impeachment is consistency. If your trial testimony is identical to your deposition testimony, there is nothing for opposing counsel to impeach. This requires thorough preparation, including re-reading your entire deposition transcript before trial.',
@@ -854,10 +1023,26 @@ export const QUIZ_DATA = {
       id: 'q6',
       text: 'What is the purpose of redirect examination?',
       options: [
-        { id: 'a', text: 'To introduce entirely new opinions not covered on direct examination', correct: false },
-        { id: 'b', text: 'To address and repair damage done during cross-examination', correct: true },
-        { id: 'c', text: 'To allow the expert to argue with opposing counsel\'s characterization', correct: false },
-        { id: 'd', text: 'To give the expert a second opportunity for a complete direct examination', correct: false },
+        {
+          id: 'a',
+          text: 'To introduce entirely new opinions not covered on direct examination',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'To address and repair damage done during cross-examination',
+          correct: true,
+        },
+        {
+          id: 'c',
+          text: "To allow the expert to argue with opposing counsel's characterization",
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'To give the expert a second opportunity for a complete direct examination',
+          correct: false,
+        },
       ],
       explanation:
         'Redirect examination is limited to topics raised during cross-examination. Its purpose is to allow retaining counsel to rehabilitate the expert by addressing incomplete answers, out-of-context quotes, or concessions that need qualification.',
@@ -866,22 +1051,54 @@ export const QUIZ_DATA = {
       id: 'q7',
       text: 'When explaining a complex technical concept to the jury, which approach is most effective?',
       options: [
-        { id: 'a', text: 'Using precise technical terminology to demonstrate your expertise', correct: false },
-        { id: 'b', text: 'Reading directly from your report to ensure accuracy', correct: false },
-        { id: 'c', text: 'Using everyday analogies that connect the concept to the juror\'s existing knowledge', correct: true },
-        { id: 'd', text: 'Speaking as quickly as possible to convey maximum information', correct: false },
+        {
+          id: 'a',
+          text: 'Using precise technical terminology to demonstrate your expertise',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Reading directly from your report to ensure accuracy',
+          correct: false,
+        },
+        {
+          id: 'c',
+          text: "Using everyday analogies that connect the concept to the juror's existing knowledge",
+          correct: true,
+        },
+        {
+          id: 'd',
+          text: 'Speaking as quickly as possible to convey maximum information',
+          correct: false,
+        },
       ],
       explanation:
-        'Analogies create bridges between the juror\'s existing knowledge and the new information you are presenting. The most effective experts translate complex concepts into everyday comparisons that any person can understand.',
+        "Analogies create bridges between the juror's existing knowledge and the new information you are presenting. The most effective experts translate complex concepts into everyday comparisons that any person can understand.",
     },
     {
       id: 'q8',
       text: 'What is the key principle when creating demonstrative exhibits for trial?',
       options: [
-        { id: 'a', text: 'Include as much information as possible on each exhibit to minimize the total number', correct: false },
-        { id: 'b', text: 'One concept per exhibit, with large fonts and labels visible from the jury box', correct: true },
-        { id: 'c', text: 'Use small fonts so more data can fit on the screen', correct: false },
-        { id: 'd', text: 'Demonstrative exhibits are optional and rarely help jury comprehension', correct: false },
+        {
+          id: 'a',
+          text: 'Include as much information as possible on each exhibit to minimize the total number',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'One concept per exhibit, with large fonts and labels visible from the jury box',
+          correct: true,
+        },
+        {
+          id: 'c',
+          text: 'Use small fonts so more data can fit on the screen',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'Demonstrative exhibits are optional and rarely help jury comprehension',
+          correct: false,
+        },
       ],
       explanation:
         'Effective demonstrative exhibits are simple, large, legible, and focused on a single concept. Jurors are typically 15-25 feet from the screen or easel, so visibility is critical. Overloaded exhibits confuse rather than clarify.',
@@ -890,10 +1107,26 @@ export const QUIZ_DATA = {
       id: 'q9',
       text: 'Under FRE 704(a), can an expert witness testify to an "ultimate issue" in a civil case?',
       options: [
-        { id: 'a', text: 'No -- experts may never state opinions on ultimate issues', correct: false },
-        { id: 'b', text: 'Yes -- but only if the judge specifically permits it during voir dire', correct: false },
-        { id: 'c', text: 'Yes -- in civil cases, an expert may testify to an ultimate issue', correct: true },
-        { id: 'd', text: 'Only if both parties stipulate to it', correct: false },
+        {
+          id: 'a',
+          text: 'No -- experts may never state opinions on ultimate issues',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Yes -- but only if the judge specifically permits it during voir dire',
+          correct: false,
+        },
+        {
+          id: 'c',
+          text: 'Yes -- in civil cases, an expert may testify to an ultimate issue',
+          correct: true,
+        },
+        {
+          id: 'd',
+          text: 'Only if both parties stipulate to it',
+          correct: false,
+        },
       ],
       explanation:
         'FRE 704(a) permits expert testimony on ultimate issues in civil cases. The restriction in FRE 704(b) applies only to criminal cases regarding a defendant\'s mental state. In practice, experts should still frame opinions technically rather than using legal conclusions like "negligent."',
@@ -902,13 +1135,29 @@ export const QUIZ_DATA = {
       id: 'q10',
       text: 'After completing your trial testimony, what is the most important step for professional development?',
       options: [
-        { id: 'a', text: 'Immediately filing your invoice for payment', correct: false },
-        { id: 'b', text: 'Conducting an honest self-assessment and debriefing with counsel', correct: true },
-        { id: 'c', text: 'Discussing your testimony publicly to build your reputation', correct: false },
-        { id: 'd', text: 'Reviewing the opposing expert\'s testimony to find errors', correct: false },
+        {
+          id: 'a',
+          text: 'Immediately filing your invoice for payment',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Conducting an honest self-assessment and debriefing with counsel',
+          correct: true,
+        },
+        {
+          id: 'c',
+          text: 'Discussing your testimony publicly to build your reputation',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: "Reviewing the opposing expert's testimony to find errors",
+          correct: false,
+        },
       ],
       explanation:
         'Every trial is a learning opportunity. Conducting an honest self-assessment -- evaluating your clarity, composure, handling of cross-examination, and effectiveness of exhibits -- combined with feedback from retaining counsel, is how experienced experts continuously improve their testimony skills.',
     },
   ],
-};
+}

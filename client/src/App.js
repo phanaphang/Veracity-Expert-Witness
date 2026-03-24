@@ -1,134 +1,205 @@
-import React, { lazy, Suspense } from 'react';
-import { createBrowserRouter, RouterProvider, Outlet, useRouteError, isRouteErrorResponse } from 'react-router-dom';
-import { AuthProvider } from './contexts/AuthContext';
-import { ToastProvider } from './contexts/ToastContext';
-import ErrorBoundary from './components/ErrorBoundary';
-import CookieConsent from './components/CookieConsent';
+import React, { lazy, Suspense } from 'react'
+import {
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  useRouteError,
+  isRouteErrorResponse,
+} from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { ToastProvider } from './contexts/ToastContext'
+import ErrorBoundary from './components/ErrorBoundary'
+import CookieConsent from './components/CookieConsent'
 
 // Home page components — always needed on first load
-import SEO from './components/SEO';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import Services from './components/Services';
-import Categories from './components/Categories';
-import HowItWorks from './components/HowItWorks';
-import ContactForm from './components/ContactForm';
-import Footer from './components/Footer';
+import SEO from './components/SEO'
+import Navbar from './components/Navbar'
+import Hero from './components/Hero'
+import Services from './components/Services'
+import Categories from './components/Categories'
+import HowItWorks from './components/HowItWorks'
+import ContactForm from './components/ContactForm'
+import Footer from './components/Footer'
 
 // Route wrappers — small, used on every portal/admin route
-import PortalLayout from './portal/components/PortalLayout';
-import ProtectedRoute from './portal/components/ProtectedRoute';
-import AdminLayout from './portal/admin/AdminLayout';
+import PortalLayout from './portal/components/PortalLayout'
+import ProtectedRoute from './portal/components/ProtectedRoute'
+import AdminLayout from './portal/admin/AdminLayout'
 
 // Public pages — lazy loaded
-const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
-const TermsOfService = lazy(() => import('./pages/TermsOfService'));
-const CookiePolicy = lazy(() => import('./pages/CookiePolicy'));
-const Compliance = lazy(() => import('./pages/Compliance'));
-const MedicalHealthcare = lazy(() => import('./pages/MedicalHealthcare'));
-const FinancialAccounting = lazy(() => import('./pages/FinancialAccounting'));
-const TechnologyCyber = lazy(() => import('./pages/TechnologyCyber'));
-const ConstructionEngineering = lazy(() => import('./pages/ConstructionEngineering'));
-const EnvironmentalScience = lazy(() => import('./pages/EnvironmentalScience'));
-const IntellectualProperty = lazy(() => import('./pages/IntellectualProperty'));
-const AccidentReconstruction = lazy(() => import('./pages/AccidentReconstruction'));
-const ForensicAnalysis = lazy(() => import('./pages/ForensicAnalysis'));
-const FAQ = lazy(() => import('./pages/FAQ'));
-const JoinOurPanel = lazy(() => import('./pages/JoinOurPanel'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'))
+const TermsOfService = lazy(() => import('./pages/TermsOfService'))
+const CookiePolicy = lazy(() => import('./pages/CookiePolicy'))
+const Compliance = lazy(() => import('./pages/Compliance'))
+const MedicalHealthcare = lazy(() => import('./pages/MedicalHealthcare'))
+const FinancialAccounting = lazy(() => import('./pages/FinancialAccounting'))
+const TechnologyCyber = lazy(() => import('./pages/TechnologyCyber'))
+const ConstructionEngineering = lazy(
+  () => import('./pages/ConstructionEngineering')
+)
+const EnvironmentalScience = lazy(() => import('./pages/EnvironmentalScience'))
+const IntellectualProperty = lazy(() => import('./pages/IntellectualProperty'))
+const AccidentReconstruction = lazy(
+  () => import('./pages/AccidentReconstruction')
+)
+const ForensicAnalysis = lazy(() => import('./pages/ForensicAnalysis'))
+const FAQ = lazy(() => import('./pages/FAQ'))
+const JoinOurPanel = lazy(() => import('./pages/JoinOurPanel'))
 
 // Portal — Auth pages
-const Login = lazy(() => import('./portal/pages/Login'));
-const AcceptInvite = lazy(() => import('./portal/pages/AcceptInvite'));
-const AuthCallback = lazy(() => import('./portal/pages/AuthCallback'));
-const ForgotPassword = lazy(() => import('./portal/pages/ForgotPassword'));
+const Login = lazy(() => import('./portal/pages/Login'))
+const AcceptInvite = lazy(() => import('./portal/pages/AcceptInvite'))
+const AuthCallback = lazy(() => import('./portal/pages/AuthCallback'))
+const ForgotPassword = lazy(() => import('./portal/pages/ForgotPassword'))
 
 // Portal — Expert pages
-const AllResources = lazy(() => import('./portal/pages/AllResources'));
-const Dashboard = lazy(() => import('./portal/pages/Dashboard'));
-const Profile = lazy(() => import('./portal/pages/Profile'));
-const Documents = lazy(() => import('./portal/pages/Documents'));
-const CaseInvitations = lazy(() => import('./portal/pages/CaseInvitations'));
-const Messages = lazy(() => import('./portal/pages/Messages'));
-const ChangePassword = lazy(() => import('./portal/pages/ChangePassword'));
-const CalendarPage = lazy(() => import('./portal/pages/Calendar'));
+const AllResources = lazy(() => import('./portal/pages/AllResources'))
+const Dashboard = lazy(() => import('./portal/pages/Dashboard'))
+const Profile = lazy(() => import('./portal/pages/Profile'))
+const Documents = lazy(() => import('./portal/pages/Documents'))
+const CaseInvitations = lazy(() => import('./portal/pages/CaseInvitations'))
+const Messages = lazy(() => import('./portal/pages/Messages'))
+const ChangePassword = lazy(() => import('./portal/pages/ChangePassword'))
+const CalendarPage = lazy(() => import('./portal/pages/Calendar'))
 
 // SOP Training Hub (staff)
-const SOPTraining = lazy(() => import('./components/SOPTraining'));
+const SOPTraining = lazy(() => import('./components/SOPTraining'))
 
 // Training module — home + Expert Witness Foundations
-const TrainingHome = lazy(() => import('./portal/training/TrainingHome'));
-const TrainingDashboard = lazy(() => import('./portal/training/TrainingDashboard'));
-const LessonPage = lazy(() => import('./portal/training/LessonPage'));
-const QuizPage = lazy(() => import('./portal/training/QuizPage'));
-const ScenarioPage = lazy(() => import('./portal/training/ScenarioPage'));
-const AssessmentPage = lazy(() => import('./portal/training/AssessmentPage'));
-const CertificatePage = lazy(() => import('./portal/training/CertificatePage'));
-const ResourcesPage = lazy(() => import('./portal/training/ResourcesPage'));
-const TrainingLayout = lazy(() => import('./portal/training/TrainingLayout'));
+const TrainingHome = lazy(() => import('./portal/training/TrainingHome'))
+const TrainingDashboard = lazy(
+  () => import('./portal/training/TrainingDashboard')
+)
+const LessonPage = lazy(() => import('./portal/training/LessonPage'))
+const QuizPage = lazy(() => import('./portal/training/QuizPage'))
+const ScenarioPage = lazy(() => import('./portal/training/ScenarioPage'))
+const AssessmentPage = lazy(() => import('./portal/training/AssessmentPage'))
+const CertificatePage = lazy(() => import('./portal/training/CertificatePage'))
+const ResourcesPage = lazy(() => import('./portal/training/ResourcesPage'))
+const TrainingLayout = lazy(() => import('./portal/training/TrainingLayout'))
 
 // Training module — Standards of Admissibility: Frye, Kelly, and Daubert
-const AdmissibilityLayout = lazy(() => import('./portal/training/admissibility/AdmissibilityLayout'));
-const AdmissibilityDashboard = lazy(() => import('./portal/training/admissibility/AdmissibilityDashboard'));
-const AdmissibilityLessonPage = lazy(() => import('./portal/training/admissibility/AdmissibilityLessonPage'));
-const AdmissibilityScenarioPage = lazy(() => import('./portal/training/admissibility/AdmissibilityScenarioPage'));
-const AdmissibilityQuizPage = lazy(() => import('./portal/training/admissibility/AdmissibilityQuizPage'));
-const AdmissibilityCertificatePage = lazy(() => import('./portal/training/admissibility/AdmissibilityCertificatePage'));
-const AdmissibilityResourcesPage = lazy(() => import('./portal/training/admissibility/AdmissibilityResourcesPage'));
+const AdmissibilityLayout = lazy(
+  () => import('./portal/training/admissibility/AdmissibilityLayout')
+)
+const AdmissibilityDashboard = lazy(
+  () => import('./portal/training/admissibility/AdmissibilityDashboard')
+)
+const AdmissibilityLessonPage = lazy(
+  () => import('./portal/training/admissibility/AdmissibilityLessonPage')
+)
+const AdmissibilityScenarioPage = lazy(
+  () => import('./portal/training/admissibility/AdmissibilityScenarioPage')
+)
+const AdmissibilityQuizPage = lazy(
+  () => import('./portal/training/admissibility/AdmissibilityQuizPage')
+)
+const AdmissibilityCertificatePage = lazy(
+  () => import('./portal/training/admissibility/AdmissibilityCertificatePage')
+)
+const AdmissibilityResourcesPage = lazy(
+  () => import('./portal/training/admissibility/AdmissibilityResourcesPage')
+)
 
 // Training module — Writing an Expert Witness Testimony Report
-const ReportWritingLayout = lazy(() => import('./portal/training/report-writing/ReportWritingLayout'));
-const ReportWritingDashboard = lazy(() => import('./portal/training/report-writing/ReportWritingDashboard'));
-const ReportWritingLessonPage = lazy(() => import('./portal/training/report-writing/ReportWritingLessonPage'));
-const ReportWritingScenarioPage = lazy(() => import('./portal/training/report-writing/ReportWritingScenarioPage'));
-const ReportWritingQuizPage = lazy(() => import('./portal/training/report-writing/ReportWritingQuizPage'));
-const ReportWritingCertificatePage = lazy(() => import('./portal/training/report-writing/ReportWritingCertificatePage'));
-const ReportWritingResourcesPage = lazy(() => import('./portal/training/report-writing/ReportWritingResourcesPage'));
+const ReportWritingLayout = lazy(
+  () => import('./portal/training/report-writing/ReportWritingLayout')
+)
+const ReportWritingDashboard = lazy(
+  () => import('./portal/training/report-writing/ReportWritingDashboard')
+)
+const ReportWritingLessonPage = lazy(
+  () => import('./portal/training/report-writing/ReportWritingLessonPage')
+)
+const ReportWritingScenarioPage = lazy(
+  () => import('./portal/training/report-writing/ReportWritingScenarioPage')
+)
+const ReportWritingQuizPage = lazy(
+  () => import('./portal/training/report-writing/ReportWritingQuizPage')
+)
+const ReportWritingCertificatePage = lazy(
+  () => import('./portal/training/report-writing/ReportWritingCertificatePage')
+)
+const ReportWritingResourcesPage = lazy(
+  () => import('./portal/training/report-writing/ReportWritingResourcesPage')
+)
 
 // Training module — Deposition as an Expert Witness
-const DepositionLayout = lazy(() => import('./portal/training/deposition/DepositionLayout'));
-const DepositionDashboard = lazy(() => import('./portal/training/deposition/DepositionDashboard'));
-const DepositionLessonPage = lazy(() => import('./portal/training/deposition/DepositionLessonPage'));
-const DepositionScenarioPage = lazy(() => import('./portal/training/deposition/DepositionScenarioPage'));
-const DepositionQuizPage = lazy(() => import('./portal/training/deposition/DepositionQuizPage'));
-const DepositionCertificatePage = lazy(() => import('./portal/training/deposition/DepositionCertificatePage'));
-const DepositionResourcesPage = lazy(() => import('./portal/training/deposition/DepositionResourcesPage'));
+const DepositionLayout = lazy(
+  () => import('./portal/training/deposition/DepositionLayout')
+)
+const DepositionDashboard = lazy(
+  () => import('./portal/training/deposition/DepositionDashboard')
+)
+const DepositionLessonPage = lazy(
+  () => import('./portal/training/deposition/DepositionLessonPage')
+)
+const DepositionScenarioPage = lazy(
+  () => import('./portal/training/deposition/DepositionScenarioPage')
+)
+const DepositionQuizPage = lazy(
+  () => import('./portal/training/deposition/DepositionQuizPage')
+)
+const DepositionCertificatePage = lazy(
+  () => import('./portal/training/deposition/DepositionCertificatePage')
+)
+const DepositionResourcesPage = lazy(
+  () => import('./portal/training/deposition/DepositionResourcesPage')
+)
 
 // Training module — Trial Testimony as an Expert Witness
-const TrialTestimonyLayout = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyLayout'));
-const TrialTestimonyDashboard = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyDashboard'));
-const TrialTestimonyLessonPage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyLessonPage'));
-const TrialTestimonyScenarioPage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyScenarioPage'));
-const TrialTestimonyQuizPage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyQuizPage'));
-const TrialTestimonyCertificatePage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyCertificatePage'));
-const TrialTestimonyResourcesPage = lazy(() => import('./portal/training/trial-testimony/TrialTestimonyResourcesPage'));
+const TrialTestimonyLayout = lazy(
+  () => import('./portal/training/trial-testimony/TrialTestimonyLayout')
+)
+const TrialTestimonyDashboard = lazy(
+  () => import('./portal/training/trial-testimony/TrialTestimonyDashboard')
+)
+const TrialTestimonyLessonPage = lazy(
+  () => import('./portal/training/trial-testimony/TrialTestimonyLessonPage')
+)
+const TrialTestimonyScenarioPage = lazy(
+  () => import('./portal/training/trial-testimony/TrialTestimonyScenarioPage')
+)
+const TrialTestimonyQuizPage = lazy(
+  () => import('./portal/training/trial-testimony/TrialTestimonyQuizPage')
+)
+const TrialTestimonyCertificatePage = lazy(
+  () =>
+    import('./portal/training/trial-testimony/TrialTestimonyCertificatePage')
+)
+const TrialTestimonyResourcesPage = lazy(
+  () => import('./portal/training/trial-testimony/TrialTestimonyResourcesPage')
+)
 
 // Admin pages — includes heavy libs (xlsx, jspdf, pdf-lib) only when visited
-const AdminDashboard = lazy(() => import('./portal/admin/AdminDashboard'));
-const ExpertList = lazy(() => import('./portal/admin/ExpertList'));
-const ExpertDetail = lazy(() => import('./portal/admin/ExpertDetail'));
-const InviteExpert = lazy(() => import('./portal/admin/InviteExpert'));
-const CaseList = lazy(() => import('./portal/admin/CaseList'));
-const CaseCreate = lazy(() => import('./portal/admin/CaseCreate'));
-const CaseDetail = lazy(() => import('./portal/admin/CaseDetail'));
-const AdminMessages = lazy(() => import('./portal/admin/AdminMessages'));
-const AdminProfile = lazy(() => import('./portal/admin/AdminProfile'));
-const TrainingReport = lazy(() => import('./portal/admin/TrainingReport'));
+const AdminDashboard = lazy(() => import('./portal/admin/AdminDashboard'))
+const ExpertList = lazy(() => import('./portal/admin/ExpertList'))
+const ExpertDetail = lazy(() => import('./portal/admin/ExpertDetail'))
+const InviteExpert = lazy(() => import('./portal/admin/InviteExpert'))
+const CaseList = lazy(() => import('./portal/admin/CaseList'))
+const CaseCreate = lazy(() => import('./portal/admin/CaseCreate'))
+const CaseDetail = lazy(() => import('./portal/admin/CaseDetail'))
+const AdminMessages = lazy(() => import('./portal/admin/AdminMessages'))
+const AdminProfile = lazy(() => import('./portal/admin/AdminProfile'))
+const TrainingReport = lazy(() => import('./portal/admin/TrainingReport'))
 
 function RouteErrorPage() {
-  const error = useRouteError();
-  const is404 = isRouteErrorResponse(error) && error.status === 404;
+  const error = useRouteError()
+  const is404 = isRouteErrorResponse(error) && error.status === 404
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '40px',
-      textAlign: 'center',
-      fontFamily: 'system-ui, sans-serif',
-    }}>
+    <div
+      style={{
+        minHeight: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '40px',
+        textAlign: 'center',
+        fontFamily: 'system-ui, sans-serif',
+      }}
+    >
       <h2 style={{ marginBottom: '12px' }}>
         {is404 ? 'Page Not Found' : 'Something went wrong'}
       </h2>
@@ -138,7 +209,7 @@ function RouteErrorPage() {
           : 'An unexpected error occurred. Please try again.'}
       </p>
       <button
-        onClick={() => window.location.href = '/'}
+        onClick={() => (window.location.href = '/')}
         style={{
           padding: '10px 24px',
           background: '#1a365d',
@@ -152,7 +223,7 @@ function RouteErrorPage() {
         Go Home
       </button>
     </div>
-  );
+  )
 }
 
 function HomePage() {
@@ -172,7 +243,7 @@ function HomePage() {
       </main>
       <Footer />
     </>
-  );
+  )
 }
 
 function Root() {
@@ -180,13 +251,15 @@ function Root() {
     <AuthProvider>
       <ToastProvider>
         <div className="app">
-          <a href="#main-content" className="skip-link">Skip to main content</a>
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
           <Outlet />
           <CookieConsent />
         </div>
       </ToastProvider>
     </AuthProvider>
-  );
+  )
 }
 
 const router = createBrowserRouter([
@@ -203,7 +276,10 @@ const router = createBrowserRouter([
       { path: '/medical-healthcare', element: <MedicalHealthcare /> },
       { path: '/financial-accounting', element: <FinancialAccounting /> },
       { path: '/technology-cyber', element: <TechnologyCyber /> },
-      { path: '/construction-engineering', element: <ConstructionEngineering /> },
+      {
+        path: '/construction-engineering',
+        element: <ConstructionEngineering />,
+      },
       { path: '/environmental-science', element: <EnvironmentalScience /> },
       { path: '/intellectual-property', element: <IntellectualProperty /> },
       { path: '/accident-reconstruction', element: <AccidentReconstruction /> },
@@ -218,75 +294,543 @@ const router = createBrowserRouter([
       { path: '/portal/forgot-password', element: <ForgotPassword /> },
 
       // Portal - Expert (protected)
-      { path: '/portal/dashboard', element: <ProtectedRoute><PortalLayout><Dashboard /></PortalLayout></ProtectedRoute> },
-      { path: '/portal/profile', element: <ProtectedRoute><PortalLayout><Profile /></PortalLayout></ProtectedRoute> },
-      { path: '/portal/documents', element: <ProtectedRoute><PortalLayout><Documents /></PortalLayout></ProtectedRoute> },
-      { path: '/portal/cases', element: <ProtectedRoute><PortalLayout><CaseInvitations /></PortalLayout></ProtectedRoute> },
-      { path: '/portal/messages', element: <ProtectedRoute><PortalLayout><Messages /></PortalLayout></ProtectedRoute> },
-      { path: '/portal/change-password', element: <ProtectedRoute><PortalLayout><ChangePassword /></PortalLayout></ProtectedRoute> },
-      { path: '/portal/calendar', element: <ProtectedRoute><PortalLayout><CalendarPage /></PortalLayout></ProtectedRoute> },
-      { path: '/portal/resources', element: <ProtectedRoute><PortalLayout><AllResources /></PortalLayout></ProtectedRoute> },
+      {
+        path: '/portal/dashboard',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <Dashboard />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/portal/profile',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <Profile />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/portal/documents',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <Documents />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/portal/cases',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <CaseInvitations />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/portal/messages',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <Messages />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/portal/change-password',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <ChangePassword />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/portal/calendar',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <CalendarPage />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/portal/resources',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <AllResources />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
 
       // SOP Training Hub (staff)
-      { path: '/sop-training', element: <ProtectedRoute requiredRole="admin"><AdminLayout><SOPTraining /></AdminLayout></ProtectedRoute> },
+      {
+        path: '/sop-training',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <SOPTraining />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
 
       // Training module (expert, admin, staff)
-      { path: '/training', element: <ProtectedRoute><PortalLayout><TrainingHome /></PortalLayout></ProtectedRoute> },
-      { path: '/training/foundations', element: <ProtectedRoute><TrainingLayout><TrainingDashboard /></TrainingLayout></ProtectedRoute> },
-      { path: '/training/lesson/:lessonId', element: <ProtectedRoute><TrainingLayout><LessonPage /></TrainingLayout></ProtectedRoute> },
-      { path: '/training/quiz/:unitId', element: <ProtectedRoute><TrainingLayout><QuizPage /></TrainingLayout></ProtectedRoute> },
-      { path: '/training/scenario/:scenarioId', element: <ProtectedRoute><TrainingLayout><ScenarioPage /></TrainingLayout></ProtectedRoute> },
-      { path: '/training/assessment', element: <ProtectedRoute><TrainingLayout><AssessmentPage /></TrainingLayout></ProtectedRoute> },
-      { path: '/training/certificate', element: <ProtectedRoute><TrainingLayout><CertificatePage /></TrainingLayout></ProtectedRoute> },
-      { path: '/training/resources', element: <ProtectedRoute><PortalLayout><ResourcesPage /></PortalLayout></ProtectedRoute> },
+      {
+        path: '/training',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <TrainingHome />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/foundations',
+        element: (
+          <ProtectedRoute>
+            <TrainingLayout>
+              <TrainingDashboard />
+            </TrainingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/lesson/:lessonId',
+        element: (
+          <ProtectedRoute>
+            <TrainingLayout>
+              <LessonPage />
+            </TrainingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/quiz/:unitId',
+        element: (
+          <ProtectedRoute>
+            <TrainingLayout>
+              <QuizPage />
+            </TrainingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/scenario/:scenarioId',
+        element: (
+          <ProtectedRoute>
+            <TrainingLayout>
+              <ScenarioPage />
+            </TrainingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/assessment',
+        element: (
+          <ProtectedRoute>
+            <TrainingLayout>
+              <AssessmentPage />
+            </TrainingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/certificate',
+        element: (
+          <ProtectedRoute>
+            <TrainingLayout>
+              <CertificatePage />
+            </TrainingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/resources',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <ResourcesPage />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
 
       // Training module — Standards of Admissibility (expert, admin, staff)
-      { path: '/training/admissibility', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityDashboard /></AdmissibilityLayout></ProtectedRoute> },
-      { path: '/training/admissibility/lesson/:lessonId', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityLessonPage /></AdmissibilityLayout></ProtectedRoute> },
-      { path: '/training/admissibility/scenario', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityScenarioPage /></AdmissibilityLayout></ProtectedRoute> },
-      { path: '/training/admissibility/quiz', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityQuizPage /></AdmissibilityLayout></ProtectedRoute> },
-      { path: '/training/admissibility/certificate', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityCertificatePage /></AdmissibilityLayout></ProtectedRoute> },
-      { path: '/training/admissibility/resources', element: <ProtectedRoute><AdmissibilityLayout><AdmissibilityResourcesPage /></AdmissibilityLayout></ProtectedRoute> },
+      {
+        path: '/training/admissibility',
+        element: (
+          <ProtectedRoute>
+            <AdmissibilityLayout>
+              <AdmissibilityDashboard />
+            </AdmissibilityLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/admissibility/lesson/:lessonId',
+        element: (
+          <ProtectedRoute>
+            <AdmissibilityLayout>
+              <AdmissibilityLessonPage />
+            </AdmissibilityLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/admissibility/scenario',
+        element: (
+          <ProtectedRoute>
+            <AdmissibilityLayout>
+              <AdmissibilityScenarioPage />
+            </AdmissibilityLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/admissibility/quiz',
+        element: (
+          <ProtectedRoute>
+            <AdmissibilityLayout>
+              <AdmissibilityQuizPage />
+            </AdmissibilityLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/admissibility/certificate',
+        element: (
+          <ProtectedRoute>
+            <AdmissibilityLayout>
+              <AdmissibilityCertificatePage />
+            </AdmissibilityLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/admissibility/resources',
+        element: (
+          <ProtectedRoute>
+            <AdmissibilityLayout>
+              <AdmissibilityResourcesPage />
+            </AdmissibilityLayout>
+          </ProtectedRoute>
+        ),
+      },
 
       // Training module — Writing an Expert Witness Testimony Report (expert, admin, staff)
-      { path: '/training/report-writing', element: <ProtectedRoute><ReportWritingLayout><ReportWritingDashboard /></ReportWritingLayout></ProtectedRoute> },
-      { path: '/training/report-writing/lesson/:lessonId', element: <ProtectedRoute><ReportWritingLayout><ReportWritingLessonPage /></ReportWritingLayout></ProtectedRoute> },
-      { path: '/training/report-writing/scenario', element: <ProtectedRoute><ReportWritingLayout><ReportWritingScenarioPage /></ReportWritingLayout></ProtectedRoute> },
-      { path: '/training/report-writing/quiz', element: <ProtectedRoute><ReportWritingLayout><ReportWritingQuizPage /></ReportWritingLayout></ProtectedRoute> },
-      { path: '/training/report-writing/certificate', element: <ProtectedRoute><ReportWritingLayout><ReportWritingCertificatePage /></ReportWritingLayout></ProtectedRoute> },
-      { path: '/training/report-writing/resources', element: <ProtectedRoute><ReportWritingLayout><ReportWritingResourcesPage /></ReportWritingLayout></ProtectedRoute> },
+      {
+        path: '/training/report-writing',
+        element: (
+          <ProtectedRoute>
+            <ReportWritingLayout>
+              <ReportWritingDashboard />
+            </ReportWritingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/report-writing/lesson/:lessonId',
+        element: (
+          <ProtectedRoute>
+            <ReportWritingLayout>
+              <ReportWritingLessonPage />
+            </ReportWritingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/report-writing/scenario',
+        element: (
+          <ProtectedRoute>
+            <ReportWritingLayout>
+              <ReportWritingScenarioPage />
+            </ReportWritingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/report-writing/quiz',
+        element: (
+          <ProtectedRoute>
+            <ReportWritingLayout>
+              <ReportWritingQuizPage />
+            </ReportWritingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/report-writing/certificate',
+        element: (
+          <ProtectedRoute>
+            <ReportWritingLayout>
+              <ReportWritingCertificatePage />
+            </ReportWritingLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/report-writing/resources',
+        element: (
+          <ProtectedRoute>
+            <ReportWritingLayout>
+              <ReportWritingResourcesPage />
+            </ReportWritingLayout>
+          </ProtectedRoute>
+        ),
+      },
 
       // Training module — Deposition as an Expert Witness (expert, admin, staff)
-      { path: '/training/deposition', element: <ProtectedRoute><DepositionLayout><DepositionDashboard /></DepositionLayout></ProtectedRoute> },
-      { path: '/training/deposition/lesson/:lessonId', element: <ProtectedRoute><DepositionLayout><DepositionLessonPage /></DepositionLayout></ProtectedRoute> },
-      { path: '/training/deposition/scenario', element: <ProtectedRoute><DepositionLayout><DepositionScenarioPage /></DepositionLayout></ProtectedRoute> },
-      { path: '/training/deposition/quiz', element: <ProtectedRoute><DepositionLayout><DepositionQuizPage /></DepositionLayout></ProtectedRoute> },
-      { path: '/training/deposition/certificate', element: <ProtectedRoute><DepositionLayout><DepositionCertificatePage /></DepositionLayout></ProtectedRoute> },
-      { path: '/training/deposition/resources', element: <ProtectedRoute><DepositionLayout><DepositionResourcesPage /></DepositionLayout></ProtectedRoute> },
+      {
+        path: '/training/deposition',
+        element: (
+          <ProtectedRoute>
+            <DepositionLayout>
+              <DepositionDashboard />
+            </DepositionLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/deposition/lesson/:lessonId',
+        element: (
+          <ProtectedRoute>
+            <DepositionLayout>
+              <DepositionLessonPage />
+            </DepositionLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/deposition/scenario',
+        element: (
+          <ProtectedRoute>
+            <DepositionLayout>
+              <DepositionScenarioPage />
+            </DepositionLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/deposition/quiz',
+        element: (
+          <ProtectedRoute>
+            <DepositionLayout>
+              <DepositionQuizPage />
+            </DepositionLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/deposition/certificate',
+        element: (
+          <ProtectedRoute>
+            <DepositionLayout>
+              <DepositionCertificatePage />
+            </DepositionLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/deposition/resources',
+        element: (
+          <ProtectedRoute>
+            <DepositionLayout>
+              <DepositionResourcesPage />
+            </DepositionLayout>
+          </ProtectedRoute>
+        ),
+      },
 
       // Training module — Trial Testimony as an Expert Witness (expert, admin, staff)
-      { path: '/training/trial-testimony', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyDashboard /></TrialTestimonyLayout></ProtectedRoute> },
-      { path: '/training/trial-testimony/lesson/:lessonId', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyLessonPage /></TrialTestimonyLayout></ProtectedRoute> },
-      { path: '/training/trial-testimony/scenario', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyScenarioPage /></TrialTestimonyLayout></ProtectedRoute> },
-      { path: '/training/trial-testimony/quiz', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyQuizPage /></TrialTestimonyLayout></ProtectedRoute> },
-      { path: '/training/trial-testimony/certificate', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyCertificatePage /></TrialTestimonyLayout></ProtectedRoute> },
-      { path: '/training/trial-testimony/resources', element: <ProtectedRoute><TrialTestimonyLayout><TrialTestimonyResourcesPage /></TrialTestimonyLayout></ProtectedRoute> },
+      {
+        path: '/training/trial-testimony',
+        element: (
+          <ProtectedRoute>
+            <TrialTestimonyLayout>
+              <TrialTestimonyDashboard />
+            </TrialTestimonyLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/trial-testimony/lesson/:lessonId',
+        element: (
+          <ProtectedRoute>
+            <TrialTestimonyLayout>
+              <TrialTestimonyLessonPage />
+            </TrialTestimonyLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/trial-testimony/scenario',
+        element: (
+          <ProtectedRoute>
+            <TrialTestimonyLayout>
+              <TrialTestimonyScenarioPage />
+            </TrialTestimonyLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/trial-testimony/quiz',
+        element: (
+          <ProtectedRoute>
+            <TrialTestimonyLayout>
+              <TrialTestimonyQuizPage />
+            </TrialTestimonyLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/trial-testimony/certificate',
+        element: (
+          <ProtectedRoute>
+            <TrialTestimonyLayout>
+              <TrialTestimonyCertificatePage />
+            </TrialTestimonyLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/training/trial-testimony/resources',
+        element: (
+          <ProtectedRoute>
+            <TrialTestimonyLayout>
+              <TrialTestimonyResourcesPage />
+            </TrialTestimonyLayout>
+          </ProtectedRoute>
+        ),
+      },
 
       // Admin (protected, admin only)
-      { path: '/admin/dashboard', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminDashboard /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/profile', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminProfile /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/experts', element: <ProtectedRoute requiredRole="admin"><AdminLayout><ExpertList /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/experts/:id', element: <ProtectedRoute requiredRole="admin"><AdminLayout><ExpertDetail /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/invite', element: <ProtectedRoute requiredRole="admin-only"><AdminLayout><InviteExpert /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/cases', element: <ProtectedRoute requiredRole="admin"><AdminLayout><CaseList /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/cases/new', element: <ProtectedRoute requiredRole="admin-only"><AdminLayout><CaseCreate /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/cases/:id', element: <ProtectedRoute requiredRole="admin"><AdminLayout><CaseDetail /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/messages', element: <ProtectedRoute requiredRole="admin"><AdminLayout><AdminMessages /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/training', element: <ProtectedRoute requiredRole="admin"><AdminLayout><TrainingReport /></AdminLayout></ProtectedRoute> },
-      { path: '/admin/change-password', element: <ProtectedRoute requiredRole="admin"><AdminLayout><ChangePassword /></AdminLayout></ProtectedRoute> },
+      {
+        path: '/admin/dashboard',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <AdminDashboard />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/profile',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <AdminProfile />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/experts',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <ExpertList />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/experts/:id',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <ExpertDetail />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/invite',
+        element: (
+          <ProtectedRoute requiredRole="admin-only">
+            <AdminLayout>
+              <InviteExpert />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/cases',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <CaseList />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/cases/new',
+        element: (
+          <ProtectedRoute requiredRole="admin-only">
+            <AdminLayout>
+              <CaseCreate />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/cases/:id',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <CaseDetail />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/messages',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <AdminMessages />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/training',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <TrainingReport />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/change-password',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <ChangePassword />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
-]);
+])
 
 export default function App() {
   return (
@@ -295,5 +839,5 @@ export default function App() {
         <RouterProvider router={router} />
       </Suspense>
     </ErrorBoundary>
-  );
+  )
 }

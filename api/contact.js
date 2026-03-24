@@ -1,67 +1,106 @@
-const { rateLimit } = require('./_lib/rateLimit');
+const { rateLimit } = require('./_lib/rateLimit')
 
 const escapeHtml = (str) =>
-  String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 
-const MAX_LEN = { short: 500, long: 5000 };
+const MAX_LEN = { short: 500, long: 5000 }
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const rl = rateLimit(req);
+  const rl = rateLimit(req)
   if (rl.limited) {
-    res.setHeader('Retry-After', String(rl.retryAfter));
-    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    res.setHeader('Retry-After', String(rl.retryAfter))
+    return res
+      .status(429)
+      .json({ error: 'Too many requests. Please try again later.' })
   }
 
-  const { name, firm, email, phone, expertise, details, website, _elapsed, tos_accepted_at } = req.body;
+  const {
+    name,
+    firm,
+    email,
+    phone,
+    expertise,
+    details,
+    website,
+    _elapsed,
+    tos_accepted_at,
+  } = req.body
 
   // Anti-bot: honeypot field filled
   if (website) {
-    return res.json({ success: true, message: 'Your request has been submitted successfully.' });
+    return res.json({
+      success: true,
+      message: 'Your request has been submitted successfully.',
+    })
   }
 
   // Anti-bot: form submitted too quickly (< 3 seconds)
   if (typeof _elapsed === 'number' && _elapsed < 3) {
-    return res.json({ success: true, message: 'Your request has been submitted successfully.' });
+    return res.json({
+      success: true,
+      message: 'Your request has been submitted successfully.',
+    })
   }
 
   if (!name || !firm || !email || !phone || !expertise || !details) {
-    return res.status(400).json({ error: 'All fields are required.' });
+    return res.status(400).json({ error: 'All fields are required.' })
   }
 
   // Input length limits
-  if (name.length > MAX_LEN.short || firm.length > MAX_LEN.short || email.length > MAX_LEN.short ||
-      phone.length > 30 || expertise.length > MAX_LEN.short || details.length > MAX_LEN.long) {
-    return res.status(400).json({ error: 'One or more fields exceed the maximum allowed length.' });
+  if (
+    name.length > MAX_LEN.short ||
+    firm.length > MAX_LEN.short ||
+    email.length > MAX_LEN.short ||
+    phone.length > 30 ||
+    expertise.length > MAX_LEN.short ||
+    details.length > MAX_LEN.long
+  ) {
+    return res
+      .status(400)
+      .json({ error: 'One or more fields exceed the maximum allowed length.' })
   }
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   if (!emailRegex.test(email)) {
-    return res.status(400).json({ error: 'Invalid email address.' });
+    return res.status(400).json({ error: 'Invalid email address.' })
   }
 
   // Log TOS acceptance (non-blocking — must never prevent form submission)
   if (tos_accepted_at) {
     try {
-      const supabase = require('./_lib/supabaseAdmin');
-      const ip = (req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
-      const userAgent = req.headers['user-agent'] || '';
-      const { error: tosError } = await supabase.from('tos_acceptances').insert({
-        name: name.slice(0, MAX_LEN.short),
-        email: email.slice(0, MAX_LEN.short),
-        ip_address: ip.slice(0, 100),
-        user_agent: userAgent.slice(0, 500),
-        tos_version: '1.0',
-        accepted_at: tos_accepted_at,
-      });
+      const supabase = require('./_lib/supabaseAdmin')
+      const ip = (
+        req.headers['x-forwarded-for'] ||
+        req.socket?.remoteAddress ||
+        ''
+      )
+        .split(',')[0]
+        .trim()
+      const userAgent = req.headers['user-agent'] || ''
+      const { error: tosError } = await supabase
+        .from('tos_acceptances')
+        .insert({
+          name: name.slice(0, MAX_LEN.short),
+          email: email.slice(0, MAX_LEN.short),
+          ip_address: ip.slice(0, 100),
+          user_agent: userAgent.slice(0, 500),
+          tos_version: '1.0',
+          accepted_at: tos_accepted_at,
+        })
       if (tosError) {
-        console.error('TOS acceptance log error:', tosError.message);
+        console.error('TOS acceptance log error:', tosError.message)
       }
     } catch (tosErr) {
-      console.error('TOS acceptance log exception:', tosErr.message);
+      console.error('TOS acceptance log exception:', tosErr.message)
     }
   }
 
@@ -75,50 +114,65 @@ module.exports = async (req, res) => {
       <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Expertise</td><td style="padding:8px;border-bottom:1px solid #eee;">${escapeHtml(expertise)}</td></tr>
       <tr><td style="padding:8px;font-weight:bold;vertical-align:top;">Case Details</td><td style="padding:8px;">${escapeHtml(details)}</td></tr>
     </table>
-  `;
+  `
 
-  const plainText = `New Expert Witness Request\n\nName: ${name}\nFirm: ${firm}\nEmail: ${email}\nPhone: ${phone}\nExpertise: ${expertise}\nCase Details: ${details}`;
+  const plainText = `New Expert Witness Request\n\nName: ${name}\nFirm: ${firm}\nEmail: ${email}\nPhone: ${phone}\nExpertise: ${expertise}\nCase Details: ${details}`
 
-  const apiUser = (process.env.PAUBOX_API_USER || '').trim();
-  const apiKey = (process.env.PAUBOX_API_KEY || '').trim();
+  const apiUser = (process.env.PAUBOX_API_USER || '').trim()
+  const apiKey = (process.env.PAUBOX_API_KEY || '').trim()
 
   try {
-    const response = await fetch(`https://api.paubox.net/v1/${apiUser}/messages`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Token token=${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        data: {
-          message: {
-            recipients: [(process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com').trim()],
-            headers: {
-              subject: `New Expert Witness Request: ${escapeHtml(expertise)} - ${escapeHtml(name)}`,
-              from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
-              'reply-to': email.replace(/[\r\n]/g, ''),
-            },
-            content: {
-              'text/html': htmlContent,
-              'text/plain': plainText,
+    const response = await fetch(
+      `https://api.paubox.net/v1/${apiUser}/messages`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Token token=${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            message: {
+              recipients: [
+                (
+                  process.env.CONTACT_EMAIL ||
+                  'support@veracityexpertwitness.com'
+                ).trim(),
+              ],
+              headers: {
+                subject: `New Expert Witness Request: ${escapeHtml(expertise)} - ${escapeHtml(name)}`,
+                from:
+                  process.env.NOREPLY_EMAIL ||
+                  'noreply@veracityexpertwitness.com',
+                'reply-to': email.replace(/[\r\n]/g, ''),
+              },
+              content: {
+                'text/html': htmlContent,
+                'text/plain': plainText,
+              },
             },
           },
-        },
-      }),
-    });
+        }),
+      }
+    )
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Paubox API error:', response.status, errorText);
-      return res.status(500).json({ error: 'Failed to send your request. Please try again.' });
+      const errorText = await response.text()
+      console.error('Paubox API error:', response.status, errorText)
+      return res
+        .status(500)
+        .json({ error: 'Failed to send your request. Please try again.' })
     }
 
     res.json({
       success: true,
-      message: 'Your request has been submitted successfully. We will be in touch within 1-2 business days.',
-    });
+      message:
+        'Your request has been submitted successfully. We will be in touch within 1-2 business days.',
+    })
   } catch (error) {
-    console.error('Email send error:', error.message);
-    res.status(500).json({ error: 'Failed to send your request. Please try again.' });
+    console.error('Email send error:', error.message)
+    res
+      .status(500)
+      .json({ error: 'Failed to send your request. Please try again.' })
   }
-};
+}

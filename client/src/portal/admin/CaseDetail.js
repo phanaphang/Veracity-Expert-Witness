@@ -1,209 +1,275 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../hooks/useAuth';
-import { formatName } from '../../utils/formatName';
-import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
-import { useToast } from '../../contexts/ToastContext';
+import React, { useState, useEffect } from 'react'
+import { useParams, Link } from 'react-router-dom'
+import { supabase } from '../../lib/supabase'
+import { useAuth } from '../../hooks/useAuth'
+import { formatName } from '../../utils/formatName'
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges'
+import { useToast } from '../../contexts/ToastContext'
 
 export default function CaseDetail() {
-  const { id } = useParams();
-  const { profile, session } = useAuth();
-  const toast = useToast();
-  const isAdmin = profile?.role === 'admin';
-  const [caseData, setCaseData] = useState(null);
-  const [invitations, setInvitations] = useState([]);
-  const [experts, setExperts] = useState([]);
-  const [managers, setManagers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [assignExpertTerm, setAssignExpertTerm] = useState('');
-  const [assignExpertResults, setAssignExpertResults] = useState([]);
-  const [assignConfirmTarget, setAssignConfirmTarget] = useState(null);
-  const [managerConfirmTarget, setManagerConfirmTarget] = useState(null);
-  const [removeExpertConfirm, setRemoveExpertConfirm] = useState(false);
-  const [statusConfirmTarget, setStatusConfirmTarget] = useState(null);
-  const [detailsEditing, setDetailsEditing] = useState(false);
-  const { UnsavedModal, setSaveHandler } = useUnsavedChanges(detailsEditing);
-  const [descValue, setDescValue] = useState('');
-  const [clientValue, setClientValue] = useState('');
-  const [caseTypeValue, setCaseTypeValue] = useState('');
-  const [jurisdictionValue, setJurisdictionValue] = useState('');
-  const [notesValue, setNotesValue] = useState('');
-  const [caseSpecialties, setCaseSpecialties] = useState([]);
-  const [allSpecialties, setAllSpecialties] = useState([]);
-  const [editingSpecialties, setEditingSpecialties] = useState([]);
-  const [expandedParents, setExpandedParents] = useState(new Set());
-  const [editingTags, setEditingTags] = useState([]);
-  const [tagInput, setTagInput] = useState('');
-  const [loading, setLoading] = useState(true);
+  const { id } = useParams()
+  const { profile, session } = useAuth()
+  const toast = useToast()
+  const isAdmin = profile?.role === 'admin'
+  const [caseData, setCaseData] = useState(null)
+  const [invitations, setInvitations] = useState([])
+  const [experts, setExperts] = useState([])
+  const [managers, setManagers] = useState([])
+  const [searchTerm, setSearchTerm] = useState('')
+  const [assignExpertTerm, setAssignExpertTerm] = useState('')
+  const [assignExpertResults, setAssignExpertResults] = useState([])
+  const [assignConfirmTarget, setAssignConfirmTarget] = useState(null)
+  const [managerConfirmTarget, setManagerConfirmTarget] = useState(null)
+  const [removeExpertConfirm, setRemoveExpertConfirm] = useState(false)
+  const [statusConfirmTarget, setStatusConfirmTarget] = useState(null)
+  const [detailsEditing, setDetailsEditing] = useState(false)
+  const { UnsavedModal, setSaveHandler } = useUnsavedChanges(detailsEditing)
+  const [descValue, setDescValue] = useState('')
+  const [clientValue, setClientValue] = useState('')
+  const [caseTypeValue, setCaseTypeValue] = useState('')
+  const [jurisdictionValue, setJurisdictionValue] = useState('')
+  const [notesValue, setNotesValue] = useState('')
+  const [caseSpecialties, setCaseSpecialties] = useState([])
+  const [allSpecialties, setAllSpecialties] = useState([])
+  const [editingSpecialties, setEditingSpecialties] = useState([])
+  const [expandedParents, setExpandedParents] = useState(new Set())
+  const [editingTags, setEditingTags] = useState([])
+  const [tagInput, setTagInput] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const toggleParent = (parentId) => {
-    setExpandedParents(prev => {
-      const next = new Set(prev);
+    setExpandedParents((prev) => {
+      const next = new Set(prev)
       if (next.has(parentId)) {
-        const subIds = allSpecialties.filter(s => s.parent_id === parentId).map(s => s.id);
-        setEditingSpecialties(sel => sel.filter(id => !subIds.includes(id)));
-        next.delete(parentId);
+        const subIds = allSpecialties
+          .filter((s) => s.parent_id === parentId)
+          .map((s) => s.id)
+        setEditingSpecialties((sel) => sel.filter((id) => !subIds.includes(id)))
+        next.delete(parentId)
       } else {
-        next.add(parentId);
+        next.add(parentId)
       }
-      return next;
-    });
-  };
+      return next
+    })
+  }
 
   const toggleSpecialty = (id) => {
-    setEditingSpecialties(prev =>
-      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
-    );
-  };
+    setEditingSpecialties((prev) =>
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
+    )
+  }
 
-  const TAG_MAX_LENGTH = 50;
-  const sanitizeTag = (value) => value.replace(/[^a-zA-Z0-9\s\-&().,']/g, '').slice(0, TAG_MAX_LENGTH);
+  const TAG_MAX_LENGTH = 50
+  const sanitizeTag = (value) =>
+    value.replace(/[^a-zA-Z0-9\s\-&().,']/g, '').slice(0, TAG_MAX_LENGTH)
   const addTag = (value) => {
-    const tag = sanitizeTag(value).trim();
-    if (!tag || editingTags.includes(tag)) { setTagInput(''); return; }
-    setEditingTags(prev => [...prev, tag]);
-    setTagInput('');
-  };
-  const removeTag = (tag) => setEditingTags(prev => prev.filter(t => t !== tag));
+    const tag = sanitizeTag(value).trim()
+    if (!tag || editingTags.includes(tag)) {
+      setTagInput('')
+      return
+    }
+    setEditingTags((prev) => [...prev, tag])
+    setTagInput('')
+  }
+  const removeTag = (tag) =>
+    setEditingTags((prev) => prev.filter((t) => t !== tag))
   const handleTagKeyDown = (e) => {
-    if (e.key === 'Enter') { e.preventDefault(); addTag(tagInput); }
-  };
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      addTag(tagInput)
+    }
+  }
 
   const saveDetails = async () => {
     try {
-      await supabase.from('cases').update({
+      await supabase
+        .from('cases')
+        .update({
+          description: descValue,
+          client: clientValue,
+          case_type: caseTypeValue,
+          jurisdiction: jurisdictionValue,
+          additional_notes: notesValue,
+          specialty_tags: editingTags,
+        })
+        .eq('id', id)
+      await supabase.from('case_specialties').delete().eq('case_id', id)
+      if (editingSpecialties.length > 0) {
+        await supabase.from('case_specialties').insert(
+          editingSpecialties.map((sid) => ({
+            case_id: id,
+            specialty_id: sid,
+          }))
+        )
+      }
+      const { data: newCs } = await supabase
+        .from('case_specialties')
+        .select('specialty_id, specialties(id, name, parent_id)')
+        .eq('case_id', id)
+      setCaseSpecialties(newCs || [])
+      setCaseData((prev) => ({
+        ...prev,
         description: descValue,
         client: clientValue,
         case_type: caseTypeValue,
         jurisdiction: jurisdictionValue,
         additional_notes: notesValue,
-        specialty_tags: editingTags,
-      }).eq('id', id);
-      await supabase.from('case_specialties').delete().eq('case_id', id);
-      if (editingSpecialties.length > 0) {
-        await supabase.from('case_specialties').insert(
-          editingSpecialties.map(sid => ({ case_id: id, specialty_id: sid }))
-        );
-      }
-      const { data: newCs } = await supabase.from('case_specialties').select('specialty_id, specialties(id, name, parent_id)').eq('case_id', id);
-      setCaseSpecialties(newCs || []);
-      setCaseData(prev => ({ ...prev, description: descValue, client: clientValue, case_type: caseTypeValue, jurisdiction: jurisdictionValue, additional_notes: notesValue }));
-      setDetailsEditing(false);
-      toast.success('Case details saved');
-      return true;
+      }))
+      setDetailsEditing(false)
+      toast.success('Case details saved')
+      return true
     } catch (err) {
-      toast.error('Failed to save case details');
-      return false;
+      toast.error('Failed to save case details')
+      return false
     }
-  };
-  setSaveHandler(saveDetails);
+  }
+  setSaveHandler(saveDetails)
 
   const loadCase = async () => {
     try {
       const [caseRes, invRes, mgrRes, csRes, specRes] = await Promise.all([
-        supabase.from('cases').select('*, specialties(name), manager:case_manager(id, first_name, last_name, email, role), assignedExpert:assigned_expert(id, first_name, last_name, email, role)').eq('id', id).single(),
-        supabase.from('case_invitations').select('*, profiles:expert_id(id, first_name, last_name, email)').eq('case_id', id).order('invited_at', { ascending: false }),
-        supabase.from('profiles').select('id, first_name, last_name, email, role').in('role', ['admin', 'staff']).order('first_name'),
-        supabase.from('case_specialties').select('specialty_id, specialties(id, name, parent_id)').eq('case_id', id),
+        supabase
+          .from('cases')
+          .select(
+            '*, specialties(name), manager:case_manager(id, first_name, last_name, email, role), assignedExpert:assigned_expert(id, first_name, last_name, email, role)'
+          )
+          .eq('id', id)
+          .single(),
+        supabase
+          .from('case_invitations')
+          .select('*, profiles:expert_id(id, first_name, last_name, email)')
+          .eq('case_id', id)
+          .order('invited_at', { ascending: false }),
+        supabase
+          .from('profiles')
+          .select('id, first_name, last_name, email, role')
+          .in('role', ['admin', 'staff'])
+          .order('first_name'),
+        supabase
+          .from('case_specialties')
+          .select('specialty_id, specialties(id, name, parent_id)')
+          .eq('case_id', id),
         supabase.from('specialties').select('*').order('name'),
-      ]);
+      ])
       if (caseRes.error) {
-        toast.error('Failed to load case');
-        setLoading(false);
-        return;
+        toast.error('Failed to load case')
+        setLoading(false)
+        return
       }
-      setCaseData(caseRes.data);
-      setDescValue(caseRes.data?.description || '');
-      setClientValue(caseRes.data?.client || '');
-      setCaseTypeValue(caseRes.data?.case_type || '');
-      setJurisdictionValue(caseRes.data?.jurisdiction || '');
-      setNotesValue(caseRes.data?.additional_notes || '');
-      setInvitations(invRes.data || []);
-      setManagers(mgrRes.data || []);
-      const loadedCs = csRes.data || [];
-      setCaseSpecialties(loadedCs);
-      setAllSpecialties(specRes.data || []);
-      const loadedIds = loadedCs.map(cs => cs.specialty_id);
-      setEditingSpecialties(loadedIds);
-      setEditingTags(caseRes.data?.specialty_tags || []);
-      const autoExpanded = new Set();
+      setCaseData(caseRes.data)
+      setDescValue(caseRes.data?.description || '')
+      setClientValue(caseRes.data?.client || '')
+      setCaseTypeValue(caseRes.data?.case_type || '')
+      setJurisdictionValue(caseRes.data?.jurisdiction || '')
+      setNotesValue(caseRes.data?.additional_notes || '')
+      setInvitations(invRes.data || [])
+      setManagers(mgrRes.data || [])
+      const loadedCs = csRes.data || []
+      setCaseSpecialties(loadedCs)
+      setAllSpecialties(specRes.data || [])
+      const loadedIds = loadedCs.map((cs) => cs.specialty_id)
+      setEditingSpecialties(loadedIds)
+      setEditingTags(caseRes.data?.specialty_tags || [])
+      const autoExpanded = new Set()
       for (const cs of loadedCs) {
-        if (cs.specialties?.parent_id) autoExpanded.add(cs.specialties.parent_id);
+        if (cs.specialties?.parent_id)
+          autoExpanded.add(cs.specialties.parent_id)
       }
-      setExpandedParents(autoExpanded);
-      setLoading(false);
+      setExpandedParents(autoExpanded)
+      setLoading(false)
     } catch (err) {
-      toast.error('Failed to load case');
-      setLoading(false);
+      toast.error('Failed to load case')
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    loadCase();
-  }, [id]); // eslint-disable-line
+    loadCase()
+  }, [id]) // eslint-disable-line
 
-  const sanitizeSearch = (term) => term.replace(/[%_(),.\\]/g, '');
+  const sanitizeSearch = (term) => term.replace(/[%_(),.\\]/g, '')
 
   const searchExperts = async (term) => {
-    setSearchTerm(term);
-    if (term.length < 2) { setExperts([]); return; }
-    const safe = sanitizeSearch(term);
-    if (!safe) { setExperts([]); return; }
+    setSearchTerm(term)
+    if (term.length < 2) {
+      setExperts([])
+      return
+    }
+    const safe = sanitizeSearch(term)
+    if (!safe) {
+      setExperts([])
+      return
+    }
     const { data } = await supabase
       .from('profiles')
       .select('id, first_name, last_name, email')
       .eq('role', 'expert')
-      .or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`)
-      .limit(10);
-    const invitedIds = invitations.map(inv => inv.profiles?.id);
-    setExperts((data || []).filter(e => !invitedIds.includes(e.id)));
-  };
+      .or(
+        `first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`
+      )
+      .limit(10)
+    const invitedIds = invitations.map((inv) => inv.profiles?.id)
+    setExperts((data || []).filter((e) => !invitedIds.includes(e.id)))
+  }
 
   const inviteExpert = async (expertId) => {
     const { error: invErr } = await supabase.from('case_invitations').insert({
       case_id: id,
       expert_id: expertId,
       status: 'pending',
-    });
+    })
     if (invErr) {
-      toast.error('Failed to send invitation');
+      toast.error('Failed to send invitation')
     } else {
-      toast.success('Invitation sent');
+      toast.success('Invitation sent')
     }
-    setSearchTerm('');
-    setExperts([]);
-    await loadCase();
-  };
+    setSearchTerm('')
+    setExperts([])
+    await loadCase()
+  }
 
   const updateStatus = async (status) => {
-    const { error: statusErr } = await supabase.from('cases').update({ status }).eq('id', id);
+    const { error: statusErr } = await supabase
+      .from('cases')
+      .update({ status })
+      .eq('id', id)
     if (statusErr) {
-      toast.error('Failed to update case status');
+      toast.error('Failed to update case status')
     } else {
-      setCaseData(prev => ({ ...prev, status }));
-      toast.success(status === 'closed' ? 'Case closed' : 'Case reopened');
+      setCaseData((prev) => ({ ...prev, status }))
+      toast.success(status === 'closed' ? 'Case closed' : 'Case reopened')
     }
-  };
+  }
 
   const searchAssignExpert = async (term) => {
-    setAssignExpertTerm(term);
-    if (term.length < 2) { setAssignExpertResults([]); return; }
-    const safe = sanitizeSearch(term);
-    if (!safe) { setAssignExpertResults([]); return; }
+    setAssignExpertTerm(term)
+    if (term.length < 2) {
+      setAssignExpertResults([])
+      return
+    }
+    const safe = sanitizeSearch(term)
+    if (!safe) {
+      setAssignExpertResults([])
+      return
+    }
     const { data } = await supabase
       .from('profiles')
       .select('id, first_name, last_name, email, role')
       .eq('role', 'expert')
-      .or(`first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`)
-      .limit(10);
-    setAssignExpertResults(data || []);
-  };
+      .or(
+        `first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`
+      )
+      .limit(10)
+    setAssignExpertResults(data || [])
+  }
 
   const assignExpert = async (expertId) => {
-    await supabase.from('cases').update({ assigned_expert: expertId }).eq('id', id);
-    setAssignExpertTerm('');
-    setAssignExpertResults([]);
+    await supabase
+      .from('cases')
+      .update({ assigned_expert: expertId })
+      .eq('id', id)
+    setAssignExpertTerm('')
+    setAssignExpertResults([])
     fetch('/api/notify-assigned-expert', {
       method: 'POST',
       headers: {
@@ -216,53 +282,98 @@ export default function CaseDetail() {
         caseId: id,
         caseNumber: caseData.case_number,
       }),
-    }).catch(() => {});
-    await loadCase();
-  };
+    }).catch(() => {})
+    await loadCase()
+  }
 
   const removeAssignedExpert = async () => {
-    await supabase.from('cases').update({ assigned_expert: null }).eq('id', id);
-    await loadCase();
-  };
+    await supabase.from('cases').update({ assigned_expert: null }).eq('id', id)
+    await loadCase()
+  }
 
-  if (loading) return <div className="portal-loading" role="status" aria-label="Loading"><div className="portal-loading__spinner"></div></div>;
-  if (!caseData) return <div className="portal-empty"><p className="portal-empty__text">Case not found</p></div>;
+  if (loading)
+    return (
+      <div className="portal-loading" role="status" aria-label="Loading">
+        <div className="portal-loading__spinner"></div>
+      </div>
+    )
+  if (!caseData)
+    return (
+      <div className="portal-empty">
+        <p className="portal-empty__text">Case not found</p>
+      </div>
+    )
 
   return (
     <div>
       <div className="portal-page__header">
         <div>
-          <Link to="/admin/cases" style={{ fontSize: '0.85rem', color: 'var(--color-accent)', textDecoration: 'none', marginBottom: 8, display: 'inline-block' }}>
+          <Link
+            to="/admin/cases"
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-accent)',
+              textDecoration: 'none',
+              marginBottom: 8,
+              display: 'inline-block',
+            }}
+          >
             &larr; Back to Cases
           </Link>
-          <h1 className="portal-page__title">#{caseData.case_number} — {caseData.title}</h1>
+          <h1 className="portal-page__title">
+            #{caseData.case_number} — {caseData.title}
+          </h1>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           {caseData.status !== 'closed' && (
-            <button className="portal-btn-action" onClick={() => setStatusConfirmTarget('closed')}>
+            <button
+              className="portal-btn-action"
+              onClick={() => setStatusConfirmTarget('closed')}
+            >
               Close Case
             </button>
           )}
           {caseData.status === 'closed' && (
-            <button className="btn btn--primary" onClick={() => setStatusConfirmTarget('open')} style={{ padding: '8px 16px', fontSize: '0.85rem' }}>
+            <button
+              className="btn btn--primary"
+              onClick={() => setStatusConfirmTarget('open')}
+              style={{ padding: '8px 16px', fontSize: '0.85rem' }}
+            >
               Reopen Case
             </button>
           )}
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 24 }}>
-        <span className={`portal-badge portal-badge--${caseData.status}`}>{caseData.status?.replace('_', ' ')}</span>
-        {caseSpecialties.map(cs => (
-          <span key={cs.specialty_id} className="portal-badge portal-badge--open">{cs.specialties?.name}</span>
+      <div
+        style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 24 }}
+      >
+        <span className={`portal-badge portal-badge--${caseData.status}`}>
+          {caseData.status?.replace('_', ' ')}
+        </span>
+        {caseSpecialties.map((cs) => (
+          <span
+            key={cs.specialty_id}
+            className="portal-badge portal-badge--open"
+          >
+            {cs.specialties?.name}
+          </span>
         ))}
       </div>
 
       <div className="portal-card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 className="portal-card__title" style={{ margin: 0 }}>Case Details</h2>
-          {(isAdmin || profile?.role === 'staff') && (
-            detailsEditing ? (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <h2 className="portal-card__title" style={{ margin: 0 }}>
+            Case Details
+          </h2>
+          {(isAdmin || profile?.role === 'staff') &&
+            (detailsEditing ? (
               <button
                 className="btn btn--primary"
                 style={{ padding: '6px 16px', fontSize: '0.85rem' }}
@@ -278,29 +389,47 @@ export default function CaseDetail() {
               >
                 Edit
               </button>
-            )
-          )}
+            ))}
         </div>
         <div style={{ marginTop: 12, marginBottom: 12 }}>
           <strong>Description:</strong>
           <textarea
             className="portal-field__input"
-            style={{ width: '100%', minHeight: 80, resize: 'vertical', lineHeight: 1.6, marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)', color: 'var(--color-gray-600)' }}
+            style={{
+              width: '100%',
+              minHeight: 80,
+              resize: 'vertical',
+              lineHeight: 1.6,
+              marginTop: 4,
+              background: detailsEditing
+                ? '#fff'
+                : 'var(--color-gray-50, #f7fafc)',
+              color: 'var(--color-gray-600)',
+            }}
             value={descValue}
             onChange={(e) => setDescValue(e.target.value)}
             readOnly={!detailsEditing}
-            placeholder={detailsEditing ? 'Enter description...' : 'No description'}
+            placeholder={
+              detailsEditing ? 'Enter description...' : 'No description'
+            }
           />
         </div>
         <div style={{ marginBottom: 12 }}>
           <strong>Client:</strong>
           <input
             className="portal-field__input"
-            style={{ marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)' }}
+            style={{
+              marginTop: 4,
+              background: detailsEditing
+                ? '#fff'
+                : 'var(--color-gray-50, #f7fafc)',
+            }}
             value={clientValue}
             onChange={(e) => setClientValue(e.target.value)}
             readOnly={!detailsEditing}
-            placeholder={detailsEditing ? 'Enter client name...' : 'No client specified'}
+            placeholder={
+              detailsEditing ? 'Enter client name...' : 'No client specified'
+            }
           />
         </div>
         <div className="portal-list-item__row" style={{ marginBottom: 12 }}>
@@ -308,22 +437,38 @@ export default function CaseDetail() {
             <strong>Type:</strong>
             <input
               className="portal-field__input"
-              style={{ marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)' }}
+              style={{
+                marginTop: 4,
+                background: detailsEditing
+                  ? '#fff'
+                  : 'var(--color-gray-50, #f7fafc)',
+              }}
               value={caseTypeValue}
               onChange={(e) => setCaseTypeValue(e.target.value)}
               readOnly={!detailsEditing}
-              placeholder={detailsEditing ? 'Enter case type...' : 'No type specified'}
+              placeholder={
+                detailsEditing ? 'Enter case type...' : 'No type specified'
+              }
             />
           </div>
           <div>
             <strong>Jurisdiction:</strong>
             <input
               className="portal-field__input"
-              style={{ marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)' }}
+              style={{
+                marginTop: 4,
+                background: detailsEditing
+                  ? '#fff'
+                  : 'var(--color-gray-50, #f7fafc)',
+              }}
               value={jurisdictionValue}
               onChange={(e) => setJurisdictionValue(e.target.value)}
               readOnly={!detailsEditing}
-              placeholder={detailsEditing ? 'Enter jurisdiction...' : 'No jurisdiction specified'}
+              placeholder={
+                detailsEditing
+                  ? 'Enter jurisdiction...'
+                  : 'No jurisdiction specified'
+              }
             />
           </div>
         </div>
@@ -335,13 +480,13 @@ export default function CaseDetail() {
               style={{ display: 'inline-block', width: 'auto', marginLeft: 8 }}
               value={caseData.case_manager || ''}
               onChange={(e) => {
-                const value = e.target.value || null;
-                const selected = managers.find(m => m.id === value);
-                setManagerConfirmTarget({ id: value, profile: selected });
+                const value = e.target.value || null
+                const selected = managers.find((m) => m.id === value)
+                setManagerConfirmTarget({ id: value, profile: selected })
               }}
             >
               <option value="">Unassigned</option>
-              {managers.map(m => (
+              {managers.map((m) => (
                 <option key={m.id} value={m.id}>
                   {formatName(m)} ({m.role})
                 </option>
@@ -360,21 +505,38 @@ export default function CaseDetail() {
           {caseData.assignedExpert ? (
             <span>
               {formatName(caseData.assignedExpert)}
-              <Link to={`/admin/experts/${caseData.assignedExpert.id}?from=case&caseId=${id}`} style={{ color: 'var(--color-accent)', fontSize: '0.8rem', marginLeft: 8 }}>
+              <Link
+                to={`/admin/experts/${caseData.assignedExpert.id}?from=case&caseId=${id}`}
+                style={{
+                  color: 'var(--color-accent)',
+                  fontSize: '0.8rem',
+                  marginLeft: 8,
+                }}
+              >
                 View Profile
               </Link>
               {(isAdmin || profile?.role === 'staff') && (
                 <button
                   className="portal-btn-action"
-                  style={{ marginLeft: 8, padding: '4px 10px', fontSize: '0.8rem' }}
+                  style={{
+                    marginLeft: 8,
+                    padding: '4px 10px',
+                    fontSize: '0.8rem',
+                  }}
                   onClick={() => setRemoveExpertConfirm(true)}
                 >
                   Remove
                 </button>
               )}
             </span>
-          ) : (isAdmin || profile?.role === 'staff') ? (
-            <div style={{ display: 'inline-block', verticalAlign: 'middle', marginLeft: 8 }}>
+          ) : isAdmin || profile?.role === 'staff' ? (
+            <div
+              style={{
+                display: 'inline-block',
+                verticalAlign: 'middle',
+                marginLeft: 8,
+              }}
+            >
               <input
                 className="portal-field__input"
                 style={{ width: 260, display: 'inline-block' }}
@@ -383,14 +545,51 @@ export default function CaseDetail() {
                 onChange={(e) => searchAssignExpert(e.target.value)}
               />
               {assignExpertResults.length > 0 && (
-                <div style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', marginTop: 4, position: 'absolute', background: '#fff', zIndex: 10, width: 360 }}>
-                  {assignExpertResults.map(exp => (
-                    <div key={exp.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 12px', borderBottom: '1px solid var(--color-gray-100)' }}>
+                <div
+                  style={{
+                    border: '1px solid var(--color-gray-200)',
+                    borderRadius: 'var(--radius-md)',
+                    marginTop: 4,
+                    position: 'absolute',
+                    background: '#fff',
+                    zIndex: 10,
+                    width: 360,
+                  }}
+                >
+                  {assignExpertResults.map((exp) => (
+                    <div
+                      key={exp.id}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        padding: '8px 12px',
+                        borderBottom: '1px solid var(--color-gray-100)',
+                      }}
+                    >
                       <div>
                         <strong>{formatName(exp)}</strong>
-                        <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginLeft: 8 }}>{exp.email}</span>
+                        <span
+                          style={{
+                            fontSize: '0.8rem',
+                            color: 'var(--color-gray-400)',
+                            marginLeft: 8,
+                          }}
+                        >
+                          {exp.email}
+                        </span>
                       </div>
-                      <button className="btn btn--primary" onClick={() => setAssignConfirmTarget({ type: 'search', expertId: exp.id, name: formatName(exp) })} style={{ padding: '4px 12px', fontSize: '0.8rem' }}>
+                      <button
+                        className="btn btn--primary"
+                        onClick={() =>
+                          setAssignConfirmTarget({
+                            type: 'search',
+                            expertId: exp.id,
+                            name: formatName(exp),
+                          })
+                        }
+                        style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                      >
                         Assign
                       </button>
                     </div>
@@ -402,98 +601,244 @@ export default function CaseDetail() {
             <span>Unassigned</span>
           )}
         </div>
-        <p style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginTop: 8 }}>
+        <p
+          style={{
+            fontSize: '0.8rem',
+            color: 'var(--color-gray-400)',
+            marginTop: 8,
+          }}
+        >
           Created: {new Date(caseData.created_at).toLocaleDateString()}
         </p>
         <div style={{ marginTop: 16 }}>
           <strong>Additional Notes:</strong>
           <textarea
             className="portal-field__input"
-            style={{ width: '100%', minHeight: 100, resize: 'vertical', marginTop: 4, background: detailsEditing ? '#fff' : 'var(--color-gray-50, #f7fafc)', color: 'var(--color-gray-600)' }}
+            style={{
+              width: '100%',
+              minHeight: 100,
+              resize: 'vertical',
+              marginTop: 4,
+              background: detailsEditing
+                ? '#fff'
+                : 'var(--color-gray-50, #f7fafc)',
+              color: 'var(--color-gray-600)',
+            }}
             value={notesValue}
             onChange={(e) => setNotesValue(e.target.value)}
             readOnly={!detailsEditing}
-            placeholder={detailsEditing ? 'Enter additional notes...' : 'No additional notes'}
+            placeholder={
+              detailsEditing
+                ? 'Enter additional notes...'
+                : 'No additional notes'
+            }
           />
         </div>
         <div style={{ marginTop: 16 }}>
           <strong>Specialties & Subspecialties:</strong>
-          {detailsEditing ? (() => {
-            const parents = allSpecialties.filter(s => !s.parent_id);
-            const hasSubs = allSpecialties.some(s => s.parent_id);
-            if (!hasSubs) return null;
-            return (
-              <div style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', padding: '10px 14px', marginTop: 6 }}>
-                <p style={{ fontSize: '0.78rem', color: 'var(--color-gray-500)', margin: '0 0 8px' }}>
-                  Select a specialty to expand its subspecialties, then choose the ones that apply.
-                </p>
-                {parents.map(parent => {
-                  const subs = allSpecialties.filter(s => s.parent_id === parent.id);
-                  if (subs.length === 0) return null;
-                  const isExpanded = expandedParents.has(parent.id);
-                  return (
-                    <div key={parent.id} style={{ marginBottom: 8, borderBottom: '1px solid var(--color-gray-100)', paddingBottom: 8 }}>
-                      <label className="portal-checkbox" style={{ fontWeight: 700, fontSize: '0.9rem', color: 'var(--color-navy)' }}>
-                        <input type="checkbox" checked={isExpanded} onChange={() => toggleParent(parent.id)} />
-                        {parent.name}
-                      </label>
-                      {isExpanded && (
-                        <div className="portal-checkbox-group" style={{ marginTop: 6, marginLeft: 24 }}>
-                          {subs.map(sub => (
-                            <label key={sub.id} className="portal-checkbox">
-                              <input type="checkbox" checked={editingSpecialties.includes(sub.id)} onChange={() => toggleSpecialty(sub.id)} />
-                              {sub.name}
-                            </label>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-                {editingSpecialties.length > 0 && (
-                  <p style={{ fontSize: '0.78rem', color: 'var(--color-accent)', margin: '4px 0 0', fontWeight: 500 }}>
-                    {editingSpecialties.length} subspecialt{editingSpecialties.length === 1 ? 'y' : 'ies'} selected
+          {detailsEditing ? (
+            (() => {
+              const parents = allSpecialties.filter((s) => !s.parent_id)
+              const hasSubs = allSpecialties.some((s) => s.parent_id)
+              if (!hasSubs) return null
+              return (
+                <div
+                  style={{
+                    border: '1px solid var(--color-gray-200)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: '10px 14px',
+                    marginTop: 6,
+                  }}
+                >
+                  <p
+                    style={{
+                      fontSize: '0.78rem',
+                      color: 'var(--color-gray-500)',
+                      margin: '0 0 8px',
+                    }}
+                  >
+                    Select a specialty to expand its subspecialties, then choose
+                    the ones that apply.
                   </p>
-                )}
-                <div style={{ borderTop: '1px solid var(--color-gray-100)', paddingTop: 10, marginTop: 10 }}>
-                  {editingTags.length > 0 && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 8 }}>
-                      {editingTags.map(tag => (
-                        <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, background: '#e0e7ff', color: '#3730a3', borderRadius: 999, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 500 }}>
-                          {tag}
-                          <button type="button" onClick={() => removeTag(tag)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#3730a3', fontSize: '1rem', lineHeight: 1, padding: 0, marginLeft: 2 }}>×</button>
-                        </span>
-                      ))}
-                    </div>
+                  {parents.map((parent) => {
+                    const subs = allSpecialties.filter(
+                      (s) => s.parent_id === parent.id
+                    )
+                    if (subs.length === 0) return null
+                    const isExpanded = expandedParents.has(parent.id)
+                    return (
+                      <div
+                        key={parent.id}
+                        style={{
+                          marginBottom: 8,
+                          borderBottom: '1px solid var(--color-gray-100)',
+                          paddingBottom: 8,
+                        }}
+                      >
+                        <label
+                          className="portal-checkbox"
+                          style={{
+                            fontWeight: 700,
+                            fontSize: '0.9rem',
+                            color: 'var(--color-navy)',
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isExpanded}
+                            onChange={() => toggleParent(parent.id)}
+                          />
+                          {parent.name}
+                        </label>
+                        {isExpanded && (
+                          <div
+                            className="portal-checkbox-group"
+                            style={{ marginTop: 6, marginLeft: 24 }}
+                          >
+                            {subs.map((sub) => (
+                              <label key={sub.id} className="portal-checkbox">
+                                <input
+                                  type="checkbox"
+                                  checked={editingSpecialties.includes(sub.id)}
+                                  onChange={() => toggleSpecialty(sub.id)}
+                                />
+                                {sub.name}
+                              </label>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                  {editingSpecialties.length > 0 && (
+                    <p
+                      style={{
+                        fontSize: '0.78rem',
+                        color: 'var(--color-accent)',
+                        margin: '4px 0 0',
+                        fontWeight: 500,
+                      }}
+                    >
+                      {editingSpecialties.length} subspecialt
+                      {editingSpecialties.length === 1 ? 'y' : 'ies'} selected
+                    </p>
                   )}
-                  <input
-                    className="portal-field__input"
-                    value={tagInput}
-                    onChange={(e) => setTagInput(sanitizeTag(e.target.value))}
-                    onKeyDown={handleTagKeyDown}
-                    onBlur={() => tagInput.trim() && addTag(tagInput)}
-                    placeholder="Other Subspecialty"
-                    style={{ marginBottom: 0 }}
-                  />
-                  <p style={{ fontSize: '0.75rem', color: 'var(--color-gray-400)', marginTop: 4, marginBottom: 0 }}>
-                    Press Enter to add. For subspecialties not in the list above.
-                  </p>
+                  <div
+                    style={{
+                      borderTop: '1px solid var(--color-gray-100)',
+                      paddingTop: 10,
+                      marginTop: 10,
+                    }}
+                  >
+                    {editingTags.length > 0 && (
+                      <div
+                        style={{
+                          display: 'flex',
+                          flexWrap: 'wrap',
+                          gap: 6,
+                          marginBottom: 8,
+                        }}
+                      >
+                        {editingTags.map((tag) => (
+                          <span
+                            key={tag}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 4,
+                              background: '#e0e7ff',
+                              color: '#3730a3',
+                              borderRadius: 999,
+                              padding: '3px 10px',
+                              fontSize: '0.8rem',
+                              fontWeight: 500,
+                            }}
+                          >
+                            {tag}
+                            <button
+                              type="button"
+                              onClick={() => removeTag(tag)}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: '#3730a3',
+                                fontSize: '1rem',
+                                lineHeight: 1,
+                                padding: 0,
+                                marginLeft: 2,
+                              }}
+                            >
+                              ×
+                            </button>
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                    <input
+                      className="portal-field__input"
+                      value={tagInput}
+                      onChange={(e) => setTagInput(sanitizeTag(e.target.value))}
+                      onKeyDown={handleTagKeyDown}
+                      onBlur={() => tagInput.trim() && addTag(tagInput)}
+                      placeholder="Other Subspecialty"
+                      style={{ marginBottom: 0 }}
+                    />
+                    <p
+                      style={{
+                        fontSize: '0.75rem',
+                        color: 'var(--color-gray-400)',
+                        marginTop: 4,
+                        marginBottom: 0,
+                      }}
+                    >
+                      Press Enter to add. For subspecialties not in the list
+                      above.
+                    </p>
+                  </div>
                 </div>
-              </div>
-            );
-          })() : (
+              )
+            })()
+          ) : (
             <div style={{ marginTop: 6 }}>
-              {(caseSpecialties.length > 0 || (caseData.specialty_tags?.length > 0)) ? (
+              {caseSpecialties.length > 0 ||
+              caseData.specialty_tags?.length > 0 ? (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {caseSpecialties.map(cs => (
-                    <span key={cs.specialty_id} className="portal-badge portal-badge--open">{cs.specialties?.name}</span>
+                  {caseSpecialties.map((cs) => (
+                    <span
+                      key={cs.specialty_id}
+                      className="portal-badge portal-badge--open"
+                    >
+                      {cs.specialties?.name}
+                    </span>
                   ))}
-                  {caseData.specialty_tags?.map(tag => (
-                    <span key={tag} style={{ display: 'inline-flex', alignItems: 'center', background: '#e0e7ff', color: '#3730a3', borderRadius: 999, padding: '3px 10px', fontSize: '0.8rem', fontWeight: 500 }}>{tag}</span>
+                  {caseData.specialty_tags?.map((tag) => (
+                    <span
+                      key={tag}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        background: '#e0e7ff',
+                        color: '#3730a3',
+                        borderRadius: 999,
+                        padding: '3px 10px',
+                        fontSize: '0.8rem',
+                        fontWeight: 500,
+                      }}
+                    >
+                      {tag}
+                    </span>
                   ))}
                 </div>
               ) : (
-                <span style={{ color: 'var(--color-gray-400)', fontSize: '0.85rem' }}>None specified</span>
+                <span
+                  style={{
+                    color: 'var(--color-gray-400)',
+                    fontSize: '0.85rem',
+                  }}
+                >
+                  None specified
+                </span>
               )}
             </div>
           )}
@@ -512,14 +857,45 @@ export default function CaseDetail() {
           />
         </div>
         {experts.length > 0 && (
-          <div style={{ border: '1px solid var(--color-gray-200)', borderRadius: 'var(--radius-md)', marginTop: 8 }}>
-            {experts.map(exp => (
-              <div key={exp.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 14px', borderBottom: '1px solid var(--color-gray-100)' }}>
+          <div
+            style={{
+              border: '1px solid var(--color-gray-200)',
+              borderRadius: 'var(--radius-md)',
+              marginTop: 8,
+            }}
+          >
+            {experts.map((exp) => (
+              <div
+                key={exp.id}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '10px 14px',
+                  borderBottom: '1px solid var(--color-gray-100)',
+                }}
+              >
                 <div>
-                  <strong>{exp.first_name ? `${exp.first_name} ${exp.last_name || ''}`.trim() : exp.email}</strong>
-                  <span style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginLeft: 8 }}>{exp.email}</span>
+                  <strong>
+                    {exp.first_name
+                      ? `${exp.first_name} ${exp.last_name || ''}`.trim()
+                      : exp.email}
+                  </strong>
+                  <span
+                    style={{
+                      fontSize: '0.8rem',
+                      color: 'var(--color-gray-400)',
+                      marginLeft: 8,
+                    }}
+                  >
+                    {exp.email}
+                  </span>
                 </div>
-                <button className="btn btn--primary" onClick={() => inviteExpert(exp.id)} style={{ padding: '6px 14px', fontSize: '0.8rem' }}>
+                <button
+                  className="btn btn--primary"
+                  onClick={() => inviteExpert(exp.id)}
+                  style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                >
                   Invite
                 </button>
               </div>
@@ -531,80 +907,155 @@ export default function CaseDetail() {
       {/* Invited Experts */}
       <div className="portal-card">
         {(() => {
-          const filteredInvitations = invitations.filter(inv => inv.profiles?.id !== caseData.assignedExpert?.id);
+          const filteredInvitations = invitations.filter(
+            (inv) => inv.profiles?.id !== caseData.assignedExpert?.id
+          )
           return (
             <>
-        <h2 className="portal-card__title">Invited Experts ({filteredInvitations.length})</h2>
-        {filteredInvitations.length === 0 ? (
-          <p style={{ color: 'var(--color-gray-400)', fontSize: '0.85rem' }}>No experts invited yet</p>
-        ) : (
-          <div className="portal-table-wrap">
-            <table className="portal-table">
-              <thead>
-                <tr>
-                  <th>Expert</th>
-                  <th>Status</th>
-                  <th>Invited</th>
-                  <th>Responded</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredInvitations.map(inv => (
-                  <tr key={inv.id}>
-                    <td>
-                      {inv.profiles?.first_name
-                        ? `${inv.profiles.first_name} ${inv.profiles.last_name || ''}`.trim()
-                        : inv.profiles?.email || '—'}
-                    </td>
-                    <td>
-                      <span className={`portal-badge portal-badge--${inv.status}`}>
-                        {inv.status === 'accepted' ? 'interested' : inv.status?.replace('_', ' ')}
-                      </span>
-                    </td>
-                    <td>{new Date(inv.invited_at).toLocaleDateString()}</td>
-                    <td>{inv.responded_at ? new Date(inv.responded_at).toLocaleDateString() : '—'}</td>
-                    <td style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-                      <Link to={`/admin/experts/${inv.expert_id}?from=case&caseId=${id}`} style={{ color: 'var(--color-accent)', fontSize: '0.85rem' }}>
-                        View Profile
-                      </Link>
-                      {(isAdmin || profile?.role === 'staff') && (
-                        <button
-                          className="btn btn--primary"
-                          style={{ padding: '4px 12px', fontSize: '0.8rem', marginLeft: 'auto' }}
-                          onClick={() => setAssignConfirmTarget({ type: 'invited', expertId: inv.expert_id, name: inv.profiles?.first_name ? `${inv.profiles.first_name} ${inv.profiles.last_name || ''}`.trim() : inv.profiles?.email || 'this expert' })}
-                        >
-                          Assign
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+              <h2 className="portal-card__title">
+                Invited Experts ({filteredInvitations.length})
+              </h2>
+              {filteredInvitations.length === 0 ? (
+                <p
+                  style={{
+                    color: 'var(--color-gray-400)',
+                    fontSize: '0.85rem',
+                  }}
+                >
+                  No experts invited yet
+                </p>
+              ) : (
+                <div className="portal-table-wrap">
+                  <table className="portal-table">
+                    <thead>
+                      <tr>
+                        <th>Expert</th>
+                        <th>Status</th>
+                        <th>Invited</th>
+                        <th>Responded</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredInvitations.map((inv) => (
+                        <tr key={inv.id}>
+                          <td>
+                            {inv.profiles?.first_name
+                              ? `${inv.profiles.first_name} ${inv.profiles.last_name || ''}`.trim()
+                              : inv.profiles?.email || '—'}
+                          </td>
+                          <td>
+                            <span
+                              className={`portal-badge portal-badge--${inv.status}`}
+                            >
+                              {inv.status === 'accepted'
+                                ? 'interested'
+                                : inv.status?.replace('_', ' ')}
+                            </span>
+                          </td>
+                          <td>
+                            {new Date(inv.invited_at).toLocaleDateString()}
+                          </td>
+                          <td>
+                            {inv.responded_at
+                              ? new Date(inv.responded_at).toLocaleDateString()
+                              : '—'}
+                          </td>
+                          <td
+                            style={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              gap: 8,
+                            }}
+                          >
+                            <Link
+                              to={`/admin/experts/${inv.expert_id}?from=case&caseId=${id}`}
+                              style={{
+                                color: 'var(--color-accent)',
+                                fontSize: '0.85rem',
+                              }}
+                            >
+                              View Profile
+                            </Link>
+                            {(isAdmin || profile?.role === 'staff') && (
+                              <button
+                                className="btn btn--primary"
+                                style={{
+                                  padding: '4px 12px',
+                                  fontSize: '0.8rem',
+                                  marginLeft: 'auto',
+                                }}
+                                onClick={() =>
+                                  setAssignConfirmTarget({
+                                    type: 'invited',
+                                    expertId: inv.expert_id,
+                                    name: inv.profiles?.first_name
+                                      ? `${inv.profiles.first_name} ${inv.profiles.last_name || ''}`.trim()
+                                      : inv.profiles?.email || 'this expert',
+                                  })
+                                }
+                              >
+                                Assign
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </>
-          );
+          )
         })()}
       </div>
 
       {assignConfirmTarget && (
-        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
-            <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>Assign Expert</h3>
-            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
+        <div
+          className="portal-modal-overlay"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            className="portal-card"
+            style={{ maxWidth: 440, width: '90%', padding: 24 }}
+          >
+            <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>
+              Assign Expert
+            </h3>
+            <p
+              style={{
+                margin: '0 0 16px',
+                fontSize: '0.9rem',
+                color: 'var(--color-gray-500)',
+              }}
+            >
               Are you sure you want to assign{' '}
-              <strong>{assignConfirmTarget.name}</strong>{' '}
-              as the assigned expert for this case?
+              <strong>{assignConfirmTarget.name}</strong> as the assigned expert
+              for this case?
             </p>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button className="btn btn--secondary" onClick={() => setAssignConfirmTarget(null)}>Cancel</button>
+            <div
+              style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
+            >
+              <button
+                className="btn btn--secondary"
+                onClick={() => setAssignConfirmTarget(null)}
+              >
+                Cancel
+              </button>
               <button
                 className="btn btn--primary"
                 onClick={async () => {
-                  await assignExpert(assignConfirmTarget.expertId);
-                  setAssignConfirmTarget(null);
+                  await assignExpert(assignConfirmTarget.expertId)
+                  setAssignConfirmTarget(null)
                 }}
               >
                 Assign Expert
@@ -615,25 +1066,73 @@ export default function CaseDetail() {
       )}
 
       {statusConfirmTarget && (
-        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
-            <h3 style={{ margin: '0 0 8px', color: statusConfirmTarget === 'closed' ? 'var(--color-error, #e53e3e)' : 'var(--color-gray-800)' }}>
+        <div
+          className="portal-modal-overlay"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            className="portal-card"
+            style={{ maxWidth: 440, width: '90%', padding: 24 }}
+          >
+            <h3
+              style={{
+                margin: '0 0 8px',
+                color:
+                  statusConfirmTarget === 'closed'
+                    ? 'var(--color-error, #e53e3e)'
+                    : 'var(--color-gray-800)',
+              }}
+            >
               {statusConfirmTarget === 'closed' ? 'Close Case' : 'Reopen Case'}
             </h3>
-            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
-              Are you sure you want to {statusConfirmTarget === 'closed' ? 'close' : 'reopen'} this case?
+            <p
+              style={{
+                margin: '0 0 16px',
+                fontSize: '0.9rem',
+                color: 'var(--color-gray-500)',
+              }}
+            >
+              Are you sure you want to{' '}
+              {statusConfirmTarget === 'closed' ? 'close' : 'reopen'} this case?
             </p>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button className="btn btn--secondary" onClick={() => setStatusConfirmTarget(null)}>Cancel</button>
+            <div
+              style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
+            >
               <button
-                className={statusConfirmTarget === 'closed' ? 'btn' : 'btn btn--primary'}
-                style={statusConfirmTarget === 'closed' ? { background: 'var(--color-error, #e53e3e)', color: '#fff', border: 'none' } : {}}
+                className="btn btn--secondary"
+                onClick={() => setStatusConfirmTarget(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className={
+                  statusConfirmTarget === 'closed' ? 'btn' : 'btn btn--primary'
+                }
+                style={
+                  statusConfirmTarget === 'closed'
+                    ? {
+                        background: 'var(--color-error, #e53e3e)',
+                        color: '#fff',
+                        border: 'none',
+                      }
+                    : {}
+                }
                 onClick={async () => {
-                  await updateStatus(statusConfirmTarget);
-                  setStatusConfirmTarget(null);
+                  await updateStatus(statusConfirmTarget)
+                  setStatusConfirmTarget(null)
                 }}
               >
-                {statusConfirmTarget === 'closed' ? 'Close Case' : 'Reopen Case'}
+                {statusConfirmTarget === 'closed'
+                  ? 'Close Case'
+                  : 'Reopen Case'}
               </button>
             </div>
           </div>
@@ -641,20 +1140,61 @@ export default function CaseDetail() {
       )}
 
       {removeExpertConfirm && caseData.assignedExpert && (
-        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
-            <h3 style={{ margin: '0 0 8px', color: 'var(--color-error, #e53e3e)' }}>Remove Assigned Expert</h3>
-            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
-              Are you sure you want to remove <strong>{formatName(caseData.assignedExpert)}</strong> as the assigned expert? They will be returned to the Invited Experts list.
+        <div
+          className="portal-modal-overlay"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            className="portal-card"
+            style={{ maxWidth: 440, width: '90%', padding: 24 }}
+          >
+            <h3
+              style={{
+                margin: '0 0 8px',
+                color: 'var(--color-error, #e53e3e)',
+              }}
+            >
+              Remove Assigned Expert
+            </h3>
+            <p
+              style={{
+                margin: '0 0 16px',
+                fontSize: '0.9rem',
+                color: 'var(--color-gray-500)',
+              }}
+            >
+              Are you sure you want to remove{' '}
+              <strong>{formatName(caseData.assignedExpert)}</strong> as the
+              assigned expert? They will be returned to the Invited Experts
+              list.
             </p>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button className="btn btn--secondary" onClick={() => setRemoveExpertConfirm(false)}>Cancel</button>
+            <div
+              style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
+            >
+              <button
+                className="btn btn--secondary"
+                onClick={() => setRemoveExpertConfirm(false)}
+              >
+                Cancel
+              </button>
               <button
                 className="btn"
-                style={{ background: 'var(--color-error, #e53e3e)', color: '#fff', border: 'none' }}
+                style={{
+                  background: 'var(--color-error, #e53e3e)',
+                  color: '#fff',
+                  border: 'none',
+                }}
                 onClick={async () => {
-                  setRemoveExpertConfirm(false);
-                  await removeAssignedExpert();
+                  setRemoveExpertConfirm(false)
+                  await removeAssignedExpert()
                 }}
               >
                 Remove Expert
@@ -665,26 +1205,62 @@ export default function CaseDetail() {
       )}
 
       {managerConfirmTarget && (
-        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
+        <div
+          className="portal-modal-overlay"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            className="portal-card"
+            style={{ maxWidth: 440, width: '90%', padding: 24 }}
+          >
             <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>
-              {managerConfirmTarget.id ? 'Assign Case Manager' : 'Remove Case Manager'}
+              {managerConfirmTarget.id
+                ? 'Assign Case Manager'
+                : 'Remove Case Manager'}
             </h3>
-            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
+            <p
+              style={{
+                margin: '0 0 16px',
+                fontSize: '0.9rem',
+                color: 'var(--color-gray-500)',
+              }}
+            >
               {managerConfirmTarget.id ? (
-                <>Are you sure you want to assign <strong>{formatName(managerConfirmTarget.profile)}</strong> as the case manager?</>
+                <>
+                  Are you sure you want to assign{' '}
+                  <strong>{formatName(managerConfirmTarget.profile)}</strong> as
+                  the case manager?
+                </>
               ) : (
                 <>Are you sure you want to remove the current case manager?</>
               )}
             </p>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button className="btn btn--secondary" onClick={() => setManagerConfirmTarget(null)}>Cancel</button>
+            <div
+              style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
+            >
+              <button
+                className="btn btn--secondary"
+                onClick={() => setManagerConfirmTarget(null)}
+              >
+                Cancel
+              </button>
               <button
                 className="btn btn--primary"
                 onClick={async () => {
-                  const value = managerConfirmTarget.id;
-                  await supabase.from('cases').update({ case_manager: value }).eq('id', id);
-                  setCaseData(prev => ({ ...prev, case_manager: value }));
+                  const value = managerConfirmTarget.id
+                  await supabase
+                    .from('cases')
+                    .update({ case_manager: value })
+                    .eq('id', id)
+                  setCaseData((prev) => ({ ...prev, case_manager: value }))
                   if (value) {
                     fetch('/api/notify-case-manager', {
                       method: 'POST',
@@ -697,10 +1273,10 @@ export default function CaseDetail() {
                         caseTitle: caseData.title,
                         caseId: id,
                       }),
-                    }).catch(() => {});
+                    }).catch(() => {})
                   }
-                  setManagerConfirmTarget(null);
-                  await loadCase();
+                  setManagerConfirmTarget(null)
+                  await loadCase()
                 }}
               >
                 {managerConfirmTarget.id ? 'Assign Manager' : 'Remove Manager'}
@@ -711,5 +1287,5 @@ export default function CaseDetail() {
       )}
       {UnsavedModal}
     </div>
-  );
+  )
 }

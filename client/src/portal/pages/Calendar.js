@@ -1,9 +1,9 @@
-import React from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import CalendarView from '../components/CalendarView';
+import React from 'react'
+import { useAuth } from '../../hooks/useAuth'
+import CalendarView from '../components/CalendarView'
 
 export default function Calendar() {
-  const { user } = useAuth();
+  const { user } = useAuth()
   return (
     <div>
       <div className="portal-page__header">
@@ -13,5 +13,5 @@ export default function Calendar() {
         <CalendarView expertId={user.id} />
       </div>
     </div>
-  );
+  )
 }

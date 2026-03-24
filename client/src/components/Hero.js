@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 function Hero() {
   return (
@@ -15,29 +15,48 @@ function Hero() {
             <span className="hero__title--accent">When You Need Them</span>
           </h1>
           <p className="hero__subtitle">
-            We handle sourcing, vetting, scheduling, logistics, and compliance so you can focus on your case.
+            We handle sourcing, vetting, scheduling, logistics, and compliance
+            so you can focus on your case.
           </p>
           <div className="hero__actions">
-            <a href="#contact" className="btn btn--primary" onClick={(e) => {
-              e.preventDefault();
-              document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-            }}>
+            <a
+              href="#contact"
+              className="btn btn--primary"
+              onClick={(e) => {
+                e.preventDefault()
+                document
+                  .querySelector('#contact')
+                  ?.scrollIntoView({ behavior: 'smooth' })
+              }}
+            >
               Find an Expert
               <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path
+                  d="M3 8h10M9 4l4 4-4 4"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </a>
-            <a href="#how-it-works" className="btn btn--outline" onClick={(e) => {
-              e.preventDefault();
-              document.querySelector('#how-it-works')?.scrollIntoView({ behavior: 'smooth' });
-            }}>
+            <a
+              href="#how-it-works"
+              className="btn btn--outline"
+              onClick={(e) => {
+                e.preventDefault()
+                document
+                  .querySelector('#how-it-works')
+                  ?.scrollIntoView({ behavior: 'smooth' })
+              }}
+            >
               How It Works
             </a>
           </div>
         </div>
       </div>
     </section>
-  );
+  )
 }
 
-export default Hero;
+export default Hero

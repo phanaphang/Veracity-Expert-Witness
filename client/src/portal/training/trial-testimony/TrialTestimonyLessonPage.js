@@ -1,43 +1,43 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../hooks/useAuth';
-import { supabase } from '../../../lib/supabase';
+import React, { useState, useEffect, useRef } from 'react'
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useAuth } from '../../../hooks/useAuth'
+import { supabase } from '../../../lib/supabase'
 import {
   LESSONS,
   TOTAL_LESSONS,
   getNextLesson,
   getLessonIndex,
   MODULE_TITLE,
-} from './trialTestimonyData';
+} from './trialTestimonyData'
 
-const COMPLETE_DELAY_MS = 60 * 1000; // 60 seconds before "Mark Complete" appears
+const COMPLETE_DELAY_MS = 60 * 1000 // 60 seconds before "Mark Complete" appears
 
 // Placeholder audio player - no real audio in v1
 function AudioPlayer() {
-  const [playing, setPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const intervalRef = useRef(null);
+  const [playing, setPlaying] = useState(false)
+  const [progress, setProgress] = useState(0)
+  const intervalRef = useRef(null)
 
   const toggle = () => {
     if (playing) {
-      clearInterval(intervalRef.current);
-      setPlaying(false);
+      clearInterval(intervalRef.current)
+      setPlaying(false)
     } else {
-      setPlaying(true);
+      setPlaying(true)
       intervalRef.current = setInterval(() => {
         setProgress((p) => {
           if (p >= 100) {
-            clearInterval(intervalRef.current);
-            setPlaying(false);
-            return 100;
+            clearInterval(intervalRef.current)
+            setPlaying(false)
+            return 100
           }
-          return p + 0.5;
-        });
-      }, 150);
+          return p + 0.5
+        })
+      }, 150)
     }
-  };
+  }
 
-  useEffect(() => () => clearInterval(intervalRef.current), []);
+  useEffect(() => () => clearInterval(intervalRef.current), [])
 
   return (
     <div className="training-audio">
@@ -60,15 +60,20 @@ function AudioPlayer() {
           )}
         </button>
         <div className="training-audio__bar">
-          <div className="training-audio__bar-fill" style={{ width: `${progress}%` }} />
+          <div
+            className="training-audio__bar-fill"
+            style={{ width: `${progress}%` }}
+          />
         </div>
         <span className="training-audio__time">
           {playing ? 'Playing...' : progress > 0 ? 'Paused' : 'Not started'}
         </span>
       </div>
-      <p className="training-audio__note">Audio narration will be available in a future release.</p>
+      <p className="training-audio__note">
+        Audio narration will be available in a future release.
+      </p>
     </div>
-  );
+  )
 }
 
 // Renders the rich content sections defined in trialTestimonyData.js
@@ -80,7 +85,9 @@ function LessonSection({ section }) {
       )}
 
       {section.body.map((para, i) => (
-        <p key={i} className="training-lesson__para">{para}</p>
+        <p key={i} className="training-lesson__para">
+          {para}
+        </p>
       ))}
 
       {section.bullets && section.bullets.length > 0 && (
@@ -135,7 +142,10 @@ function LessonSection({ section }) {
             </thead>
             <tbody>
               {section.comparisonTable.map((row, i) => (
-                <tr key={i} style={{ background: i % 2 === 0 ? '#f9fafb' : '#ffffff' }}>
+                <tr
+                  key={i}
+                  style={{ background: i % 2 === 0 ? '#f9fafb' : '#ffffff' }}
+                >
                   {Object.values(row).map((val, j) => (
                     <td
                       key={j}
@@ -157,115 +167,129 @@ function LessonSection({ section }) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export default function TrialTestimonyLessonPage({ onProgressUpdate }) {
-  const { lessonId } = useParams();
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  const { lessonId } = useParams()
+  const navigate = useNavigate()
+  const { user } = useAuth()
 
-  const lesson = LESSONS[lessonId];
-  const lessonIndex = lesson ? getLessonIndex(lessonId) : 0;
-  const nextLessonId = lesson ? getNextLesson(lessonId) : null;
+  const lesson = LESSONS[lessonId]
+  const lessonIndex = lesson ? getLessonIndex(lessonId) : 0
+  const nextLessonId = lesson ? getNextLesson(lessonId) : null
 
-  const [alreadyCompleted, setAlreadyCompleted] = useState(false);
-  const [canComplete, setCanComplete] = useState(false);
-  const [completing, setCompleting] = useState(false);
-  const [error, setError] = useState('');
-  const timerRef = useRef(null);
-  const arrivedAt = useRef(Date.now());
+  const [alreadyCompleted, setAlreadyCompleted] = useState(false)
+  const [canComplete, setCanComplete] = useState(false)
+  const [completing, setCompleting] = useState(false)
+  const [error, setError] = useState('')
+  const timerRef = useRef(null)
+  const arrivedAt = useRef(Date.now())
 
   // Load existing completion status
   useEffect(() => {
-    if (!user || !lessonId) return;
+    if (!user || !lessonId) return
+    setAlreadyCompleted(false)
     const check = async () => {
       const { data } = await supabase
         .from('trial_testimony_progress')
         .select('completed')
         .eq('user_id', user.id)
         .eq('lesson_id', lessonId)
-        .maybeSingle();
-      if (data?.completed) setAlreadyCompleted(true);
-    };
-    check();
-  }, [user, lessonId]);
+        .maybeSingle()
+      if (data?.completed) setAlreadyCompleted(true)
+    }
+    check()
+  }, [user, lessonId])
 
   // 60-second timer before "Mark Complete" button appears
   useEffect(() => {
-    arrivedAt.current = Date.now();
-    setCanComplete(false);
+    arrivedAt.current = Date.now()
+    setCanComplete(false)
 
     timerRef.current = setTimeout(() => {
-      setCanComplete(true);
-    }, COMPLETE_DELAY_MS);
+      setCanComplete(true)
+    }, COMPLETE_DELAY_MS)
 
-    return () => clearTimeout(timerRef.current);
-  }, [lessonId]);
+    return () => clearTimeout(timerRef.current)
+  }, [lessonId])
 
   const handleMarkComplete = async () => {
-    if (!user) return;
-    setCompleting(true);
-    setError('');
+    if (!user) return
+    setCompleting(true)
+    setError('')
     try {
-      const now = new Date().toISOString();
+      const now = new Date().toISOString()
 
       const { data: existing } = await supabase
         .from('trial_testimony_progress')
         .select('id')
         .eq('user_id', user.id)
         .eq('lesson_id', lessonId)
-        .maybeSingle();
+        .maybeSingle()
 
       if (existing) {
         await supabase
           .from('trial_testimony_progress')
           .update({ completed: true, completed_at: now })
-          .eq('id', existing.id);
+          .eq('id', existing.id)
       } else {
         await supabase.from('trial_testimony_progress').insert({
           user_id: user.id,
           lesson_id: lessonId,
           completed: true,
           completed_at: now,
-        });
+        })
       }
 
-      setAlreadyCompleted(true);
-      if (onProgressUpdate) onProgressUpdate();
+      setAlreadyCompleted(true)
+      if (onProgressUpdate) onProgressUpdate()
 
       if (nextLessonId) {
-        navigate(`/training/trial-testimony/lesson/${nextLessonId}`);
+        navigate(`/training/trial-testimony/lesson/${nextLessonId}`)
       } else {
         // Last lesson - go to scenario
-        navigate('/training/trial-testimony/scenario');
+        navigate('/training/trial-testimony/scenario')
       }
     } catch (e) {
-      console.error('Mark complete error', e);
-      setError('Could not save progress. Please try again.');
+      console.error('Mark complete error', e)
+      setError('Could not save progress. Please try again.')
     } finally {
-      setCompleting(false);
+      setCompleting(false)
     }
-  };
+  }
 
   if (!lesson) {
     return (
       <div>
-        <div className="portal-alert portal-alert--error">Lesson not found.</div>
-        <Link to="/training/trial-testimony" className="btn btn--secondary" style={{ marginTop: 16 }}>
+        <div className="portal-alert portal-alert--error">
+          Lesson not found.
+        </div>
+        <Link
+          to="/training/trial-testimony"
+          className="btn btn--secondary"
+          style={{ marginTop: 16 }}
+        >
           Back to Training
         </Link>
       </div>
-    );
+    )
   }
 
-  const progressPct = Math.round((lessonIndex / TOTAL_LESSONS) * 100);
+  const progressPct = Math.round((lessonIndex / TOTAL_LESSONS) * 100)
 
   return (
     <div className="training-lesson">
       {/* Top progress bar */}
       <div className="training-lesson__course-progress">
-        <div className="training-lesson__course-progress-bar" role="progressbar" aria-valuenow={progressPct} aria-valuemin={0} aria-valuemax={100} aria-label="Course progress">
+        <div
+          className="training-lesson__course-progress-bar"
+          role="progressbar"
+          aria-valuenow={progressPct}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="Course progress"
+        >
           <div
             className="training-lesson__course-progress-fill"
             style={{ width: `${progressPct}%` }}
@@ -280,7 +304,9 @@ export default function TrialTestimonyLessonPage({ onProgressUpdate }) {
       <div className="training-lesson__header">
         <div className="training-lesson__unit-badge">{MODULE_TITLE}</div>
         <h1 className="training-lesson__title">{lesson.title}</h1>
-        <div className="training-lesson__meta">~{lesson.estimatedMinutes} min</div>
+        <div className="training-lesson__meta">
+          ~{lesson.estimatedMinutes} min
+        </div>
       </div>
 
       {/* Audio player placeholder */}
@@ -301,7 +327,9 @@ export default function TrialTestimonyLessonPage({ onProgressUpdate }) {
 
       {/* Completion action */}
       <div className="training-lesson__footer">
-        {error && <div className="portal-alert portal-alert--error">{error}</div>}
+        {error && (
+          <div className="portal-alert portal-alert--error">{error}</div>
+        )}
 
         {alreadyCompleted ? (
           <div className="training-lesson__already-done">
@@ -357,5 +385,5 @@ export default function TrialTestimonyLessonPage({ onProgressUpdate }) {
         </Link>
       </div>
     </div>
-  );
+  )
 }

@@ -17,19 +17,22 @@
 //   keyTakeaway     string
 // ============================================================
 
-export const MODULE_TITLE = 'Deposition as an Expert Witness';
-export const MODULE_SUBTITLE = '~60 minutes \u00b7 8 Lessons \u00b7 1 Scenario \u00b7 1 Knowledge Check';
+export const MODULE_TITLE = 'Deposition as an Expert Witness'
+export const MODULE_SUBTITLE =
+  '~60 minutes \u00b7 8 Lessons \u00b7 1 Scenario \u00b7 1 Knowledge Check'
 
-export const LESSON_SEQUENCE = ['1', '2', '3', '4', '5', '6', '7', '8'];
-export const TOTAL_LESSONS = 8;
+export const LESSON_SEQUENCE = ['1', '2', '3', '4', '5', '6', '7', '8']
+export const TOTAL_LESSONS = 8
 
 export function getNextLesson(lessonId) {
-  const idx = LESSON_SEQUENCE.indexOf(lessonId);
-  return idx >= 0 && idx < LESSON_SEQUENCE.length - 1 ? LESSON_SEQUENCE[idx + 1] : null;
+  const idx = LESSON_SEQUENCE.indexOf(lessonId)
+  return idx >= 0 && idx < LESSON_SEQUENCE.length - 1
+    ? LESSON_SEQUENCE[idx + 1]
+    : null
 }
 
 export function getLessonIndex(lessonId) {
-  return LESSON_SEQUENCE.indexOf(lessonId) + 1; // 1-based
+  return LESSON_SEQUENCE.indexOf(lessonId) + 1 // 1-based
 }
 
 // ============================================================
@@ -37,7 +40,7 @@ export function getLessonIndex(lessonId) {
 // ============================================================
 
 export const LESSONS = {
-  '1': {
+  1: {
     title: 'What Is a Deposition and Why It Matters',
     estimatedMinutes: 7,
     sections: [
@@ -57,7 +60,9 @@ export const LESSONS = {
       },
       {
         subheading: 'Strategic Purpose for Each Party',
-        body: ['Each side approaches an expert deposition with different objectives:'],
+        body: [
+          'Each side approaches an expert deposition with different objectives:',
+        ],
         bullets: [
           'Opposing counsel deposes you to: discover the full scope of your opinions, identify weaknesses in your methodology, lock you into specific positions that can be used at trial, test whether you can be rattled or led into overstatements, and gather ammunition for a Daubert challenge or motion in limine.',
           'Retaining counsel defends the deposition to: protect you from improper questions, preserve objections for the record, prevent you from being tricked into concessions, and assess how you will perform in front of a jury.',
@@ -65,16 +70,41 @@ export const LESSONS = {
         ],
       },
       {
-        subheading: 'How Expert Depositions Differ from Fact Witness Depositions',
+        subheading:
+          'How Expert Depositions Differ from Fact Witness Depositions',
         body: [
           'Fact witnesses testify about what they personally observed or experienced. Expert witnesses testify about their professional opinions, the methodology behind those opinions, and the materials they relied on. This difference has important practical consequences:',
         ],
         comparisonTable: [
-          { aspect: 'Subject matter', 'fact witness': 'Personal knowledge and observations', 'expert witness': 'Professional opinions, methodology, and bases' },
-          { aspect: 'Preparation materials', 'fact witness': 'Limited -- typically own documents', 'expert witness': 'Extensive -- report, materials reviewed, publications, prior testimony' },
-          { aspect: 'Scope of questioning', 'fact witness': 'What happened?', 'expert witness': 'What do you believe, why, and can it withstand scrutiny?' },
-          { aspect: 'Use of treatises', 'fact witness': 'Rare', 'expert witness': 'Common -- FRE 803(18) allows learned treatises to be used during cross-examination' },
-          { aspect: 'Impeachment risk', 'fact witness': 'Prior inconsistent statements', 'expert witness': 'Prior testimony, publications, report inconsistencies, methodology challenges' },
+          {
+            aspect: 'Subject matter',
+            'fact witness': 'Personal knowledge and observations',
+            'expert witness': 'Professional opinions, methodology, and bases',
+          },
+          {
+            aspect: 'Preparation materials',
+            'fact witness': 'Limited -- typically own documents',
+            'expert witness':
+              'Extensive -- report, materials reviewed, publications, prior testimony',
+          },
+          {
+            aspect: 'Scope of questioning',
+            'fact witness': 'What happened?',
+            'expert witness':
+              'What do you believe, why, and can it withstand scrutiny?',
+          },
+          {
+            aspect: 'Use of treatises',
+            'fact witness': 'Rare',
+            'expert witness':
+              'Common -- FRE 803(18) allows learned treatises to be used during cross-examination',
+          },
+          {
+            aspect: 'Impeachment risk',
+            'fact witness': 'Prior inconsistent statements',
+            'expert witness':
+              'Prior testimony, publications, report inconsistencies, methodology challenges',
+          },
         ],
       },
     ],
@@ -82,7 +112,7 @@ export const LESSONS = {
       'A deposition is sworn testimony that creates a permanent record. Everything you say can and will be used -- to support you or to undermine you. Treat every question as if it will be read aloud to a jury.',
   },
 
-  '2': {
+  2: {
     title: 'Preparation: Before You Walk In',
     estimatedMinutes: 8,
     sections: [
@@ -146,7 +176,7 @@ export const LESSONS = {
       'The deposition is won or lost in preparation. Know your report cold, anticipate the lines of attack, and walk in with a plan -- not just hope.',
   },
 
-  '3': {
+  3: {
     title: 'Rules and Mechanics of the Deposition Process',
     estimatedMinutes: 7,
     sections: [
@@ -187,7 +217,8 @@ export const LESSONS = {
           '"Objection, asked and answered" -- the question has already been asked. You typically still answer.',
           '"Instruction not to answer" -- retaining counsel directs you not to answer. This is permitted only in narrow circumstances: to preserve privilege, to enforce a court-ordered limitation, or to present a motion under Rule 30(d)(3) to terminate or limit the deposition. If instructed not to answer, follow the instruction.',
         ],
-        afterList: 'When counsel objects, pause. Wait for the objection to be stated. If no instruction not to answer follows, answer the question. This pause-and-wait rhythm is important -- it gives your attorney time to protect the record.',
+        afterList:
+          'When counsel objects, pause. Wait for the objection to be stated. If no instruction not to answer follows, answer the question. This pause-and-wait rhythm is important -- it gives your attorney time to protect the record.',
       },
       {
         subheading: 'Breaks, Documents, and Exhibits',
@@ -201,7 +232,7 @@ export const LESSONS = {
       'The deposition is a formal proceeding with specific rules. Understand the mechanics -- who is present, how objections work, and when to pause -- so you can focus entirely on giving accurate, measured answers.',
   },
 
-  '4': {
+  4: {
     title: 'The Art of Answering Questions',
     estimatedMinutes: 9,
     sections: [
@@ -228,10 +259,22 @@ export const LESSONS = {
           'The most common mistake experts make in depositions is volunteering information. Every additional word you speak beyond what the question requires is a gift to opposing counsel -- it opens new lines of inquiry and creates new opportunities for impeachment.',
         ],
         comparisonTable: [
-          { question: '"Did you visit the site?"', 'poor answer': '"Yes, I visited the site on March 15 and I noticed the flashing was deteriorated and I also took photos of the drainage system..."', 'better answer': '"Yes."' },
-          { question: '"What methodology did you use?"', 'poor answer': '"Well, I considered several approaches but ultimately I decided on a visual inspection supplemented by moisture testing because..."', 'better answer': '"Visual inspection supplemented by moisture testing, as described in Section VI of my report."' },
+          {
+            question: '"Did you visit the site?"',
+            'poor answer':
+              '"Yes, I visited the site on March 15 and I noticed the flashing was deteriorated and I also took photos of the drainage system..."',
+            'better answer': '"Yes."',
+          },
+          {
+            question: '"What methodology did you use?"',
+            'poor answer':
+              '"Well, I considered several approaches but ultimately I decided on a visual inspection supplemented by moisture testing because..."',
+            'better answer':
+              '"Visual inspection supplemented by moisture testing, as described in Section VI of my report."',
+          },
         ],
-        afterList: 'If the attorney wants more detail, they will ask a follow-up question. Let them do the work.',
+        afterList:
+          'If the attorney wants more detail, they will ask a follow-up question. Let them do the work.',
       },
       {
         subheading: 'The Power of Short Answers',
@@ -262,15 +305,16 @@ export const LESSONS = {
           '"If you\'re asking [specific interpretation], then [answer]. If you\'re asking [different interpretation], the answer is different."',
           '"Subject to [qualification], yes."',
         ],
-        afterList: 'Qualifying your answers is not evasion -- it is precision. An expert who qualifies appropriately demonstrates the careful thinking that courts expect.',
+        afterList:
+          'Qualifying your answers is not evasion -- it is precision. An expert who qualifies appropriately demonstrates the careful thinking that courts expect.',
       },
     ],
     keyTakeaway:
       'Listen fully, pause, then answer only what was asked. Short, precise answers protect you. "I don\'t know" is always better than a guess.',
   },
 
-  '5': {
-    title: 'Opposing Counsel\'s Questioning Techniques',
+  5: {
+    title: "Opposing Counsel's Questioning Techniques",
     estimatedMinutes: 8,
     sections: [
       {
@@ -309,14 +353,14 @@ export const LESSONS = {
         subheading: 'Rapid-Fire and Fatigue Tactics',
         body: [
           'Some attorneys use a rapid pace of questioning to prevent you from thinking carefully about each answer. The goal is to exhaust you, get you into a rhythm of quick responses, and catch you making concessions you would not make with more deliberation.',
-          'The antidote is simple: maintain your pace. You control the speed of your answers. There is no rule requiring you to match the attorney\'s pace. Take your time, pause before every answer, and request a break if you are fatigued.',
+          "The antidote is simple: maintain your pace. You control the speed of your answers. There is no rule requiring you to match the attorney's pace. Take your time, pause before every answer, and request a break if you are fatigued.",
         ],
       },
       {
         subheading: 'Silence as a Weapon',
         body: [
-          'After you finish an answer, some attorneys will remain silent, waiting. The instinct is to fill the silence by continuing to talk -- adding qualifications, explanations, or context you were not asked for. This is one of the most effective techniques in a deposing attorney\'s toolkit.',
-          'When you have answered the question, stop. Sit comfortably in the silence. The next move is the attorney\'s, not yours.',
+          "After you finish an answer, some attorneys will remain silent, waiting. The instinct is to fill the silence by continuing to talk -- adding qualifications, explanations, or context you were not asked for. This is one of the most effective techniques in a deposing attorney's toolkit.",
+          "When you have answered the question, stop. Sit comfortably in the silence. The next move is the attorney's, not yours.",
         ],
       },
     ],
@@ -324,7 +368,7 @@ export const LESSONS = {
       'Opposing counsel uses specific techniques -- leading questions, hypotheticals, pace changes, and silence -- to extract concessions. Recognizing these techniques is the first step to neutralizing them.',
   },
 
-  '6': {
+  6: {
     title: 'Common Traps and How to Avoid Them',
     estimatedMinutes: 8,
     sections: [
@@ -394,7 +438,7 @@ export const LESSONS = {
       'The most dangerous traps -- absolutes, scope creep, learned treatises, inconsistencies, and compensation bias -- are all avoidable with preparation and precise language. Recognize the setup before you fall into the sequence.',
   },
 
-  '7': {
+  7: {
     title: 'Maintaining Composure and Credibility',
     estimatedMinutes: 6,
     sections: [
@@ -412,7 +456,7 @@ export const LESSONS = {
         bullets: [
           'Anger signals defensiveness. If you get angry, the jury assumes the attorney struck a nerve.',
           'Frustration signals impatience. An impatient expert appears arrogant or unwilling to engage.',
-          'Sarcasm signals contempt. A sarcastic expert loses the jury\'s trust immediately.',
+          "Sarcasm signals contempt. A sarcastic expert loses the jury's trust immediately.",
           'The correct response to every provocation is the same: a calm, measured, factual answer.',
         ],
       },
@@ -426,7 +470,8 @@ export const LESSONS = {
           'Instead of: "You\'re misrepresenting my opinion" -- try: "To be precise, my opinion is [accurate statement]."',
           'Instead of: "I already answered that" -- try: "As I stated earlier, [brief restatement]."',
         ],
-        afterList: 'The transcript does not capture tone, but the video does. If the deposition is videotaped, the jury will see exactly how you handled the exchange.',
+        afterList:
+          'The transcript does not capture tone, but the video does. If the deposition is videotaped, the jury will see exactly how you handled the exchange.',
       },
       {
         subheading: 'Body Language on Video',
@@ -452,7 +497,7 @@ export const LESSONS = {
       'Your credibility is built through composure, candor, and consistency. Never argue, never lose your temper, and never sacrifice long-term credibility for a short-term point.',
   },
 
-  '8': {
+  8: {
     title: 'The Deposition Transcript and Post-Deposition Considerations',
     estimatedMinutes: 7,
     sections: [
@@ -485,7 +530,8 @@ export const LESSONS = {
           'Motion practice: Deposition testimony supports and opposes summary judgment motions, Daubert motions, and motions in limine. What you say at deposition directly affects whether your opinions make it to the jury.',
           'Read-ins: If specific deposition exchanges are particularly favorable, either side may read them into the record at trial.',
         ],
-        afterList: 'This is why consistency between your report, deposition testimony, and trial testimony is critical. Every inconsistency is a potential impeachment moment.',
+        afterList:
+          'This is why consistency between your report, deposition testimony, and trial testimony is critical. Every inconsistency is a potential impeachment moment.',
       },
       {
         subheading: 'Supplementing Your Report Post-Deposition',
@@ -501,9 +547,7 @@ export const LESSONS = {
       },
       {
         subheading: 'Lessons for Next Time',
-        body: [
-          'After every deposition, conduct a brief self-assessment:',
-        ],
+        body: ['After every deposition, conduct a brief self-assessment:'],
         bullets: [
           'What questions did you handle well?',
           'Where were you caught off guard?',
@@ -511,13 +555,14 @@ export const LESSONS = {
           'Were there areas of your report that proved harder to defend than expected?',
           'Did you maintain composure throughout, or were there moments of frustration?',
         ],
-        afterList: 'Each deposition makes you a better expert witness. The lessons you learn from one deposition directly improve your performance in the next one.',
+        afterList:
+          'Each deposition makes you a better expert witness. The lessons you learn from one deposition directly improve your performance in the next one.',
       },
     ],
     keyTakeaway:
       'The transcript is permanent and will follow you to trial. Always ensure review is requested before the deposition concludes under FRCP 30(e), maintain consistency across every stage of litigation, and treat each deposition as a learning experience for the next.',
   },
-};
+}
 
 // ============================================================
 // SCENARIO: "The Expert Under Fire"
@@ -568,7 +613,8 @@ export const SCENARIO_DATA = {
       title: 'Choice Point 2: The Scope Creep Question',
       prompt:
         'Later in the deposition, opposing counsel shifts topics and asks: "Doctor, based on your inspection and analysis of this building, is the building currently safe for occupancy?" Your report addressed defective flashing installation and resulting water damage, but you were not asked to -- and did not -- evaluate overall building safety or habitability.',
-      redirectIfWrongCp1: 'Even though the previous answer did not go as well as it could have, you have a fresh opportunity here. Apply what you know about scope discipline.',
+      redirectIfWrongCp1:
+        'Even though the previous answer did not go as well as it could have, you have a fresh opportunity here. Apply what you know about scope discipline.',
       choices: [
         {
           id: 'a',
@@ -604,16 +650,16 @@ export const SCENARIO_DATA = {
   summaryPrinciples: [
     'Treatise handling: Never broadly endorse an entire publication as authoritative. Require opposing counsel to identify the specific passage, review it carefully, and respond to the precise proposition rather than the whole text.',
     'Scope discipline: Know the boundaries of your engagement and defend them clearly. Opinions offered outside your disclosed scope lack analytical support and create Daubert vulnerability.',
-    'Precise answers: Every word matters in a deposition transcript. Answer what was asked, qualify when necessary, and stop when you have answered. The silence that follows is the attorney\'s problem, not yours.',
+    "Precise answers: Every word matters in a deposition transcript. Answer what was asked, qualify when necessary, and stop when you have answered. The silence that follows is the attorney's problem, not yours.",
   ],
-};
+}
 
 // ============================================================
 // QUIZ
 // ============================================================
 
-export const PASS_SCORE = 6;
-export const TOTAL_QUESTIONS = 8;
+export const PASS_SCORE = 6
+export const TOTAL_QUESTIONS = 8
 
 export const QUIZ_DATA = {
   questions: [
@@ -621,10 +667,26 @@ export const QUIZ_DATA = {
       id: 'q1',
       text: 'What is the primary strategic purpose of an expert deposition for opposing counsel?',
       options: [
-        { id: 'a', text: 'To give the expert an opportunity to present their full opinion to the court', correct: false },
-        { id: 'b', text: 'To discover the scope of the expert\'s opinions, identify weaknesses, and lock the expert into positions for trial', correct: true },
-        { id: 'c', text: 'To negotiate a settlement based on the expert\'s testimony', correct: false },
-        { id: 'd', text: 'To allow the expert and opposing counsel to collaborate on joint findings', correct: false },
+        {
+          id: 'a',
+          text: 'To give the expert an opportunity to present their full opinion to the court',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: "To discover the scope of the expert's opinions, identify weaknesses, and lock the expert into positions for trial",
+          correct: true,
+        },
+        {
+          id: 'c',
+          text: "To negotiate a settlement based on the expert's testimony",
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'To allow the expert and opposing counsel to collaborate on joint findings',
+          correct: false,
+        },
       ],
       explanation:
         'The primary purpose of deposing an opposing expert is to discover the full scope of their opinions, probe for weaknesses in methodology, lock them into specific positions that can be used for impeachment at trial, and gather ammunition for Daubert challenges.',
@@ -633,10 +695,26 @@ export const QUIZ_DATA = {
       id: 'q2',
       text: 'Which of the following is the BEST preparation practice before an expert deposition?',
       options: [
-        { id: 'a', text: 'Memorize your report word for word so you can recite it if asked', correct: false },
-        { id: 'b', text: 'Read your report as if you were opposing counsel looking for weaknesses, and discuss likely lines of attack with retaining counsel', correct: true },
-        { id: 'c', text: 'Avoid reviewing your report so your answers sound spontaneous rather than rehearsed', correct: false },
-        { id: 'd', text: 'Prepare written answers to anticipated questions and bring them to the deposition', correct: false },
+        {
+          id: 'a',
+          text: 'Memorize your report word for word so you can recite it if asked',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Read your report as if you were opposing counsel looking for weaknesses, and discuss likely lines of attack with retaining counsel',
+          correct: true,
+        },
+        {
+          id: 'c',
+          text: 'Avoid reviewing your report so your answers sound spontaneous rather than rehearsed',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'Prepare written answers to anticipated questions and bring them to the deposition',
+          correct: false,
+        },
       ],
       explanation:
         'The most effective preparation is to re-master your report by reading it from the perspective of opposing counsel, identifying weaknesses, and conducting a preparation session with retaining counsel to practice handling likely lines of attack.',
@@ -645,10 +723,26 @@ export const QUIZ_DATA = {
       id: 'q3',
       text: 'What is the recommended technique for answering deposition questions?',
       options: [
-        { id: 'a', text: 'Answer as quickly as possible to project confidence', correct: false },
-        { id: 'b', text: 'Provide thorough explanations with each answer to ensure the record is complete', correct: false },
-        { id: 'c', text: 'Listen to the full question, pause briefly, then answer only what was asked', correct: true },
-        { id: 'd', text: 'Defer to retaining counsel before answering each question', correct: false },
+        {
+          id: 'a',
+          text: 'Answer as quickly as possible to project confidence',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Provide thorough explanations with each answer to ensure the record is complete',
+          correct: false,
+        },
+        {
+          id: 'c',
+          text: 'Listen to the full question, pause briefly, then answer only what was asked',
+          correct: true,
+        },
+        {
+          id: 'd',
+          text: 'Defer to retaining counsel before answering each question',
+          correct: false,
+        },
       ],
       explanation:
         'The listen-pause-answer technique ensures you understand the question, gives retaining counsel time to object if needed, and prevents you from volunteering information beyond what was asked.',
@@ -657,10 +751,26 @@ export const QUIZ_DATA = {
       id: 'q4',
       text: 'When is it appropriate to say "I don\'t recall" versus "I don\'t know" in a deposition?',
       options: [
-        { id: 'a', text: 'They are interchangeable and mean the same thing', correct: false },
-        { id: 'b', text: '"I don\'t recall" means you once knew but cannot currently remember; "I don\'t know" means the information is outside your knowledge', correct: true },
-        { id: 'c', text: '"I don\'t recall" should never be used because it implies poor preparation', correct: false },
-        { id: 'd', text: '"I don\'t know" should be avoided because it implies incompetence', correct: false },
+        {
+          id: 'a',
+          text: 'They are interchangeable and mean the same thing',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: '"I don\'t recall" means you once knew but cannot currently remember; "I don\'t know" means the information is outside your knowledge',
+          correct: true,
+        },
+        {
+          id: 'c',
+          text: '"I don\'t recall" should never be used because it implies poor preparation',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: '"I don\'t know" should be avoided because it implies incompetence',
+          correct: false,
+        },
       ],
       explanation:
         '"I don\'t recall" and "I don\'t know" are distinct responses. "I don\'t recall" means you once had the information but cannot retrieve it now (and may be subject to refresh attempts). "I don\'t know" means the information was never within your knowledge. Both are legitimate, honest answers.',
@@ -669,10 +779,26 @@ export const QUIZ_DATA = {
       id: 'q5',
       text: 'Opposing counsel poses a hypothetical that changes several key facts of the case and asks: "Would that change your opinion?" What is the best approach?',
       options: [
-        { id: 'a', text: 'Refuse to answer hypothetical questions as they are speculative and outside the scope of your report', correct: false },
-        { id: 'b', text: 'Answer within the hypothetical framework, but if the hypothetical omits critical facts or is unrealistic, note those deficiencies before answering', correct: true },
-        { id: 'c', text: 'Always agree that different facts would change your opinion, to appear reasonable and open-minded', correct: false },
-        { id: 'd', text: 'Ask retaining counsel to object to all hypothetical questions', correct: false },
+        {
+          id: 'a',
+          text: 'Refuse to answer hypothetical questions as they are speculative and outside the scope of your report',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Answer within the hypothetical framework, but if the hypothetical omits critical facts or is unrealistic, note those deficiencies before answering',
+          correct: true,
+        },
+        {
+          id: 'c',
+          text: 'Always agree that different facts would change your opinion, to appear reasonable and open-minded',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'Ask retaining counsel to object to all hypothetical questions',
+          correct: false,
+        },
       ],
       explanation:
         'Hypothetical questions are a legitimate and common deposition technique. You can engage with the hypothetical, but you should ensure you understand the full hypothetical before answering, and note if it omits critical facts or is unrealistic. Refusing to engage makes you appear evasive, while blindly agreeing to every hypothetical hands opposing counsel ammunition for trial.',
@@ -681,22 +807,54 @@ export const QUIZ_DATA = {
       id: 'q6',
       text: 'After you finish answering a deposition question, opposing counsel remains silent for an extended pause. What is the best response?',
       options: [
-        { id: 'a', text: 'Fill the silence by elaborating on your answer to ensure the record is complete', correct: false },
-        { id: 'b', text: 'Ask opposing counsel if they have another question', correct: false },
-        { id: 'c', text: 'Sit comfortably and wait - the silence is opposing counsel\'s responsibility, not yours', correct: true },
-        { id: 'd', text: 'Use the pause to voluntarily clarify any potential ambiguity in your prior answers', correct: false },
+        {
+          id: 'a',
+          text: 'Fill the silence by elaborating on your answer to ensure the record is complete',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Ask opposing counsel if they have another question',
+          correct: false,
+        },
+        {
+          id: 'c',
+          text: "Sit comfortably and wait - the silence is opposing counsel's responsibility, not yours",
+          correct: true,
+        },
+        {
+          id: 'd',
+          text: 'Use the pause to voluntarily clarify any potential ambiguity in your prior answers',
+          correct: false,
+        },
       ],
       explanation:
-        'Silence after your answer is one of the most effective techniques in a deposing attorney\'s toolkit. The instinct is to fill the silence by continuing to talk - adding qualifications, explanations, or context you were not asked for. When you have answered the question, stop. The next move is the attorney\'s, not yours. Every additional word you volunteer beyond what the question requires is a gift to opposing counsel.',
+        "Silence after your answer is one of the most effective techniques in a deposing attorney's toolkit. The instinct is to fill the silence by continuing to talk - adding qualifications, explanations, or context you were not asked for. When you have answered the question, stop. The next move is the attorney's, not yours. Every additional word you volunteer beyond what the question requires is a gift to opposing counsel.",
     },
     {
       id: 'q7',
       text: 'What does FRCP 30(e) allow an expert to do after a deposition?',
       options: [
-        { id: 'a', text: 'Withdraw testimony they regret giving', correct: false },
-        { id: 'b', text: 'If review was requested before the deposition concluded, review the transcript and submit an errata sheet noting changes in form or substance within 30 days', correct: true },
-        { id: 'c', text: 'File a motion to seal the deposition transcript from public access', correct: false },
-        { id: 'd', text: 'Refuse to sign the transcript if they disagree with how questions were asked', correct: false },
+        {
+          id: 'a',
+          text: 'Withdraw testimony they regret giving',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'If review was requested before the deposition concluded, review the transcript and submit an errata sheet noting changes in form or substance within 30 days',
+          correct: true,
+        },
+        {
+          id: 'c',
+          text: 'File a motion to seal the deposition transcript from public access',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'Refuse to sign the transcript if they disagree with how questions were asked',
+          correct: false,
+        },
       ],
       explanation:
         'FRCP 30(e) allows the deponent to review the transcript and submit changes in "form or substance" within 30 days, provided that review was requested by the deponent or a party before the deposition was completed. Typographical corrections are routine, but substantive changes will be heavily scrutinized by opposing counsel.',
@@ -705,13 +863,29 @@ export const QUIZ_DATA = {
       id: 'q8',
       text: 'Why is maintaining composure during a deposition critical for an expert witness?',
       options: [
-        { id: 'a', text: 'Because showing emotion is a violation of deposition rules', correct: false },
-        { id: 'b', text: 'Because the court reporter cannot accurately record testimony from an agitated witness', correct: false },
-        { id: 'c', text: 'Because credibility is built through composure, candor, and consistency, and emotional reactions signal defensiveness to the jury', correct: true },
-        { id: 'd', text: 'Because retaining counsel will terminate the deposition if the expert becomes visibly upset', correct: false },
+        {
+          id: 'a',
+          text: 'Because showing emotion is a violation of deposition rules',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Because the court reporter cannot accurately record testimony from an agitated witness',
+          correct: false,
+        },
+        {
+          id: 'c',
+          text: 'Because credibility is built through composure, candor, and consistency, and emotional reactions signal defensiveness to the jury',
+          correct: true,
+        },
+        {
+          id: 'd',
+          text: 'Because retaining counsel will terminate the deposition if the expert becomes visibly upset',
+          correct: false,
+        },
       ],
       explanation:
-        'An expert\'s credibility is their most valuable asset. Emotional reactions -- anger, frustration, sarcasm -- signal defensiveness and undermine the perception of objectivity. A calm, measured response to every provocation reinforces credibility, especially when the deposition is videotaped.',
+        "An expert's credibility is their most valuable asset. Emotional reactions -- anger, frustration, sarcasm -- signal defensiveness and undermine the perception of objectivity. A calm, measured response to every provocation reinforces credibility, especially when the deposition is videotaped.",
     },
   ],
-};
+}

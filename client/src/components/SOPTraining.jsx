@@ -1,74 +1,83 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { MODULES, ROLES } from '../data/trainingModules';
-import { useTrainingProgress } from '../hooks/useTrainingProgress';
-import { useAuth } from '../hooks/useAuth';
-import { supabase } from '../lib/supabase';
-import './SOPTraining.css';
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import { MODULES, ROLES } from '../data/trainingModules'
+import { useTrainingProgress } from '../hooks/useTrainingProgress'
+import { useAuth } from '../hooks/useAuth'
+import { supabase } from '../lib/supabase'
+import './SOPTraining.css'
 
-const VIEWS = { DASHBOARD: 'dashboard', DETAIL: 'detail', REFERENCE: 'reference', OVERVIEW: 'overview' };
-const PHASES = { CONTENT: 'content', QUIZ: 'quiz' };
-const PASS_THRESHOLD = 80;
+const VIEWS = {
+  DASHBOARD: 'dashboard',
+  DETAIL: 'detail',
+  REFERENCE: 'reference',
+  OVERVIEW: 'overview',
+}
+const PHASES = { CONTENT: 'content', QUIZ: 'quiz' }
+const PASS_THRESHOLD = 80
 
 export default function SOPTraining() {
-  const { progress, loading, saveQuizResult } = useTrainingProgress();
-  const { profile } = useAuth();
-  const isAdmin = profile?.role === 'admin';
+  const { progress, loading, saveQuizResult } = useTrainingProgress()
+  const { profile } = useAuth()
+  const isAdmin = profile?.role === 'admin'
 
-  const [view, setView] = useState(VIEWS.DASHBOARD);
-  const [activeModuleId, setActiveModuleId] = useState(null);
-  const [roleFilter, setRoleFilter] = useState('All');
-  const [phase, setPhase] = useState(PHASES.CONTENT);
+  const [view, setView] = useState(VIEWS.DASHBOARD)
+  const [activeModuleId, setActiveModuleId] = useState(null)
+  const [roleFilter, setRoleFilter] = useState('All')
+  const [phase, setPhase] = useState(PHASES.CONTENT)
 
   // Quiz state
-  const [qIndex, setQIndex] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [checked, setChecked] = useState(false);
-  const [quizAnswers, setQuizAnswers] = useState([]);
-  const [quizDone, setQuizDone] = useState(false);
-  const [quizScore, setQuizScore] = useState(0);
+  const [qIndex, setQIndex] = useState(0)
+  const [selected, setSelected] = useState(null)
+  const [checked, setChecked] = useState(false)
+  const [quizAnswers, setQuizAnswers] = useState([])
+  const [quizDone, setQuizDone] = useState(false)
+  const [quizScore, setQuizScore] = useState(0)
 
   // Reference search
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState('')
 
   // Admin overview state
-  const [staffData, setStaffData] = useState([]);
-  const [overviewLoading, setOverviewLoading] = useState(false);
-  const [sendingReminder, setSendingReminder] = useState(null);
-  const [reminderStatus, setReminderStatus] = useState({});
+  const [staffData, setStaffData] = useState([])
+  const [overviewLoading, setOverviewLoading] = useState(false)
+  const [sendingReminder, setSendingReminder] = useState(null)
+  const [reminderStatus, setReminderStatus] = useState({})
 
   const fetchStaffOverview = useCallback(async () => {
-    setOverviewLoading(true);
+    setOverviewLoading(true)
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       const res = await fetch('/api/training/sop', {
         headers: { Authorization: `Bearer ${session?.access_token}` },
-      });
+      })
       if (res.ok) {
-        const json = await res.json();
-        setStaffData(json.staff || []);
+        const json = await res.json()
+        setStaffData(json.staff || [])
       }
     } catch (err) {
-      console.error('Failed to fetch staff overview:', err);
+      console.error('Failed to fetch staff overview:', err)
     } finally {
-      setOverviewLoading(false);
+      setOverviewLoading(false)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     if (isAdmin && view === VIEWS.OVERVIEW) {
-      fetchStaffOverview();
+      fetchStaffOverview()
     }
-  }, [isAdmin, view, fetchStaffOverview]);
+  }, [isAdmin, view, fetchStaffOverview])
 
   const sendReminder = useCallback(async (staff) => {
-    const incompleteModules = MODULES
-      .filter((m) => !staff.modules.find((sm) => sm.moduleId === m.id && sm.completed))
-      .map((m) => m.title);
-    if (!incompleteModules.length) return;
+    const incompleteModules = MODULES.filter(
+      (m) => !staff.modules.find((sm) => sm.moduleId === m.id && sm.completed)
+    ).map((m) => m.title)
+    if (!incompleteModules.length) return
 
-    setSendingReminder(staff.name);
+    setSendingReminder(staff.name)
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
       const res = await fetch('/api/training/sop', {
         method: 'POST',
         headers: {
@@ -80,22 +89,22 @@ export default function SOPTraining() {
           staffName: staff.name,
           incompleteModules,
         }),
-      });
+      })
       setReminderStatus((prev) => ({
         ...prev,
         [staff.name]: res.ok ? 'sent' : 'failed',
-      }));
+      }))
     } catch {
-      setReminderStatus((prev) => ({ ...prev, [staff.name]: 'failed' }));
+      setReminderStatus((prev) => ({ ...prev, [staff.name]: 'failed' }))
     } finally {
-      setSendingReminder(null);
+      setSendingReminder(null)
     }
-  }, []);
+  }, [])
 
   const activeModule = useMemo(
     () => MODULES.find((m) => m.id === activeModuleId),
     [activeModuleId]
-  );
+  )
 
   const filteredModules = useMemo(
     () =>
@@ -103,98 +112,98 @@ export default function SOPTraining() {
         ? MODULES
         : MODULES.filter((m) => m.roles.includes(roleFilter)),
     [roleFilter]
-  );
+  )
 
   const completedCount = useMemo(
     () => MODULES.filter((m) => progress[m.id]?.completed).length,
     [progress]
-  );
+  )
 
   const avgScore = useMemo(() => {
     const scores = MODULES.map((m) => progress[m.id]?.quizScore).filter(
       (s) => s !== undefined && s > 0
-    );
-    if (!scores.length) return 0;
-    return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
-  }, [progress]);
+    )
+    if (!scores.length) return 0
+    return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
+  }, [progress])
 
   const resetQuiz = useCallback(() => {
-    setQIndex(0);
-    setSelected(null);
-    setChecked(false);
-    setQuizAnswers([]);
-    setQuizDone(false);
-    setQuizScore(0);
-  }, []);
+    setQIndex(0)
+    setSelected(null)
+    setChecked(false)
+    setQuizAnswers([])
+    setQuizDone(false)
+    setQuizScore(0)
+  }, [])
 
-  const openModule = useCallback((id) => {
-    setActiveModuleId(id);
-    setView(VIEWS.DETAIL);
-    setPhase(PHASES.CONTENT);
-    resetQuiz();
-  }, [resetQuiz]);
+  const openModule = useCallback(
+    (id) => {
+      setActiveModuleId(id)
+      setView(VIEWS.DETAIL)
+      setPhase(PHASES.CONTENT)
+      resetQuiz()
+    },
+    [resetQuiz]
+  )
 
   const goBack = useCallback(() => {
-    setView(VIEWS.DASHBOARD);
-    setActiveModuleId(null);
-    resetQuiz();
-  }, [resetQuiz]);
+    setView(VIEWS.DASHBOARD)
+    setActiveModuleId(null)
+    resetQuiz()
+  }, [resetQuiz])
 
   function startQuiz() {
-    resetQuiz();
-    setPhase(PHASES.QUIZ);
+    resetQuiz()
+    setPhase(PHASES.QUIZ)
   }
 
   function checkAnswer() {
-    if (selected === null || !activeModule) return;
-    setChecked(true);
-    const q = activeModule.quiz[qIndex];
-    const isCorrect = selected === q.correct;
+    if (selected === null || !activeModule) return
+    setChecked(true)
+    const q = activeModule.quiz[qIndex]
+    const isCorrect = selected === q.correct
     setQuizAnswers((prev) => [
       ...prev,
       { questionIndex: qIndex, selected, correct: q.correct, isCorrect },
-    ]);
+    ])
   }
 
   function nextQuestion() {
-    if (!activeModule) return;
+    if (!activeModule) return
     if (qIndex + 1 < activeModule.quiz.length) {
-      setQIndex((i) => i + 1);
-      setSelected(null);
-      setChecked(false);
+      setQIndex((i) => i + 1)
+      setSelected(null)
+      setChecked(false)
     } else {
-      finishQuiz();
+      finishQuiz()
     }
   }
 
   function finishQuiz() {
-    const answers = [
-      ...quizAnswers,
-    ];
-    const correctCount = answers.filter((a) => a.isCorrect).length;
-    const total = activeModule.quiz.length;
-    const pct = Math.round((correctCount / total) * 100);
-    setQuizScore(pct);
-    setQuizDone(true);
-    saveQuizResult(activeModule.id, pct, answers);
+    const answers = [...quizAnswers]
+    const correctCount = answers.filter((a) => a.isCorrect).length
+    const total = activeModule.quiz.length
+    const pct = Math.round((correctCount / total) * 100)
+    setQuizScore(pct)
+    setQuizDone(true)
+    saveQuizResult(activeModule.id, pct, answers)
   }
 
   // Reference data
   const refSections = useMemo(() => {
-    const all = [];
+    const all = []
     MODULES.forEach((m) => {
       m.sections.forEach((s) => {
-        all.push({ moduleTitle: m.title, moduleIcon: m.icon, ...s });
-      });
-    });
-    if (!search.trim()) return all;
-    const q = search.toLowerCase();
+        all.push({ moduleTitle: m.title, moduleIcon: m.icon, ...s })
+      })
+    })
+    if (!search.trim()) return all
+    const q = search.toLowerCase()
     return all.filter(
       (s) =>
-        s.title.toLowerCase().includes(q) ||
-        s.content.toLowerCase().includes(q)
-    );
-  }, [search]);
+        s.title.toLowerCase().includes(q) || s.content.toLowerCase().includes(q)
+    )
+  }, [search])
 
   if (loading) {
     return (
@@ -204,7 +213,7 @@ export default function SOPTraining() {
           <span>Loading training data…</span>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -213,20 +222,32 @@ export default function SOPTraining() {
       <nav className="sop-nav">
         <button
           className={`sop-nav__btn ${view === VIEWS.DASHBOARD ? 'sop-nav__btn--active' : ''}`}
-          onClick={() => { setView(VIEWS.DASHBOARD); setActiveModuleId(null); resetQuiz(); }}
+          onClick={() => {
+            setView(VIEWS.DASHBOARD)
+            setActiveModuleId(null)
+            resetQuiz()
+          }}
         >
           Dashboard
         </button>
         <button
           className={`sop-nav__btn ${view === VIEWS.REFERENCE ? 'sop-nav__btn--active' : ''}`}
-          onClick={() => { setView(VIEWS.REFERENCE); setActiveModuleId(null); resetQuiz(); }}
+          onClick={() => {
+            setView(VIEWS.REFERENCE)
+            setActiveModuleId(null)
+            resetQuiz()
+          }}
         >
           SOP Reference
         </button>
         {isAdmin && (
           <button
             className={`sop-nav__btn ${view === VIEWS.OVERVIEW ? 'sop-nav__btn--active' : ''}`}
-            onClick={() => { setView(VIEWS.OVERVIEW); setActiveModuleId(null); resetQuiz(); }}
+            onClick={() => {
+              setView(VIEWS.OVERVIEW)
+              setActiveModuleId(null)
+              resetQuiz()
+            }}
           >
             Staff Overview
           </button>
@@ -252,7 +273,9 @@ export default function SOPTraining() {
               <div className="sop-stat__bar">
                 <div
                   className="sop-stat__bar-fill"
-                  style={{ width: `${(completedCount / MODULES.length) * 100}%` }}
+                  style={{
+                    width: `${(completedCount / MODULES.length) * 100}%`,
+                  }}
                 />
               </div>
             </div>
@@ -262,7 +285,9 @@ export default function SOPTraining() {
             </div>
             <div
               className={`sop-stat ${
-                completedCount === MODULES.length ? 'sop-stat--success' : 'sop-stat--progress'
+                completedCount === MODULES.length
+                  ? 'sop-stat--success'
+                  : 'sop-stat--progress'
               }`}
             >
               <div className="sop-stat__value">
@@ -296,7 +321,7 @@ export default function SOPTraining() {
 
           <div className="sop-grid">
             {filteredModules.map((m) => {
-              const p = progress[m.id];
+              const p = progress[m.id]
               return (
                 <div
                   key={m.id}
@@ -304,14 +329,21 @@ export default function SOPTraining() {
                   onClick={() => openModule(m.id)}
                   role="button"
                   tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModule(m.id); } }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      openModule(m.id)
+                    }
+                  }}
                 >
                   <div className="sop-card__icon">{m.icon}</div>
                   <h3 className="sop-card__title">{m.title}</h3>
                   <p className="sop-card__desc">{m.description}</p>
                   <div className="sop-card__roles">
                     {m.roles.map((r) => (
-                      <span key={r} className="sop-card__pill">{r}</span>
+                      <span key={r} className="sop-card__pill">
+                        {r}
+                      </span>
                     ))}
                   </div>
                   <div className="sop-card__footer">
@@ -331,7 +363,7 @@ export default function SOPTraining() {
                     )}
                   </div>
                 </div>
-              );
+              )
             })}
           </div>
         </>
@@ -351,7 +383,9 @@ export default function SOPTraining() {
               <p className="sop-detail__desc">{activeModule.description}</p>
               <div className="sop-detail__roles">
                 {activeModule.roles.map((r) => (
-                  <span key={r} className="sop-card__pill">{r}</span>
+                  <span key={r} className="sop-card__pill">
+                    {r}
+                  </span>
                 ))}
               </div>
             </div>
@@ -360,7 +394,10 @@ export default function SOPTraining() {
           <div className="sop-toggle">
             <button
               className={`sop-toggle__btn ${phase === PHASES.CONTENT ? 'sop-toggle__btn--active' : ''}`}
-              onClick={() => { setPhase(PHASES.CONTENT); resetQuiz(); }}
+              onClick={() => {
+                setPhase(PHASES.CONTENT)
+                resetQuiz()
+              }}
             >
               Training Content
             </button>
@@ -402,12 +439,13 @@ export default function SOPTraining() {
               </h3>
               <div className="sop-quiz__options">
                 {activeModule.quiz[qIndex].options.map((opt, i) => {
-                  let cls = 'sop-quiz__option';
+                  let cls = 'sop-quiz__option'
                   if (checked) {
-                    if (i === activeModule.quiz[qIndex].correct) cls += ' sop-quiz__option--correct';
-                    else if (i === selected) cls += ' sop-quiz__option--wrong';
+                    if (i === activeModule.quiz[qIndex].correct)
+                      cls += ' sop-quiz__option--correct'
+                    else if (i === selected) cls += ' sop-quiz__option--wrong'
                   } else if (i === selected) {
-                    cls += ' sop-quiz__option--selected';
+                    cls += ' sop-quiz__option--selected'
                   }
                   return (
                     <button
@@ -418,7 +456,7 @@ export default function SOPTraining() {
                     >
                       {opt}
                     </button>
-                  );
+                  )
                 })}
               </div>
               {checked && (
@@ -470,7 +508,10 @@ export default function SOPTraining() {
               <div className="sop-results__actions">
                 <button
                   className="sop-quiz__btn sop-quiz__btn--secondary"
-                  onClick={() => { setPhase(PHASES.CONTENT); resetQuiz(); }}
+                  onClick={() => {
+                    setPhase(PHASES.CONTENT)
+                    resetQuiz()
+                  }}
                 >
                   Review Content
                 </button>
@@ -514,7 +555,8 @@ export default function SOPTraining() {
           </div>
 
           <div className="sop-ref__count">
-            {refSections.length} section{refSections.length !== 1 ? 's' : ''} found
+            {refSections.length} section{refSections.length !== 1 ? 's' : ''}{' '}
+            found
           </div>
 
           <div className="sop-ref__list">
@@ -547,7 +589,9 @@ export default function SOPTraining() {
               <span>Loading staff data…</span>
             </div>
           ) : staffData.length === 0 ? (
-            <div className="sop-overview__empty">No staff training data found.</div>
+            <div className="sop-overview__empty">
+              No staff training data found.
+            </div>
           ) : (
             <div className="sop-overview__table-wrap">
               <table className="sop-overview__table">
@@ -562,43 +606,55 @@ export default function SOPTraining() {
                 </thead>
                 <tbody>
                   {staffData.map((staff) => {
-                    const completedMods = staff.modules.filter((m) => m.completed).length;
+                    const completedMods = staff.modules.filter(
+                      (m) => m.completed
+                    ).length
                     const scores = staff.modules
                       .map((m) => m.quizScore)
-                      .filter((s) => s !== null && s > 0);
+                      .filter((s) => s !== null && s > 0)
                     const avg = scores.length
-                      ? Math.round(scores.reduce((a, b) => a + b, 0) / scores.length)
-                      : 0;
-                    const allDone = completedMods === MODULES.length;
-                    const status = reminderStatus[staff.name];
+                      ? Math.round(
+                          scores.reduce((a, b) => a + b, 0) / scores.length
+                        )
+                      : 0
+                    const allDone = completedMods === MODULES.length
+                    const status = reminderStatus[staff.name]
 
                     return (
                       <tr key={staff.name}>
                         <td className="sop-overview__name">{staff.name}</td>
                         <td>{staff.role || '\u2014'}</td>
                         <td>
-                          <span className={`sop-overview__progress ${allDone ? 'sop-overview__progress--done' : ''}`}>
+                          <span
+                            className={`sop-overview__progress ${allDone ? 'sop-overview__progress--done' : ''}`}
+                          >
                             {completedMods}/{MODULES.length}
                           </span>
                         </td>
                         <td>{avg > 0 ? `${avg}%` : '\u2014'}</td>
                         <td>
                           {allDone ? (
-                            <span className="sop-overview__complete-tag">All complete</span>
+                            <span className="sop-overview__complete-tag">
+                              All complete
+                            </span>
                           ) : status === 'sent' ? (
-                            <span className="sop-overview__sent-tag">Reminder sent</span>
+                            <span className="sop-overview__sent-tag">
+                              Reminder sent
+                            </span>
                           ) : (
                             <button
                               className="sop-overview__remind-btn"
                               disabled={sendingReminder === staff.name}
                               onClick={() => sendReminder(staff)}
                             >
-                              {sendingReminder === staff.name ? 'Sending…' : 'Send Reminder'}
+                              {sendingReminder === staff.name
+                                ? 'Sending…'
+                                : 'Send Reminder'}
                             </button>
                           )}
                         </td>
                       </tr>
-                    );
+                    )
                   })}
                 </tbody>
               </table>
@@ -607,5 +663,5 @@ export default function SOPTraining() {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,0 +1,1 @@
+npx prettier --check "client/src/**/*.{js,jsx,css}" "api/**/*.js"

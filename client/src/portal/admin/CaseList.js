@@ -1,94 +1,131 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
-import { supabase } from '../../lib/supabase';
-import { useAuth } from '../../hooks/useAuth';
-import { formatName } from '../../utils/formatName';
-import { useToast } from '../../contexts/ToastContext';
+import React, { useState, useEffect, useMemo } from 'react'
+import { Link } from 'react-router-dom'
+import { supabase } from '../../lib/supabase'
+import { useAuth } from '../../hooks/useAuth'
+import { formatName } from '../../utils/formatName'
+import { useToast } from '../../contexts/ToastContext'
 
 function highlight(text, term) {
-  if (!text || !term) return text;
-  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const regex = new RegExp(`(${escaped})`, 'gi');
-  const parts = text.split(regex);
+  if (!text || !term) return text
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const regex = new RegExp(`(${escaped})`, 'gi')
+  const parts = text.split(regex)
   return parts.map((part, i) =>
-    i % 2 === 1
-      ? <mark key={i} style={{ background: '#fef08a', borderRadius: 2, padding: '0 1px' }}>{part}</mark>
-      : part
-  );
+    i % 2 === 1 ? (
+      <mark
+        key={i}
+        style={{ background: '#fef08a', borderRadius: 2, padding: '0 1px' }}
+      >
+        {part}
+      </mark>
+    ) : (
+      part
+    )
+  )
 }
 
 export default function CaseList() {
-  const { profile } = useAuth();
-  const toast = useToast();
-  const isStaff = profile?.role === 'staff';
-  const isAdmin = profile?.role === 'admin';
-  const [cases, setCases] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState('open');
-  const [searchTerm, setSearchTerm] = useState('');
-  const [deleteTarget, setDeleteTarget] = useState(null);
-  const [deleting, setDeleting] = useState(false);
-  const [page, setPage] = useState(1);
-  const PAGE_SIZE = 25;
+  const { profile } = useAuth()
+  const toast = useToast()
+  const isStaff = profile?.role === 'staff'
+  const isAdmin = profile?.role === 'admin'
+  const [cases, setCases] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [filterStatus, setFilterStatus] = useState('open')
+  const [searchTerm, setSearchTerm] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
+  const [page, setPage] = useState(1)
+  const PAGE_SIZE = 25
 
   useEffect(() => {
     supabase
       .from('cases')
-      .select('*, specialties(name), case_invitations(count), manager:case_manager(first_name, last_name, email, role), assignedExpert:assigned_expert(first_name, last_name, email, role)')
+      .select(
+        '*, specialties(name), case_invitations(count), manager:case_manager(first_name, last_name, email, role), assignedExpert:assigned_expert(first_name, last_name, email, role)'
+      )
       .order('created_at', { ascending: false })
       .limit(500)
       .then(({ data }) => {
-        setCases(data || []);
-        setLoading(false);
+        setCases(data || [])
+        setLoading(false)
       })
       .catch(() => {
-        toast.error('Failed to load cases');
-        setLoading(false);
-      });
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+        toast.error('Failed to load cases')
+        setLoading(false)
+      })
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const filtered = useMemo(() => cases.filter(c => {
-    if (filterStatus && c.status !== filterStatus) return false;
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      if (!c.title.toLowerCase().includes(term) && !(c.case_number || '').toLowerCase().includes(term)) return false;
-    }
-    return true;
-  }), [cases, filterStatus, searchTerm]);
+  const filtered = useMemo(
+    () =>
+      cases.filter((c) => {
+        if (filterStatus && c.status !== filterStatus) return false
+        if (searchTerm) {
+          const term = searchTerm.toLowerCase()
+          if (
+            !c.title.toLowerCase().includes(term) &&
+            !(c.case_number || '').toLowerCase().includes(term)
+          )
+            return false
+        }
+        return true
+      }),
+    [cases, filterStatus, searchTerm]
+  )
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
-  const paginatedCases = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const paginatedCases = filtered.slice(
+    (page - 1) * PAGE_SIZE,
+    page * PAGE_SIZE
+  )
 
-  useEffect(() => { setPage(1); }, [filterStatus, searchTerm]);
+  useEffect(() => {
+    setPage(1)
+  }, [filterStatus, searchTerm])
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
-    setDeleting(true);
-    const { error } = await supabase.from('cases').delete().eq('id', deleteTarget.id);
+    if (!deleteTarget) return
+    setDeleting(true)
+    const { error } = await supabase
+      .from('cases')
+      .delete()
+      .eq('id', deleteTarget.id)
     if (!error) {
-      setCases(prev => prev.filter(c => c.id !== deleteTarget.id));
-      toast.success('Case deleted');
+      setCases((prev) => prev.filter((c) => c.id !== deleteTarget.id))
+      toast.success('Case deleted')
     } else {
-      toast.error('Failed to delete case');
+      toast.error('Failed to delete case')
     }
-    setDeleting(false);
-    setDeleteTarget(null);
-  };
+    setDeleting(false)
+    setDeleteTarget(null)
+  }
 
-  if (loading) return <div className="portal-loading" role="status" aria-label="Loading"><div className="portal-loading__spinner"></div></div>;
+  if (loading)
+    return (
+      <div className="portal-loading" role="status" aria-label="Loading">
+        <div className="portal-loading__spinner"></div>
+      </div>
+    )
 
   return (
     <div>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Cases</h1>
         {!isStaff && (
-          <Link to="/admin/cases/new" className="btn btn--primary" style={{ padding: '10px 20px', textDecoration: 'none' }}>
+          <Link
+            to="/admin/cases/new"
+            className="btn btn--primary"
+            style={{ padding: '10px 20px', textDecoration: 'none' }}
+          >
             Create Case
           </Link>
         )}
       </div>
 
-      <div className="portal-search-bar" style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+      <div
+        className="portal-search-bar"
+        style={{ display: 'flex', gap: 12, alignItems: 'center' }}
+      >
         <input
           className="portal-field__input"
           placeholder="Search by title or case number..."
@@ -96,7 +133,11 @@ export default function CaseList() {
           onChange={(e) => setSearchTerm(e.target.value)}
           style={{ maxWidth: 300 }}
         />
-        <select className="portal-field__select" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+        <select
+          className="portal-field__select"
+          value={filterStatus}
+          onChange={(e) => setFilterStatus(e.target.value)}
+        >
           <option value="">All Statuses</option>
           <option value="open">Open</option>
           <option value="closed">Closed</option>
@@ -106,7 +147,14 @@ export default function CaseList() {
       {filtered.length === 0 ? (
         <div className="portal-empty">
           <p className="portal-empty__text">No cases found</p>
-          {!isStaff && <Link to="/admin/cases/new" style={{ color: 'var(--color-accent)', fontSize: '0.9rem' }}>Create your first case</Link>}
+          {!isStaff && (
+            <Link
+              to="/admin/cases/new"
+              style={{ color: 'var(--color-accent)', fontSize: '0.9rem' }}
+            >
+              Create your first case
+            </Link>
+          )}
         </div>
       ) : (
         <div className="portal-table-wrap">
@@ -124,9 +172,14 @@ export default function CaseList() {
               </tr>
             </thead>
             <tbody>
-              {paginatedCases.map(c => (
+              {paginatedCases.map((c) => (
                 <tr key={c.id}>
-                  <td><strong>#{highlight(c.case_number || '', searchTerm)} — {highlight(c.title, searchTerm)}</strong></td>
+                  <td>
+                    <strong>
+                      #{highlight(c.case_number || '', searchTerm)} —{' '}
+                      {highlight(c.title, searchTerm)}
+                    </strong>
+                  </td>
                   <td>{c.specialties?.name || '—'}</td>
                   <td>
                     <span className={`portal-badge portal-badge--${c.status}`}>
@@ -134,17 +187,27 @@ export default function CaseList() {
                     </span>
                   </td>
                   <td>{c.manager ? formatName(c.manager) : '—'}</td>
-                  <td>{c.assignedExpert ? formatName(c.assignedExpert) : '—'}</td>
+                  <td>
+                    {c.assignedExpert ? formatName(c.assignedExpert) : '—'}
+                  </td>
                   <td>{c.case_invitations?.[0]?.count || 0}</td>
                   <td>{new Date(c.created_at).toLocaleDateString()}</td>
                   <td style={{ display: 'flex', gap: 8 }}>
-                    <Link to={`/admin/cases/${c.id}`} className="portal-btn-action">
+                    <Link
+                      to={`/admin/cases/${c.id}`}
+                      className="portal-btn-action"
+                    >
                       View
                     </Link>
                     {isAdmin && (
                       <button
                         className="portal-btn-action"
-                        style={{ color: 'var(--color-error, #e53e3e)', border: '1px solid var(--color-error, #e53e3e)', background: 'none', cursor: 'pointer' }}
+                        style={{
+                          color: 'var(--color-error, #e53e3e)',
+                          border: '1px solid var(--color-error, #e53e3e)',
+                          background: 'none',
+                          cursor: 'pointer',
+                        }}
                         onClick={() => setDeleteTarget(c)}
                       >
                         Delete
@@ -160,25 +223,91 @@ export default function CaseList() {
 
       {filtered.length > PAGE_SIZE && (
         <div className="portal-pagination">
-          <button className="portal-pagination__btn" disabled={page === 1} onClick={() => setPage(p => p - 1)}>Prev</button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-            <button key={p} className={`portal-pagination__btn ${p === page ? 'portal-pagination__btn--active' : ''}`} onClick={() => setPage(p)}>{p}</button>
+          <button
+            className="portal-pagination__btn"
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+          >
+            Prev
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+            <button
+              key={p}
+              className={`portal-pagination__btn ${p === page ? 'portal-pagination__btn--active' : ''}`}
+              onClick={() => setPage(p)}
+            >
+              {p}
+            </button>
           ))}
-          <button className="portal-pagination__btn" disabled={page === totalPages} onClick={() => setPage(p => p + 1)}>Next</button>
-          <span className="portal-pagination__info">Page {page} of {totalPages}</span>
+          <button
+            className="portal-pagination__btn"
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => p + 1)}
+          >
+            Next
+          </button>
+          <span className="portal-pagination__info">
+            Page {page} of {totalPages}
+          </span>
         </div>
       )}
 
       {deleteTarget && (
-        <div className="portal-modal-overlay" style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="portal-card" style={{ maxWidth: 440, width: '90%', padding: 24 }}>
-            <h3 style={{ margin: '0 0 8px', color: 'var(--color-error, #e53e3e)' }}>Delete Case</h3>
-            <p style={{ margin: '0 0 16px', fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
-              Are you sure you want to permanently delete <strong>{deleteTarget.title}</strong>? This will remove the case and all associated invitations. This action cannot be undone.
+        <div
+          className="portal-modal-overlay"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            className="portal-card"
+            style={{ maxWidth: 440, width: '90%', padding: 24 }}
+          >
+            <h3
+              style={{
+                margin: '0 0 8px',
+                color: 'var(--color-error, #e53e3e)',
+              }}
+            >
+              Delete Case
+            </h3>
+            <p
+              style={{
+                margin: '0 0 16px',
+                fontSize: '0.9rem',
+                color: 'var(--color-gray-500)',
+              }}
+            >
+              Are you sure you want to permanently delete{' '}
+              <strong>{deleteTarget.title}</strong>? This will remove the case
+              and all associated invitations. This action cannot be undone.
             </p>
-            <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button className="btn btn--secondary" onClick={() => setDeleteTarget(null)} disabled={deleting}>Cancel</button>
-              <button className="btn" style={{ background: 'var(--color-error, #e53e3e)', color: '#fff', border: 'none' }} onClick={handleDelete} disabled={deleting}>
+            <div
+              style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
+            >
+              <button
+                className="btn btn--secondary"
+                onClick={() => setDeleteTarget(null)}
+                disabled={deleting}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn"
+                style={{
+                  background: 'var(--color-error, #e53e3e)',
+                  color: '#fff',
+                  border: 'none',
+                }}
+                onClick={handleDelete}
+                disabled={deleting}
+              >
                 {deleting ? 'Deleting...' : 'Delete Case'}
               </button>
             </div>
@@ -186,5 +315,5 @@ export default function CaseList() {
         </div>
       )}
     </div>
-  );
+  )
 }

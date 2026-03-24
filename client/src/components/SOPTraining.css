@@ -164,11 +164,21 @@
   animation: sopFadeIn 0.4s ease both;
 }
 
-.sop-card:nth-child(2) { animation-delay: 0.06s; }
-.sop-card:nth-child(3) { animation-delay: 0.12s; }
-.sop-card:nth-child(4) { animation-delay: 0.18s; }
-.sop-card:nth-child(5) { animation-delay: 0.24s; }
-.sop-card:nth-child(6) { animation-delay: 0.30s; }
+.sop-card:nth-child(2) {
+  animation-delay: 0.06s;
+}
+.sop-card:nth-child(3) {
+  animation-delay: 0.12s;
+}
+.sop-card:nth-child(4) {
+  animation-delay: 0.18s;
+}
+.sop-card:nth-child(5) {
+  animation-delay: 0.24s;
+}
+.sop-card:nth-child(6) {
+  animation-delay: 0.3s;
+}
 
 .sop-card:hover {
   border-color: var(--color-accent);
@@ -352,8 +362,12 @@
   animation: sopFadeIn 0.4s ease both;
 }
 
-.sop-section:nth-child(2) { animation-delay: 0.08s; }
-.sop-section:nth-child(3) { animation-delay: 0.16s; }
+.sop-section:nth-child(2) {
+  animation-delay: 0.08s;
+}
+.sop-section:nth-child(3) {
+  animation-delay: 0.16s;
+}
 
 .sop-section__title {
   font-size: 1.05rem;
@@ -381,7 +395,11 @@
   font-weight: 600;
   font-family: var(--font-family);
   color: #fff;
-  background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-dark),
+    var(--color-accent)
+  );
   border: none;
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -488,7 +506,11 @@
 
 .sop-quiz__btn--primary {
   color: #fff;
-  background: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent));
+  background: linear-gradient(
+    135deg,
+    var(--color-accent-dark),
+    var(--color-accent)
+  );
   border: none;
   box-shadow: 0 4px 14px rgba(211, 102, 34, 0.35);
 }
@@ -608,9 +630,15 @@
   animation: sopFadeIn 0.3s ease both;
 }
 
-.sop-ref__card:nth-child(2) { animation-delay: 0.04s; }
-.sop-ref__card:nth-child(3) { animation-delay: 0.08s; }
-.sop-ref__card:nth-child(4) { animation-delay: 0.12s; }
+.sop-ref__card:nth-child(2) {
+  animation-delay: 0.04s;
+}
+.sop-ref__card:nth-child(3) {
+  animation-delay: 0.08s;
+}
+.sop-ref__card:nth-child(4) {
+  animation-delay: 0.12s;
+}
 
 .sop-ref__tag {
   display: inline-block;

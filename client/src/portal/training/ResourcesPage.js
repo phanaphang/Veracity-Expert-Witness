@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import TrainingDisclaimer from '../components/TrainingDisclaimer';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import TrainingDisclaimer from '../components/TrainingDisclaimer'
 
 // Shared inline styles for generated HTML resource pages
 const pageStyles = `
@@ -38,7 +38,7 @@ const pageStyles = `
     table { font-size: 12px; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     th, td { padding: 8px 10px; }
   }
-`;
+`
 
 function makeHtml(title, subtitle, bodyHtml) {
   return `<!DOCTYPE html>
@@ -66,19 +66,21 @@ function makeHtml(title, subtitle, bodyHtml) {
     </div>
   </div>
 </body>
-</html>`;
+</html>`
 }
 
 const RESOURCES = [
   {
     id: 1,
     title: 'Court-Ready CV Checklist',
-    description: 'Ensure your CV is formatted and complete for expert witness engagements.',
+    description:
+      'Ensure your CV is formatted and complete for expert witness engagements.',
     icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
-    generate: () => makeHtml(
-      'Court-Ready CV Checklist',
-      'Expert Witness Foundations · Veracity Expert Witness LLC',
-      `
+    generate: () =>
+      makeHtml(
+        'Court-Ready CV Checklist',
+        'Expert Witness Foundations · Veracity Expert Witness LLC',
+        `
       <h2>Personal & Contact Information</h2>
       <ul>
         <li>Full legal name as it appears on licenses and credentials</li>
@@ -136,17 +138,19 @@ const RESOURCES = [
         <li>CV dated and versioned so you can track what was disclosed in each matter</li>
       </ul>
       `
-    ),
+      ),
   },
   {
     id: 2,
     title: 'Pre-Deposition Preparation Protocol',
-    description: 'A step-by-step protocol to prepare for your expert deposition.',
+    description:
+      'A step-by-step protocol to prepare for your expert deposition.',
     icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4',
-    generate: () => makeHtml(
-      'Pre-Deposition Preparation Protocol',
-      'Expert Witness Foundations · Veracity Expert Witness LLC',
-      `
+    generate: () =>
+      makeHtml(
+        'Pre-Deposition Preparation Protocol',
+        'Expert Witness Foundations · Veracity Expert Witness LLC',
+        `
       <h2>Two Weeks Before the Deposition</h2>
       <ul>
         <li>Re-read your expert report from cover to cover - know every word</li>
@@ -200,17 +204,19 @@ const RESOURCES = [
         <li>Flag any inconsistencies between your deposition testimony and your report</li>
       </ul>
       `
-    ),
+      ),
   },
   {
     id: 3,
     title: 'California Expert Witness Rules Quick Reference',
-    description: 'Key California statutes and standards every expert should know.',
+    description:
+      'Key California statutes and standards every expert should know.',
     icon: 'M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3',
-    generate: () => makeHtml(
-      'California Expert Witness Rules Quick Reference',
-      'Expert Witness Foundations · Veracity Expert Witness LLC',
-      `
+    generate: () =>
+      makeHtml(
+        'California Expert Witness Rules Quick Reference',
+        'Expert Witness Foundations · Veracity Expert Witness LLC',
+        `
       <table>
         <tr><th>Statute / Standard</th><th>What It Governs</th><th>Key Requirement</th></tr>
         <tr><td><strong>Evidence Code § 720</strong></td><td>Expert Qualifications</td><td>Expert must have special knowledge, skill, experience, training, OR education on the subject. No degree required - practical experience alone can qualify.</td></tr>
@@ -241,17 +247,19 @@ const RESOURCES = [
         <li>Opinions that contradict the expert's own prior testimony or writings without explanation</li>
       </ul>
       `
-    ),
+      ),
   },
   {
     id: 4,
     title: 'Expert Fee & Disclosure Language Guide',
-    description: 'Standard language for fee agreements and disclosure responses.',
+    description:
+      'Standard language for fee agreements and disclosure responses.',
     icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-    generate: () => makeHtml(
-      'Expert Fee & Disclosure Language Guide',
-      'Expert Witness Foundations · Veracity Expert Witness LLC',
-      `
+    generate: () =>
+      makeHtml(
+        'Expert Fee & Disclosure Language Guide',
+        'Expert Witness Foundations · Veracity Expert Witness LLC',
+        `
       <h2>Standard Fee Categories</h2>
       <table>
         <tr><th>Service</th><th>Billing Practice</th><th>Notes</th></tr>
@@ -287,17 +295,19 @@ const RESOURCES = [
         <li><strong>No contingency:</strong> "Compensation is not contingent on the outcome of the matter." (Required under California case law and ethical standards)</li>
       </ul>
       `
-    ),
+      ),
   },
   {
     id: 5,
     title: 'Expert Witness Foundations - Full Lesson Summary',
-    description: 'A complete written summary of all 10 lessons for ongoing reference.',
+    description:
+      'A complete written summary of all 10 lessons for ongoing reference.',
     icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
-    generate: () => makeHtml(
-      'Expert Witness Foundations - Full Lesson Summary',
-      'Expert Witness Foundations · Veracity Expert Witness LLC',
-      `
+    generate: () =>
+      makeHtml(
+        'Expert Witness Foundations - Full Lesson Summary',
+        'Expert Witness Foundations · Veracity Expert Witness LLC',
+        `
       <h2>Unit 1: The Expert Witness Role</h2>
 
       <p><strong>Lesson 1.1 - What Expert Witnesses Actually Do</strong></p>
@@ -387,24 +397,32 @@ const RESOURCES = [
         <li>JCCP proceedings may modify standard expert witness rules</li>
       </ul>
       `
-    ),
+      ),
   },
-];
+]
 
 export default function ResourcesPage() {
   const openResource = (resource) => {
-    const win = window.open('', '_blank');
-    if (!win) return;
-    win.document.write(resource.generate());
-    win.document.close();
-  };
+    const win = window.open('', '_blank')
+    if (!win) return
+    win.document.write(resource.generate())
+    win.document.close()
+  }
 
   return (
     <div>
-      <Link to="/portal/resources" className="training-lesson__back" style={{ color: 'var(--color-accent)' }}>← All Training Resources</Link>
+      <Link
+        to="/portal/resources"
+        className="training-lesson__back"
+        style={{ color: 'var(--color-accent)' }}
+      >
+        ← All Training Resources
+      </Link>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
-        <p className="portal-page__subtitle">5 reference guides - available anytime, open in a new tab</p>
+        <p className="portal-page__subtitle">
+          5 reference guides - available anytime, open in a new tab
+        </p>
       </div>
 
       <TrainingDisclaimer />
@@ -413,8 +431,20 @@ export default function ResourcesPage() {
         {RESOURCES.map((res) => (
           <div key={res.id} className="portal-card training-resource-card">
             <div className="training-resource-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
-                <path d={res.icon} stroke="var(--color-navy)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                width="28"
+                height="28"
+                aria-hidden="true"
+              >
+                <path
+                  d={res.icon}
+                  stroke="var(--color-navy)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div className="training-resource-card__body">
@@ -431,8 +461,6 @@ export default function ResourcesPage() {
           </div>
         ))}
       </div>
-
-
     </div>
-  );
+  )
 }

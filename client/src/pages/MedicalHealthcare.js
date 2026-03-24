@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import SEO from '../components/SEO';
+import React, { useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import SEO from '../components/SEO'
 
 const expertiseAreas = [
   {
@@ -121,14 +121,14 @@ const expertiseAreas = [
       'Disability and functional capacity evaluation',
     ],
   },
-];
+]
 
 function MedicalHealthcare() {
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    window.scrollTo(0, 0)
+  }, [])
 
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
 
   return (
     <div className="legal-page">
@@ -136,37 +136,62 @@ function MedicalHealthcare() {
         title="Medical & Healthcare Expert Witnesses"
         description="Connect with leading medical professionals who provide clear, credible expert witness testimony across every healthcare specialty including malpractice, orthopedics, neurology, and more."
         path="/medical-healthcare"
-        serviceSchema={{ serviceType: 'Medical & Healthcare Expert Witness Services' }}
+        serviceSchema={{
+          serviceType: 'Medical & Healthcare Expert Witness Services',
+        }}
       />
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">
-            <svg className="navbar__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
+            <svg
+              className="navbar__logo-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              width="28"
+              height="28"
+              aria-hidden="true"
+            >
               <path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--color-accent)" />
-              <path d="M2 17l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
-              <path d="M2 12l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
+              <path
+                d="M2 17l10 5 10-5"
+                stroke="var(--color-accent)"
+                strokeWidth="2"
+                fill="none"
+              />
+              <path
+                d="M2 12l10 5 10-5"
+                stroke="var(--color-accent)"
+                strokeWidth="2"
+                fill="none"
+              />
             </svg>
             <span>Veracity</span>
           </Link>
-          <Link to="/" className="navbar__btn navbar__btn--cta">Back to Home</Link>
+          <Link to="/" className="navbar__btn navbar__btn--cta">
+            Back to Home
+          </Link>
         </div>
       </nav>
 
       <header className="legal-header">
         <div className="section__container">
-          <h1 className="legal-header__title">Medical &amp; Healthcare Expert Witnesses</h1>
+          <h1 className="legal-header__title">
+            Medical &amp; Healthcare Expert Witnesses
+          </h1>
           <p className="legal-header__subtitle">
-            We connect you with leading medical professionals who provide clear, credible testimony across every healthcare specialty.
+            We connect you with leading medical professionals who provide clear,
+            credible testimony across every healthcare specialty.
           </p>
         </div>
       </header>
 
       <main className="legal-content specialty-content">
         <p className="specialty-intro">
-          Medical and healthcare cases demand expert witnesses with deep clinical knowledge
-          and the ability to explain complex medical issues clearly. Our network includes
-          board-certified physicians, surgeons, nurses, pharmacists, and allied health
-          professionals across the specialties below.
+          Medical and healthcare cases demand expert witnesses with deep
+          clinical knowledge and the ability to explain complex medical issues
+          clearly. Our network includes board-certified physicians, surgeons,
+          nurses, pharmacists, and allied health professionals across the
+          specialties below.
         </p>
 
         <div className="specialty-grid">
@@ -185,12 +210,23 @@ function MedicalHealthcare() {
         <div className="specialty-cta">
           <h2>Need a Medical Expert Witness?</h2>
           <p>
-            Tell us about your case and we&apos;ll match you with the right medical expert.
+            Tell us about your case and we&apos;ll match you with the right
+            medical expert.
           </p>
-          <Link to="/" state={{ scrollTo: '#contact' }} className="btn btn--primary">
+          <Link
+            to="/"
+            state={{ scrollTo: '#contact' }}
+            className="btn btn--primary"
+          >
             Get Started
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path
+                d="M3 8h10M9 4l4 4-4 4"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </Link>
         </div>
@@ -199,13 +235,16 @@ function MedicalHealthcare() {
       <footer className="footer">
         <div className="section__container">
           <div className="legal-footer__inner">
-            <p>&copy; {currentYear} Veracity Expert Witness LLC. All rights reserved.</p>
+            <p>
+              &copy; {currentYear} Veracity Expert Witness LLC. All rights
+              reserved.
+            </p>
             <Link to="/">Back to Home</Link>
           </div>
         </div>
       </footer>
     </div>
-  );
+  )
 }
 
-export default MedicalHealthcare;
+export default MedicalHealthcare

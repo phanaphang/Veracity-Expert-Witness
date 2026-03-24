@@ -1,70 +1,76 @@
-const supabaseAdmin = require('../_lib/supabaseAdmin');
+const supabaseAdmin = require('../_lib/supabaseAdmin')
 
 async function verifyAdmin(req) {
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization
   if (!authHeader?.startsWith('Bearer ')) {
-    return { error: 'Missing authorization token', status: 401 };
+    return { error: 'Missing authorization token', status: 401 }
   }
 
-  const token = authHeader.replace('Bearer ', '');
-  const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+  const token = authHeader.replace('Bearer ', '')
+  const {
+    data: { user },
+    error: authError,
+  } = await supabaseAdmin.auth.getUser(token)
   if (authError || !user) {
-    return { error: 'Invalid token', status: 401 };
+    return { error: 'Invalid token', status: 401 }
   }
 
   const { data: profile } = await supabaseAdmin
     .from('profiles')
     .select('role')
     .eq('id', user.id)
-    .single();
+    .single()
 
   if (profile?.role !== 'admin') {
-    return { error: 'Admin access required', status: 403 };
+    return { error: 'Admin access required', status: 403 }
   }
 
-  return { user };
+  return { user }
 }
 
 async function handleGetOverview(req, res) {
-  const auth = await verifyAdmin(req);
-  if (auth.error) return res.status(auth.status).json({ error: auth.error });
+  const auth = await verifyAdmin(req)
+  if (auth.error) return res.status(auth.status).json({ error: auth.error })
 
   const { data: profileRows, error: profileError } = await supabaseAdmin
     .from('profiles')
     .select('id, email, role, first_name, last_name')
-    .in('role', ['admin', 'staff']);
+    .in('role', ['admin', 'staff'])
 
   if (profileError) {
-    console.error('[SOP OVERVIEW]', profileError.message);
-    return res.status(500).json({ error: 'Failed to fetch staff data' });
+    console.error('[SOP OVERVIEW]', profileError.message)
+    return res.status(500).json({ error: 'Failed to fetch staff data' })
   }
 
-  const userIds = (profileRows || []).map((p) => p.id);
+  const userIds = (profileRows || []).map((p) => p.id)
 
-  let progressRows = [];
+  let progressRows = []
   if (userIds.length > 0) {
     const { data, error: progressError } = await supabaseAdmin
       .from('sop_training_progress')
-      .select('user_id, module_id, completed, quiz_score, attempts, completed_at, last_attempt_at')
-      .in('user_id', userIds);
+      .select(
+        'user_id, module_id, completed, quiz_score, attempts, completed_at, last_attempt_at'
+      )
+      .in('user_id', userIds)
 
     if (progressError) {
-      console.error('[SOP OVERVIEW]', progressError.message);
-      return res.status(500).json({ error: 'Failed to fetch training data' });
+      console.error('[SOP OVERVIEW]', progressError.message)
+      return res.status(500).json({ error: 'Failed to fetch training data' })
     }
-    progressRows = data || [];
+    progressRows = data || []
   }
 
-  const staffMap = {};
-  (profileRows || []).forEach((p) => {
-    const name = [p.first_name, p.last_name].filter(Boolean).join(' ').trim() || p.email;
+  const staffMap = {}
+  ;(profileRows || []).forEach((p) => {
+    const name =
+      [p.first_name, p.last_name].filter(Boolean).join(' ').trim() || p.email
     staffMap[p.id] = {
       name,
       email: p.email,
       role: p.role,
       modules: [],
-    };
-  });
+    }
+  })
 
   progressRows.forEach((row) => {
     if (staffMap[row.user_id]) {
@@ -75,31 +81,38 @@ async function handleGetOverview(req, res) {
         attempts: row.attempts,
         completedAt: row.completed_at,
         lastAttemptAt: row.last_attempt_at,
-      });
+      })
     }
-  });
+  })
 
-  return res.status(200).json({ staff: Object.values(staffMap) });
+  return res.status(200).json({ staff: Object.values(staffMap) })
 }
 
 async function handleSendReminder(req, res) {
-  const auth = await verifyAdmin(req);
-  if (auth.error) return res.status(auth.status).json({ error: auth.error });
+  const auth = await verifyAdmin(req)
+  if (auth.error) return res.status(auth.status).json({ error: auth.error })
 
-  const { staffEmail, staffName, incompleteModules } = req.body;
+  const { staffEmail, staffName, incompleteModules } = req.body
 
-  if (!staffEmail || !staffName || !Array.isArray(incompleteModules) || !incompleteModules.length) {
-    return res.status(400).json({ error: 'staffEmail, staffName, and incompleteModules are required' });
+  if (
+    !staffEmail ||
+    !staffName ||
+    !Array.isArray(incompleteModules) ||
+    !incompleteModules.length
+  ) {
+    return res.status(400).json({
+      error: 'staffEmail, staffName, and incompleteModules are required',
+    })
   }
 
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   if (!emailRegex.test(staffEmail)) {
-    return res.status(400).json({ error: 'Invalid email format' });
+    return res.status(400).json({ error: 'Invalid email format' })
   }
 
   const moduleList = incompleteModules
     .map((m) => `<li style="margin-bottom:6px;">${m}</li>`)
-    .join('');
+    .join('')
 
   const htmlBody = `
     <div style="font-family: 'Inter', Arial, sans-serif; max-width: 560px; margin: 0 auto; color: #3e442b;">
@@ -120,7 +133,7 @@ async function handleSendReminder(req, res) {
         &mdash; Veracity Expert Witness LLC
       </p>
     </div>
-  `;
+  `
 
   const emailRes = await fetch('https://api.resend.com/emails', {
     method: 'POST',
@@ -129,29 +142,31 @@ async function handleSendReminder(req, res) {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: process.env.EMAIL_FROM || 'Veracity Expert Witness <noreply@veracityexpertwitness.com>',
+      from:
+        process.env.EMAIL_FROM ||
+        'Veracity Expert Witness <noreply@veracityexpertwitness.com>',
       to: [staffEmail],
       subject: 'SOP Training Reminder \u2014 Modules Awaiting Completion',
       html: htmlBody,
     }),
-  });
+  })
 
   if (!emailRes.ok) {
-    const errBody = await emailRes.text();
-    console.error('[SOP REMINDER] Resend error:', errBody);
-    return res.status(502).json({ error: 'Failed to send reminder email' });
+    const errBody = await emailRes.text()
+    console.error('[SOP REMINDER] Resend error:', errBody)
+    return res.status(502).json({ error: 'Failed to send reminder email' })
   }
 
-  return res.status(200).json({ success: true });
+  return res.status(200).json({ success: true })
 }
 
 module.exports = async (req, res) => {
   try {
-    if (req.method === 'GET') return handleGetOverview(req, res);
-    if (req.method === 'POST') return handleSendReminder(req, res);
-    return res.status(405).json({ error: 'Method not allowed' });
+    if (req.method === 'GET') return handleGetOverview(req, res)
+    if (req.method === 'POST') return handleSendReminder(req, res)
+    return res.status(405).json({ error: 'Method not allowed' })
   } catch (err) {
-    console.error('[SOP TRAINING ERROR]', err);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('[SOP TRAINING ERROR]', err)
+    return res.status(500).json({ error: 'Internal server error' })
   }
-};
+}

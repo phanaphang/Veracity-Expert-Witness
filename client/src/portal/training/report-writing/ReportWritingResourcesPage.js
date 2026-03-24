@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import TrainingDisclaimer from '../../components/TrainingDisclaimer';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import TrainingDisclaimer from '../../components/TrainingDisclaimer'
 // -- Shared HTML shell --
 const htmlShell = (title, body) => `<!DOCTYPE html>
 <html lang="en">
@@ -60,12 +60,13 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
     </div>
   </div>
 </body>
-</html>`;
+</html>`
 
 // -- Resource 1: Report Structure Quick Reference Card --
-const resource1Html = () => htmlShell(
-  'Expert Report Structure Quick Reference Card',
-  `
+const resource1Html = () =>
+  htmlShell(
+    'Expert Report Structure Quick Reference Card',
+    `
 <h1>Expert Report Structure Quick Reference Card</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   The ten essential sections of a defensible expert report, with industry-specific guidance
@@ -219,12 +220,13 @@ const resource1Html = () => htmlShell(
   </tbody>
 </table>
 `
-);
+  )
 
 // -- Resource 2: Opinion Writing Guide --
-const resource2Html = () => htmlShell(
-  'Opinion Writing Guide',
-  `
+const resource2Html = () =>
+  htmlShell(
+    'Opinion Writing Guide',
+    `
 <h1>Opinion Writing Guide</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Facts, assumptions, and opinions - clarity, specificity, and defensibility
@@ -360,12 +362,13 @@ const resource2Html = () => htmlShell(
 <div class="check-item">Opinions are specific enough to be useful but not so narrow they become brittle</div>
 <div class="check-item">Number exhibits and appendices using a consistent scheme for easy reference</div>
 `
-);
+  )
 
 // -- Resource 3: Methodology & Deposition Defense Checklist --
-const resource3Html = () => htmlShell(
-  'Methodology & Deposition Defense Checklist',
-  `
+const resource3Html = () =>
+  htmlShell(
+    'Methodology & Deposition Defense Checklist',
+    `
 <h1>Methodology &amp; Deposition Defense Checklist</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Document your methodology to survive Daubert challenges and prepare your report for deposition scrutiny
@@ -526,12 +529,13 @@ const resource3Html = () => htmlShell(
   </tbody>
 </table>
 `
-);
+  )
 
 // -- Resource 4: Full Module Summary --
-const resource4Html = () => htmlShell(
-  'Report Writing Module - Full Summary',
-  `
+const resource4Html = () =>
+  htmlShell(
+    'Report Writing Module - Full Summary',
+    `
 <h1>Report Writing Module - Full Summary</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Condensed reference notes from all eight lessons - Writing an Expert Witness Testimony Report
@@ -670,7 +674,7 @@ const resource4Html = () => htmlShell(
   <li><strong>Attention to detail is your best defense.</strong> Most successful challenges exploit preventable errors.</li>
 </ol>
 `
-);
+  )
 
 // -- Page component --
 
@@ -707,22 +711,30 @@ const RESOURCES = [
     icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
     generate: resource4Html,
   },
-];
+]
 
 export default function ReportWritingResourcesPage() {
   const openResource = (resource) => {
-    const win = window.open('', '_blank');
-    if (!win) return;
-    win.document.write(resource.generate());
-    win.document.close();
-  };
+    const win = window.open('', '_blank')
+    if (!win) return
+    win.document.write(resource.generate())
+    win.document.close()
+  }
 
   return (
     <div>
-      <Link to="/portal/resources" className="training-lesson__back" style={{ color: 'var(--color-accent)' }}>← All Training Resources</Link>
+      <Link
+        to="/portal/resources"
+        className="training-lesson__back"
+        style={{ color: 'var(--color-accent)' }}
+      >
+        ← All Training Resources
+      </Link>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
-        <p className="portal-page__subtitle">4 reference guides - available anytime, open in a new tab</p>
+        <p className="portal-page__subtitle">
+          4 reference guides - available anytime, open in a new tab
+        </p>
       </div>
 
       <TrainingDisclaimer />
@@ -731,8 +743,20 @@ export default function ReportWritingResourcesPage() {
         {RESOURCES.map((res) => (
           <div key={res.id} className="portal-card training-resource-card">
             <div className="training-resource-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
-                <path d={res.icon} stroke="var(--color-navy)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                width="28"
+                height="28"
+                aria-hidden="true"
+              >
+                <path
+                  d={res.icon}
+                  stroke="var(--color-navy)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div className="training-resource-card__body">
@@ -750,5 +774,5 @@ export default function ReportWritingResourcesPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }

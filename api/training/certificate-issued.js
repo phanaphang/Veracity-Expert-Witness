@@ -1,5 +1,5 @@
-const supabaseAdmin = require('../_lib/supabaseAdmin');
-const { rateLimit } = require('../_lib/rateLimit');
+const supabaseAdmin = require('../_lib/supabaseAdmin')
+const { rateLimit } = require('../_lib/rateLimit')
 
 // Server-side HTML escaping (DOMPurify is browser-only;
 // all user content is escaped before insertion into HTML email)
@@ -9,37 +9,37 @@ const escapeHtml = (str) =>
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+    .replace(/'/g, '&#39;')
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
   const ip =
     req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
     req.socket?.remoteAddress ||
-    'unknown';
+    'unknown'
 
-  const authHeader = req.headers.authorization;
+  const authHeader = req.headers.authorization
   if (!authHeader?.startsWith('Bearer ')) {
     console.warn(
       `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | training/certificate-issued | missing token`
-    );
-    return res.status(401).json({ error: 'Missing authorization token' });
+    )
+    return res.status(401).json({ error: 'Missing authorization token' })
   }
 
-  const token = authHeader.replace('Bearer ', '');
+  const token = authHeader.replace('Bearer ', '')
   const {
     data: { user },
     error: authError,
-  } = await supabaseAdmin.auth.getUser(token);
+  } = await supabaseAdmin.auth.getUser(token)
 
   if (authError || !user) {
     console.warn(
       `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | training/certificate-issued | invalid token`
-    );
-    return res.status(401).json({ error: 'Invalid token' });
+    )
+    return res.status(401).json({ error: 'Invalid token' })
   }
 
   // Role check — expert, admin, or staff
@@ -47,13 +47,13 @@ module.exports = async (req, res) => {
     .from('profiles')
     .select('role, first_name, last_name, email')
     .eq('id', user.id)
-    .single();
+    .single()
 
   if (!profile || !['expert', 'admin', 'staff'].includes(profile.role)) {
     console.warn(
       `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | training/certificate-issued | insufficient role`
-    );
-    return res.status(403).json({ error: 'Access denied' });
+    )
+    return res.status(403).json({ error: 'Access denied' })
   }
 
   const {
@@ -62,10 +62,10 @@ module.exports = async (req, res) => {
     expertEmail,
     moduleTitle = 'Expert Witness Foundations',
     moduleDuration = '~60 min',
-  } = req.body;
+  } = req.body
 
   if (!certificateName || !completionDate || !expertEmail) {
-    return res.status(400).json({ error: 'Missing required fields.' });
+    return res.status(400).json({ error: 'Missing required fields.' })
   }
 
   // Length guard
@@ -74,24 +74,26 @@ module.exports = async (req, res) => {
     completionDate.length > 50 ||
     expertEmail.length > 500
   ) {
-    return res.status(400).json({ error: 'Input exceeds maximum allowed length.' });
+    return res
+      .status(400)
+      .json({ error: 'Input exceeds maximum allowed length.' })
   }
 
   // Validate email format
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   if (!emailRegex.test(expertEmail)) {
-    return res.status(400).json({ error: 'Invalid email address.' });
+    return res.status(400).json({ error: 'Invalid email address.' })
   }
 
-  const safeName = escapeHtml(certificateName);
-  const safeDate = escapeHtml(completionDate);
-  const safeEmail = escapeHtml(expertEmail);
-  const safeTitle = escapeHtml(moduleTitle);
-  const safeDuration = escapeHtml(moduleDuration);
+  const safeName = escapeHtml(certificateName)
+  const safeDate = escapeHtml(completionDate)
+  const safeEmail = escapeHtml(expertEmail)
+  const safeTitle = escapeHtml(moduleTitle)
+  const safeDuration = escapeHtml(moduleDuration)
 
-  const expertPlainText = `Congratulations, ${certificateName}!\n\nYou have successfully completed the ${moduleTitle} training module.\n\nCertificate Name: ${certificateName}\nCompletion Date: ${completionDate}\nCourse: ${moduleTitle} (${moduleDuration})\n\nYour certificate of completion is available in your expert portal under Training > Certificate.\n\nThis email was sent by Veracity Expert Witness. Please do not reply to this message.`;
+  const expertPlainText = `Congratulations, ${certificateName}!\n\nYou have successfully completed the ${moduleTitle} training module.\n\nCertificate Name: ${certificateName}\nCompletion Date: ${completionDate}\nCourse: ${moduleTitle} (${moduleDuration})\n\nYour certificate of completion is available in your expert portal under Training > Certificate.\n\nThis email was sent by Veracity Expert Witness. Please do not reply to this message.`
 
-  const adminPlainText = `Panel Member Training Completed\n\nA panel member has completed the ${moduleTitle} training module.\n\nCertificate Name: ${certificateName}\nEmail: ${expertEmail}\nCompletion Date: ${completionDate}\n\nVeracity Expert Witness — Internal Notification`;
+  const adminPlainText = `Panel Member Training Completed\n\nA panel member has completed the ${moduleTitle} training module.\n\nCertificate Name: ${certificateName}\nEmail: ${expertEmail}\nCompletion Date: ${completionDate}\n\nVeracity Expert Witness — Internal Notification`
 
   const expertHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
@@ -120,7 +122,7 @@ module.exports = async (req, res) => {
         <p style="color:#6b7280;font-size:13px;margin-top:24px;">This email was sent by Veracity Expert Witness. Please do not reply to this message.</p>
       </div>
     </div>
-  `;
+  `
 
   const adminHtml = `
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
@@ -148,10 +150,10 @@ module.exports = async (req, res) => {
         <p style="color:#6b7280;font-size:13px;margin-top:24px;">Veracity Expert Witness — Internal Notification</p>
       </div>
     </div>
-  `;
+  `
 
-  const apiUser = (process.env.PAUBOX_API_USER || '').trim();
-  const apiKey = (process.env.PAUBOX_API_KEY || '').trim();
+  const apiUser = (process.env.PAUBOX_API_USER || '').trim()
+  const apiKey = (process.env.PAUBOX_API_KEY || '').trim()
 
   try {
     // Email 1: Expert confirmation
@@ -169,19 +171,26 @@ module.exports = async (req, res) => {
               recipients: [expertEmail],
               headers: {
                 subject: `You've completed ${moduleTitle} — Veracity`,
-                from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
+                from:
+                  process.env.NOREPLY_EMAIL ||
+                  'noreply@veracityexpertwitness.com',
               },
-              content: { 'text/html': expertHtml, 'text/plain': expertPlainText },
+              content: {
+                'text/html': expertHtml,
+                'text/plain': expertPlainText,
+              },
             },
           },
         }),
       }
-    );
+    )
 
     if (!expertRes.ok) {
-      const errText = await expertRes.text();
-      console.error('Paubox expert email error:', expertRes.status, errText);
-      return res.status(500).json({ error: 'Failed to send expert confirmation email.' });
+      const errText = await expertRes.text()
+      console.error('Paubox expert email error:', expertRes.status, errText)
+      return res
+        .status(500)
+        .json({ error: 'Failed to send expert confirmation email.' })
     }
 
     // Email 2: Admin notification
@@ -197,30 +206,33 @@ module.exports = async (req, res) => {
           data: {
             message: {
               recipients: [
-                process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com',
+                process.env.CONTACT_EMAIL ||
+                  'support@veracityexpertwitness.com',
                 process.env.ADMIN_EMAIL || 'support@veracityexpertwitness.com',
               ],
               headers: {
                 subject: `Training Complete: ${escapeHtml(certificateName)} — ${escapeHtml(moduleTitle)}`,
-                from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
+                from:
+                  process.env.NOREPLY_EMAIL ||
+                  'noreply@veracityexpertwitness.com',
               },
               content: { 'text/html': adminHtml, 'text/plain': adminPlainText },
             },
           },
         }),
       }
-    );
+    )
 
     if (!adminRes.ok) {
-      const errText = await adminRes.text();
-      console.error('Paubox admin email error:', adminRes.status, errText);
+      const errText = await adminRes.text()
+      console.error('Paubox admin email error:', adminRes.status, errText)
       // Non-fatal — expert email succeeded; log and continue
-      console.error('Admin notification failed but expert email was sent.');
+      console.error('Admin notification failed but expert email was sent.')
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true })
   } catch (err) {
-    console.error('certificate-issued error:', err.message);
-    return res.status(500).json({ error: 'Failed to send completion emails.' });
+    console.error('certificate-issued error:', err.message)
+    return res.status(500).json({ error: 'Failed to send completion emails.' })
   }
-};
+}

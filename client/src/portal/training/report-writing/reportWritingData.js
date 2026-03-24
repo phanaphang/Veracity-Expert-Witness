@@ -16,19 +16,22 @@
 //   keyTakeaway     string
 // ============================================================
 
-export const MODULE_TITLE = 'Writing an Expert Witness Testimony Report';
-export const MODULE_SUBTITLE = '~60 minutes \u00b7 8 Lessons \u00b7 1 Scenario \u00b7 1 Knowledge Check';
+export const MODULE_TITLE = 'Writing an Expert Witness Testimony Report'
+export const MODULE_SUBTITLE =
+  '~60 minutes \u00b7 8 Lessons \u00b7 1 Scenario \u00b7 1 Knowledge Check'
 
-export const LESSON_SEQUENCE = ['1', '2', '3', '4', '5', '6', '7', '8'];
-export const TOTAL_LESSONS = 8;
+export const LESSON_SEQUENCE = ['1', '2', '3', '4', '5', '6', '7', '8']
+export const TOTAL_LESSONS = 8
 
 export function getNextLesson(lessonId) {
-  const idx = LESSON_SEQUENCE.indexOf(lessonId);
-  return idx >= 0 && idx < LESSON_SEQUENCE.length - 1 ? LESSON_SEQUENCE[idx + 1] : null;
+  const idx = LESSON_SEQUENCE.indexOf(lessonId)
+  return idx >= 0 && idx < LESSON_SEQUENCE.length - 1
+    ? LESSON_SEQUENCE[idx + 1]
+    : null
 }
 
 export function getLessonIndex(lessonId) {
-  return LESSON_SEQUENCE.indexOf(lessonId) + 1; // 1-based
+  return LESSON_SEQUENCE.indexOf(lessonId) + 1 // 1-based
 }
 
 // ============================================================
@@ -36,7 +39,7 @@ export function getLessonIndex(lessonId) {
 // ============================================================
 
 export const LESSONS = {
-  '1': {
+  1: {
     title: 'Purpose and Audience: Who Reads Your Report and Why It Matters',
     estimatedMinutes: 7,
     sections: [
@@ -49,7 +52,9 @@ export const LESSONS = {
       },
       {
         subheading: 'The Five Audiences',
-        body: ['Every expert report has at least five distinct audiences, each reading with a different intent:'],
+        body: [
+          'Every expert report has at least five distinct audiences, each reading with a different intent:',
+        ],
         bullets: [
           'Retaining attorney: reads for strength, looking for opinions that support the case theory and hold up under scrutiny. They need to know what you will say at deposition and trial.',
           'Opposing counsel: reads for weakness, looking for vague opinions, unsupported conclusions, overstatements, and inconsistencies they can exploit at deposition and trial.',
@@ -77,8 +82,9 @@ export const LESSONS = {
       'Your report is both a persuasive document and a litigation weapon. Write it knowing it will be scrutinized by adversaries who are looking for every opportunity to undermine your credibility.',
   },
 
-  '2': {
-    title: 'Anatomy of a Strong Expert Report: Essential Sections and Structure',
+  2: {
+    title:
+      'Anatomy of a Strong Expert Report: Essential Sections and Structure',
     estimatedMinutes: 8,
     sections: [
       {
@@ -89,7 +95,9 @@ export const LESSONS = {
       },
       {
         subheading: 'Essential Sections',
-        body: ['The sections below are listed in the order they typically appear:'],
+        body: [
+          'The sections below are listed in the order they typically appear:',
+        ],
         numberedList: [
           'Caption / Title Page: case name, your name, date, and the retaining party. This identifies the report in the litigation record.',
           'Qualifications Summary: a brief overview of the credentials, training, and experience that qualify you to opine on the specific issues in this case. This is not your full CV (which is attached separately) but a focused narrative tying your background to the subject matter.',
@@ -105,7 +113,9 @@ export const LESSONS = {
       },
       {
         subheading: 'Industry-Specific Variations',
-        body: ['While the core sections remain consistent, the depth and emphasis shift by practice area:'],
+        body: [
+          'While the core sections remain consistent, the depth and emphasis shift by practice area:',
+        ],
         bullets: [
           'Construction defect: the analysis section typically includes site inspection findings, testing results, code and standard references, and a detailed deficiency-by-deficiency breakdown.',
           'Medical: causation opinions require a differential diagnosis section showing how alternative causes were systematically ruled out.',
@@ -118,7 +128,7 @@ export const LESSONS = {
       'A well-structured report signals competence to the court and gives opposing counsel fewer angles of attack. Structure is not a formality; it is a defense.',
   },
 
-  '3': {
+  3: {
     title: 'Writing Your Opinions: Clarity, Specificity, and Defensibility',
     estimatedMinutes: 8,
     sections: [
@@ -177,8 +187,9 @@ export const LESSONS = {
       'Every opinion should answer "what do you believe, and how confident are you?" in one clear sentence. If you cannot state your opinion clearly, you are not ready to write it.',
   },
 
-  '4': {
-    title: 'The Materials Reviewed Section: What to List, What to Omit, and How to Survive the Deposition Questions',
+  4: {
+    title:
+      'The Materials Reviewed Section: What to List, What to Omit, and How to Survive the Deposition Questions',
     estimatedMinutes: 7,
     sections: [
       {
@@ -222,7 +233,7 @@ export const LESSONS = {
       {
         subheading: 'Email and Communication Pitfalls',
         body: [
-          'Communications between you and retaining counsel deserve particular care. FRCP 26(b)(4)(C) protects most attorney-expert communications from discovery, but carves out three exceptions: communications relating to compensation for the expert\'s study or testimony, facts or data provided by counsel that you considered in forming your opinions, and assumptions provided by counsel that you relied on.',
+          "Communications between you and retaining counsel deserve particular care. FRCP 26(b)(4)(C) protects most attorney-expert communications from discovery, but carves out three exceptions: communications relating to compensation for the expert's study or testimony, facts or data provided by counsel that you considered in forming your opinions, and assumptions provided by counsel that you relied on.",
           'If counsel sent you an email containing factual data that you considered, the content of that communication (though not necessarily the communication itself) may be discoverable. Draft communications with counsel carefully, and confirm with counsel which facts and assumptions should be documented in the report itself.',
         ],
       },
@@ -235,7 +246,9 @@ export const LESSONS = {
       },
       {
         subheading: 'Industry-Specific Materials Lists',
-        body: ['The types of materials you review vary significantly by discipline. Common categories include:'],
+        body: [
+          'The types of materials you review vary significantly by discipline. Common categories include:',
+        ],
         bullets: [
           'Construction: plans, specifications, change orders, daily logs, inspection reports, building code editions, manufacturer installation instructions, weather data, geotechnical reports',
           'Medical: medical records, imaging studies, laboratory results, published medical literature, clinical guidelines, pharmacy records, life care plans',
@@ -248,14 +261,14 @@ export const LESSONS = {
       'The Materials Reviewed section is a minefield. Every document on the list is fair game at deposition, and every document missing from the list is a potential credibility attack.',
   },
 
-  '5': {
+  5: {
     title: 'Supporting Your Conclusions: Methodology, Data, and Citations',
     estimatedMinutes: 8,
     sections: [
       {
         subheading: null,
         body: [
-          'A well-documented report demonstrating sound methodology strengthens the expert\'s position to survive a Daubert challenge to their testimony; a report that merely states conclusions without showing methodology is vulnerable to exclusion. The analysis section of your report is where you show your work.',
+          "A well-documented report demonstrating sound methodology strengthens the expert's position to survive a Daubert challenge to their testimony; a report that merely states conclusions without showing methodology is vulnerable to exclusion. The analysis section of your report is where you show your work.",
         ],
       },
       {
@@ -267,7 +280,9 @@ export const LESSONS = {
       },
       {
         subheading: 'Showing Your Work',
-        body: ['Depending on your discipline, "showing your work" may include:'],
+        body: [
+          'Depending on your discipline, "showing your work" may include:',
+        ],
         bullets: [
           'Calculations, measurements, or test results with documented procedures',
           'Statistical analyses with sample sizes, confidence intervals, and methodology descriptions',
@@ -303,8 +318,9 @@ export const LESSONS = {
       'A report that documents its methodology gives the retaining attorney the tools to defend your testimony at the gatekeeping stage; one that simply announces conclusions does not.',
   },
 
-  '6': {
-    title: 'Writing for Deposition Defense: Every Sentence Will Be Read Back to You Under Oath',
+  6: {
+    title:
+      'Writing for Deposition Defense: Every Sentence Will Be Read Back to You Under Oath',
     estimatedMinutes: 8,
     sections: [
       {
@@ -367,7 +383,7 @@ export const LESSONS = {
       'Write your report as if opposing counsel is sitting across from you, because at deposition, they will be, and they will have your report memorized.',
   },
 
-  '7': {
+  7: {
     title: 'Formatting, Exhibits, and Professional Presentation',
     estimatedMinutes: 6,
     sections: [
@@ -440,14 +456,14 @@ export const LESSONS = {
       'Typographical errors, mislabeled exhibits, and sloppy formatting tell the reader the analysis was careless too. Presentation is credibility.',
   },
 
-  '8': {
+  8: {
     title: 'Common Pitfalls: What Gets Reports Challenged or Excluded',
     estimatedMinutes: 7,
     sections: [
       {
         subheading: null,
         body: [
-          'Most successful challenges to expert reports exploit preventable errors. The pitfalls below represent the most common reasons expert reports are challenged, excluded, or used to undermine the expert\'s credibility at deposition and trial.',
+          "Most successful challenges to expert reports exploit preventable errors. The pitfalls below represent the most common reasons expert reports are challenged, excluded, or used to undermine the expert's credibility at deposition and trial.",
         ],
       },
       {
@@ -504,7 +520,7 @@ export const LESSONS = {
     keyTakeaway:
       'Most successful challenges to expert reports exploit preventable errors. Attention to detail is your best defense.',
   },
-};
+}
 
 // ============================================================
 // BRANCHING SCENARIO
@@ -549,7 +565,7 @@ export const SCENARIO_DATA = {
           text: '"Soften it slightly but keep the general tone. The attorney wants strong language."',
           correct: false,
           consequence:
-            'The retaining attorney may prefer strong language, but your duty is to the court, not to the attorney\'s preferred tone. A report that reads like a brief will be attacked as advocacy, and the expert\'s credibility will suffer. The attorney can use strong language in their brief; the expert should not.',
+            "The retaining attorney may prefer strong language, but your duty is to the court, not to the attorney's preferred tone. A report that reads like a brief will be attacked as advocacy, and the expert's credibility will suffer. The attorney can use strong language in their brief; the expert should not.",
           takeaway:
             'Your report is not a brief. The attorney advocates; you educate. Meeting the attorney halfway on advocacy language still leaves you exposed at deposition.',
         },
@@ -561,7 +577,7 @@ export const SCENARIO_DATA = {
       prompt:
         'Later in the draft, you find the following opinion: "The total cost of repair is $2.4 million." The opinion is stated without any supporting methodology, no breakdown of how the figure was calculated, no reference to cost data sources, and no explanation of assumptions. How should you advise your colleague?',
       redirectIfWrongCp1:
-        'Let\'s assume you correctly identified the advocacy language issue. Now, another problem: the missing methodology.',
+        "Let's assume you correctly identified the advocacy language issue. Now, another problem: the missing methodology.",
       choices: [
         {
           id: 'a',
@@ -598,7 +614,7 @@ export const SCENARIO_DATA = {
     'Every opinion must show its analytical path. A conclusion without methodology is vulnerable to exclusion.',
     'Review every draft as if opposing counsel will read it, because they will.',
   ],
-};
+}
 
 // ============================================================
 // KNOWLEDGE CHECK
@@ -608,19 +624,35 @@ export const SCENARIO_DATA = {
 // Q8 neutral.
 // ============================================================
 
-export const PASS_SCORE = 6;
-export const TOTAL_QUESTIONS = 8;
+export const PASS_SCORE = 6
+export const TOTAL_QUESTIONS = 8
 
 export const QUIZ_DATA = {
   questions: [
     {
       id: 'q1',
-      text: 'Under FRCP 26(a)(2)(B), which of the following is NOT required in a testifying expert\'s written report?',
+      text: "Under FRCP 26(a)(2)(B), which of the following is NOT required in a testifying expert's written report?",
       options: [
-        { id: 'a', text: 'A complete statement of all opinions and their bases', correct: false },
-        { id: 'b', text: 'The facts or data considered by the expert', correct: false },
-        { id: 'c', text: 'A list of cases in which the expert testified in the preceding 4 years', correct: false },
-        { id: 'd', text: 'A list of all documents produced by the retaining attorney in the litigation', correct: true },
+        {
+          id: 'a',
+          text: 'A complete statement of all opinions and their bases',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'The facts or data considered by the expert',
+          correct: false,
+        },
+        {
+          id: 'c',
+          text: 'A list of cases in which the expert testified in the preceding 4 years',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'A list of all documents produced by the retaining attorney in the litigation',
+          correct: true,
+        },
       ],
       explanation:
         'FRCP 26(a)(2)(B) requires: (i) a complete statement of all opinions and their bases, (ii) the facts or data considered, (iii) any exhibits, (iv) qualifications including publications from the preceding 10 years, (v) a list of cases testified in during the preceding 4 years, and (vi) a statement of compensation. It does not require a list of all documents produced by the retaining attorney.',
@@ -629,46 +661,82 @@ export const QUIZ_DATA = {
       id: 'q2',
       text: 'An expert report contains the following opinion: "It is possible that the water intrusion was caused by defective flashing installation." What is the primary weakness of this statement?',
       options: [
-        { id: 'a', text: 'It fails to identify the applicable building code', correct: false },
+        {
+          id: 'a',
+          text: 'It fails to identify the applicable building code',
+          correct: false,
+        },
         {
           id: 'b',
           text: 'It uses hedge language ("it is possible") rather than stating a committed professional conclusion to a reasonable degree of certainty',
           correct: true,
         },
-        { id: 'c', text: 'It does not include a citation to peer-reviewed literature', correct: false },
-        { id: 'd', text: 'It is too short and should include the full methodology in the opinion statement', correct: false },
+        {
+          id: 'c',
+          text: 'It does not include a citation to peer-reviewed literature',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'It is too short and should include the full methodology in the opinion statement',
+          correct: false,
+        },
       ],
       explanation:
         'Hedge words like "might," "could," and "possibly" weaken opinions and invite challenge. A well-stated opinion should be expressed to a "reasonable degree of professional certainty" and tied to the methodology and evidence that supports it. The stronger formulation would be: "It is my opinion, to a reasonable degree of engineering certainty, that the water intrusion was caused by defective installation of the roof-to-wall flashing, based on my site inspection, destructive testing, and code analysis."',
     },
     {
       id: 'q3',
-      text: 'A physician\'s expert report states a causation opinion but does not describe the differential diagnosis methodology used to rule out alternative causes. What is the most likely challenge this report will face?',
+      text: "A physician's expert report states a causation opinion but does not describe the differential diagnosis methodology used to rule out alternative causes. What is the most likely challenge this report will face?",
       options: [
-        { id: 'a', text: 'A challenge to the physician\'s qualifications', correct: false },
-        { id: 'b', text: 'A challenge to the completeness of the materials reviewed', correct: false },
+        {
+          id: 'a',
+          text: "A challenge to the physician's qualifications",
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'A challenge to the completeness of the materials reviewed',
+          correct: false,
+        },
         {
           id: 'c',
           text: 'A Daubert challenge arguing the opinion lacks reliable methodology',
           correct: true,
         },
-        { id: 'd', text: 'A challenge based on the physician\'s compensation', correct: false },
+        {
+          id: 'd',
+          text: "A challenge based on the physician's compensation",
+          correct: false,
+        },
       ],
       explanation:
-        'Medical causation opinions in federal court must demonstrate differential diagnosis methodology, showing how the expert systematically considered and ruled out alternative causes. A report that states a causation conclusion without documenting this methodology is vulnerable to a Daubert challenge on the ground that the opinion lacks a reliable methodological foundation. The court evaluates whether the expert\'s methodology is reliable, not whether the conclusion is correct.',
+        "Medical causation opinions in federal court must demonstrate differential diagnosis methodology, showing how the expert systematically considered and ruled out alternative causes. A report that states a causation conclusion without documenting this methodology is vulnerable to a Daubert challenge on the ground that the opinion lacks a reliable methodological foundation. The court evaluates whether the expert's methodology is reliable, not whether the conclusion is correct.",
     },
     {
       id: 'q4',
       text: 'An expert discovers that his current report contains a paragraph describing "the October 2019 site inspection of the Elm Street property" - but his current case involves a different property and his inspection occurred in March 2024. What most likely happened, and what is the consequence?',
       options: [
-        { id: 'a', text: 'A typographical error that can be corrected with a supplemental report and will have minimal impact', correct: false },
+        {
+          id: 'a',
+          text: 'A typographical error that can be corrected with a supplemental report and will have minimal impact',
+          correct: false,
+        },
         {
           id: 'b',
-          text: 'Language was copy-pasted from a prior report, and opposing counsel will use this to argue that the expert\'s entire analysis is recycled rather than case-specific',
+          text: "Language was copy-pasted from a prior report, and opposing counsel will use this to argue that the expert's entire analysis is recycled rather than case-specific",
           correct: true,
         },
-        { id: 'c', text: 'The court reporter made a transcription error from the expert\'s dictation', correct: false },
-        { id: 'd', text: 'Retaining counsel inserted the wrong information, which shields the expert from responsibility', correct: false },
+        {
+          id: 'c',
+          text: "The court reporter made a transcription error from the expert's dictation",
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'Retaining counsel inserted the wrong information, which shields the expert from responsibility',
+          correct: false,
+        },
       ],
       explanation:
         'Reusing language from prior reports is efficient but dangerous. Case-specific details from a prior engagement that appear in your current report will be found by opposing counsel, and the resulting deposition questioning will be devastating. Every report should be drafted from scratch for the specific case. Use templates for structure, but write the substance fresh each time.',
@@ -677,17 +745,29 @@ export const QUIZ_DATA = {
       id: 'q5',
       text: 'An expert discovers that their written report contains a statement that is inconsistent with testimony they gave at a recent deposition in the same case. What is the best course of action?',
       options: [
-        { id: 'a', text: 'Do nothing and hope opposing counsel does not notice the inconsistency', correct: false },
-        { id: 'b', text: 'Change the deposition transcript to match the report', correct: false },
+        {
+          id: 'a',
+          text: 'Do nothing and hope opposing counsel does not notice the inconsistency',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: 'Change the deposition transcript to match the report',
+          correct: false,
+        },
         {
           id: 'c',
           text: 'Issue a supplemental or amended report correcting the inconsistency and notify retaining counsel immediately',
           correct: true,
         },
-        { id: 'd', text: 'Withdraw the report entirely and decline to testify', correct: false },
+        {
+          id: 'd',
+          text: 'Withdraw the report entirely and decline to testify',
+          correct: false,
+        },
       ],
       explanation:
-        'Inconsistencies between the written report and deposition testimony are a primary tool for impeachment at trial. Opposing counsel will identify every discrepancy and use it to undermine the expert\'s credibility. The appropriate response is to issue a supplemental or amended report, disclose the correction to retaining counsel, and be prepared to explain the change transparently. Hoping the inconsistency goes unnoticed is not a viable strategy; opposing counsel reviews reports and transcripts with precisely this goal.',
+        "Inconsistencies between the written report and deposition testimony are a primary tool for impeachment at trial. Opposing counsel will identify every discrepancy and use it to undermine the expert's credibility. The appropriate response is to issue a supplemental or amended report, disclose the correction to retaining counsel, and be prepared to explain the change transparently. Hoping the inconsistency goes unnoticed is not a viable strategy; opposing counsel reviews reports and transcripts with precisely this goal.",
     },
     {
       id: 'q6',
@@ -698,25 +778,49 @@ export const QUIZ_DATA = {
           text: 'Yes. FRCP 26(a)(2)(B) requires disclosure of facts or data "considered," which is broader than "relied upon." Every document reviewed must be listed.',
           correct: true,
         },
-        { id: 'b', text: 'No. Only documents the expert affirmatively relied on should be listed.', correct: false },
-        { id: 'c', text: 'Only if opposing counsel specifically requests it during discovery.', correct: false },
-        { id: 'd', text: 'Only if the document supports the expert\'s conclusions.', correct: false },
+        {
+          id: 'b',
+          text: 'No. Only documents the expert affirmatively relied on should be listed.',
+          correct: false,
+        },
+        {
+          id: 'c',
+          text: 'Only if opposing counsel specifically requests it during discovery.',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: "Only if the document supports the expert's conclusions.",
+          correct: false,
+        },
       ],
       explanation:
         'FRCP 26(a)(2)(B)(ii) requires the report to contain "the facts or data considered by the witness in forming" the opinions. The word "considered" is broader than "relied upon." A document that the expert reviewed and considered, even if the expert ultimately did not rely on it, must be disclosed. Omitting such a document creates a credibility risk if opposing counsel discovers the gap, because the implication is that the expert was either careless (forgot to list it) or deliberately hiding unfavorable material.',
     },
     {
       id: 'q7',
-      text: 'A digital forensics expert\'s report includes screenshots of forensic tool output, but none of the screenshots are labeled as exhibits or include descriptive captions. What is the primary risk?',
+      text: "A digital forensics expert's report includes screenshots of forensic tool output, but none of the screenshots are labeled as exhibits or include descriptive captions. What is the primary risk?",
       options: [
-        { id: 'a', text: 'The screenshots are automatically inadmissible as evidence under the Federal Rules of Evidence', correct: false },
+        {
+          id: 'a',
+          text: 'The screenshots are automatically inadmissible as evidence under the Federal Rules of Evidence',
+          correct: false,
+        },
         {
           id: 'b',
           text: 'Unlabeled exhibits cannot be efficiently referenced at deposition or trial and signal careless report preparation',
           correct: true,
         },
-        { id: 'c', text: 'The court will exclude the entire expert report', correct: false },
-        { id: 'd', text: 'The opposing expert will be unable to write a rebuttal report', correct: false },
+        {
+          id: 'c',
+          text: 'The court will exclude the entire expert report',
+          correct: false,
+        },
+        {
+          id: 'd',
+          text: 'The opposing expert will be unable to write a rebuttal report',
+          correct: false,
+        },
       ],
       explanation:
         'Exhibits that lack labels, numbers, and descriptive captions cannot be efficiently referenced during deposition or trial proceedings. Counsel and the court need to refer to specific exhibits by number ("Please turn to Exhibit 7"). Unlabeled exhibits also signal careless preparation, which undermines the expert\'s credibility. While unlabeled exhibits are not automatically inadmissible, the practical impact on the expert\'s credibility and the usability of the report is significant.',
@@ -725,17 +829,29 @@ export const QUIZ_DATA = {
       id: 'q8',
       text: 'Before submitting a final expert report, the most important self-editing question an expert should ask about every sentence is:',
       options: [
-        { id: 'a', text: '"Does the retaining attorney approve of this language?"', correct: false },
-        { id: 'b', text: '"Is this the strongest possible statement of my opinion?"', correct: false },
+        {
+          id: 'a',
+          text: '"Does the retaining attorney approve of this language?"',
+          correct: false,
+        },
+        {
+          id: 'b',
+          text: '"Is this the strongest possible statement of my opinion?"',
+          correct: false,
+        },
         {
           id: 'c',
           text: '"Can I defend this statement under cross-examination?"',
           correct: true,
         },
-        { id: 'd', text: '"Will the jury find this persuasive?"', correct: false },
+        {
+          id: 'd',
+          text: '"Will the jury find this persuasive?"',
+          correct: false,
+        },
       ],
       explanation:
-        'The expert\'s primary obligation is to provide defensible, well-supported opinions, not to please the retaining attorney, maximize rhetorical force, or persuade the jury. Every sentence in the report will be scrutinized at deposition, where opposing counsel will ask the expert to confirm, explain, or defend each statement. If the expert cannot defend a statement under cross-examination, it should not appear in the report. This question focuses the expert on credibility and defensibility, which are the foundations of effective expert testimony.',
+        "The expert's primary obligation is to provide defensible, well-supported opinions, not to please the retaining attorney, maximize rhetorical force, or persuade the jury. Every sentence in the report will be scrutinized at deposition, where opposing counsel will ask the expert to confirm, explain, or defend each statement. If the expert cannot defend a statement under cross-examination, it should not appear in the report. This question focuses the expert on credibility and defensibility, which are the foundations of effective expert testimony.",
     },
   ],
-};
+}

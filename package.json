@@ -6,12 +6,17 @@
     "client": "cd client && npm start",
     "dev": "npm run client",
     "build": "cd client && npm run build",
-    "install:all": "npm install && cd client && npm install"
+    "install:all": "npm install && cd client && npm install",
+    "format": "prettier --write \"client/src/**/*.{js,jsx,css}\" \"api/**/*.js\"",
+    "format:check": "prettier --check \"client/src/**/*.{js,jsx,css}\" \"api/**/*.js\"",
+    "prepare": "husky"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
+    "prettier": "^3.8.1"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.95.3"
+    "@supabase/supabase-js": "^2.100.0"
   }
 }

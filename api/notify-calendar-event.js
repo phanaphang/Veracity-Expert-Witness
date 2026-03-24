@@ -1,78 +1,107 @@
-const supabaseAdmin = require('./_lib/supabaseAdmin');
-const { rateLimit } = require('./_lib/rateLimit');
+const supabaseAdmin = require('./_lib/supabaseAdmin')
+const { rateLimit } = require('./_lib/rateLimit')
 
 const escapeHtml = (str) =>
-  String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
-  const authHeader = req.headers.authorization;
+  const ip =
+    req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+    req.socket?.remoteAddress ||
+    'unknown'
+  const authHeader = req.headers.authorization
   if (!authHeader?.startsWith('Bearer ')) {
-    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | notify-calendar-event | missing token`);
-    return res.status(401).json({ error: 'Missing authorization token' });
+    console.warn(
+      `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | notify-calendar-event | missing token`
+    )
+    return res.status(401).json({ error: 'Missing authorization token' })
   }
 
-  const token = authHeader.replace('Bearer ', '');
-  const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+  const token = authHeader.replace('Bearer ', '')
+  const {
+    data: { user },
+    error: authError,
+  } = await supabaseAdmin.auth.getUser(token)
   if (authError || !user) {
-    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | notify-calendar-event | invalid token`);
-    return res.status(401).json({ error: 'Invalid token' });
+    console.warn(
+      `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | notify-calendar-event | invalid token`
+    )
+    return res.status(401).json({ error: 'Invalid token' })
   }
 
   const { data: callerProfile } = await supabaseAdmin
     .from('profiles')
     .select('role, first_name, last_name')
     .eq('id', user.id)
-    .single();
+    .single()
 
   if (!callerProfile || !['admin', 'staff'].includes(callerProfile.role)) {
-    console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | notify-calendar-event | insufficient role: ${callerProfile?.role}`);
-    return res.status(403).json({ error: 'Admin or staff access required' });
+    console.warn(
+      `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | notify-calendar-event | insufficient role: ${callerProfile?.role}`
+    )
+    return res.status(403).json({ error: 'Admin or staff access required' })
   }
 
-  const rl = rateLimit(req, { maxRequests: 10 });
+  const rl = rateLimit(req, { maxRequests: 10 })
   if (rl.limited) {
-    res.setHeader('Retry-After', String(rl.retryAfter));
-    return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+    res.setHeader('Retry-After', String(rl.retryAfter))
+    return res
+      .status(429)
+      .json({ error: 'Too many requests. Please try again later.' })
   }
 
-  const { expertId, eventTitle, startTime, endTime, action } = req.body;
+  const { expertId, eventTitle, startTime, endTime, action } = req.body
   if (!expertId || !eventTitle || !startTime || !endTime || !action) {
-    return res.status(400).json({ error: 'Missing required fields' });
+    return res.status(400).json({ error: 'Missing required fields' })
   }
 
   const { data: expert } = await supabaseAdmin
     .from('profiles')
     .select('email, first_name, last_name')
     .eq('id', expertId)
-    .single();
+    .single()
 
   if (!expert?.email) {
-    return res.status(404).json({ error: 'Expert not found' });
+    return res.status(404).json({ error: 'Expert not found' })
   }
 
-  const expertName = expert.first_name ? `${expert.first_name}` : 'there';
+  const expertName = expert.first_name ? `${expert.first_name}` : 'there'
   const adminName = callerProfile.first_name
     ? `${callerProfile.first_name} ${callerProfile.last_name || ''}`.trim()
-    : 'A Veracity team member';
+    : 'A Veracity team member'
 
   const formatDate = (iso) => {
-    const d = new Date(iso);
-    return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-  };
+    const d = new Date(iso)
+    return d.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    })
+  }
   const formatTime = (iso) => {
-    const d = new Date(iso);
-    return d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZoneName: 'short' });
-  };
+    const d = new Date(iso)
+    return d.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZoneName: 'short',
+    })
+  }
 
-  const actionLabel = action === 'created' ? 'added a new event' : 'updated an event';
-  const calendarUrl = 'https://veracityexpertwitness.com/portal/calendar';
+  const actionLabel =
+    action === 'created' ? 'added a new event' : 'updated an event'
+  const calendarUrl = 'https://veracityexpertwitness.com/portal/calendar'
 
-  const plainText = `Calendar Update\n\nHi ${expertName},\n\n${adminName} has ${actionLabel} on your calendar:\n\n${eventTitle}\n${formatDate(startTime)}\n${formatTime(startTime)} – ${formatTime(endTime)}\n\nView your calendar: ${calendarUrl}\n\n— Veracity Expert Witness Portal`;
+  const plainText = `Calendar Update\n\nHi ${expertName},\n\n${adminName} has ${actionLabel} on your calendar:\n\n${eventTitle}\n${formatDate(startTime)}\n${formatTime(startTime)} – ${formatTime(endTime)}\n\nView your calendar: ${calendarUrl}\n\n— Veracity Expert Witness Portal`
 
   const htmlContent = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -100,45 +129,52 @@ module.exports = async (req, res) => {
         Veracity Expert Witness Portal
       </div>
     </div>
-  `;
+  `
 
-  const apiUser = (process.env.PAUBOX_API_USER || '').trim();
-  const apiKey = (process.env.PAUBOX_API_KEY || '').trim();
+  const apiUser = (process.env.PAUBOX_API_USER || '').trim()
+  const apiKey = (process.env.PAUBOX_API_KEY || '').trim()
 
   try {
-    const response = await fetch(`https://api.paubox.net/v1/${apiUser}/messages`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Token token=${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        data: {
-          message: {
-            recipients: [expert.email],
-            headers: {
-              subject: `Calendar ${action === 'created' ? 'event added' : 'event updated'}: ${eventTitle}`,
-              from: process.env.NOREPLY_EMAIL || 'noreply@veracityexpertwitness.com',
-              'List-Unsubscribe': `<mailto:${process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com'}?subject=Unsubscribe>`,
-            },
-            content: {
-              'text/html': htmlContent,
-              'text/plain': plainText,
+    const response = await fetch(
+      `https://api.paubox.net/v1/${apiUser}/messages`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Token token=${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            message: {
+              recipients: [expert.email],
+              headers: {
+                subject: `Calendar ${action === 'created' ? 'event added' : 'event updated'}: ${eventTitle}`,
+                from:
+                  process.env.NOREPLY_EMAIL ||
+                  'noreply@veracityexpertwitness.com',
+                'List-Unsubscribe': `<mailto:${process.env.CONTACT_EMAIL || 'support@veracityexpertwitness.com'}?subject=Unsubscribe>`,
+              },
+              content: {
+                'text/html': htmlContent,
+                'text/plain': plainText,
+              },
             },
           },
-        },
-      }),
-    });
+        }),
+      }
+    )
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error('Paubox API error:', response.status, errorText);
-      return res.status(500).json({ error: 'Failed to send notification email' });
+      const errorText = await response.text()
+      console.error('Paubox API error:', response.status, errorText)
+      return res
+        .status(500)
+        .json({ error: 'Failed to send notification email' })
     }
 
-    return res.status(200).json({ success: true });
+    return res.status(200).json({ success: true })
   } catch (err) {
-    console.error('Email send error:', err.message);
-    return res.status(500).json({ error: 'Failed to send notification email' });
+    console.error('Email send error:', err.message)
+    return res.status(500).json({ error: 'Failed to send notification email' })
   }
-};
+}

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import TrainingDisclaimer from '../../components/TrainingDisclaimer';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import TrainingDisclaimer from '../../components/TrainingDisclaimer'
 // -- Shared HTML shell --
 const htmlShell = (title, body) => `<!DOCTYPE html>
 <html lang="en">
@@ -60,12 +60,13 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
     </div>
   </div>
 </body>
-</html>`;
+</html>`
 
 // -- Resource 1: Trial Preparation Checklist --
-const resource1Html = () => htmlShell(
-  'Trial Preparation Checklist',
-  `
+const resource1Html = () =>
+  htmlShell(
+    'Trial Preparation Checklist',
+    `
 <h1>Trial Preparation Checklist</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Essential steps for preparing to testify as an expert witness at trial
@@ -105,12 +106,13 @@ const resource1Html = () => htmlShell(
 <div class="check-item">Know how many times you have testified and for which sides</div>
 <div class="check-item">Be ready to articulate why your methodology is reliable</div>
 `
-);
+  )
 
 // -- Resource 2: Cross-Examination Survival Guide --
-const resource2Html = () => htmlShell(
-  'Cross-Examination Survival Guide',
-  `
+const resource2Html = () =>
+  htmlShell(
+    'Cross-Examination Survival Guide',
+    `
 <h1>Cross-Examination Survival Guide</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Techniques, traps, and defenses for expert witnesses under cross-examination at trial
@@ -173,12 +175,13 @@ const resource2Html = () => htmlShell(
   <li>If a question is compound, ambiguous, or contains an incorrect assumption, say so</li>
 </ul>
 `
-);
+  )
 
 // -- Resource 3: Jury Communication Tips --
-const resource3Html = () => htmlShell(
-  'Jury Communication Tips',
-  `
+const resource3Html = () =>
+  htmlShell(
+    'Jury Communication Tips',
+    `
 <h1>Jury Communication Tips for Expert Witnesses</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   How to explain complex concepts clearly, use analogies, and present with confidence
@@ -266,12 +269,13 @@ const resource3Html = () => htmlShell(
   </tbody>
 </table>
 `
-);
+  )
 
 // -- Resource 4: Full Module Summary --
-const resource4Html = () => htmlShell(
-  'Trial Testimony Module - Full Summary',
-  `
+const resource4Html = () =>
+  htmlShell(
+    'Trial Testimony Module - Full Summary',
+    `
 <h1>Trial Testimony Module - Full Summary</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Condensed reference notes from all ten lessons -- Trial Testimony as an Expert Witness
@@ -358,7 +362,7 @@ const resource4Html = () => htmlShell(
   <li>Maintain a testimony log and seek opportunities to improve</li>
 </ul>
 `
-);
+  )
 
 // -- Page component --
 
@@ -383,7 +387,7 @@ const RESOURCES = [
     id: 'r3',
     title: 'Jury Communication Tips',
     description:
-      'Plain language principles, body language do\'s and don\'ts, pacing and emphasis, and when to look at the jury vs. the attorney.',
+      "Plain language principles, body language do's and don'ts, pacing and emphasis, and when to look at the jury vs. the attorney.",
     icon: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z',
     generate: resource3Html,
   },
@@ -395,22 +399,30 @@ const RESOURCES = [
     icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
     generate: resource4Html,
   },
-];
+]
 
 export default function TrialTestimonyResourcesPage() {
   const openResource = (resource) => {
-    const win = window.open('', '_blank');
-    if (!win) return;
-    win.document.write(resource.generate());
-    win.document.close();
-  };
+    const win = window.open('', '_blank')
+    if (!win) return
+    win.document.write(resource.generate())
+    win.document.close()
+  }
 
   return (
     <div>
-      <Link to="/portal/resources" className="training-lesson__back" style={{ color: 'var(--color-accent)' }}>← All Training Resources</Link>
+      <Link
+        to="/portal/resources"
+        className="training-lesson__back"
+        style={{ color: 'var(--color-accent)' }}
+      >
+        ← All Training Resources
+      </Link>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
-        <p className="portal-page__subtitle">4 reference guides - available anytime, open in a new tab</p>
+        <p className="portal-page__subtitle">
+          4 reference guides - available anytime, open in a new tab
+        </p>
       </div>
 
       <TrainingDisclaimer />
@@ -419,8 +431,20 @@ export default function TrialTestimonyResourcesPage() {
         {RESOURCES.map((res) => (
           <div key={res.id} className="portal-card training-resource-card">
             <div className="training-resource-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
-                <path d={res.icon} stroke="var(--color-navy)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                width="28"
+                height="28"
+                aria-hidden="true"
+              >
+                <path
+                  d={res.icon}
+                  stroke="var(--color-navy)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div className="training-resource-card__body">
@@ -438,5 +462,5 @@ export default function TrialTestimonyResourcesPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }

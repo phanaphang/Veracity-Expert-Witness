@@ -4,9 +4,9 @@
   "private": true,
   "dependencies": {
     "@e965/xlsx": "^0.20.3",
-    "@supabase/supabase-js": "^2.95.3",
+    "@supabase/supabase-js": "^2.100.0",
     "date-fns": "^4.1.0",
-    "dompurify": "^3.3.2",
+    "dompurify": "^3.3.3",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.0",
     "pdf-lib": "^1.17.1",
@@ -14,7 +14,7 @@
     "react-big-calendar": "^1.19.4",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^2.0.5",
-    "react-router-dom": "^7.13.0"
+    "react-router-dom": "^7.13.2"
   },
   "scripts": {
     "start": "vite",

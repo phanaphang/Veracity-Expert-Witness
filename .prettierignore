@@ -1,0 +1,7 @@
+*.md
+node_modules
+client/node_modules
+dist
+build
+client/dist
+.husky

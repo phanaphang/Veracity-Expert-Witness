@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import TrainingDisclaimer from '../../components/TrainingDisclaimer';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import TrainingDisclaimer from '../../components/TrainingDisclaimer'
 // -- Shared HTML shell --
 const htmlShell = (title, body) => `<!DOCTYPE html>
 <html lang="en">
@@ -60,12 +60,13 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
     </div>
   </div>
 </body>
-</html>`;
+</html>`
 
 // -- Resource 1: Deposition Preparation Quick Reference Card --
-const resource1Html = () => htmlShell(
-  'Deposition Preparation Quick Reference Card',
-  `
+const resource1Html = () =>
+  htmlShell(
+    'Deposition Preparation Quick Reference Card',
+    `
 <h1>Deposition Preparation Quick Reference Card</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Essential preparation steps, key rules, and answering techniques for expert depositions
@@ -151,12 +152,13 @@ const resource1Html = () => htmlShell(
   </tbody>
 </table>
 `
-);
+  )
 
 // -- Resource 2: Answering Techniques Guide --
-const resource2Html = () => htmlShell(
-  'Deposition Answering Techniques Guide',
-  `
+const resource2Html = () =>
+  htmlShell(
+    'Deposition Answering Techniques Guide',
+    `
 <h1>Deposition Answering Techniques Guide</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   The listen-pause-answer method, short answers, qualifying responses, and handling difficult questions
@@ -257,12 +259,13 @@ const resource2Html = () => htmlShell(
   </tbody>
 </table>
 `
-);
+  )
 
 // -- Resource 3: Common Traps & Counter-Strategies Checklist --
-const resource3Html = () => htmlShell(
-  'Common Deposition Traps & Counter-Strategies',
-  `
+const resource3Html = () =>
+  htmlShell(
+    'Common Deposition Traps & Counter-Strategies',
+    `
 <h1>Common Deposition Traps &amp; Counter-Strategies</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Recognize the setup before you fall into the sequence -- preparation and precise language are your best defense
@@ -358,12 +361,13 @@ const resource3Html = () => htmlShell(
 <div class="check-item">Apply the same standards to both sides -- fairness signals objectivity</div>
 <div class="check-item">Be precise -- say exactly what you mean, no more and no less</div>
 `
-);
+  )
 
 // -- Resource 4: Full Module Summary --
-const resource4Html = () => htmlShell(
-  'Deposition Module - Full Summary',
-  `
+const resource4Html = () =>
+  htmlShell(
+    'Deposition Module - Full Summary',
+    `
 <h1>Deposition Module - Full Summary</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Condensed reference notes from all eight lessons -- Deposition as an Expert Witness
@@ -454,7 +458,7 @@ const resource4Html = () => htmlShell(
   <li><strong>The transcript is permanent.</strong> Every word follows you to trial. Review it, maintain consistency, and learn from every deposition.</li>
 </ol>
 `
-);
+  )
 
 // -- Page component --
 
@@ -491,22 +495,30 @@ const RESOURCES = [
     icon: 'M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253',
     generate: resource4Html,
   },
-];
+]
 
 export default function DepositionResourcesPage() {
   const openResource = (resource) => {
-    const win = window.open('', '_blank');
-    if (!win) return;
-    win.document.write(resource.generate());
-    win.document.close();
-  };
+    const win = window.open('', '_blank')
+    if (!win) return
+    win.document.write(resource.generate())
+    win.document.close()
+  }
 
   return (
     <div>
-      <Link to="/portal/resources" className="training-lesson__back" style={{ color: 'var(--color-accent)' }}>← All Training Resources</Link>
+      <Link
+        to="/portal/resources"
+        className="training-lesson__back"
+        style={{ color: 'var(--color-accent)' }}
+      >
+        ← All Training Resources
+      </Link>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
-        <p className="portal-page__subtitle">4 reference guides - available anytime, open in a new tab</p>
+        <p className="portal-page__subtitle">
+          4 reference guides - available anytime, open in a new tab
+        </p>
       </div>
 
       <TrainingDisclaimer />
@@ -515,8 +527,20 @@ export default function DepositionResourcesPage() {
         {RESOURCES.map((res) => (
           <div key={res.id} className="portal-card training-resource-card">
             <div className="training-resource-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
-                <path d={res.icon} stroke="var(--color-navy)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                width="28"
+                height="28"
+                aria-hidden="true"
+              >
+                <path
+                  d={res.icon}
+                  stroke="var(--color-navy)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div className="training-resource-card__body">
@@ -534,5 +558,5 @@ export default function DepositionResourcesPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }

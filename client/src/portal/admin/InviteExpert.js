@@ -1,77 +1,83 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../hooks/useAuth';
-import { supabase } from '../../lib/supabase';
-import { useUnsavedChanges } from '../../hooks/useUnsavedChanges';
-import { useToast } from '../../contexts/ToastContext';
+import React, { useState } from 'react'
+import { useAuth } from '../../hooks/useAuth'
+import { supabase } from '../../lib/supabase'
+import { useUnsavedChanges } from '../../hooks/useUnsavedChanges'
+import { useToast } from '../../contexts/ToastContext'
 
 export default function InviteExpert() {
-  const { session } = useAuth();
-  const toast = useToast();
-  const [form, setForm] = useState({ email: '', first_name: '', last_name: '' });
-  const [sending, setSending] = useState(false);
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const isDirty = form.email !== '' || form.first_name !== '' || form.last_name !== '';
-  const { UnsavedModal } = useUnsavedChanges(isDirty);
+  const { session } = useAuth()
+  const toast = useToast()
+  const [form, setForm] = useState({ email: '', first_name: '', last_name: '' })
+  const [sending, setSending] = useState(false)
+  const [message, setMessage] = useState('')
+  const [error, setError] = useState('')
+  const [emailError, setEmailError] = useState('')
+  const isDirty =
+    form.email !== '' || form.first_name !== '' || form.last_name !== ''
+  const { UnsavedModal } = useUnsavedChanges(isDirty)
 
   const handleChange = (e) => {
-    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
-    if (e.target.name === 'email' && emailError) setEmailError('');
-  };
+    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    if (e.target.name === 'email' && emailError) setEmailError('')
+  }
 
   const handleEmailBlur = () => {
-    if (form.email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email)) {
-      setEmailError('Please enter a valid email address');
+    if (
+      form.email &&
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email)
+    ) {
+      setEmailError('Please enter a valid email address')
     } else {
-      setEmailError('');
+      setEmailError('')
     }
-  };
+  }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSending(true);
-    setMessage('');
-    setError('');
+    e.preventDefault()
+    setSending(true)
+    setMessage('')
+    setError('')
 
     try {
       // Get a fresh access token (the stored session token may have expired)
-      const { data: { session: currentSession } } = await supabase.auth.getSession();
-      const token = currentSession?.access_token || session?.access_token;
+      const {
+        data: { session: currentSession },
+      } = await supabase.auth.getSession()
+      const token = currentSession?.access_token || session?.access_token
 
       const res = await fetch('/api/invite', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(form),
-      });
+      })
 
-      const text = await res.text();
-      let data;
+      const text = await res.text()
+      let data
       try {
-        data = JSON.parse(text);
+        data = JSON.parse(text)
       } catch {
-        toast.error('Server error — please try again');
-        setSending(false);
-        return;
+        toast.error('Server error — please try again')
+        setSending(false)
+        return
       }
       if (!res.ok) {
-        toast.error(data.error || 'Failed to send invitation');
-        setSending(false);
-        return;
+        toast.error(data.error || 'Failed to send invitation')
+        setSending(false)
+        return
       }
 
-      toast.success(`Invitation sent to ${form.email}`);
-      setMessage(`Invitation sent to ${form.email}`);
-      setForm({ email: '', first_name: '', last_name: '' });
+      toast.success(`Invitation sent to ${form.email}`)
+      setMessage(`Invitation sent to ${form.email}`)
+      setForm({ email: '', first_name: '', last_name: '' })
     } catch (err) {
-      toast.error('Failed to send invitation');
+      toast.error('Failed to send invitation')
     }
 
-    setSending(false);
-  };
+    setSending(false)
+  }
 
   return (
     <div>
@@ -79,7 +85,9 @@ export default function InviteExpert() {
         <h1 className="portal-page__title">Invite Expert</h1>
       </div>
 
-      {message && <div className="portal-alert portal-alert--success">{message}</div>}
+      {message && (
+        <div className="portal-alert portal-alert--success">{message}</div>
+      )}
       {error && <div className="portal-alert portal-alert--error">{error}</div>}
 
       <div className="portal-card" style={{ maxWidth: 500 }}>
@@ -96,7 +104,18 @@ export default function InviteExpert() {
               required
               placeholder="expert@example.com"
             />
-            {emailError && <span style={{ fontSize: '0.75rem', color: 'var(--color-error)', marginTop: 4, display: 'block' }}>{emailError}</span>}
+            {emailError && (
+              <span
+                style={{
+                  fontSize: '0.75rem',
+                  color: 'var(--color-error)',
+                  marginTop: 4,
+                  display: 'block',
+                }}
+              >
+                {emailError}
+              </span>
+            )}
           </div>
           <div className="portal-list-item__row">
             <div className="portal-field">
@@ -120,7 +139,12 @@ export default function InviteExpert() {
               />
             </div>
           </div>
-          <button type="submit" className="btn btn--primary" disabled={sending} style={{ marginTop: 8, padding: '10px 24px' }}>
+          <button
+            type="submit"
+            className="btn btn--primary"
+            disabled={sending}
+            style={{ marginTop: 8, padding: '10px 24px' }}
+          >
             {sending ? 'Sending...' : 'Send Invitation'}
           </button>
         </form>
@@ -128,14 +152,26 @@ export default function InviteExpert() {
 
       <div className="portal-card" style={{ marginTop: 24 }}>
         <h2 className="portal-card__title">How It Works</h2>
-        <ol style={{ paddingLeft: 20, lineHeight: 2, fontSize: '0.9rem', color: 'var(--color-gray-600)' }}>
+        <ol
+          style={{
+            paddingLeft: 20,
+            lineHeight: 2,
+            fontSize: '0.9rem',
+            color: 'var(--color-gray-600)',
+          }}
+        >
           <li>Enter the expert&apos;s email address above</li>
-          <li>They&apos;ll receive an invitation email with a link to set their password</li>
-          <li>After signing in, they&apos;ll be prompted to complete their profile</li>
+          <li>
+            They&apos;ll receive an invitation email with a link to set their
+            password
+          </li>
+          <li>
+            After signing in, they&apos;ll be prompted to complete their profile
+          </li>
           <li>You can then review their profile and invite them to cases</li>
         </ol>
       </div>
       {UnsavedModal}
     </div>
-  );
+  )
 }

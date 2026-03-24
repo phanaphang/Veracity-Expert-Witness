@@ -1,6 +1,6 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import TrainingDisclaimer from '../../components/TrainingDisclaimer';
+import React from 'react'
+import { Link } from 'react-router-dom'
+import TrainingDisclaimer from '../../components/TrainingDisclaimer'
 // ── Shared HTML shell ──────────────────────────────────────────────────────────
 const htmlShell = (title, body) => `<!DOCTYPE html>
 <html lang="en">
@@ -60,12 +60,13 @@ const htmlShell = (title, body) => `<!DOCTYPE html>
     </div>
   </div>
 </body>
-</html>`;
+</html>`
 
 // ── Resource 1: Quick Reference Card ─────────────────────────────────────────
-const resource1Html = () => htmlShell(
-  'Frye vs. Kelly vs. Daubert Quick Reference Card',
-  `
+const resource1Html = () =>
+  htmlShell(
+    'Frye vs. Kelly vs. Daubert Quick Reference Card',
+    `
 <h1>Frye vs. Kelly vs. Daubert - Quick Reference Card</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   All eight professional disciplines: medical &amp; healthcare, engineering &amp; construction,
@@ -201,12 +202,13 @@ const resource1Html = () => htmlShell(
   </tbody>
 </table>
 `
-);
+  )
 
 // ── Resource 2: California Expert Admissibility Checklist ─────────────────────
-const resource2Html = () => htmlShell(
-  'California Expert Admissibility Checklist',
-  `
+const resource2Html = () =>
+  htmlShell(
+    'California Expert Admissibility Checklist',
+    `
 <h1>California Expert Admissibility Checklist</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   For expert witnesses across all industries testifying in California state court
@@ -310,12 +312,13 @@ const resource2Html = () => htmlShell(
   <li><strong>Red flags:</strong> expert-only techniques not used by the broader forensic community; no validated error rates; undocumented procedures; techniques criticized in the 2009 NAS or 2016 PCAST reports</li>
 </ul>
 `
-);
+  )
 
 // ── Resource 3: Federal Court Daubert Preparation Guide ──────────────────────
-const resource3Html = () => htmlShell(
-  'Federal Court Daubert Preparation Guide',
-  `
+const resource3Html = () =>
+  htmlShell(
+    'Federal Court Daubert Preparation Guide',
+    `
 <h1>Federal Court Daubert Preparation Guide</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   For expert witnesses across all industries
@@ -450,12 +453,13 @@ const resource3Html = () => htmlShell(
   <li><strong>Common exclusion patterns:</strong> no validated error rates; undocumented methodology; techniques not recognized by OSAC/NIST or the relevant forensic science community; expert-only methods without independent validation</li>
 </ul>
 `
-);
+  )
 
 // ── Resource 4: Full Module Summary ──────────────────────────────────────────
-const resource4Html = () => htmlShell(
-  'Admissibility Standards - Full Module Summary',
-  `
+const resource4Html = () =>
+  htmlShell(
+    'Admissibility Standards - Full Module Summary',
+    `
 <h1>Admissibility Standards - Full Module Summary</h1>
 <p style="color:#555;font-family:Arial,sans-serif;font-size:13px;">
   Condensed reference notes from all three lessons · Standards of Admissibility: Frye, Kelly, and Daubert
@@ -613,12 +617,13 @@ const resource4Html = () => htmlShell(
   <li><strong>Non-scientific experts are not exempt from Daubert.</strong> After Kumho Tire, engineers, accountants, and forensic technology experts face the same scrutiny as scientific witnesses in federal and most state courts.</li>
 </ol>
 `
-);
+  )
 
 // ── Resource 5: State-by-State Admissibility Standards ────────────────────────
-const resource5Html = () => htmlShell(
-  'State-by-State Admissibility Standards',
-  `
+const resource5Html = () =>
+  htmlShell(
+    'State-by-State Admissibility Standards',
+    `
 <h1>State-by-State Admissibility Standards</h1>
 <div class="subtitle">Which states use Daubert, Frye, or their own standard</div>
 
@@ -717,7 +722,7 @@ const resource5Html = () => htmlShell(
   <strong>Practice tip:</strong> Before accepting any expert retention, confirm (1) which court the case is in (state vs. federal), (2) which admissibility standard applies in that specific jurisdiction, and (3) whether the standard applies differently to scientific vs. non-scientific expert testimony. A Daubert state's federal court always uses Daubert, but the same state's courts may use Frye or a hybrid standard.
 </div>
 `
-);
+  )
 
 // ── Page component ────────────────────────────────────────────────────────────
 
@@ -762,22 +767,30 @@ const RESOURCES = [
     icon: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
     generate: resource5Html,
   },
-];
+]
 
 export default function AdmissibilityResourcesPage() {
   const openResource = (resource) => {
-    const win = window.open('', '_blank');
-    if (!win) return;
-    win.document.write(resource.generate());
-    win.document.close();
-  };
+    const win = window.open('', '_blank')
+    if (!win) return
+    win.document.write(resource.generate())
+    win.document.close()
+  }
 
   return (
     <div>
-      <Link to="/portal/resources" className="training-lesson__back" style={{ color: 'var(--color-accent)' }}>← All Training Resources</Link>
+      <Link
+        to="/portal/resources"
+        className="training-lesson__back"
+        style={{ color: 'var(--color-accent)' }}
+      >
+        ← All Training Resources
+      </Link>
       <div className="portal-page__header">
         <h1 className="portal-page__title">Downloadable Resources</h1>
-        <p className="portal-page__subtitle">5 reference guides - available anytime, open in a new tab</p>
+        <p className="portal-page__subtitle">
+          5 reference guides - available anytime, open in a new tab
+        </p>
       </div>
 
       <TrainingDisclaimer />
@@ -786,8 +799,20 @@ export default function AdmissibilityResourcesPage() {
         {RESOURCES.map((res) => (
           <div key={res.id} className="portal-card training-resource-card">
             <div className="training-resource-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
-                <path d={res.icon} stroke="var(--color-navy)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                width="28"
+                height="28"
+                aria-hidden="true"
+              >
+                <path
+                  d={res.icon}
+                  stroke="var(--color-navy)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
             </div>
             <div className="training-resource-card__body">
@@ -805,5 +830,5 @@ export default function AdmissibilityResourcesPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }

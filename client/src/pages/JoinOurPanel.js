@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import SEO from '../components/SEO';
+import React, { useState, useRef, useEffect } from 'react'
+import { Link } from 'react-router-dom'
+import SEO from '../components/SEO'
 
 const specialtyOptions = [
   'Medical & Healthcare',
@@ -12,40 +12,61 @@ const specialtyOptions = [
   'Accident Reconstruction',
   'Forensic Analysis',
   'Other',
-];
+]
 
 const benefits = [
   {
     title: 'Training Resources',
-    description: 'Access curated training materials, deposition preparation guides, and courtroom best practices to sharpen your skills as an expert witness.',
+    description:
+      'Access curated training materials, deposition preparation guides, and courtroom best practices to sharpen your skills as an expert witness.',
   },
   {
     title: 'Full Administrative Support',
-    description: 'Our team handles the administrative and logistics work so you can focus on what you do best: providing expert analysis and testimony.',
+    description:
+      'Our team handles the administrative and logistics work so you can focus on what you do best: providing expert analysis and testimony.',
   },
   {
     title: 'Scheduling & Compliance',
-    description: 'We coordinate scheduling, compliance requirements, and document management on your behalf for every engagement.',
+    description:
+      'We coordinate scheduling, compliance requirements, and document management on your behalf for every engagement.',
   },
   {
     title: 'Flexible Engagement',
-    description: 'Choose the cases that fit your expertise and availability. You decide which engagements to accept.',
+    description:
+      'Choose the cases that fit your expertise and availability. You decide which engagements to accept.',
   },
   {
     title: 'Secure Expert Portal',
-    description: 'Manage your profile, review case invitations, and communicate with our team through a secure online platform.',
+    description:
+      'Manage your profile, review case invitations, and communicate with our team through a secure online platform.',
   },
   {
     title: 'Professional Onboarding',
-    description: 'Confidential conflict screening and a streamlined onboarding process designed to respect your time and credentials.',
+    description:
+      'Confidential conflict screening and a streamlined onboarding process designed to respect your time and credentials.',
   },
-];
+]
 
 const steps = [
-  { number: '1', title: 'Apply', description: 'Submit your application with your credentials and area of expertise.' },
-  { number: '2', title: 'Get Vetted', description: 'Our team reviews your qualifications, experience, and professional background.' },
-  { number: '3', title: 'Receive Cases', description: 'Once approved, start receiving case assignment opportunities matched to your specialty.' },
-];
+  {
+    number: '1',
+    title: 'Apply',
+    description:
+      'Submit your application with your credentials and area of expertise.',
+  },
+  {
+    number: '2',
+    title: 'Get Vetted',
+    description:
+      'Our team reviews your qualifications, experience, and professional background.',
+  },
+  {
+    number: '3',
+    title: 'Receive Cases',
+    description:
+      'Once approved, start receiving case assignment opportunities matched to your specialty.',
+  },
+]
 
 function JoinOurPanel() {
   const [formData, setFormData] = useState({
@@ -55,56 +76,59 @@ function JoinOurPanel() {
     phone: '',
     specialty: '',
     bio: '',
-  });
+  })
 
-  const [website, setWebsite] = useState('');
-  const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState(null);
-  const [showTosModal, setShowTosModal] = useState(false);
-  const renderTime = useRef(Date.now());
+  const [website, setWebsite] = useState('')
+  const [errors, setErrors] = useState({})
+  const [status, setStatus] = useState(null)
+  const [showTosModal, setShowTosModal] = useState(false)
+  const renderTime = useRef(Date.now())
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    window.scrollTo(0, 0)
+  }, [])
 
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
 
   const validate = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = 'Name is required';
-    if (!formData.credentials.trim()) newErrors.credentials = 'Credentials/title is required';
+    const newErrors = {}
+    if (!formData.name.trim()) newErrors.name = 'Name is required'
+    if (!formData.credentials.trim())
+      newErrors.credentials = 'Credentials/title is required'
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = 'Email is required'
+    } else if (
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)
+    ) {
+      newErrors.email = 'Please enter a valid email'
     }
-    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
-    if (!formData.specialty) newErrors.specialty = 'Please select a specialty';
-    if (!formData.bio.trim()) newErrors.bio = 'Please provide a brief bio';
-    return newErrors;
-  };
+    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required'
+    if (!formData.specialty) newErrors.specialty = 'Please select a specialty'
+    if (!formData.bio.trim()) newErrors.bio = 'Please provide a brief bio'
+    return newErrors
+  }
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
+      setErrors((prev) => ({ ...prev, [name]: '' }))
     }
-  };
+  }
 
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const newErrors = validate();
+    e.preventDefault()
+    const newErrors = validate()
     if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return;
+      setErrors(newErrors)
+      return
     }
-    setShowTosModal(true);
-  };
+    setShowTosModal(true)
+  }
 
   const handleConfirmSubmit = async () => {
-    setShowTosModal(false);
-    setStatus('sending');
+    setShowTosModal(false)
+    setStatus('sending')
     try {
       const res = await fetch('/api/join-panel', {
         method: 'POST',
@@ -114,17 +138,24 @@ function JoinOurPanel() {
           website,
           _elapsed: (Date.now() - renderTime.current) / 1000,
         }),
-      });
+      })
       if (res.ok) {
-        setStatus('success');
-        setFormData({ name: '', credentials: '', email: '', phone: '', specialty: '', bio: '' });
+        setStatus('success')
+        setFormData({
+          name: '',
+          credentials: '',
+          email: '',
+          phone: '',
+          specialty: '',
+          bio: '',
+        })
       } else {
-        setStatus('error');
+        setStatus('error')
       }
     } catch {
-      setStatus('error');
+      setStatus('error')
     }
-  };
+  }
 
   return (
     <div className="legal-page">
@@ -136,23 +167,46 @@ function JoinOurPanel() {
       <nav className="navbar navbar--scrolled">
         <div className="navbar__container">
           <Link to="/" className="navbar__logo">
-            <svg className="navbar__logo-icon" viewBox="0 0 24 24" fill="none" width="28" height="28" aria-hidden="true">
+            <svg
+              className="navbar__logo-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              width="28"
+              height="28"
+              aria-hidden="true"
+            >
               <path d="M12 2L2 7l10 5 10-5-10-5z" fill="var(--color-accent)" />
-              <path d="M2 17l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
-              <path d="M2 12l10 5 10-5" stroke="var(--color-accent)" strokeWidth="2" fill="none" />
+              <path
+                d="M2 17l10 5 10-5"
+                stroke="var(--color-accent)"
+                strokeWidth="2"
+                fill="none"
+              />
+              <path
+                d="M2 12l10 5 10-5"
+                stroke="var(--color-accent)"
+                strokeWidth="2"
+                fill="none"
+              />
             </svg>
             <span>Veracity</span>
           </Link>
-          <Link to="/" className="navbar__btn navbar__btn--cta">Back to Home</Link>
+          <Link to="/" className="navbar__btn navbar__btn--cta">
+            Back to Home
+          </Link>
         </div>
       </nav>
 
       <header className="legal-header">
         <div className="section__container">
-          <Link to="/" className="legal-header__back">&larr; Back to Home</Link>
+          <Link to="/" className="legal-header__back">
+            &larr; Back to Home
+          </Link>
           <h1 className="legal-header__title">Join Our Expert Panel</h1>
           <p className="legal-header__subtitle">
-            Grow your practice by joining our network of expert witnesses. Receive case assignment opportunities, administrative support, and a secure platform to manage your engagements.
+            Grow your practice by joining our network of expert witnesses.
+            Receive case assignment opportunities, administrative support, and a
+            secure platform to manage your engagements.
           </p>
         </div>
       </header>
@@ -164,7 +218,9 @@ function JoinOurPanel() {
             {benefits.map((benefit) => (
               <div key={benefit.title} className="join-panel-benefit">
                 <h3 className="join-panel-benefit__title">{benefit.title}</h3>
-                <p className="join-panel-benefit__text">{benefit.description}</p>
+                <p className="join-panel-benefit__text">
+                  {benefit.description}
+                </p>
               </div>
             ))}
           </div>
@@ -186,18 +242,21 @@ function JoinOurPanel() {
         <section className="join-panel-section">
           <h2 className="join-panel-section__title">Apply Now</h2>
           <p className="join-panel-section__subtitle">
-            Fill out the form below and our team will review your application. We will be in touch within a few business days.
+            Fill out the form below and our team will review your application.
+            We will be in touch within a few business days.
           </p>
 
           <form className="contact__form" onSubmit={handleSubmit} noValidate>
             {status === 'success' && (
               <div className="contact__alert contact__alert--success">
-                Thank you for your application! Our team will review your information and be in touch within 1-2 business days.
+                Thank you for your application! Our team will review your
+                information and be in touch within 1-2 business days.
               </div>
             )}
             {status === 'error' && (
               <div className="contact__alert contact__alert--error">
-                Something went wrong. Please try again or email us at support@veracityexpertwitness.com.
+                Something went wrong. Please try again or email us at
+                support@veracityexpertwitness.com.
               </div>
             )}
 
@@ -216,7 +275,9 @@ function JoinOurPanel() {
 
             <div className="contact__row">
               <div className="contact__field">
-                <label className="contact__label" htmlFor="name">Full Name</label>
+                <label className="contact__label" htmlFor="name">
+                  Full Name
+                </label>
                 <input
                   className={`contact__input ${errors.name ? 'contact__input--error' : ''}`}
                   id="name"
@@ -227,10 +288,14 @@ function JoinOurPanel() {
                   onChange={handleChange}
                   maxLength={500}
                 />
-                {errors.name && <span className="contact__error">{errors.name}</span>}
+                {errors.name && (
+                  <span className="contact__error">{errors.name}</span>
+                )}
               </div>
               <div className="contact__field">
-                <label className="contact__label" htmlFor="credentials">Credentials / Title</label>
+                <label className="contact__label" htmlFor="credentials">
+                  Credentials / Title
+                </label>
                 <input
                   className={`contact__input ${errors.credentials ? 'contact__input--error' : ''}`}
                   id="credentials"
@@ -241,13 +306,17 @@ function JoinOurPanel() {
                   onChange={handleChange}
                   maxLength={500}
                 />
-                {errors.credentials && <span className="contact__error">{errors.credentials}</span>}
+                {errors.credentials && (
+                  <span className="contact__error">{errors.credentials}</span>
+                )}
               </div>
             </div>
 
             <div className="contact__row">
               <div className="contact__field">
-                <label className="contact__label" htmlFor="email">Email Address</label>
+                <label className="contact__label" htmlFor="email">
+                  Email Address
+                </label>
                 <input
                   className={`contact__input ${errors.email ? 'contact__input--error' : ''}`}
                   id="email"
@@ -258,10 +327,14 @@ function JoinOurPanel() {
                   onChange={handleChange}
                   maxLength={500}
                 />
-                {errors.email && <span className="contact__error">{errors.email}</span>}
+                {errors.email && (
+                  <span className="contact__error">{errors.email}</span>
+                )}
               </div>
               <div className="contact__field">
-                <label className="contact__label" htmlFor="phone">Phone Number</label>
+                <label className="contact__label" htmlFor="phone">
+                  Phone Number
+                </label>
                 <input
                   className={`contact__input ${errors.phone ? 'contact__input--error' : ''}`}
                   id="phone"
@@ -272,12 +345,16 @@ function JoinOurPanel() {
                   onChange={handleChange}
                   maxLength={30}
                 />
-                {errors.phone && <span className="contact__error">{errors.phone}</span>}
+                {errors.phone && (
+                  <span className="contact__error">{errors.phone}</span>
+                )}
               </div>
             </div>
 
             <div className="contact__field">
-              <label className="contact__label" htmlFor="specialty">Primary Specialty</label>
+              <label className="contact__label" htmlFor="specialty">
+                Primary Specialty
+              </label>
               <select
                 className={`contact__input contact__select ${errors.specialty ? 'contact__input--error' : ''}`}
                 id="specialty"
@@ -287,14 +364,20 @@ function JoinOurPanel() {
               >
                 <option value="">Select your primary specialty</option>
                 {specialtyOptions.map((opt) => (
-                  <option key={opt} value={opt}>{opt}</option>
+                  <option key={opt} value={opt}>
+                    {opt}
+                  </option>
                 ))}
               </select>
-              {errors.specialty && <span className="contact__error">{errors.specialty}</span>}
+              {errors.specialty && (
+                <span className="contact__error">{errors.specialty}</span>
+              )}
             </div>
 
             <div className="contact__field">
-              <label className="contact__label" htmlFor="bio">Brief Bio / Experience</label>
+              <label className="contact__label" htmlFor="bio">
+                Brief Bio / Experience
+              </label>
               <textarea
                 className={`contact__input contact__textarea ${errors.bio ? 'contact__input--error' : ''}`}
                 id="bio"
@@ -305,8 +388,14 @@ function JoinOurPanel() {
                 onChange={handleChange}
                 maxLength={5000}
               />
-              <span className={`portal-char-count${formData.bio.length >= 4500 ? (formData.bio.length >= 5000 ? ' portal-char-count--limit' : ' portal-char-count--warn') : ''}`}>{formData.bio.length} / 5000</span>
-              {errors.bio && <span className="contact__error">{errors.bio}</span>}
+              <span
+                className={`portal-char-count${formData.bio.length >= 4500 ? (formData.bio.length >= 5000 ? ' portal-char-count--limit' : ' portal-char-count--warn') : ''}`}
+              >
+                {formData.bio.length} / 5000
+              </span>
+              {errors.bio && (
+                <span className="contact__error">{errors.bio}</span>
+              )}
             </div>
 
             <button
@@ -317,7 +406,13 @@ function JoinOurPanel() {
               {status === 'sending' ? 'Submitting...' : 'Submit Application'}
               {status !== 'sending' && (
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path
+                    d="M3 8h10M9 4l4 4-4 4"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               )}
             </button>
@@ -328,63 +423,101 @@ function JoinOurPanel() {
       <footer className="footer">
         <div className="section__container">
           <div className="legal-footer__inner">
-            <p>&copy; {currentYear} Veracity Expert Witness LLC. All rights reserved.</p>
+            <p>
+              &copy; {currentYear} Veracity Expert Witness LLC. All rights
+              reserved.
+            </p>
             <Link to="/">Back to Home</Link>
           </div>
         </div>
       </footer>
 
       {showTosModal && (
-        <div className="tos-modal-overlay" onClick={() => setShowTosModal(false)}>
+        <div
+          className="tos-modal-overlay"
+          onClick={() => setShowTosModal(false)}
+        >
           <div className="tos-modal" onClick={(e) => e.stopPropagation()}>
             <h2 className="tos-modal__title">Terms of Service</h2>
-            <p className="tos-modal__subtitle">Please review and accept the terms before submitting your application.</p>
+            <p className="tos-modal__subtitle">
+              Please review and accept the terms before submitting your
+              application.
+            </p>
             <div className="tos-modal__content">
               <h4>1. Panel Membership</h4>
               <p>
-                By submitting this application, you are applying to join the Veracity Expert Witness panel.
-                Acceptance is at the sole discretion of Veracity Expert Witness LLC. Panel membership does not
-                guarantee case assignments or compensation.
+                By submitting this application, you are applying to join the
+                Veracity Expert Witness panel. Acceptance is at the sole
+                discretion of Veracity Expert Witness LLC. Panel membership does
+                not guarantee case assignments or compensation.
               </p>
               <h4>2. Accuracy of Information</h4>
               <p>
-                You confirm that all information provided in this application is accurate and complete.
-                You agree to promptly notify Veracity of any changes to your credentials, contact information,
-                or professional standing.
+                You confirm that all information provided in this application is
+                accurate and complete. You agree to promptly notify Veracity of
+                any changes to your credentials, contact information, or
+                professional standing.
               </p>
               <h4>3. Confidentiality</h4>
               <p>
-                You agree to maintain strict confidentiality regarding all case information, client details,
-                and proprietary materials shared with you through Veracity. This obligation survives the
+                You agree to maintain strict confidentiality regarding all case
+                information, client details, and proprietary materials shared
+                with you through Veracity. This obligation survives the
                 termination of your panel membership.
               </p>
               <h4>4. Professional Conduct</h4>
               <p>
-                You agree to maintain the highest standards of professional conduct and ethics in all
-                engagements coordinated through Veracity. You will provide honest, objective, and unbiased
+                You agree to maintain the highest standards of professional
+                conduct and ethics in all engagements coordinated through
+                Veracity. You will provide honest, objective, and unbiased
                 expert opinions based on your professional expertise.
               </p>
               <h4>5. Conflict of Interest</h4>
               <p>
-                You agree to disclose any potential conflicts of interest before accepting a case assignment.
-                You will not accept engagements where a conflict exists or could reasonably be perceived.
+                You agree to disclose any potential conflicts of interest before
+                accepting a case assignment. You will not accept engagements
+                where a conflict exists or could reasonably be perceived.
               </p>
               <h4>6. Independent Contractor Status</h4>
               <p>
-                Panel members are independent contractors, not employees of Veracity Expert Witness LLC.
-                You are responsible for your own taxes, insurance, and professional licensing.
+                Panel members are independent contractors, not employees of
+                Veracity Expert Witness LLC. You are responsible for your own
+                taxes, insurance, and professional licensing.
               </p>
               <h4>7. Full Terms</h4>
               <p>
-                This summary highlights key terms. The complete <Link to="/terms-of-service" target="_blank" rel="noopener noreferrer">Terms of Service</Link> and <Link to="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</Link> govern
-                your use of our services and platform.
+                This summary highlights key terms. The complete{' '}
+                <Link
+                  to="/terms-of-service"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link
+                  to="/privacy-policy"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Privacy Policy
+                </Link>{' '}
+                govern your use of our services and platform.
               </p>
             </div>
             <div className="tos-modal__actions">
-              <button className="btn btn--outline" type="button" onClick={() => setShowTosModal(false)}>
+              <button
+                className="btn btn--outline"
+                type="button"
+                onClick={() => setShowTosModal(false)}
+              >
                 Cancel
               </button>
-              <button className="btn btn--primary" type="button" onClick={handleConfirmSubmit}>
+              <button
+                className="btn btn--primary"
+                type="button"
+                onClick={handleConfirmSubmit}
+              >
                 Agree &amp; Submit
               </button>
             </div>
@@ -392,7 +525,7 @@ function JoinOurPanel() {
         </div>
       )}
     </div>
-  );
+  )
 }
 
-export default JoinOurPanel;
+export default JoinOurPanel

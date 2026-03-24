@@ -1,71 +1,73 @@
-import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
-import { useAuth } from './useAuth';
+import { useState, useEffect, useCallback } from 'react'
+import { supabase } from '../lib/supabase'
+import { useAuth } from './useAuth'
 
 export function useTrainingProgress() {
-  const { user } = useAuth();
-  const [progress, setProgress] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user } = useAuth()
+  const [progress, setProgress] = useState({})
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     if (!user) {
-      setProgress({});
-      setLoading(false);
-      return;
+      setProgress({})
+      setLoading(false)
+      return
     }
 
-    let cancelled = false;
-    setLoading(true);
+    let cancelled = false
+    setLoading(true)
 
     async function loadProgress() {
       const { data, error: fetchError } = await supabase
         .from('sop_training_progress')
         .select('module_id, completed, quiz_score, attempts')
-        .eq('user_id', user.id);
+        .eq('user_id', user.id)
 
-      if (cancelled) return;
+      if (cancelled) return
 
       if (fetchError) {
-        setError(fetchError.message);
-        setLoading(false);
-        return;
+        setError(fetchError.message)
+        setLoading(false)
+        return
       }
 
-      const map = {};
-      (data || []).forEach((row) => {
+      const map = {}
+      ;(data || []).forEach((row) => {
         map[row.module_id] = {
           completed: row.completed,
           quizScore: row.quiz_score,
           attempts: row.attempts,
-        };
-      });
-      setProgress(map);
-      setLoading(false);
+        }
+      })
+      setProgress(map)
+      setLoading(false)
     }
 
-    loadProgress();
+    loadProgress()
 
-    return () => { cancelled = true; };
-  }, [user]);
+    return () => {
+      cancelled = true
+    }
+  }, [user])
 
   const saveQuizResult = useCallback(
     async (moduleId, score, answers) => {
-      if (!user) return;
+      if (!user) return
 
-      const prev = progress[moduleId];
-      const bestScore = prev ? Math.max(prev.quizScore, score) : score;
-      const completed = bestScore >= 80;
-      const attempts = prev ? prev.attempts + 1 : 1;
-      const now = new Date().toISOString();
+      const prev = progress[moduleId]
+      const bestScore = prev ? Math.max(prev.quizScore, score) : score
+      const completed = bestScore >= 80
+      const attempts = prev ? prev.attempts + 1 : 1
+      const now = new Date().toISOString()
 
       const optimistic = {
         completed,
         quizScore: bestScore,
         attempts,
-      };
+      }
 
-      setProgress((p) => ({ ...p, [moduleId]: optimistic }));
+      setProgress((p) => ({ ...p, [moduleId]: optimistic }))
 
       try {
         const [upsertRes, insertRes] = await Promise.all([
@@ -89,21 +91,25 @@ export function useTrainingProgress() {
             score,
             answers,
           }),
-        ]);
+        ])
 
-        if (upsertRes.error) throw upsertRes.error;
-        if (insertRes.error) throw insertRes.error;
+        if (upsertRes.error) throw upsertRes.error
+        if (insertRes.error) throw insertRes.error
       } catch (err) {
-        setProgress((p) => (prev ? { ...p, [moduleId]: prev } : (() => {
-          const next = { ...p };
-          delete next[moduleId];
-          return next;
-        })()));
-        setError(err.message);
+        setProgress((p) =>
+          prev
+            ? { ...p, [moduleId]: prev }
+            : (() => {
+                const next = { ...p }
+                delete next[moduleId]
+                return next
+              })()
+        )
+        setError(err.message)
       }
     },
     [user, progress]
-  );
+  )
 
-  return { progress, loading, error, user, saveQuizResult };
+  return { progress, loading, error, user, saveQuizResult }
 }

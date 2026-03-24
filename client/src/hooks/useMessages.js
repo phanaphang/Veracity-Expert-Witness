@@ -1,70 +1,83 @@
-import { useEffect, useState, useCallback } from 'react';
-import { supabase } from '../lib/supabase';
+import { useEffect, useState, useCallback } from 'react'
+import { supabase } from '../lib/supabase'
 
 export function useMessages(conversationId) {
-  const [messages, setMessages] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [messages, setMessages] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (!conversationId) { setLoading(false); return; }
+    if (!conversationId) {
+      setLoading(false)
+      return
+    }
 
-    setLoading(true);
+    setLoading(true)
     supabase
       .from('messages')
       .select('*')
       .eq('conversation_id', conversationId)
       .order('created_at', { ascending: true })
       .then(({ data }) => {
-        setMessages(data || []);
-        setLoading(false);
-      });
+        setMessages(data || [])
+        setLoading(false)
+      })
 
     const channel = supabase
       .channel(`messages:${conversationId}`)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-        filter: `conversation_id=eq.${conversationId}`,
-      }, (payload) => {
-        setMessages(prev => [...prev, payload.new]);
-      })
-      .subscribe();
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
+        },
+        (payload) => {
+          setMessages((prev) => [...prev, payload.new])
+        }
+      )
+      .subscribe()
 
-    return () => { supabase.removeChannel(channel); };
-  }, [conversationId]);
-
-  const sendMessage = useCallback(async (content, senderId, recipientId, senderName) => {
-    const { error } = await supabase.from('messages').insert({
-      conversation_id: conversationId,
-      sender_id: senderId,
-      recipient_id: recipientId,
-      content,
-    });
-    if (!error) {
-      await supabase.from('conversations')
-        .update({ last_message_at: new Date().toISOString() })
-        .eq('id', conversationId);
-
-      // Send email notification (non-blocking)
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (!session) return;
-        fetch('/api/notify-message', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${session.access_token}`,
-          },
-          body: JSON.stringify({
-            recipientId,
-            senderName: senderName || 'Someone',
-            messagePreview: content,
-          }),
-        }).catch(() => {});
-      });
+    return () => {
+      supabase.removeChannel(channel)
     }
-    return { error };
-  }, [conversationId]);
+  }, [conversationId])
 
-  return { messages, loading, sendMessage };
+  const sendMessage = useCallback(
+    async (content, senderId, recipientId, senderName) => {
+      const { error } = await supabase.from('messages').insert({
+        conversation_id: conversationId,
+        sender_id: senderId,
+        recipient_id: recipientId,
+        content,
+      })
+      if (!error) {
+        await supabase
+          .from('conversations')
+          .update({ last_message_at: new Date().toISOString() })
+          .eq('id', conversationId)
+
+        // Send email notification (non-blocking)
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (!session) return
+          fetch('/api/notify-message', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({
+              recipientId,
+              senderName: senderName || 'Someone',
+              messagePreview: content,
+            }),
+          }).catch(() => {})
+        })
+      }
+      return { error }
+    },
+    [conversationId]
+  )
+
+  return { messages, loading, sendMessage }
 }

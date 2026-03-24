@@ -1,29 +1,35 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
-import { supabase } from '../../lib/supabase';
-import { UNITS, TOTAL_LESSONS } from './courseData';
-import TrainingTermsModal from '../components/TrainingTermsModal';
-import TrainingDisclaimer from '../components/TrainingDisclaimer';
+import React, { useEffect, useState, useCallback } from 'react'
+import { Link } from 'react-router-dom'
+import { useAuth } from '../../hooks/useAuth'
+import { supabase } from '../../lib/supabase'
+import { UNITS, TOTAL_LESSONS } from './courseData'
+import TrainingTermsModal from '../components/TrainingTermsModal'
+import TrainingDisclaimer from '../components/TrainingDisclaimer'
 
 export default function TrainingHome() {
-  const { user } = useAuth();
-  const handleTermsAccepted = useCallback(() => {}, []);
-  const [foundationsPct, setFoundationsPct] = useState(null);
-  const [admissibilityPct, setAdmissibilityPct] = useState(null);
-  const [reportWritingPct, setReportWritingPct] = useState(null);
-  const [depositionPct, setDepositionPct] = useState(null);
-  const [trialTestimonyPct, setTrialTestimonyPct] = useState(null);
-  const [foundationsNext, setFoundationsNext] = useState(null);
-  const [admissibilityNext, setAdmissibilityNext] = useState(null);
-  const [reportWritingNext, setReportWritingNext] = useState(null);
-  const [depositionNext, setDepositionNext] = useState(null);
-  const [trialTestimonyNext, setTrialTestimonyNext] = useState(null);
+  const { user } = useAuth()
+  const handleTermsAccepted = useCallback(() => {}, [])
+  const [foundationsPct, setFoundationsPct] = useState(null)
+  const [admissibilityPct, setAdmissibilityPct] = useState(null)
+  const [reportWritingPct, setReportWritingPct] = useState(null)
+  const [depositionPct, setDepositionPct] = useState(null)
+  const [trialTestimonyPct, setTrialTestimonyPct] = useState(null)
+  const [foundationsNext, setFoundationsNext] = useState(null)
+  const [admissibilityNext, setAdmissibilityNext] = useState(null)
+  const [reportWritingNext, setReportWritingNext] = useState(null)
+  const [depositionNext, setDepositionNext] = useState(null)
+  const [trialTestimonyNext, setTrialTestimonyNext] = useState(null)
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) return
     const load = async () => {
-      const [{ data: foundations }, { data: admissibility }, { data: reportWriting }, { data: deposition }, { data: trialTestimony }] = await Promise.all([
+      const [
+        { data: foundations },
+        { data: admissibility },
+        { data: reportWriting },
+        { data: deposition },
+        { data: trialTestimony },
+      ] = await Promise.all([
         supabase
           .from('training_progress')
           .select('lesson_id, completed')
@@ -44,81 +50,120 @@ export default function TrainingHome() {
           .from('trial_testimony_progress')
           .select('lesson_id, completed, quiz_score')
           .eq('user_id', user.id),
-      ]);
+      ])
 
       if (foundations) {
-        const completedIds = foundations.filter((r) => r.completed && r.lesson_id).map((r) => r.lesson_id);
-        setFoundationsPct(Math.round((completedIds.length / TOTAL_LESSONS) * 100));
-        const allLessons = UNITS.flatMap((u) => u.lessons);
-        const nextId = allLessons.find((lid) => !completedIds.includes(lid));
-        if (nextId) setFoundationsNext(`/training/lesson/${nextId}`);
+        const completedIds = foundations
+          .filter((r) => r.completed && r.lesson_id)
+          .map((r) => r.lesson_id)
+        setFoundationsPct(
+          Math.round((completedIds.length / TOTAL_LESSONS) * 100)
+        )
+        const allLessons = UNITS.flatMap((u) => u.lessons)
+        const nextId = allLessons.find((lid) => !completedIds.includes(lid))
+        if (nextId) setFoundationsNext(`/training/lesson/${nextId}`)
       }
 
       if (admissibility) {
-        const completedIds = admissibility.filter(
-          (r) => r.completed && ['1', '2', '3'].includes(r.lesson_id)
-        ).map((r) => r.lesson_id);
-        const scenario = admissibility.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
+        const completedIds = admissibility
+          .filter((r) => r.completed && ['1', '2', '3'].includes(r.lesson_id))
+          .map((r) => r.lesson_id)
+        const scenario = admissibility.some(
+          (r) => r.lesson_id === 'scenario' && r.completed
+        )
+          ? 1
+          : 0
         const quiz = admissibility.some(
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 4
-        ) ? 1 : 0;
-        setAdmissibilityPct(Math.round(((completedIds.length + scenario + quiz) / 5) * 100));
-        const nextId = ['1', '2', '3'].find((lid) => !completedIds.includes(lid));
-        if (nextId) setAdmissibilityNext(`/training/admissibility/lesson/${nextId}`);
+        )
+          ? 1
+          : 0
+        setAdmissibilityPct(
+          Math.round(((completedIds.length + scenario + quiz) / 5) * 100)
+        )
+        const nextId = ['1', '2', '3'].find(
+          (lid) => !completedIds.includes(lid)
+        )
+        if (nextId)
+          setAdmissibilityNext(`/training/admissibility/lesson/${nextId}`)
       }
 
       if (reportWriting) {
-        const rwSeq = ['1', '2', '3', '4', '5', '6', '7', '8'];
-        const completedIds = reportWriting.filter(
-          (r) => r.completed && rwSeq.includes(r.lesson_id)
-        ).map((r) => r.lesson_id);
-        const scenario = reportWriting.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
+        const rwSeq = ['1', '2', '3', '4', '5', '6', '7', '8']
+        const completedIds = reportWriting
+          .filter((r) => r.completed && rwSeq.includes(r.lesson_id))
+          .map((r) => r.lesson_id)
+        const scenario = reportWriting.some(
+          (r) => r.lesson_id === 'scenario' && r.completed
+        )
+          ? 1
+          : 0
         const quiz = reportWriting.some(
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6
-        ) ? 1 : 0;
-        setReportWritingPct(Math.round(((completedIds.length + scenario + quiz) / 10) * 100));
-        const nextId = rwSeq.find((lid) => !completedIds.includes(lid));
-        if (nextId) setReportWritingNext(`/training/report-writing/lesson/${nextId}`);
+        )
+          ? 1
+          : 0
+        setReportWritingPct(
+          Math.round(((completedIds.length + scenario + quiz) / 10) * 100)
+        )
+        const nextId = rwSeq.find((lid) => !completedIds.includes(lid))
+        if (nextId)
+          setReportWritingNext(`/training/report-writing/lesson/${nextId}`)
       }
 
       if (deposition) {
-        const depSeq = ['1', '2', '3', '4', '5', '6', '7', '8'];
-        const completedIds = deposition.filter(
-          (r) => r.completed && depSeq.includes(r.lesson_id)
-        ).map((r) => r.lesson_id);
-        const scenario = deposition.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
+        const depSeq = ['1', '2', '3', '4', '5', '6', '7', '8']
+        const completedIds = deposition
+          .filter((r) => r.completed && depSeq.includes(r.lesson_id))
+          .map((r) => r.lesson_id)
+        const scenario = deposition.some(
+          (r) => r.lesson_id === 'scenario' && r.completed
+        )
+          ? 1
+          : 0
         const quiz = deposition.some(
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 6
-        ) ? 1 : 0;
-        setDepositionPct(Math.round(((completedIds.length + scenario + quiz) / 10) * 100));
-        const nextId = depSeq.find((lid) => !completedIds.includes(lid));
-        if (nextId) setDepositionNext(`/training/deposition/lesson/${nextId}`);
+        )
+          ? 1
+          : 0
+        setDepositionPct(
+          Math.round(((completedIds.length + scenario + quiz) / 10) * 100)
+        )
+        const nextId = depSeq.find((lid) => !completedIds.includes(lid))
+        if (nextId) setDepositionNext(`/training/deposition/lesson/${nextId}`)
       }
 
       if (trialTestimony) {
-        const ttSeq = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
-        const completedIds = trialTestimony.filter(
-          (r) => r.completed && ttSeq.includes(r.lesson_id)
-        ).map((r) => r.lesson_id);
-        const scenario = trialTestimony.some((r) => r.lesson_id === 'scenario' && r.completed) ? 1 : 0;
+        const ttSeq = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+        const completedIds = trialTestimony
+          .filter((r) => r.completed && ttSeq.includes(r.lesson_id))
+          .map((r) => r.lesson_id)
+        const scenario = trialTestimony.some(
+          (r) => r.lesson_id === 'scenario' && r.completed
+        )
+          ? 1
+          : 0
         const quiz = trialTestimony.some(
           (r) => r.lesson_id === 'quiz' && (r.quiz_score?.score ?? 0) >= 8
-        ) ? 1 : 0;
-        setTrialTestimonyPct(Math.round(((completedIds.length + scenario + quiz) / 12) * 100));
-        const nextId = ttSeq.find((lid) => !completedIds.includes(lid));
-        if (nextId) setTrialTestimonyNext(`/training/trial-testimony/lesson/${nextId}`);
+        )
+          ? 1
+          : 0
+        setTrialTestimonyPct(
+          Math.round(((completedIds.length + scenario + quiz) / 12) * 100)
+        )
+        const nextId = ttSeq.find((lid) => !completedIds.includes(lid))
+        if (nextId)
+          setTrialTestimonyNext(`/training/trial-testimony/lesson/${nextId}`)
       }
-    };
-    load();
-  }, [user]);
+    }
+    load()
+  }, [user])
 
   return (
     <div>
       <TrainingTermsModal onAccepted={handleTermsAccepted} />
       <div className="portal-page__header">
-        <h1 className="portal-page__title">
-          Training
-        </h1>
+        <h1 className="portal-page__title">Training</h1>
         <p className="portal-page__subtitle">
           Choose a module below to continue your expert witness training.
         </p>
@@ -126,49 +171,110 @@ export default function TrainingHome() {
 
       <TrainingDisclaimer />
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+          gap: 20,
+        }}
+      >
         {/* Expert Witness Foundations */}
         <Link
           to={foundationsNext || '/training/foundations'}
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-navy)', margin: 0 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: 10,
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '1.05rem',
+                fontWeight: 700,
+                color: 'var(--color-navy)',
+                margin: 0,
+              }}
+            >
               Expert Witness Foundations
             </h2>
             {foundationsPct !== null && (
-              <span style={{
-                background: foundationsPct === 100 ? '#16a34a' : 'var(--color-accent)',
-                color: '#fff',
-                fontSize: '0.65rem',
-                fontWeight: 700,
-                padding: '2px 7px',
-                borderRadius: 999,
-                whiteSpace: 'nowrap',
-                marginLeft: 8,
-                flexShrink: 0,
-              }}>
+              <span
+                style={{
+                  background:
+                    foundationsPct === 100 ? '#16a34a' : 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                  flexShrink: 0,
+                }}
+              >
                 {foundationsPct === 100 ? 'Complete' : `${foundationsPct}%`}
               </span>
             )}
           </div>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', margin: '0 0 12px' }}>
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              margin: '0 0 12px',
+            }}
+          >
             ~60 min &middot; 4 units &middot; 10 lessons
           </p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-600)', margin: '0 0 16px', lineHeight: 1.5 }}>
-            Core skills for expert witnesses -- roles, reports, depositions, and trial testimony.
-            Earn your certificate upon completion.
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-600)',
+              margin: '0 0 16px',
+              lineHeight: 1.5,
+            }}
+          >
+            Core skills for expert witnesses -- roles, reports, depositions, and
+            trial testimony. Earn your certificate upon completion.
           </p>
-          {foundationsPct !== null && foundationsPct > 0 && foundationsPct < 100 && (
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ height: 5, background: 'var(--color-gray-100)', borderRadius: 999, overflow: 'hidden' }}>
-                <div style={{ width: `${foundationsPct}%`, height: '100%', background: 'var(--color-accent)', borderRadius: 999 }} />
+          {foundationsPct !== null &&
+            foundationsPct > 0 &&
+            foundationsPct < 100 && (
+              <div style={{ marginBottom: 14 }}>
+                <div
+                  style={{
+                    height: 5,
+                    background: 'var(--color-gray-100)',
+                    borderRadius: 999,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${foundationsPct}%`,
+                      height: '100%',
+                      background: 'var(--color-accent)',
+                      borderRadius: 999,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
-          <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {foundationsPct === 0 || foundationsPct === null ? 'Start Module' : foundationsPct === 100 ? 'Review Module' : foundationsNext ? 'Continue Lesson' : 'Continue'}
+            )}
+          <span
+            className="btn btn--primary"
+            style={{ display: 'inline-block', pointerEvents: 'none' }}
+          >
+            {foundationsPct === 0 || foundationsPct === null
+              ? 'Start Module'
+              : foundationsPct === 100
+                ? 'Review Module'
+                : foundationsNext
+                  ? 'Continue Lesson'
+                  : 'Continue'}
           </span>
         </Link>
 
@@ -178,42 +284,100 @@ export default function TrainingHome() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-navy)', margin: 0 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: 10,
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '1.05rem',
+                fontWeight: 700,
+                color: 'var(--color-navy)',
+                margin: 0,
+              }}
+            >
               Standards of Admissibility
             </h2>
             {admissibilityPct !== null && (
-              <span style={{
-                background: admissibilityPct === 100 ? '#16a34a' : 'var(--color-accent)',
-                color: '#fff',
-                fontSize: '0.65rem',
-                fontWeight: 700,
-                padding: '2px 7px',
-                borderRadius: 999,
-                whiteSpace: 'nowrap',
-                marginLeft: 8,
-                flexShrink: 0,
-              }}>
+              <span
+                style={{
+                  background:
+                    admissibilityPct === 100
+                      ? '#16a34a'
+                      : 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                  flexShrink: 0,
+                }}
+              >
                 {admissibilityPct === 100 ? 'Complete' : `${admissibilityPct}%`}
               </span>
             )}
           </div>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', margin: '0 0 12px' }}>
-            ~30 min &middot; 3 lessons &middot; 1 scenario &middot; 1 knowledge check
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              margin: '0 0 12px',
+            }}
+          >
+            ~30 min &middot; 3 lessons &middot; 1 scenario &middot; 1 knowledge
+            check
           </p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-600)', margin: '0 0 16px', lineHeight: 1.5 }}>
-            Frye, Kelly, and Daubert -- the standards that determine whether your testimony is
-            admitted in state and federal court.
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-600)',
+              margin: '0 0 16px',
+              lineHeight: 1.5,
+            }}
+          >
+            Frye, Kelly, and Daubert -- the standards that determine whether
+            your testimony is admitted in state and federal court.
           </p>
-          {admissibilityPct !== null && admissibilityPct > 0 && admissibilityPct < 100 && (
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ height: 5, background: 'var(--color-gray-100)', borderRadius: 999, overflow: 'hidden' }}>
-                <div style={{ width: `${admissibilityPct}%`, height: '100%', background: 'var(--color-accent)', borderRadius: 999 }} />
+          {admissibilityPct !== null &&
+            admissibilityPct > 0 &&
+            admissibilityPct < 100 && (
+              <div style={{ marginBottom: 14 }}>
+                <div
+                  style={{
+                    height: 5,
+                    background: 'var(--color-gray-100)',
+                    borderRadius: 999,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${admissibilityPct}%`,
+                      height: '100%',
+                      background: 'var(--color-accent)',
+                      borderRadius: 999,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
-          <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {admissibilityPct === 0 || admissibilityPct === null ? 'Start Module' : admissibilityPct === 100 ? 'Review Module' : admissibilityNext ? 'Continue Lesson' : 'Continue'}
+            )}
+          <span
+            className="btn btn--primary"
+            style={{ display: 'inline-block', pointerEvents: 'none' }}
+          >
+            {admissibilityPct === 0 || admissibilityPct === null
+              ? 'Start Module'
+              : admissibilityPct === 100
+                ? 'Review Module'
+                : admissibilityNext
+                  ? 'Continue Lesson'
+                  : 'Continue'}
           </span>
         </Link>
 
@@ -223,42 +387,101 @@ export default function TrainingHome() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-navy)', margin: 0 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: 10,
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '1.05rem',
+                fontWeight: 700,
+                color: 'var(--color-navy)',
+                margin: 0,
+              }}
+            >
               Report Writing
             </h2>
             {reportWritingPct !== null && (
-              <span style={{
-                background: reportWritingPct === 100 ? '#16a34a' : 'var(--color-accent)',
-                color: '#fff',
-                fontSize: '0.65rem',
-                fontWeight: 700,
-                padding: '2px 7px',
-                borderRadius: 999,
-                whiteSpace: 'nowrap',
-                marginLeft: 8,
-                flexShrink: 0,
-              }}>
+              <span
+                style={{
+                  background:
+                    reportWritingPct === 100
+                      ? '#16a34a'
+                      : 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                  flexShrink: 0,
+                }}
+              >
                 {reportWritingPct === 100 ? 'Complete' : `${reportWritingPct}%`}
               </span>
             )}
           </div>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', margin: '0 0 12px' }}>
-            ~60 min &middot; 8 lessons &middot; 1 scenario &middot; 1 knowledge check
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              margin: '0 0 12px',
+            }}
+          >
+            ~60 min &middot; 8 lessons &middot; 1 scenario &middot; 1 knowledge
+            check
           </p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-600)', margin: '0 0 16px', lineHeight: 1.5 }}>
-            Writing a defensible expert report -- structure, opinions, methodology, materials
-            reviewed, deposition defense, and common pitfalls.
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-600)',
+              margin: '0 0 16px',
+              lineHeight: 1.5,
+            }}
+          >
+            Writing a defensible expert report -- structure, opinions,
+            methodology, materials reviewed, deposition defense, and common
+            pitfalls.
           </p>
-          {reportWritingPct !== null && reportWritingPct > 0 && reportWritingPct < 100 && (
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ height: 5, background: 'var(--color-gray-100)', borderRadius: 999, overflow: 'hidden' }}>
-                <div style={{ width: `${reportWritingPct}%`, height: '100%', background: 'var(--color-accent)', borderRadius: 999 }} />
+          {reportWritingPct !== null &&
+            reportWritingPct > 0 &&
+            reportWritingPct < 100 && (
+              <div style={{ marginBottom: 14 }}>
+                <div
+                  style={{
+                    height: 5,
+                    background: 'var(--color-gray-100)',
+                    borderRadius: 999,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${reportWritingPct}%`,
+                      height: '100%',
+                      background: 'var(--color-accent)',
+                      borderRadius: 999,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
-          <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {reportWritingPct === 0 || reportWritingPct === null ? 'Start Module' : reportWritingPct === 100 ? 'Review Module' : reportWritingNext ? 'Continue Lesson' : 'Continue'}
+            )}
+          <span
+            className="btn btn--primary"
+            style={{ display: 'inline-block', pointerEvents: 'none' }}
+          >
+            {reportWritingPct === 0 || reportWritingPct === null
+              ? 'Start Module'
+              : reportWritingPct === 100
+                ? 'Review Module'
+                : reportWritingNext
+                  ? 'Continue Lesson'
+                  : 'Continue'}
           </span>
         </Link>
 
@@ -268,42 +491,99 @@ export default function TrainingHome() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-navy)', margin: 0 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: 10,
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '1.05rem',
+                fontWeight: 700,
+                color: 'var(--color-navy)',
+                margin: 0,
+              }}
+            >
               Deposition
             </h2>
             {depositionPct !== null && (
-              <span style={{
-                background: depositionPct === 100 ? '#16a34a' : 'var(--color-accent)',
-                color: '#fff',
-                fontSize: '0.65rem',
-                fontWeight: 700,
-                padding: '2px 7px',
-                borderRadius: 999,
-                whiteSpace: 'nowrap',
-                marginLeft: 8,
-                flexShrink: 0,
-              }}>
+              <span
+                style={{
+                  background:
+                    depositionPct === 100 ? '#16a34a' : 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                  flexShrink: 0,
+                }}
+              >
                 {depositionPct === 100 ? 'Complete' : `${depositionPct}%`}
               </span>
             )}
           </div>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', margin: '0 0 12px' }}>
-            ~60 min &middot; 8 lessons &middot; 1 scenario &middot; 1 knowledge check
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              margin: '0 0 12px',
+            }}
+          >
+            ~60 min &middot; 8 lessons &middot; 1 scenario &middot; 1 knowledge
+            check
           </p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-600)', margin: '0 0 16px', lineHeight: 1.5 }}>
-            Preparing for and excelling in expert depositions -- answering techniques, common traps,
-            composure, and post-deposition considerations.
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-600)',
+              margin: '0 0 16px',
+              lineHeight: 1.5,
+            }}
+          >
+            Preparing for and excelling in expert depositions -- answering
+            techniques, common traps, composure, and post-deposition
+            considerations.
           </p>
-          {depositionPct !== null && depositionPct > 0 && depositionPct < 100 && (
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ height: 5, background: 'var(--color-gray-100)', borderRadius: 999, overflow: 'hidden' }}>
-                <div style={{ width: `${depositionPct}%`, height: '100%', background: 'var(--color-accent)', borderRadius: 999 }} />
+          {depositionPct !== null &&
+            depositionPct > 0 &&
+            depositionPct < 100 && (
+              <div style={{ marginBottom: 14 }}>
+                <div
+                  style={{
+                    height: 5,
+                    background: 'var(--color-gray-100)',
+                    borderRadius: 999,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${depositionPct}%`,
+                      height: '100%',
+                      background: 'var(--color-accent)',
+                      borderRadius: 999,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
-          <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {depositionPct === 0 || depositionPct === null ? 'Start Module' : depositionPct === 100 ? 'Review Module' : depositionNext ? 'Continue Lesson' : 'Continue'}
+            )}
+          <span
+            className="btn btn--primary"
+            style={{ display: 'inline-block', pointerEvents: 'none' }}
+          >
+            {depositionPct === 0 || depositionPct === null
+              ? 'Start Module'
+              : depositionPct === 100
+                ? 'Review Module'
+                : depositionNext
+                  ? 'Continue Lesson'
+                  : 'Continue'}
           </span>
         </Link>
 
@@ -313,45 +593,106 @@ export default function TrainingHome() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
-            <h2 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--color-navy)', margin: 0 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              marginBottom: 10,
+            }}
+          >
+            <h2
+              style={{
+                fontSize: '1.05rem',
+                fontWeight: 700,
+                color: 'var(--color-navy)',
+                margin: 0,
+              }}
+            >
               Trial Testimony
             </h2>
             {trialTestimonyPct !== null && (
-              <span style={{
-                background: trialTestimonyPct === 100 ? '#16a34a' : 'var(--color-accent)',
-                color: '#fff',
-                fontSize: '0.65rem',
-                fontWeight: 700,
-                padding: '2px 7px',
-                borderRadius: 999,
-                whiteSpace: 'nowrap',
-                marginLeft: 8,
-                flexShrink: 0,
-              }}>
-                {trialTestimonyPct === 100 ? 'Complete' : `${trialTestimonyPct}%`}
+              <span
+                style={{
+                  background:
+                    trialTestimonyPct === 100
+                      ? '#16a34a'
+                      : 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                  flexShrink: 0,
+                }}
+              >
+                {trialTestimonyPct === 100
+                  ? 'Complete'
+                  : `${trialTestimonyPct}%`}
               </span>
             )}
           </div>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)', margin: '0 0 12px' }}>
-            ~75 min &middot; 10 lessons &middot; 1 scenario &middot; 1 knowledge check
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              margin: '0 0 12px',
+            }}
+          >
+            ~75 min &middot; 10 lessons &middot; 1 scenario &middot; 1 knowledge
+            check
           </p>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-600)', margin: '0 0 16px', lineHeight: 1.5 }}>
-            Mastering courtroom testimony -- qualification, direct and cross examination, jury
-            communication, visual aids, ethical boundaries, and continuous improvement.
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-600)',
+              margin: '0 0 16px',
+              lineHeight: 1.5,
+            }}
+          >
+            Mastering courtroom testimony -- qualification, direct and cross
+            examination, jury communication, visual aids, ethical boundaries,
+            and continuous improvement.
           </p>
-          {trialTestimonyPct !== null && trialTestimonyPct > 0 && trialTestimonyPct < 100 && (
-            <div style={{ marginBottom: 14 }}>
-              <div style={{ height: 5, background: 'var(--color-gray-100)', borderRadius: 999, overflow: 'hidden' }}>
-                <div style={{ width: `${trialTestimonyPct}%`, height: '100%', background: 'var(--color-accent)', borderRadius: 999 }} />
+          {trialTestimonyPct !== null &&
+            trialTestimonyPct > 0 &&
+            trialTestimonyPct < 100 && (
+              <div style={{ marginBottom: 14 }}>
+                <div
+                  style={{
+                    height: 5,
+                    background: 'var(--color-gray-100)',
+                    borderRadius: 999,
+                    overflow: 'hidden',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: `${trialTestimonyPct}%`,
+                      height: '100%',
+                      background: 'var(--color-accent)',
+                      borderRadius: 999,
+                    }}
+                  />
+                </div>
               </div>
-            </div>
-          )}
-          <span className="btn btn--primary" style={{ display: 'inline-block', pointerEvents: 'none' }}>
-            {trialTestimonyPct === 0 || trialTestimonyPct === null ? 'Start Module' : trialTestimonyPct === 100 ? 'Review Module' : trialTestimonyNext ? 'Continue Lesson' : 'Continue'}
+            )}
+          <span
+            className="btn btn--primary"
+            style={{ display: 'inline-block', pointerEvents: 'none' }}
+          >
+            {trialTestimonyPct === 0 || trialTestimonyPct === null
+              ? 'Start Module'
+              : trialTestimonyPct === 100
+                ? 'Review Module'
+                : trialTestimonyNext
+                  ? 'Continue Lesson'
+                  : 'Continue'}
           </span>
         </Link>
       </div>
     </div>
-  );
+  )
 }

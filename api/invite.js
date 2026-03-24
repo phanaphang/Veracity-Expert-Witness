@@ -1,25 +1,35 @@
-const supabaseAdmin = require('./_lib/supabaseAdmin');
-const { rateLimit } = require('./_lib/rateLimit');
+const supabaseAdmin = require('./_lib/supabaseAdmin')
+const { rateLimit } = require('./_lib/rateLimit')
 
 module.exports = async (req, res) => {
   if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
   try {
     // Verify the caller is an admin
-    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress || 'unknown';
-    const authHeader = req.headers.authorization;
+    const ip =
+      req.headers['x-forwarded-for']?.split(',')[0]?.trim() ||
+      req.socket?.remoteAddress ||
+      'unknown'
+    const authHeader = req.headers.authorization
     if (!authHeader?.startsWith('Bearer ')) {
-      console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | missing token`);
-      return res.status(401).json({ error: 'Missing authorization token' });
+      console.warn(
+        `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | missing token`
+      )
+      return res.status(401).json({ error: 'Missing authorization token' })
     }
 
-    const token = authHeader.replace('Bearer ', '');
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
+    const token = authHeader.replace('Bearer ', '')
+    const {
+      data: { user },
+      error: authError,
+    } = await supabaseAdmin.auth.getUser(token)
     if (authError || !user) {
-      console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | invalid token`);
-      return res.status(401).json({ error: 'Invalid token' });
+      console.warn(
+        `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | invalid token`
+      )
+      return res.status(401).json({ error: 'Invalid token' })
     }
 
     // Check admin role
@@ -27,60 +37,91 @@ module.exports = async (req, res) => {
       .from('profiles')
       .select('role')
       .eq('id', user.id)
-      .single();
+      .single()
 
     if (profile?.role !== 'admin') {
-      console.warn(`[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | insufficient role: ${profile?.role}`);
-      return res.status(403).json({ error: 'Admin access required' });
+      console.warn(
+        `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | invite | insufficient role: ${profile?.role}`
+      )
+      return res.status(403).json({ error: 'Admin access required' })
     }
 
-    const rl = rateLimit(req, { maxRequests: 10 });
+    const rl = rateLimit(req, { maxRequests: 10 })
     if (rl.limited) {
-      res.setHeader('Retry-After', String(rl.retryAfter));
-      return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+      res.setHeader('Retry-After', String(rl.retryAfter))
+      return res
+        .status(429)
+        .json({ error: 'Too many requests. Please try again later.' })
     }
 
-    const { email, first_name, last_name } = req.body;
+    const { email, first_name, last_name } = req.body
     if (!email) {
-      return res.status(400).json({ error: 'Email is required' });
+      return res.status(400).json({ error: 'Email is required' })
     }
 
     // Email format validation
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     if (!emailRegex.test(email)) {
-      return res.status(400).json({ error: 'Invalid email address.' });
+      return res.status(400).json({ error: 'Invalid email address.' })
     }
 
     // Input length limits
-    if (email.length > 500 || (first_name && first_name.length > 200) || (last_name && last_name.length > 200)) {
-      return res.status(400).json({ error: 'Input exceeds maximum allowed length.' });
+    if (
+      email.length > 500 ||
+      (first_name && first_name.length > 200) ||
+      (last_name && last_name.length > 200)
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'Input exceeds maximum allowed length.' })
     }
 
     // Whitelist allowed redirect origins
-    const allowedOrigins = ['https://veracityexpertwitness.com', 'https://www.veracityexpertwitness.com', 'http://localhost:3000'];
-    const origin = req.headers.origin;
-    const redirectBase = allowedOrigins.includes(origin) ? origin : 'https://veracityexpertwitness.com';
+    const allowedOrigins = [
+      'https://veracityexpertwitness.com',
+      'https://www.veracityexpertwitness.com',
+      'http://localhost:3000',
+    ]
+    const origin = req.headers.origin
+    const redirectBase = allowedOrigins.includes(origin)
+      ? origin
+      : 'https://veracityexpertwitness.com'
 
     // Sanitize name fields before storing in auth metadata
-    const safeName = (val) => String(val || '').replace(/[<>]/g, '').slice(0, 200).trim();
+    const safeName = (val) =>
+      String(val || '')
+        .replace(/[<>]/g, '')
+        .slice(0, 200)
+        .trim()
 
     // Invite user via Supabase Auth
-    const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
-      redirectTo: `${redirectBase}/portal/auth/callback`,
-      data: {
-        first_name: safeName(first_name),
-        last_name: safeName(last_name),
-        role: 'expert',
-      },
-    });
+    const { data: inviteData, error: inviteError } =
+      await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
+        redirectTo: `${redirectBase}/portal/auth/callback`,
+        data: {
+          first_name: safeName(first_name),
+          last_name: safeName(last_name),
+          role: 'expert',
+        },
+      })
 
     if (inviteError) {
-      console.error('Invite error:', inviteError.message);
-      const msg = inviteError.message?.toLowerCase() || '';
-      if (msg.includes('already registered') || msg.includes('already been registered') || msg.includes('duplicate') || msg.includes('already exists')) {
-        return res.status(409).json({ error: 'This email is already registered. If the expert needs a new invite, delete their account from Supabase Auth first.' });
+      console.error('Invite error:', inviteError.message)
+      const msg = inviteError.message?.toLowerCase() || ''
+      if (
+        msg.includes('already registered') ||
+        msg.includes('already been registered') ||
+        msg.includes('duplicate') ||
+        msg.includes('already exists')
+      ) {
+        return res.status(409).json({
+          error:
+            'This email is already registered. If the expert needs a new invite, delete their account from Supabase Auth first.',
+        })
       }
-      return res.status(400).json({ error: 'Failed to send invitation. Please try again.' });
+      return res
+        .status(400)
+        .json({ error: 'Failed to send invitation. Please try again.' })
     }
 
     // Record invitation
@@ -89,7 +130,7 @@ module.exports = async (req, res) => {
       invited_by: user.id,
       first_name: safeName(first_name) || null,
       last_name: safeName(last_name) || null,
-    });
+    })
 
     // Update profile with name if provided
     if (inviteData?.user?.id && (first_name || last_name)) {
@@ -100,12 +141,16 @@ module.exports = async (req, res) => {
           last_name: safeName(last_name) || null,
           invited_at: new Date().toISOString(),
         })
-        .eq('id', inviteData.user.id);
+        .eq('id', inviteData.user.id)
     }
 
-    return res.status(200).json({ success: true, message: `Invitation sent to ${email}` });
+    return res
+      .status(200)
+      .json({ success: true, message: `Invitation sent to ${email}` })
   } catch (err) {
-    console.error('Invite handler error:', err.message, err.stack);
-    return res.status(500).json({ error: 'Failed to send invitation. Please try again.' });
+    console.error('Invite handler error:', err.message, err.stack)
+    return res
+      .status(500)
+      .json({ error: 'Failed to send invitation. Please try again.' })
   }
-};
+}
