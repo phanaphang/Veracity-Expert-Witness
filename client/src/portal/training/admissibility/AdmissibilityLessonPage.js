@@ -242,6 +242,7 @@ export default function AdmissibilityLessonPage({ onProgressUpdate }) {
 
   // 60-second timer before "Mark Complete" button appears
   useEffect(() => {
+    window.scrollTo(0, 0)
     arrivedAt.current = Date.now()
     setCanComplete(false)
 

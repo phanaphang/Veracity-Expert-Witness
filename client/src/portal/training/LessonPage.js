@@ -114,6 +114,7 @@ export default function LessonPage({ onProgressUpdate }) {
 
   // Start 60-second timer — show button after delay
   useEffect(() => {
+    window.scrollTo(0, 0)
     arrivedAt.current = Date.now()
     setCanComplete(false)
 
