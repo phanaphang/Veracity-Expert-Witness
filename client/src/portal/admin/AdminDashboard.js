@@ -15,10 +15,14 @@ export default function AdminDashboard() {
   })
 
   useEffect(() => {
+    const loadStats = async () => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
     const queries = [
       supabase
         .from('messages')
         .select('*', { count: 'exact', head: true })
+        .eq('recipient_id', user.id)
         .eq('is_read', false),
     ]
     if (!isStaff) {
@@ -59,6 +63,8 @@ export default function AdminDashboard() {
       })
       .catch(() => {})
       .finally(() => setLoading(false))
+    }
+    loadStats()
   }, [isStaff])
 
   return (
