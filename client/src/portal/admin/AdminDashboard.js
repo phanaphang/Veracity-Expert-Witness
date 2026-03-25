@@ -16,53 +16,55 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const loadStats = async () => {
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-    const queries = [
-      supabase
-        .from('messages')
-        .select('*', { count: 'exact', head: true })
-        .eq('recipient_id', user.id)
-        .eq('is_read', false),
-    ]
-    if (!isStaff) {
-      queries.unshift(
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) return
+      const queries = [
         supabase
-          .from('profiles')
+          .from('messages')
           .select('*', { count: 'exact', head: true })
-          .eq('role', 'expert'),
-        supabase
-          .from('profiles')
-          .select('*', { count: 'exact', head: true })
-          .eq('role', 'expert')
-          .is('onboarded_at', null),
-        supabase
-          .from('cases')
-          .select('*', { count: 'exact', head: true })
-          .eq('status', 'open')
-      )
-    }
-    Promise.all(queries)
-      .then((results) => {
-        if (isStaff) {
-          setStats({
-            totalExperts: 0,
-            pendingProfiles: 0,
-            openCases: 0,
-            unreadMessages: results[0].count || 0,
-          })
-        } else {
-          const [experts, pending, cases, msgs] = results
-          setStats({
-            totalExperts: experts.count || 0,
-            pendingProfiles: pending.count || 0,
-            openCases: cases.count || 0,
-            unreadMessages: msgs.count || 0,
-          })
-        }
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false))
+          .eq('recipient_id', user.id)
+          .eq('is_read', false),
+      ]
+      if (!isStaff) {
+        queries.unshift(
+          supabase
+            .from('profiles')
+            .select('*', { count: 'exact', head: true })
+            .eq('role', 'expert'),
+          supabase
+            .from('profiles')
+            .select('*', { count: 'exact', head: true })
+            .eq('role', 'expert')
+            .is('onboarded_at', null),
+          supabase
+            .from('cases')
+            .select('*', { count: 'exact', head: true })
+            .eq('status', 'open')
+        )
+      }
+      Promise.all(queries)
+        .then((results) => {
+          if (isStaff) {
+            setStats({
+              totalExperts: 0,
+              pendingProfiles: 0,
+              openCases: 0,
+              unreadMessages: results[0].count || 0,
+            })
+          } else {
+            const [experts, pending, cases, msgs] = results
+            setStats({
+              totalExperts: experts.count || 0,
+              pendingProfiles: pending.count || 0,
+              openCases: cases.count || 0,
+              unreadMessages: msgs.count || 0,
+            })
+          }
+        })
+        .catch(() => {})
+        .finally(() => setLoading(false))
     }
     loadStats()
   }, [isStaff])
