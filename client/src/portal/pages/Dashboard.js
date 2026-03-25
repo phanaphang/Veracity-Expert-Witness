@@ -227,7 +227,6 @@ export default function Dashboard() {
           <div className="skeleton skeleton--stat" />
           <div className="skeleton skeleton--stat" />
           <div className="skeleton skeleton--stat" />
-          <div className="skeleton skeleton--stat" />
         </div>
       ) : (
         <div className="portal-stats">
@@ -254,16 +253,6 @@ export default function Dashboard() {
           >
             <div className="portal-stat__value">{stats.documents}</div>
             <div className="portal-stat__label">Documents Uploaded</div>
-          </Link>
-          <Link
-            to="/training"
-            className="portal-stat"
-            style={{ textDecoration: 'none', cursor: 'pointer' }}
-          >
-            <div className="portal-stat__value">
-              {trainingPct !== null ? `${trainingPct}%` : '—'}
-            </div>
-            <div className="portal-stat__label">Training Progress</div>
           </Link>
         </div>
       )}
