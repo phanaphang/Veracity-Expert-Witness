@@ -67,28 +67,26 @@ export default function AdminDashboard() {
         </h1>
       </div>
 
-      <div className="portal-stats">
-        {!isStaff && (
-          <>
-            <div className="portal-stat">
-              <div className="portal-stat__value">{stats.totalExperts}</div>
-              <div className="portal-stat__label">Total Experts</div>
-            </div>
-            <div className="portal-stat">
-              <div className="portal-stat__value">{stats.pendingProfiles}</div>
-              <div className="portal-stat__label">Pending Profiles</div>
-            </div>
-            <div className="portal-stat">
-              <div className="portal-stat__value">{stats.openCases}</div>
-              <div className="portal-stat__label">Open Cases</div>
-            </div>
-          </>
-        )}
-        <div className="portal-stat">
-          <div className="portal-stat__value">{stats.unreadMessages}</div>
-          <div className="portal-stat__label">Unread Messages</div>
+      {!isStaff && (
+        <div className="portal-stats">
+          <div className="portal-stat">
+            <div className="portal-stat__value">{stats.totalExperts}</div>
+            <div className="portal-stat__label">Total Experts</div>
+          </div>
+          <div className="portal-stat">
+            <div className="portal-stat__value">{stats.pendingProfiles}</div>
+            <div className="portal-stat__label">Pending Profiles</div>
+          </div>
+          <div className="portal-stat">
+            <div className="portal-stat__value">{stats.openCases}</div>
+            <div className="portal-stat__label">Open Cases</div>
+          </div>
+          <div className="portal-stat">
+            <div className="portal-stat__value">{stats.unreadMessages}</div>
+            <div className="portal-stat__label">Unread Messages</div>
+          </div>
         </div>
-      </div>
+      )}
 
       <div
         style={{
@@ -134,7 +132,23 @@ export default function AdminDashboard() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <h3 className="portal-card__title">Messages</h3>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Messages</h3>
+            {isStaff && stats.unreadMessages > 0 && (
+              <span
+                style={{
+                  background: '#ef4444',
+                  color: '#fff',
+                  fontSize: '0.75rem',
+                  fontWeight: 600,
+                  padding: '2px 8px',
+                  borderRadius: 10,
+                }}
+              >
+                {stats.unreadMessages} unread
+              </span>
+            )}
+          </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
             Communicate with experts
           </p>
