@@ -132,8 +132,16 @@ export default function AdminDashboard() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>Messages</h3>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
+              Messages
+            </h3>
             {isStaff && stats.unreadMessages > 0 && (
               <span
                 style={{
