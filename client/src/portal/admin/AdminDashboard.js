@@ -6,6 +6,7 @@ import { useAuth } from '../../hooks/useAuth'
 export default function AdminDashboard() {
   const { profile } = useAuth()
   const isStaff = profile?.role === 'staff'
+  const [loading, setLoading] = useState(true)
   const [stats, setStats] = useState({
     totalExperts: 0,
     pendingProfiles: 0,
@@ -57,6 +58,7 @@ export default function AdminDashboard() {
         }
       })
       .catch(() => {})
+      .finally(() => setLoading(false))
   }, [isStaff])
 
   return (
@@ -66,27 +68,6 @@ export default function AdminDashboard() {
           {isStaff ? 'Staff Dashboard' : 'Admin Dashboard'}
         </h1>
       </div>
-
-      {!isStaff && (
-        <div className="portal-stats">
-          <div className="portal-stat">
-            <div className="portal-stat__value">{stats.totalExperts}</div>
-            <div className="portal-stat__label">Total Experts</div>
-          </div>
-          <div className="portal-stat">
-            <div className="portal-stat__value">{stats.pendingProfiles}</div>
-            <div className="portal-stat__label">Pending Profiles</div>
-          </div>
-          <div className="portal-stat">
-            <div className="portal-stat__value">{stats.openCases}</div>
-            <div className="portal-stat__label">Open Cases</div>
-          </div>
-          <div className="portal-stat">
-            <div className="portal-stat__value">{stats.unreadMessages}</div>
-            <div className="portal-stat__label">Unread Messages</div>
-          </div>
-        </div>
-      )}
 
       <div
         style={{
@@ -100,8 +81,40 @@ export default function AdminDashboard() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <h3 className="portal-card__title">Manage Experts</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
+              Manage Experts
+            </h3>
+            {!isStaff && !loading && stats.totalExperts > 0 && (
+              <span
+                style={{
+                  background: 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                }}
+              >
+                {stats.totalExperts} expert{stats.totalExperts !== 1 ? 's' : ''}
+              </span>
+            )}
+          </div>
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              marginTop: 8,
+            }}
+          >
             Browse, review, and manage expert profiles
           </p>
         </Link>
@@ -111,8 +124,40 @@ export default function AdminDashboard() {
             className="portal-card portal-card--clickable"
             style={{ textDecoration: 'none' }}
           >
-            <h3 className="portal-card__title">Invite Expert</h3>
-            <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start',
+              }}
+            >
+              <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
+                Invite Expert
+              </h3>
+              {!loading && stats.pendingProfiles > 0 && (
+                <span
+                  style={{
+                    background: '#ef4444',
+                    color: '#fff',
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    padding: '2px 7px',
+                    borderRadius: 999,
+                    whiteSpace: 'nowrap',
+                    marginLeft: 8,
+                  }}
+                >
+                  {stats.pendingProfiles} pending
+                </span>
+              )}
+            </div>
+            <p
+              style={{
+                fontSize: '0.85rem',
+                color: 'var(--color-gray-500)',
+                marginTop: 8,
+              }}
+            >
               Send an invitation to a new expert
             </p>
           </Link>
@@ -122,8 +167,40 @@ export default function AdminDashboard() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <h3 className="portal-card__title">Cases</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
+              Cases
+            </h3>
+            {!isStaff && !loading && stats.openCases > 0 && (
+              <span
+                style={{
+                  background: 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                }}
+              >
+                {stats.openCases} open
+              </span>
+            )}
+          </div>
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              marginTop: 8,
+            }}
+          >
             {isStaff ? 'Manage cases' : 'Create and manage case opportunities'}
           </p>
         </Link>
@@ -135,29 +212,37 @@ export default function AdminDashboard() {
           <div
             style={{
               display: 'flex',
-              alignItems: 'center',
               justifyContent: 'space-between',
+              alignItems: 'flex-start',
             }}
           >
             <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
               Messages
             </h3>
-            {isStaff && stats.unreadMessages > 0 && (
+            {!loading && stats.unreadMessages > 0 && (
               <span
                 style={{
                   background: '#ef4444',
                   color: '#fff',
-                  fontSize: '0.75rem',
-                  fontWeight: 600,
-                  padding: '2px 8px',
-                  borderRadius: 10,
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
                 }}
               >
                 {stats.unreadMessages} unread
               </span>
             )}
           </div>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              marginTop: 8,
+            }}
+          >
             Communicate with experts
           </p>
         </Link>
