@@ -1782,6 +1782,46 @@
   padding: 12px 0;
 }
 
+/* Countdown timer */
+.training-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 0;
+}
+
+.training-countdown__ring-wrap {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.training-countdown__ring-wrap svg {
+  transform: rotate(-90deg);
+}
+
+.training-countdown__circle {
+  transition: stroke-dashoffset 1s linear;
+}
+
+.training-countdown__seconds {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.training-countdown__label {
+  font-size: 13px;
+  color: var(--color-gray-400);
+  margin: 0;
+}
+
 .training-lesson__already-done {
   display: flex;
   align-items: center;

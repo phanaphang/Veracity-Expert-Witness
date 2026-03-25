@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import LessonCountdown from '../LessonCountdown'
 import { Link, useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../hooks/useAuth'
 import { supabase } from '../../../lib/supabase'
@@ -221,7 +222,6 @@ export default function AdmissibilityLessonPage({ onProgressUpdate }) {
   const [canComplete, setCanComplete] = useState(false)
   const [completing, setCompleting] = useState(false)
   const [error, setError] = useState('')
-  const timerRef = useRef(null)
   const arrivedAt = useRef(Date.now())
 
   // Load existing completion status
@@ -240,17 +240,11 @@ export default function AdmissibilityLessonPage({ onProgressUpdate }) {
     check()
   }, [user, lessonId])
 
-  // 60-second timer before "Mark Complete" button appears
+  // Scroll to top on lesson change
   useEffect(() => {
     window.scrollTo(0, 0)
     arrivedAt.current = Date.now()
     setCanComplete(false)
-
-    timerRef.current = setTimeout(() => {
-      setCanComplete(true)
-    }, COMPLETE_DELAY_MS)
-
-    return () => clearTimeout(timerRef.current)
   }, [lessonId])
 
   const handleMarkComplete = async () => {
@@ -411,9 +405,11 @@ export default function AdmissibilityLessonPage({ onProgressUpdate }) {
             {completing ? 'Saving…' : 'Mark Complete & Continue →'}
           </button>
         ) : (
-          <div className="training-lesson__waiting">
-            Please read through the lesson. You can mark it complete shortly.
-          </div>
+          <LessonCountdown
+            key={lessonId}
+            durationMs={COMPLETE_DELAY_MS}
+            onComplete={() => setCanComplete(true)}
+          />
         )}
       </div>
 
