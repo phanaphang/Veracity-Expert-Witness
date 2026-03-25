@@ -222,41 +222,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {loading ? (
-        <div className="portal-stats">
-          <div className="skeleton skeleton--stat" />
-          <div className="skeleton skeleton--stat" />
-          <div className="skeleton skeleton--stat" />
-        </div>
-      ) : (
-        <div className="portal-stats">
-          <Link
-            to="/portal/cases"
-            className="portal-stat"
-            style={{ textDecoration: 'none', cursor: 'pointer' }}
-          >
-            <div className="portal-stat__value">{stats.pendingCases}</div>
-            <div className="portal-stat__label">Pending Case Invitations</div>
-          </Link>
-          <Link
-            to="/portal/messages"
-            className="portal-stat"
-            style={{ textDecoration: 'none', cursor: 'pointer' }}
-          >
-            <div className="portal-stat__value">{stats.unreadMessages}</div>
-            <div className="portal-stat__label">Unread Messages</div>
-          </Link>
-          <Link
-            to="/portal/documents"
-            className="portal-stat"
-            style={{ textDecoration: 'none', cursor: 'pointer' }}
-          >
-            <div className="portal-stat__value">{stats.documents}</div>
-            <div className="portal-stat__label">Documents Uploaded</div>
-          </Link>
-        </div>
-      )}
-
       <div
         style={{
           display: 'grid',
@@ -323,8 +288,40 @@ export default function Dashboard() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <h3 className="portal-card__title">Documents</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
+              Documents
+            </h3>
+            {!loading && (
+              <span
+                style={{
+                  background: 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                }}
+              >
+                {stats.documents} uploaded
+              </span>
+            )}
+          </div>
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              marginTop: 8,
+            }}
+          >
             Upload your licenses and certifications
           </p>
         </Link>
@@ -333,9 +330,83 @@ export default function Dashboard() {
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}
         >
-          <h3 className="portal-card__title">Case Invitations</h3>
-          <p style={{ fontSize: '0.85rem', color: 'var(--color-gray-500)' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
+              Case Invitations
+            </h3>
+            {!loading && stats.pendingCases > 0 && (
+              <span
+                style={{
+                  background: 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                }}
+              >
+                {stats.pendingCases} pending
+              </span>
+            )}
+          </div>
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              marginTop: 8,
+            }}
+          >
             View and respond to case opportunities
+          </p>
+        </Link>
+        <Link
+          to="/portal/messages"
+          className="portal-card portal-card--clickable"
+          style={{ textDecoration: 'none' }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
+              Messages
+            </h3>
+            {!loading && stats.unreadMessages > 0 && (
+              <span
+                style={{
+                  background: '#ef4444',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                }}
+              >
+                {stats.unreadMessages} unread
+              </span>
+            )}
+          </div>
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              marginTop: 8,
+            }}
+          >
+            View and send messages
           </p>
         </Link>
       </div>
