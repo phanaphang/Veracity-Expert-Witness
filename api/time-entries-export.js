@@ -68,9 +68,7 @@ module.exports = async (req, res) => {
 
     const { data: entries, error: entriesError } = await supabaseAdmin
       .from('case_time_entries')
-      .select(
-        '*, logger:logged_by(first_name, last_name), task:task_id(title)'
-      )
+      .select('*, logger:logged_by(first_name, last_name), task:task_id(title)')
       .eq('case_id', caseId)
       .order('logged_at', { ascending: false })
 
