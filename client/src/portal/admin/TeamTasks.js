@@ -781,8 +781,7 @@ export default function TeamTasks() {
         const db = b.due_date || '9999-12-31'
         if (da !== db) return da < db ? -1 : 1
         return (
-          (PRIORITY_ORDER[a.priority] ?? 9) -
-          (PRIORITY_ORDER[b.priority] ?? 9)
+          (PRIORITY_ORDER[a.priority] ?? 9) - (PRIORITY_ORDER[b.priority] ?? 9)
         )
       })
       setTasks(sorted)
@@ -931,8 +930,7 @@ export default function TeamTasks() {
         changes.push(`status: ${form.status}`)
       if (editingTask.priority !== form.priority)
         changes.push(`priority: ${form.priority}`)
-      if (editingTask.title !== form.title.trim())
-        changes.push('title updated')
+      if (editingTask.title !== form.title.trim()) changes.push('title updated')
 
       await logActivity(editingTask.case_id, 'task_updated', {
         task_title: form.title.trim(),
@@ -1169,8 +1167,10 @@ export default function TeamTasks() {
                       <span
                         className={`portal-badge portal-badge--${task.status}`}
                       >
-                        {STATUS_OPTIONS.find((s) => s.value === task.status)
-                          ?.label}
+                        {
+                          STATUS_OPTIONS.find((s) => s.value === task.status)
+                            ?.label
+                        }
                       </span>
                       {task.case && (
                         <Link
