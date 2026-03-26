@@ -1,4 +1,5 @@
 const { rateLimit } = require('./_lib/rateLimit')
+const supabase = require('./_lib/supabaseAdmin')
 
 const escapeHtml = (str) =>
   String(str)
@@ -77,7 +78,6 @@ module.exports = async (req, res) => {
   // Log TOS acceptance (non-blocking — must never prevent form submission)
   if (tos_accepted_at) {
     try {
-      const supabase = require('./_lib/supabaseAdmin')
       const ip = (
         req.headers['x-forwarded-for'] ||
         req.socket?.remoteAddress ||

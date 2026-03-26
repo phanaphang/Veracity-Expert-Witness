@@ -47,7 +47,7 @@ export default function SOPTraining() {
       const {
         data: { session },
       } = await supabase.auth.getSession()
-      const res = await fetch('/api/training/sop', {
+      const res = await fetch('/api/training/overview', {
         headers: { Authorization: `Bearer ${session?.access_token}` },
       })
       if (res.ok) {
@@ -78,7 +78,7 @@ export default function SOPTraining() {
       const {
         data: { session },
       } = await supabase.auth.getSession()
-      const res = await fetch('/api/training/sop', {
+      const res = await fetch('/api/training/send-reminder', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${session?.access_token}`,

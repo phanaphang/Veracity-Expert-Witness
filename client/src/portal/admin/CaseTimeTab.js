@@ -143,61 +143,32 @@ export default function CaseTimeTab({
     }
   }
 
-  const downloadCSV = () => {
-    const escapeCSV = (val) => {
-      if (val == null) return ''
-      const str = String(val)
-      if (str.includes(',') || str.includes('"') || str.includes('\n'))
-        return '"' + str.replace(/"/g, '""') + '"'
-      return str
+  const downloadCSV = async () => {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
+      const res = await fetch(
+        `/api/time-entries-export?caseId=${encodeURIComponent(caseId)}`,
+        {
+          headers: { Authorization: `Bearer ${session?.access_token}` },
+        }
+      )
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Export failed')
+      }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `case-${caseData?.case_number || caseId}-time-entries.csv`
+      a.click()
+      URL.revokeObjectURL(url)
+      toast.success('CSV downloaded.')
+    } catch (err) {
+      toast.error('Failed to download CSV: ' + err.message)
     }
-    const headers = [
-      'Date',
-      'Description',
-      'Work Type',
-      'Hours',
-      'Minutes',
-      'Total Hours',
-      'Rate',
-      'Cost',
-      'Logged By',
-      'Task',
-    ]
-    const rows = timeEntries.map((entry) => {
-      const hrs = parseFloat(entry.hours) || 0
-      const mins = parseInt(entry.minutes) || 0
-      const totalHrs = hrs + mins / 60
-      const rate = expertRates ? expertRates[entry.work_type] || 0 : 0
-      const cost = totalHrs * rate
-      const loggerName = entry.logger
-        ? `${entry.logger.first_name} ${entry.logger.last_name}`
-        : ''
-      return [
-        new Date(entry.logged_at).toLocaleDateString(),
-        entry.description || '',
-        WORK_TYPE_OPTIONS.find((w) => w.value === entry.work_type)?.label ||
-          entry.work_type,
-        hrs,
-        mins,
-        totalHrs.toFixed(2),
-        rate.toFixed(2),
-        cost.toFixed(2),
-        loggerName,
-        entry.task?.title || '',
-      ]
-    })
-    const csv = [
-      headers.map(escapeCSV).join(','),
-      ...rows.map((r) => r.map(escapeCSV).join(',')),
-    ].join('\n')
-    const blob = new Blob([csv], { type: 'text/csv' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `case-${caseData?.case_number || caseId}-time-entries.csv`
-    a.click()
-    URL.revokeObjectURL(url)
-    toast.success('CSV downloaded.')
   }
 
   const formatDuration = (hours, minutes) => {
