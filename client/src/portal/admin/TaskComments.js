@@ -22,7 +22,6 @@ export default function TaskComments({ taskId, profile, onRead }) {
 
   const markRead = useCallback(
     async (loaded) => {
-      // Use latest comment's server timestamp + 1s buffer to avoid precision issues
       let latest
       if (loaded?.length) {
         const d = new Date(loaded[loaded.length - 1].created_at)
@@ -31,14 +30,17 @@ export default function TaskComments({ taskId, profile, onRead }) {
       } else {
         latest = new Date(Date.now() + 1000).toISOString()
       }
-      await supabase.from('task_comment_reads').upsert(
-        {
-          user_id: profile.id,
-          task_id: taskId,
-          last_read_at: latest,
-        },
-        { onConflict: 'user_id,task_id' }
-      )
+      // Delete then insert to avoid composite-key upsert issues
+      await supabase
+        .from('task_comment_reads')
+        .delete()
+        .eq('user_id', profile.id)
+        .eq('task_id', taskId)
+      await supabase.from('task_comment_reads').insert({
+        user_id: profile.id,
+        task_id: taskId,
+        last_read_at: latest,
+      })
       if (onRead) onRead(taskId)
     },
     [taskId, profile.id, onRead]
