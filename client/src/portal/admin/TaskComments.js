@@ -20,17 +20,24 @@ export default function TaskComments({ taskId, profile, onRead }) {
   const [body, setBody] = useState('')
   const [posting, setPosting] = useState(false)
 
-  const markRead = useCallback(async () => {
-    await supabase.from('task_comment_reads').upsert(
-      {
-        user_id: profile.id,
-        task_id: taskId,
-        last_read_at: new Date().toISOString(),
-      },
-      { onConflict: 'user_id,task_id' }
-    )
-    if (onRead) onRead(taskId)
-  }, [taskId, profile.id, onRead])
+  const markRead = useCallback(
+    async (loaded) => {
+      // Use the latest comment's server-generated created_at to avoid clock skew
+      const latest = loaded?.length
+        ? loaded[loaded.length - 1].created_at
+        : new Date().toISOString()
+      await supabase.from('task_comment_reads').upsert(
+        {
+          user_id: profile.id,
+          task_id: taskId,
+          last_read_at: latest,
+        },
+        { onConflict: 'user_id,task_id' }
+      )
+      if (onRead) onRead(taskId)
+    },
+    [taskId, profile.id, onRead]
+  )
 
   const loadComments = useCallback(async () => {
     const { data } = await supabase
@@ -39,10 +46,11 @@ export default function TaskComments({ taskId, profile, onRead }) {
       .eq('task_id', taskId)
       .order('created_at', { ascending: true })
     if (data) setComments(data)
+    return data || []
   }, [taskId])
 
   useEffect(() => {
-    loadComments().then(() => markRead())
+    loadComments().then((data) => markRead(data))
   }, [loadComments, markRead])
 
   const handlePost = async () => {
@@ -57,7 +65,7 @@ export default function TaskComments({ taskId, profile, onRead }) {
       toast.error('Failed to post comment.')
     } else {
       setBody('')
-      loadComments().then(() => markRead())
+      loadComments().then((data) => markRead(data))
     }
     setPosting(false)
   }
