@@ -38,7 +38,7 @@ export default function ExpertCaseDetail() {
           supabase
             .from('cases')
             .select(
-              'case_number, title, description, status, case_phase, specialties(name)'
+              'case_number, title, description, status, case_phase, client, case_type, jurisdiction, additional_notes, specialties(name), manager:case_manager(first_name, last_name)'
             )
             .eq('id', id)
             .single(),
@@ -172,6 +172,44 @@ export default function ExpertCaseDetail() {
           </p>
         </div>
       )}
+
+      <div className="portal-card">
+        <h3 className="portal-card__title">Case Details</h3>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 16,
+          }}
+        >
+          <div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Client</div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>{caseData.client || '-'}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Type</div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>{caseData.case_type?.replace('_', ' ') || '-'}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Jurisdiction</div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>{caseData.jurisdiction || '-'}</div>
+          </div>
+          <div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Case Manager</div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>
+              {caseData.manager ? `${caseData.manager.first_name || ''} ${caseData.manager.last_name || ''}`.trim() : '-'}
+            </div>
+          </div>
+        </div>
+        {caseData.additional_notes && (
+          <div style={{ marginTop: 16 }}>
+            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Additional Notes</div>
+            <p style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)', lineHeight: 1.6, margin: 0 }}>
+              {caseData.additional_notes}
+            </p>
+          </div>
+        )}
+      </div>
 
       <div className="case-time-summary">
         <div className="case-time-summary__card">
