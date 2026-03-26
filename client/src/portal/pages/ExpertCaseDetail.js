@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../contexts/ToastContext'
-import CaseActivityTab from '../admin/CaseActivityTab'
 
 const PHASES = [
   { value: 'intake', label: 'Intake' },
@@ -14,12 +13,6 @@ const PHASES = [
   { value: 'trial_prep', label: 'Trial Prep' },
   { value: 'closed', label: 'Closed' },
 ]
-
-const STATUS_LABELS = {
-  to_do: 'To Do',
-  in_progress: 'In Progress',
-  done: 'Done',
-}
 
 const WORK_TYPE_LABELS = {
   review_report: 'Review/Report',
@@ -32,11 +25,8 @@ export default function ExpertCaseDetail() {
   const { user } = useAuth()
   const toast = useToast()
   const [caseData, setCaseData] = useState(null)
-  const [tasks, setTasks] = useState([])
   const [timeEntries, setTimeEntries] = useState([])
-  const [activityLog, setActivityLog] = useState([])
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('overview')
 
   useEffect(() => {
     if (!user || !id) return
@@ -44,7 +34,7 @@ export default function ExpertCaseDetail() {
 
     const load = async () => {
       try {
-        const [caseRes, taskRes, timeRes, actRes] = await Promise.all([
+        const [caseRes, timeRes] = await Promise.all([
           supabase
             .from('cases')
             .select(
@@ -53,20 +43,9 @@ export default function ExpertCaseDetail() {
             .eq('id', id)
             .single(),
           supabase
-            .from('case_tasks')
-            .select('id, title, description, due_date, priority, status')
-            .eq('case_id', id)
-            .order('created_at', { ascending: false }),
-          supabase
             .from('case_time_entries')
             .select('hours, minutes, work_type')
             .eq('case_id', id),
-          supabase
-            .from('case_activity_log')
-            .select('*, actorProfile:actor(first_name, last_name, email, role)')
-            .eq('case_id', id)
-            .order('created_at', { ascending: false })
-            .limit(100),
         ])
 
         if (cancelled) return
@@ -78,9 +57,7 @@ export default function ExpertCaseDetail() {
         }
 
         setCaseData(caseRes.data)
-        setTasks(taskRes.data || [])
         setTimeEntries(timeRes.data || [])
-        setActivityLog(actRes.data || [])
       } catch {
         if (!cancelled) toast.error('Failed to load case.')
       }
@@ -108,8 +85,6 @@ export default function ExpertCaseDetail() {
         </p>
       </div>
     )
-
-  const doneCount = tasks.filter((t) => t.status === 'done').length
 
   const timeSummary = (() => {
     const byType = { review_report: 0, deposition: 0, trial_testimony: 0 }
@@ -183,144 +158,39 @@ export default function ExpertCaseDetail() {
         })}
       </div>
 
-      {/* Tab Bar */}
-      <div className="case-tabs">
-        {['overview', 'tasks', 'activity'].map((tab) => (
-          <button
-            key={tab}
-            className={`case-tabs__btn${activeTab === tab ? ' case-tabs__btn--active' : ''}`}
-            onClick={() => setActiveTab(tab)}
+      {caseData.description && (
+        <div className="portal-card">
+          <h3 className="portal-card__title">Description</h3>
+          <p
+            style={{
+              fontSize: '0.9rem',
+              color: 'var(--color-gray-600)',
+              lineHeight: 1.6,
+            }}
           >
-            {tab === 'overview' && 'Overview'}
-            {tab === 'tasks' && `Tasks (${tasks.length})`}
-            {tab === 'activity' && 'Activity'}
-          </button>
+            {caseData.description}
+          </p>
+        </div>
+      )}
+
+      <div className="case-time-summary">
+        <div className="case-time-summary__card">
+          <div className="case-time-summary__label">Total Hours Logged</div>
+          <div className="case-time-summary__value">
+            {timeSummary.totalHours.toFixed(1)}h
+          </div>
+        </div>
+        {Object.entries(timeSummary.byType).map(([type, mins]) => (
+          <div key={type} className="case-time-summary__card">
+            <div className="case-time-summary__label">
+              {WORK_TYPE_LABELS[type]}
+            </div>
+            <div className="case-time-summary__value">
+              {(mins / 60).toFixed(1)}h
+            </div>
+          </div>
         ))}
       </div>
-
-      {/* Overview Tab */}
-      {activeTab === 'overview' && (
-        <div>
-          {caseData.description && (
-            <div className="portal-card">
-              <h3 className="portal-card__title">Description</h3>
-              <p
-                style={{
-                  fontSize: '0.9rem',
-                  color: 'var(--color-gray-600)',
-                  lineHeight: 1.6,
-                }}
-              >
-                {caseData.description}
-              </p>
-            </div>
-          )}
-
-          <div className="case-time-summary">
-            <div className="case-time-summary__card">
-              <div className="case-time-summary__label">Total Hours Logged</div>
-              <div className="case-time-summary__value">
-                {timeSummary.totalHours.toFixed(1)}h
-              </div>
-            </div>
-            {Object.entries(timeSummary.byType).map(([type, mins]) => (
-              <div key={type} className="case-time-summary__card">
-                <div className="case-time-summary__label">
-                  {WORK_TYPE_LABELS[type]}
-                </div>
-                <div className="case-time-summary__value">
-                  {(mins / 60).toFixed(1)}h
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="portal-card">
-            <h3 className="portal-card__title">Tasks Progress</h3>
-            <p style={{ fontSize: '0.9rem', color: 'var(--color-gray-500)' }}>
-              {doneCount} of {tasks.length} tasks complete
-            </p>
-            {tasks.length > 0 && (
-              <div
-                style={{
-                  marginTop: 8,
-                  background: 'var(--color-gray-100)',
-                  borderRadius: 'var(--radius-md)',
-                  height: 8,
-                  overflow: 'hidden',
-                }}
-              >
-                <div
-                  style={{
-                    width: `${tasks.length > 0 ? (doneCount / tasks.length) * 100 : 0}%`,
-                    height: '100%',
-                    background: 'var(--color-success-dark)',
-                    borderRadius: 'var(--radius-md)',
-                    transition: 'width 0.3s ease',
-                  }}
-                />
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* Tasks Tab (read-only) */}
-      {activeTab === 'tasks' && (
-        <div>
-          <div className="case-tab-header">
-            <span className="case-tab-header__count">
-              {doneCount} of {tasks.length} tasks complete
-            </span>
-          </div>
-          {tasks.length === 0 ? (
-            <div className="portal-empty">
-              <p className="portal-empty__text">No tasks assigned yet.</p>
-            </div>
-          ) : (
-            tasks.map((task) => (
-              <div
-                key={task.id}
-                className={`case-task-item${task.status === 'done' ? ' case-task-item--done' : ''}`}
-              >
-                <div className="case-task-item__info">
-                  <div className="case-task-item__title">{task.title}</div>
-                  {task.description && (
-                    <div className="case-task-item__desc">
-                      {task.description}
-                    </div>
-                  )}
-                  <div className="case-task-item__meta">
-                    <span
-                      className={`portal-badge portal-badge--${task.priority}`}
-                    >
-                      {task.priority}
-                    </span>
-                    <span
-                      className={`portal-badge portal-badge--${task.status}`}
-                    >
-                      {STATUS_LABELS[task.status] || task.status}
-                    </span>
-                    {task.due_date && (
-                      <span>
-                        Due:{' '}
-                        {new Date(
-                          task.due_date + 'T00:00:00'
-                        ).toLocaleDateString()}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {/* Activity Tab */}
-      {activeTab === 'activity' && (
-        <CaseActivityTab activityLog={activityLog} />
-      )}
     </div>
   )
 }
