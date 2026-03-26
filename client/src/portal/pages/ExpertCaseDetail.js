@@ -183,28 +183,83 @@ export default function ExpertCaseDetail() {
           }}
         >
           <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Client</div>
-            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>{caseData.client || '-'}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Type</div>
-            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>{caseData.case_type?.replace('_', ' ') || '-'}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Jurisdiction</div>
-            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>{caseData.jurisdiction || '-'}</div>
-          </div>
-          <div>
-            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Case Manager</div>
+            <div
+              style={{
+                fontSize: '0.8rem',
+                color: 'var(--color-gray-400)',
+                marginBottom: 4,
+              }}
+            >
+              Client
+            </div>
             <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>
-              {caseData.manager ? `${caseData.manager.first_name || ''} ${caseData.manager.last_name || ''}`.trim() : '-'}
+              {caseData.client || '-'}
+            </div>
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: '0.8rem',
+                color: 'var(--color-gray-400)',
+                marginBottom: 4,
+              }}
+            >
+              Type
+            </div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>
+              {caseData.case_type?.replace('_', ' ') || '-'}
+            </div>
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: '0.8rem',
+                color: 'var(--color-gray-400)',
+                marginBottom: 4,
+              }}
+            >
+              Jurisdiction
+            </div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>
+              {caseData.jurisdiction || '-'}
+            </div>
+          </div>
+          <div>
+            <div
+              style={{
+                fontSize: '0.8rem',
+                color: 'var(--color-gray-400)',
+                marginBottom: 4,
+              }}
+            >
+              Case Manager
+            </div>
+            <div style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)' }}>
+              {caseData.manager
+                ? `${caseData.manager.first_name || ''} ${caseData.manager.last_name || ''}`.trim()
+                : '-'}
             </div>
           </div>
         </div>
         {caseData.additional_notes && (
           <div style={{ marginTop: 16 }}>
-            <div style={{ fontSize: '0.8rem', color: 'var(--color-gray-400)', marginBottom: 4 }}>Additional Notes</div>
-            <p style={{ fontSize: '0.9rem', color: 'var(--color-gray-700)', lineHeight: 1.6, margin: 0 }}>
+            <div
+              style={{
+                fontSize: '0.8rem',
+                color: 'var(--color-gray-400)',
+                marginBottom: 4,
+              }}
+            >
+              Additional Notes
+            </div>
+            <p
+              style={{
+                fontSize: '0.9rem',
+                color: 'var(--color-gray-700)',
+                lineHeight: 1.6,
+                margin: 0,
+              }}
+            >
               {caseData.additional_notes}
             </p>
           </div>
