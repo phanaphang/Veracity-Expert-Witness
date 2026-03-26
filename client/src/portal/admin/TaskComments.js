@@ -30,17 +30,20 @@ export default function TaskComments({ taskId, profile, onRead }) {
       } else {
         latest = new Date(Date.now() + 1000).toISOString()
       }
-      // Delete then insert to avoid composite-key upsert issues
-      await supabase
+      const { error: delErr } = await supabase
         .from('task_comment_reads')
         .delete()
         .eq('user_id', profile.id)
         .eq('task_id', taskId)
-      await supabase.from('task_comment_reads').insert({
-        user_id: profile.id,
-        task_id: taskId,
-        last_read_at: latest,
-      })
+      if (delErr) console.error('markRead delete failed:', delErr.message)
+      const { error: insErr } = await supabase
+        .from('task_comment_reads')
+        .insert({
+          user_id: profile.id,
+          task_id: taskId,
+          last_read_at: latest,
+        })
+      if (insErr) console.error('markRead insert failed:', insErr.message)
       if (onRead) onRead(taskId)
     },
     [taskId, profile.id, onRead]
@@ -114,6 +117,8 @@ export default function TaskComments({ taskId, profile, onRead }) {
       ))}
       <div className="task-comments__form">
         <textarea
+          id={`comment-${taskId}`}
+          name="comment"
           className="portal-field__textarea"
           placeholder="Add a comment..."
           value={body}

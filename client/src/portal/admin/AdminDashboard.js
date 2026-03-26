@@ -89,6 +89,8 @@ export default function AdminDashboard() {
                 .eq('user_id', user.id)
                 .in('task_id', taskIds),
             ])
+            if (readsRes.error)
+              console.error('task_comment_reads query failed:', readsRes.error.message)
             const readMap = {}
             ;(readsRes.data || []).forEach((r) => {
               readMap[r.task_id] = r.last_read_at
