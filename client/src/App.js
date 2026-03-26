@@ -183,6 +183,7 @@ const CaseDetail = lazy(() => import('./portal/admin/CaseDetail'))
 const AdminMessages = lazy(() => import('./portal/admin/AdminMessages'))
 const AdminProfile = lazy(() => import('./portal/admin/AdminProfile'))
 const MyTasks = lazy(() => import('./portal/admin/MyTasks'))
+const TeamTasks = lazy(() => import('./portal/admin/TeamTasks'))
 const TrainingReport = lazy(() => import('./portal/admin/TrainingReport'))
 
 function RouteErrorPage() {
@@ -816,6 +817,16 @@ const router = createBrowserRouter([
           <ProtectedRoute requiredRole="admin">
             <AdminLayout>
               <MyTasks />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/team-tasks',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <TeamTasks />
             </AdminLayout>
           </ProtectedRoute>
         ),
