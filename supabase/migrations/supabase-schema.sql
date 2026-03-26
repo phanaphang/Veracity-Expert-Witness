@@ -330,7 +330,8 @@ CREATE POLICY "Experts can delete own documents" ON documents FOR DELETE USING (
 -- CASES
 CREATE POLICY "Admins can manage cases" ON cases FOR ALL USING (is_admin());
 CREATE POLICY "Experts can view cases they're invited to" ON cases FOR SELECT USING (
-  EXISTS (SELECT 1 FROM case_invitations WHERE case_id = cases.id AND expert_id = auth.uid())
+  assigned_expert = auth.uid()
+  OR EXISTS (SELECT 1 FROM case_invitations WHERE case_id = cases.id AND expert_id = auth.uid())
 );
 
 -- CASE_INVITATIONS

@@ -168,58 +168,36 @@ export default function CaseInvitations() {
                 Invited: {new Date(inv.invited_at).toLocaleDateString()}
               </p>
 
-              {inv.status === 'pending' && (
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <button
-                    className="btn btn--primary"
-                    onClick={() => respond(inv.id, 'accepted')}
-                    style={{ padding: '8px 20px', fontSize: '0.85rem' }}
-                  >
-                    Interested
-                  </button>
-                  <button
-                    className="portal-btn-action"
-                    onClick={() => respond(inv.id, 'declined')}
-                  >
-                    Decline
-                  </button>
+              <div style={{ display: 'flex', gap: 8 }}>
+                <button
+                  className="btn btn--primary"
+                  onClick={() => respond(inv.id, 'accepted')}
+                  style={{ padding: '8px 20px', fontSize: '0.85rem' }}
+                >
+                  Interested
+                </button>
+                <button
+                  className="portal-btn-action"
+                  onClick={() => respond(inv.id, 'declined')}
+                >
+                  Decline
+                </button>
+                {inv.status === 'pending' && (
                   <button
                     className="portal-btn-action"
                     onClick={() => respond(inv.id, 'info_requested')}
                   >
                     Request More Info
                   </button>
-                </div>
-              )}
-
-              {(inv.status === 'info_requested' ||
-                inv.status === 'declined' ||
-                inv.status === 'accepted') && (
-                <div style={{ display: 'flex', gap: 8 }}>
-                  <button
-                    className="btn btn--primary"
-                    onClick={() => respond(inv.id, 'accepted')}
-                    style={{ padding: '8px 20px', fontSize: '0.85rem' }}
-                  >
-                    Interested
-                  </button>
-                  <button
-                    className="portal-btn-action"
-                    onClick={() => respond(inv.id, 'declined')}
-                  >
-                    Decline
-                  </button>
-                  {inv.status === 'accepted' && (
-                    <Link
-                      to={`/portal/cases/${inv.case_id}`}
-                      className="portal-btn-action"
-                      style={{ textDecoration: 'none' }}
-                    >
-                      View Case Progress
-                    </Link>
-                  )}
-                </div>
-              )}
+                )}
+                <Link
+                  to={`/portal/cases/${inv.case_id}`}
+                  className="portal-btn-action"
+                  style={{ textDecoration: 'none' }}
+                >
+                  View Case Details
+                </Link>
+              </div>
 
               {inv.expert_notes && (
                 <p
