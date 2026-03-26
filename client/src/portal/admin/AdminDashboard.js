@@ -12,6 +12,7 @@ export default function AdminDashboard() {
     pendingProfiles: 0,
     openCases: 0,
     unreadMessages: 0,
+    myTasks: 0,
   })
 
   useEffect(() => {
@@ -26,6 +27,11 @@ export default function AdminDashboard() {
           .select('*', { count: 'exact', head: true })
           .eq('recipient_id', user.id)
           .eq('is_read', false),
+        supabase
+          .from('case_tasks')
+          .select('*', { count: 'exact', head: true })
+          .eq('assignee', user.id)
+          .neq('status', 'done'),
       ]
       if (!isStaff) {
         queries.unshift(
@@ -52,14 +58,16 @@ export default function AdminDashboard() {
               pendingProfiles: 0,
               openCases: 0,
               unreadMessages: results[0].count || 0,
+              myTasks: results[1].count || 0,
             })
           } else {
-            const [experts, pending, cases, msgs] = results
+            const [experts, pending, cases, msgs, taskCount] = results
             setStats({
               totalExperts: experts.count || 0,
               pendingProfiles: pending.count || 0,
               openCases: cases.count || 0,
               unreadMessages: msgs.count || 0,
+              myTasks: taskCount.count || 0,
             })
           }
         })
@@ -210,6 +218,48 @@ export default function AdminDashboard() {
             }}
           >
             {isStaff ? 'Manage cases' : 'Create and manage case opportunities'}
+          </p>
+        </Link>
+        <Link
+          to="/admin/tasks"
+          className="portal-card portal-card--clickable"
+          style={{ textDecoration: 'none' }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+            }}
+          >
+            <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
+              Tasks
+            </h3>
+            {!loading && stats.myTasks > 0 && (
+              <span
+                style={{
+                  background: '#ef4444',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 8,
+                }}
+              >
+                {stats.myTasks} active
+              </span>
+            )}
+          </div>
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              marginTop: 8,
+            }}
+          >
+            View and manage tasks assigned to you
           </p>
         </Link>
         <Link

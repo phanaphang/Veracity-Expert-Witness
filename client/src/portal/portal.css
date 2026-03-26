@@ -3476,3 +3476,101 @@
     align-self: flex-end;
   }
 }
+
+/* =============================================
+   My Tasks Page
+   ============================================= */
+
+.my-task-card {
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  margin-bottom: 10px;
+  background: var(--color-white);
+  overflow: hidden;
+}
+
+.my-task-card .case-task-item {
+  border: none;
+  border-radius: 0;
+}
+
+/* =============================================
+   Task Comments
+   ============================================= */
+
+.task-comments {
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--color-gray-200);
+  background: var(--color-gray-50);
+}
+
+.task-comments__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  margin-bottom: 8px;
+}
+
+.task-comments__empty {
+  font-size: 0.8rem;
+  color: var(--color-gray-400);
+  margin-bottom: 8px;
+}
+
+.task-comments__item {
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+}
+
+.task-comments__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.task-comments__author {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.task-comments__time {
+  font-size: 0.75rem;
+  color: var(--color-gray-400);
+}
+
+.task-comments__delete {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--color-error);
+  font-size: 0.72rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.task-comments__delete:hover {
+  text-decoration: underline;
+}
+
+.task-comments__body {
+  font-size: 0.84rem;
+  color: var(--color-gray-600);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.task-comments__form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.task-comments__form .portal-field__textarea {
+  font-size: 0.84rem;
+}

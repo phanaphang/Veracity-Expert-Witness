@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { supabase } from '../../lib/supabase'
 import { formatName } from '../../utils/formatName'
 import { useToast } from '../../contexts/ToastContext'
+import TaskComments from './TaskComments'
 
 const PRIORITY_OPTIONS = [
   { value: 'urgent', label: 'Urgent' },
@@ -41,6 +42,7 @@ export default function CaseTasksTab({
   const [filterStatus, setFilterStatus] = useState('')
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
+  const [expandedTask, setExpandedTask] = useState(null)
 
   const assigneeOptions = useMemo(() => {
     const opts = []
@@ -242,72 +244,90 @@ export default function CaseTasksTab({
         </div>
       ) : (
         filtered.map((task) => (
-          <div
-            key={task.id}
-            className={`case-task-item${task.status === 'done' ? ' case-task-item--done' : ''}`}
-          >
-            <div className="case-task-item__info">
-              <div className="case-task-item__title">{task.title}</div>
-              {task.description && (
-                <div className="case-task-item__desc">{task.description}</div>
-              )}
-              <div className="case-task-item__meta">
-                <span className={`portal-badge portal-badge--${task.priority}`}>
-                  {task.priority}
-                </span>
-                <span className={`portal-badge portal-badge--${task.status}`}>
-                  {STATUS_OPTIONS.find((s) => s.value === task.status)?.label}
-                </span>
-                {task.assigneeProfile && (
-                  <span>{formatName(task.assigneeProfile)}</span>
+          <div key={task.id} className="my-task-card">
+            <div
+              className={`case-task-item${task.status === 'done' ? ' case-task-item--done' : ''}`}
+              style={{ marginBottom: 0 }}
+            >
+              <div className="case-task-item__info">
+                <div className="case-task-item__title">{task.title}</div>
+                {task.description && (
+                  <div className="case-task-item__desc">{task.description}</div>
                 )}
-                {task.due_date && (
-                  <span>
-                    Due:{' '}
-                    {new Date(task.due_date + 'T00:00:00').toLocaleDateString()}
+                <div className="case-task-item__meta">
+                  <span
+                    className={`portal-badge portal-badge--${task.priority}`}
+                  >
+                    {task.priority}
                   </span>
-                )}
+                  <span className={`portal-badge portal-badge--${task.status}`}>
+                    {STATUS_OPTIONS.find((s) => s.value === task.status)?.label}
+                  </span>
+                  {task.assigneeProfile && (
+                    <span>{formatName(task.assigneeProfile)}</span>
+                  )}
+                  {task.due_date && (
+                    <span>
+                      Due:{' '}
+                      {new Date(
+                        task.due_date + 'T00:00:00'
+                      ).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="case-task-item__actions">
-              <button
-                className="portal-btn-action"
-                style={{ fontSize: '0.78rem', padding: '4px 10px' }}
-                onClick={() => handleStatusToggle(task)}
-                title={
-                  task.status === 'to_do'
+              <div className="case-task-item__actions">
+                <button
+                  className="portal-btn-action"
+                  style={{ fontSize: '0.78rem', padding: '4px 10px' }}
+                  onClick={() => handleStatusToggle(task)}
+                  title={
+                    task.status === 'to_do'
+                      ? 'Start'
+                      : task.status === 'in_progress'
+                        ? 'Complete'
+                        : 'Reopen'
+                  }
+                >
+                  {task.status === 'to_do'
                     ? 'Start'
                     : task.status === 'in_progress'
                       ? 'Complete'
-                      : 'Reopen'
-                }
-              >
-                {task.status === 'to_do'
-                  ? 'Start'
-                  : task.status === 'in_progress'
-                    ? 'Complete'
-                    : 'Reopen'}
-              </button>
-              <button
-                className="portal-btn-action"
-                style={{ fontSize: '0.78rem', padding: '4px 10px' }}
-                onClick={() => openEdit(task)}
-              >
-                Edit
-              </button>
-              <button
-                className="portal-btn-action"
-                style={{
-                  fontSize: '0.78rem',
-                  padding: '4px 10px',
-                  color: 'var(--color-error)',
-                  borderColor: 'var(--color-error)',
-                }}
-                onClick={() => setDeleteTarget(task)}
-              >
-                Delete
-              </button>
+                      : 'Reopen'}
+                </button>
+                <button
+                  className="portal-btn-action"
+                  style={{ fontSize: '0.78rem', padding: '4px 10px' }}
+                  onClick={() => openEdit(task)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="portal-btn-action"
+                  style={{ fontSize: '0.78rem', padding: '4px 10px' }}
+                  onClick={() =>
+                    setExpandedTask(expandedTask === task.id ? null : task.id)
+                  }
+                >
+                  {expandedTask === task.id ? 'Hide Comments' : 'Comments'}
+                </button>
+                <button
+                  className="portal-btn-action"
+                  style={{
+                    fontSize: '0.78rem',
+                    padding: '4px 10px',
+                    color: 'var(--color-error)',
+                    borderColor: 'var(--color-error)',
+                  }}
+                  onClick={() => setDeleteTarget(task)}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
+            {expandedTask === task.id && (
+              <TaskComments taskId={task.id} profile={profile} />
+            )}
           </div>
         ))
       )}
