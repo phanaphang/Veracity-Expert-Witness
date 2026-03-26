@@ -22,10 +22,15 @@ export default function TaskComments({ taskId, profile, onRead }) {
 
   const markRead = useCallback(
     async (loaded) => {
-      // Use the latest comment's server-generated created_at to avoid clock skew
-      const latest = loaded?.length
-        ? loaded[loaded.length - 1].created_at
-        : new Date().toISOString()
+      // Use latest comment's server timestamp + 1s buffer to avoid precision issues
+      let latest
+      if (loaded?.length) {
+        const d = new Date(loaded[loaded.length - 1].created_at)
+        d.setSeconds(d.getSeconds() + 1)
+        latest = d.toISOString()
+      } else {
+        latest = new Date(Date.now() + 1000).toISOString()
+      }
       await supabase.from('task_comment_reads').upsert(
         {
           user_id: profile.id,
