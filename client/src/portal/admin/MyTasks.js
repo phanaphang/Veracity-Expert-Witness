@@ -761,7 +761,9 @@ export default function MyTasks() {
       const da = a.due_date || '9999-12-31'
       const db = b.due_date || '9999-12-31'
       if (da !== db) return da < db ? -1 : 1
-      return (PRIORITY_ORDER[a.priority] ?? 9) - (PRIORITY_ORDER[b.priority] ?? 9)
+      return (
+        (PRIORITY_ORDER[a.priority] ?? 9) - (PRIORITY_ORDER[b.priority] ?? 9)
+      )
     })
 
   const loadTasks = useCallback(async () => {
