@@ -355,6 +355,11 @@ export default function CaseDetail() {
       .from('cases')
       .update({ assigned_expert: expertId })
       .eq('id', id)
+    // Create a case invitation so the expert sees it on their invitations page
+    await supabase.from('case_invitations').upsert(
+      { case_id: id, expert_id: expertId, status: 'pending' },
+      { onConflict: 'case_id,expert_id' }
+    )
     setAssignExpertTerm('')
     setAssignExpertResults([])
     const target = assignExpertResults.find((e) => e.id === expertId)
