@@ -22,7 +22,11 @@ export default function TaskComments({ taskId, profile, onRead }) {
 
   const markRead = useCallback(async () => {
     await supabase.from('task_comment_reads').upsert(
-      { user_id: profile.id, task_id: taskId, last_read_at: new Date().toISOString() },
+      {
+        user_id: profile.id,
+        task_id: taskId,
+        last_read_at: new Date().toISOString(),
+      },
       { onConflict: 'user_id,task_id' }
     )
     if (onRead) onRead(taskId)
