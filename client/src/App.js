@@ -58,6 +58,9 @@ const Dashboard = lazy(() => import('./portal/pages/Dashboard'))
 const Profile = lazy(() => import('./portal/pages/Profile'))
 const Documents = lazy(() => import('./portal/pages/Documents'))
 const CaseInvitations = lazy(() => import('./portal/pages/CaseInvitations'))
+const ExpertCaseDetail = lazy(
+  () => import('./portal/pages/ExpertCaseDetail')
+)
 const Messages = lazy(() => import('./portal/pages/Messages'))
 const ChangePassword = lazy(() => import('./portal/pages/ChangePassword'))
 const CalendarPage = lazy(() => import('./portal/pages/Calendar'))
@@ -330,6 +333,16 @@ const router = createBrowserRouter([
           <ProtectedRoute>
             <PortalLayout>
               <CaseInvitations />
+            </PortalLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/portal/cases/:id',
+        element: (
+          <ProtectedRoute>
+            <PortalLayout>
+              <ExpertCaseDetail />
             </PortalLayout>
           </ProtectedRoute>
         ),

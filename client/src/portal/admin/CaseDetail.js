@@ -1,10 +1,23 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { formatName } from '../../utils/formatName'
 import { useUnsavedChanges } from '../../hooks/useUnsavedChanges'
 import { useToast } from '../../contexts/ToastContext'
+import CaseTasksTab from './CaseTasksTab'
+import CaseTimeTab from './CaseTimeTab'
+import CaseActivityTab from './CaseActivityTab'
+
+const PHASES = [
+  { value: 'intake', label: 'Intake' },
+  { value: 'records_review', label: 'Records Review' },
+  { value: 'report_drafting', label: 'Report Drafting' },
+  { value: 'report_review', label: 'Report Review' },
+  { value: 'deposition_prep', label: 'Deposition Prep' },
+  { value: 'trial_prep', label: 'Trial Prep' },
+  { value: 'closed', label: 'Closed' },
+]
 
 export default function CaseDetail() {
   const { id } = useParams()
@@ -36,6 +49,10 @@ export default function CaseDetail() {
   const [editingTags, setEditingTags] = useState([])
   const [tagInput, setTagInput] = useState('')
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState('details')
+  const [tasks, setTasks] = useState([])
+  const [timeEntries, setTimeEntries] = useState([])
+  const [activityLog, setActivityLog] = useState([])
 
   const toggleParent = (parentId) => {
     setExpandedParents((prev) => {
@@ -117,6 +134,13 @@ export default function CaseDetail() {
       }))
       setDetailsEditing(false)
       toast.success('Case details saved')
+      await supabase.from('case_activity_log').insert({
+        case_id: id,
+        actor: profile.id,
+        action: 'details_updated',
+        details: {},
+      })
+      loadProjectData()
       return true
     } catch (err) {
       toast.error('Failed to save case details')
@@ -183,8 +207,39 @@ export default function CaseDetail() {
     }
   }
 
+  const loadProjectData = useCallback(async () => {
+    const [taskRes, timeRes, actRes] = await Promise.all([
+      supabase
+        .from('case_tasks')
+        .select(
+          '*, assigneeProfile:assignee(first_name, last_name, email, role), creator:created_by(first_name, last_name, email, role)'
+        )
+        .eq('case_id', id)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('case_time_entries')
+        .select(
+          '*, logger:logged_by(first_name, last_name, email, role), task:task_id(title)'
+        )
+        .eq('case_id', id)
+        .order('logged_at', { ascending: false }),
+      supabase
+        .from('case_activity_log')
+        .select(
+          '*, actorProfile:actor(first_name, last_name, email, role)'
+        )
+        .eq('case_id', id)
+        .order('created_at', { ascending: false })
+        .limit(200),
+    ])
+    setTasks(taskRes.data || [])
+    setTimeEntries(timeRes.data || [])
+    setActivityLog(actRes.data || [])
+  }, [id])
+
   useEffect(() => {
     loadCase()
+    loadProjectData()
   }, [id]) // eslint-disable-line
 
   const sanitizeSearch = (term) => term.replace(/[%_(),.\\]/g, '')
@@ -229,16 +284,53 @@ export default function CaseDetail() {
   }
 
   const updateStatus = async (status) => {
+    const phaseUpdate =
+      status === 'closed' ? { status, case_phase: 'closed' } : { status }
     const { error: statusErr } = await supabase
       .from('cases')
-      .update({ status })
+      .update(phaseUpdate)
       .eq('id', id)
     if (statusErr) {
       toast.error('Failed to update case status')
     } else {
-      setCaseData((prev) => ({ ...prev, status }))
+      setCaseData((prev) => ({
+        ...prev,
+        status,
+        ...(status === 'closed' ? { case_phase: 'closed' } : {}),
+      }))
       toast.success(status === 'closed' ? 'Case closed' : 'Case reopened')
+      await supabase.from('case_activity_log').insert({
+        case_id: id,
+        actor: profile.id,
+        action: 'status_changed',
+        details: { to: status },
+      })
+      loadProjectData()
     }
+  }
+
+  const updatePhase = async (newPhase) => {
+    const oldPhase = caseData.case_phase
+    const updates = { case_phase: newPhase }
+    if (newPhase === 'closed') updates.status = 'closed'
+    else if (caseData.status === 'closed') updates.status = 'open'
+
+    const { error } = await supabase
+      .from('cases')
+      .update(updates)
+      .eq('id', id)
+    if (error) {
+      toast.error('Failed to update phase')
+      return
+    }
+    setCaseData((prev) => ({ ...prev, ...updates }))
+    await supabase.from('case_activity_log').insert({
+      case_id: id,
+      actor: profile.id,
+      action: 'phase_changed',
+      details: { from: oldPhase, to: newPhase },
+    })
+    loadProjectData()
   }
 
   const searchAssignExpert = async (term) => {
@@ -270,6 +362,13 @@ export default function CaseDetail() {
       .eq('id', id)
     setAssignExpertTerm('')
     setAssignExpertResults([])
+    const target = assignExpertResults.find((e) => e.id === expertId)
+    await supabase.from('case_activity_log').insert({
+      case_id: id,
+      actor: profile.id,
+      action: 'expert_assigned',
+      details: { expert_name: target ? formatName(target) : 'Expert' },
+    })
     fetch('/api/notify-assigned-expert', {
       method: 'POST',
       headers: {
@@ -284,11 +383,22 @@ export default function CaseDetail() {
       }),
     }).catch(() => {})
     await loadCase()
+    loadProjectData()
   }
 
   const removeAssignedExpert = async () => {
+    const removedName = caseData.assignedExpert
+      ? formatName(caseData.assignedExpert)
+      : 'Expert'
     await supabase.from('cases').update({ assigned_expert: null }).eq('id', id)
+    await supabase.from('case_activity_log').insert({
+      case_id: id,
+      actor: profile.id,
+      action: 'expert_removed',
+      details: { expert_name: removedName },
+    })
     await loadCase()
+    loadProjectData()
   }
 
   if (loading)
@@ -361,6 +471,69 @@ export default function CaseDetail() {
         ))}
       </div>
 
+      {/* Phase Indicator */}
+      <div className="case-phase-indicator">
+        {PHASES.map((phase, idx) => {
+          const currentIdx = PHASES.findIndex(
+            (p) => p.value === caseData.case_phase
+          )
+          const isCompleted = idx < currentIdx
+          const isCurrent = idx === currentIdx
+          return (
+            <React.Fragment key={phase.value}>
+              {idx > 0 && (
+                <div
+                  className={`case-phase-connector${isCompleted ? ' case-phase-connector--completed' : ''}`}
+                />
+              )}
+              <div
+                className={`case-phase-step${isCompleted ? ' case-phase-step--completed' : ''}${isCurrent ? ' case-phase-step--current' : ''}`}
+              >
+                <div className="case-phase-step__dot" />
+                <div className="case-phase-step__label">{phase.label}</div>
+              </div>
+            </React.Fragment>
+          )
+        })}
+      </div>
+
+      {/* Phase Selector */}
+      {(isAdmin || profile?.role === 'staff') && (
+        <div style={{ marginBottom: 24 }}>
+          <label className="portal-field__label">Current Phase</label>
+          <select
+            className="portal-field__select"
+            style={{ maxWidth: 240 }}
+            value={caseData.case_phase || 'intake'}
+            onChange={(e) => updatePhase(e.target.value)}
+          >
+            {PHASES.map((p) => (
+              <option key={p.value} value={p.value}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+      {/* Tab Bar */}
+      <div className="case-tabs">
+        {['details', 'tasks', 'time', 'activity'].map((tab) => (
+          <button
+            key={tab}
+            className={`case-tabs__btn${activeTab === tab ? ' case-tabs__btn--active' : ''}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab === 'details' && 'Details'}
+            {tab === 'tasks' && `Tasks (${tasks.length})`}
+            {tab === 'time' && 'Time & Billing'}
+            {tab === 'activity' && 'Activity'}
+          </button>
+        ))}
+      </div>
+
+      {/* Details Tab */}
+      {activeTab !== 'details' ? null : (<>
       <div className="portal-card">
         <div
           style={{
@@ -1285,7 +1458,38 @@ export default function CaseDetail() {
           </div>
         </div>
       )}
+      </>)} {/* end Details tab */}
+
       {UnsavedModal}
+
+      {/* Tasks Tab */}
+      {activeTab === 'tasks' && (
+        <CaseTasksTab
+          caseId={id}
+          tasks={tasks}
+          onTasksChange={loadProjectData}
+          profile={profile}
+          managers={managers}
+          caseData={caseData}
+        />
+      )}
+
+      {/* Time & Billing Tab */}
+      {activeTab === 'time' && (
+        <CaseTimeTab
+          caseId={id}
+          caseData={caseData}
+          timeEntries={timeEntries}
+          tasks={tasks}
+          onTimeEntriesChange={loadProjectData}
+          profile={profile}
+        />
+      )}
+
+      {/* Activity Tab */}
+      {activeTab === 'activity' && (
+        <CaseActivityTab activityLog={activityLog} />
+      )}
     </div>
   )
 }

@@ -3062,3 +3062,415 @@
   color: var(--color-error);
   font-weight: 600;
 }
+
+/* =============================================
+   Case Detail Tabs
+   ============================================= */
+
+.case-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid var(--color-gray-200);
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+
+.case-tabs__btn {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-gray-400);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  white-space: nowrap;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.case-tabs__btn:hover {
+  color: var(--color-navy);
+}
+
+.case-tabs__btn--active {
+  color: var(--color-accent);
+  border-bottom-color: var(--color-accent);
+}
+
+/* =============================================
+   Phase Indicator
+   ============================================= */
+
+.case-phase-indicator {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  padding: 16px 0;
+}
+
+.case-phase-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 90px;
+  position: relative;
+  cursor: default;
+}
+
+.case-phase-step__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-gray-200);
+  border: 2px solid var(--color-gray-300);
+  z-index: 1;
+}
+
+.case-phase-step--completed .case-phase-step__dot {
+  background: var(--color-success-dark);
+  border-color: var(--color-success-dark);
+}
+
+.case-phase-step--current .case-phase-step__dot {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(211, 102, 34, 0.2);
+}
+
+.case-phase-step__label {
+  font-size: 0.72rem;
+  color: var(--color-gray-400);
+  margin-top: 6px;
+  text-align: center;
+}
+
+.case-phase-step--completed .case-phase-step__label {
+  color: var(--color-success-dark);
+}
+
+.case-phase-step--current .case-phase-step__label {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.case-phase-connector {
+  flex: 1;
+  height: 2px;
+  background: var(--color-gray-200);
+  min-width: 16px;
+}
+
+.case-phase-connector--completed {
+  background: var(--color-success-dark);
+}
+
+/* =============================================
+   Activity Timeline
+   ============================================= */
+
+.case-timeline {
+  position: relative;
+  padding-left: 24px;
+}
+
+.case-timeline::before {
+  content: '';
+  position: absolute;
+  left: 7px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--color-gray-200);
+}
+
+.case-timeline__item {
+  position: relative;
+  padding-bottom: 20px;
+  padding-left: 16px;
+}
+
+.case-timeline__dot {
+  position: absolute;
+  left: -24px;
+  top: 4px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-gray-300);
+  border: 2px solid var(--color-white);
+}
+
+.case-timeline__dot--phase {
+  background: var(--color-accent);
+}
+
+.case-timeline__dot--task {
+  background: #3b82f6;
+}
+
+.case-timeline__dot--time {
+  background: var(--color-success-dark);
+}
+
+.case-timeline__dot--expert {
+  background: #8b5cf6;
+}
+
+.case-timeline__dot--status {
+  background: var(--color-warning-dark);
+}
+
+.case-timeline__dot--details {
+  background: var(--color-gray-500);
+}
+
+.case-timeline__content {
+  font-size: 0.88rem;
+  color: var(--color-gray-600);
+  line-height: 1.5;
+}
+
+.case-timeline__actor {
+  font-weight: 600;
+  color: var(--color-navy);
+}
+
+.case-timeline__time {
+  font-size: 0.78rem;
+  color: var(--color-gray-400);
+  margin-top: 2px;
+}
+
+/* =============================================
+   Phase Badge Variants
+   ============================================= */
+
+.portal-badge--intake {
+  background: var(--color-info-light);
+  color: #1e40af;
+}
+
+.portal-badge--records_review {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.portal-badge--report_drafting {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.portal-badge--report_review {
+  background: #fce7f3;
+  color: #9d174d;
+}
+
+.portal-badge--deposition_prep {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.portal-badge--trial_prep {
+  background: #d1fae5;
+  color: #166534;
+}
+
+/* =============================================
+   Priority Badge Variants
+   ============================================= */
+
+.portal-badge--urgent {
+  background: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.portal-badge--high {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.portal-badge--medium {
+  background: var(--color-info-light);
+  color: #1e40af;
+}
+
+.portal-badge--low {
+  background: var(--color-gray-100);
+  color: var(--color-gray-500);
+}
+
+/* =============================================
+   Task Status Badge Variants
+   ============================================= */
+
+.portal-badge--to_do {
+  background: var(--color-gray-100);
+  color: var(--color-gray-600);
+}
+
+.portal-badge--in_progress {
+  background: var(--color-info-light);
+  color: #1e40af;
+}
+
+.portal-badge--done {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* =============================================
+   Task Items
+   ============================================= */
+
+.case-task-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  margin-bottom: 8px;
+  background: var(--color-white);
+  transition: border-color var(--transition);
+}
+
+.case-task-item:hover {
+  border-color: var(--color-gray-300);
+}
+
+.case-task-item--done {
+  opacity: 0.6;
+}
+
+.case-task-item__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.case-task-item__title {
+  font-weight: 600;
+  color: var(--color-navy);
+  font-size: 0.92rem;
+}
+
+.case-task-item--done .case-task-item__title {
+  text-decoration: line-through;
+}
+
+.case-task-item__desc {
+  font-size: 0.82rem;
+  color: var(--color-gray-500);
+  margin-top: 2px;
+}
+
+.case-task-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: var(--color-gray-400);
+}
+
+.case-task-item__actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+/* =============================================
+   Time & Billing Summary
+   ============================================= */
+
+.case-time-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.case-time-summary__card {
+  padding: 16px;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+}
+
+.case-time-summary__label {
+  font-size: 0.8rem;
+  color: var(--color-gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.case-time-summary__value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-navy);
+  margin-top: 4px;
+}
+
+.case-time-summary__sub {
+  font-size: 0.8rem;
+  color: var(--color-gray-500);
+  margin-top: 2px;
+}
+
+/* =============================================
+   Task/Time Tab Header
+   ============================================= */
+
+.case-tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.case-tab-header__filters {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.case-tab-header__count {
+  font-size: 0.85rem;
+  color: var(--color-gray-500);
+}
+
+@media (max-width: 768px) {
+  .case-phase-indicator {
+    padding: 12px 0;
+  }
+
+  .case-phase-step {
+    min-width: 70px;
+  }
+
+  .case-phase-step__label {
+    font-size: 0.65rem;
+  }
+
+  .case-tabs__btn {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+
+  .case-time-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .case-task-item {
+    flex-direction: column;
+  }
+
+  .case-task-item__actions {
+    align-self: flex-end;
+  }
+}

@@ -5,6 +5,16 @@ import { useAuth } from '../../hooks/useAuth'
 import { formatName } from '../../utils/formatName'
 import { useToast } from '../../contexts/ToastContext'
 
+const PHASE_LABELS = {
+  intake: 'Intake',
+  records_review: 'Records Review',
+  report_drafting: 'Report Drafting',
+  report_review: 'Report Review',
+  deposition_prep: 'Deposition Prep',
+  trial_prep: 'Trial Prep',
+  closed: 'Closed',
+}
+
 function highlight(text, term) {
   if (!text || !term) return text
   const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -36,13 +46,14 @@ export default function CaseList() {
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [page, setPage] = useState(1)
+  const [filterPhase, setFilterPhase] = useState('')
   const PAGE_SIZE = 25
 
   useEffect(() => {
     supabase
       .from('cases')
       .select(
-        '*, specialties(name), case_invitations(count), manager:case_manager(first_name, last_name, email, role), assignedExpert:assigned_expert(first_name, last_name, email, role)'
+        '*, specialties(name), case_invitations(count), case_tasks(count), manager:case_manager(first_name, last_name, email, role), assignedExpert:assigned_expert(first_name, last_name, email, role)'
       )
       .order('created_at', { ascending: false })
       .limit(500)
@@ -60,6 +71,7 @@ export default function CaseList() {
     () =>
       cases.filter((c) => {
         if (filterStatus && c.status !== filterStatus) return false
+        if (filterPhase && c.case_phase !== filterPhase) return false
         if (searchTerm) {
           const term = searchTerm.toLowerCase()
           if (
@@ -70,7 +82,7 @@ export default function CaseList() {
         }
         return true
       }),
-    [cases, filterStatus, searchTerm]
+    [cases, filterStatus, filterPhase, searchTerm]
   )
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
@@ -81,7 +93,7 @@ export default function CaseList() {
 
   useEffect(() => {
     setPage(1)
-  }, [filterStatus, searchTerm])
+  }, [filterStatus, filterPhase, searchTerm])
 
   const handleDelete = async () => {
     if (!deleteTarget) return
@@ -142,6 +154,20 @@ export default function CaseList() {
           <option value="open">Open</option>
           <option value="closed">Closed</option>
         </select>
+        <select
+          className="portal-field__select"
+          value={filterPhase}
+          onChange={(e) => setFilterPhase(e.target.value)}
+        >
+          <option value="">All Phases</option>
+          <option value="intake">Intake</option>
+          <option value="records_review">Records Review</option>
+          <option value="report_drafting">Report Drafting</option>
+          <option value="report_review">Report Review</option>
+          <option value="deposition_prep">Deposition Prep</option>
+          <option value="trial_prep">Trial Prep</option>
+          <option value="closed">Closed</option>
+        </select>
       </div>
 
       {filtered.length === 0 ? (
@@ -164,6 +190,8 @@ export default function CaseList() {
                 <th>Title</th>
                 <th>Specialty</th>
                 <th>Status</th>
+                <th>Phase</th>
+                <th>Tasks</th>
                 <th>Case Manager</th>
                 <th>Assigned Expert</th>
                 <th>Invitations</th>
@@ -186,6 +214,14 @@ export default function CaseList() {
                       {c.status?.replace('_', ' ')}
                     </span>
                   </td>
+                  <td>
+                    <span
+                      className={`portal-badge portal-badge--${c.case_phase || 'intake'}`}
+                    >
+                      {PHASE_LABELS[c.case_phase] || 'Intake'}
+                    </span>
+                  </td>
+                  <td>{c.case_tasks?.[0]?.count || 0}</td>
                   <td>{c.manager ? formatName(c.manager) : '—'}</td>
                   <td>
                     {c.assignedExpert ? formatName(c.assignedExpert) : '—'}

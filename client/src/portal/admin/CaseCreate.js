@@ -20,6 +20,7 @@ export default function CaseCreate() {
     jurisdiction: '',
     case_manager: '',
     status: 'open',
+    case_phase: 'intake',
   })
   const [selectedSpecialties, setSelectedSpecialties] = useState([])
   const [expandedParents, setExpandedParents] = useState(new Set())
@@ -414,6 +415,24 @@ export default function CaseCreate() {
                   {formatName(m)} ({m.role})
                 </option>
               ))}
+            </select>
+          </div>
+          <div className="portal-field">
+            <label className="portal-field__label">Starting Phase</label>
+            <select
+              className="portal-field__select"
+              name="case_phase"
+              value={form.case_phase}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, case_phase: e.target.value }))
+              }
+            >
+              <option value="intake">Intake</option>
+              <option value="records_review">Records Review</option>
+              <option value="report_drafting">Report Drafting</option>
+              <option value="report_review">Report Review</option>
+              <option value="deposition_prep">Deposition Prep</option>
+              <option value="trial_prep">Trial Prep</option>
             </select>
           </div>
           <button

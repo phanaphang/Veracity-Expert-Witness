@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../hooks/useAuth'
 import { useToast } from '../../contexts/ToastContext'
@@ -208,6 +209,15 @@ export default function CaseInvitations() {
                   >
                     Decline
                   </button>
+                  {inv.status === 'accepted' && (
+                    <Link
+                      to={`/portal/cases/${inv.case_id}`}
+                      className="portal-btn-action"
+                      style={{ textDecoration: 'none' }}
+                    >
+                      View Case Progress
+                    </Link>
+                  )}
                 </div>
               )}
 
