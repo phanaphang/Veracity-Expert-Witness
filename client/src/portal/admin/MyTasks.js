@@ -739,7 +739,9 @@ export default function MyTasks() {
   const { profile } = useAuth()
   const toast = useToast()
   const [tasks, setTasks] = useState([])
+  const [assignedByMe, setAssignedByMe] = useState([])
   const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState('mine')
   const [filterStatus, setFilterStatus] = useState('')
   const [expandedTask, setExpandedTask] = useState(null)
   const [expandedAutomation, setExpandedAutomation] = useState(null)
@@ -754,27 +756,35 @@ export default function MyTasks() {
   const [managers, setManagers] = useState([])
   const [showAutomations, setShowAutomations] = useState(false)
 
+  const sortTasks = (list) =>
+    [...list].sort((a, b) => {
+      const da = a.due_date || '9999-12-31'
+      const db = b.due_date || '9999-12-31'
+      if (da !== db) return da < db ? -1 : 1
+      return (PRIORITY_ORDER[a.priority] ?? 9) - (PRIORITY_ORDER[b.priority] ?? 9)
+    })
+
   const loadTasks = useCallback(async () => {
     if (!profile) return
-    const { data } = await supabase
-      .from('case_tasks')
-      .select(
-        '*, case:case_id(id, title), assigneeProfile:assignee(id, first_name, last_name, email, role), creatorProfile:created_by(id, first_name, last_name, email, role)'
-      )
-      .eq('assignee', profile.id)
-      .order('due_date', { ascending: true, nullsFirst: false })
-      .order('created_at', { ascending: false })
-    if (data) {
-      const sorted = data.sort((a, b) => {
-        const pa = PRIORITY_ORDER[a.priority] ?? 9
-        const pb = PRIORITY_ORDER[b.priority] ?? 9
-        const da = a.due_date || '9999-12-31'
-        const db = b.due_date || '9999-12-31'
-        if (da !== db) return da < db ? -1 : 1
-        return pa - pb
-      })
-      setTasks(sorted)
-    }
+    const select =
+      '*, case:case_id(id, title), assigneeProfile:assignee(id, first_name, last_name, email, role), creatorProfile:created_by(id, first_name, last_name, email, role)'
+
+    const [myRes, otherRes] = await Promise.all([
+      supabase
+        .from('case_tasks')
+        .select(select)
+        .eq('assignee', profile.id)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('case_tasks')
+        .select(select)
+        .eq('created_by', profile.id)
+        .neq('assignee', profile.id)
+        .not('assignee', 'is', null)
+        .order('created_at', { ascending: false }),
+    ])
+    if (myRes.data) setTasks(sortTasks(myRes.data))
+    if (otherRes.data) setAssignedByMe(sortTasks(otherRes.data))
     setLoading(false)
   }, [profile])
 
@@ -1005,11 +1015,13 @@ export default function MyTasks() {
     }
   }
 
-  const filtered = filterStatus
-    ? tasks.filter((t) => t.status === filterStatus)
-    : tasks
+  const activeTasks = activeTab === 'mine' ? tasks : assignedByMe
 
-  const doneCount = tasks.filter((t) => t.status === 'done').length
+  const filtered = filterStatus
+    ? activeTasks.filter((t) => t.status === filterStatus)
+    : activeTasks
+
+  const doneCount = activeTasks.filter((t) => t.status === 'done').length
 
   const isOverdue = (d) => {
     if (!d) return false
@@ -1038,6 +1050,27 @@ export default function MyTasks() {
         <h1 className="portal-page__title">My Tasks</h1>
       </div>
 
+      <div className="case-tabs">
+        <button
+          className={`case-tabs__btn${activeTab === 'mine' ? ' case-tabs__btn--active' : ''}`}
+          onClick={() => {
+            setActiveTab('mine')
+            setFilterStatus('')
+          }}
+        >
+          Assigned to Me ({tasks.length})
+        </button>
+        <button
+          className={`case-tabs__btn${activeTab === 'others' ? ' case-tabs__btn--active' : ''}`}
+          onClick={() => {
+            setActiveTab('others')
+            setFilterStatus('')
+          }}
+        >
+          Assigned to Others ({assignedByMe.length})
+        </button>
+      </div>
+
       <div className="case-tab-header">
         <div className="case-tab-header__filters">
           <select
@@ -1054,7 +1087,7 @@ export default function MyTasks() {
             ))}
           </select>
           <span className="case-tab-header__count">
-            {doneCount} of {tasks.length} complete
+            {doneCount} of {activeTasks.length} complete
           </span>
         </div>
       </div>
@@ -1062,8 +1095,10 @@ export default function MyTasks() {
       {filtered.length === 0 ? (
         <div className="portal-empty">
           <p className="portal-empty__text">
-            {tasks.length === 0
-              ? 'No tasks assigned to you.'
+            {activeTasks.length === 0
+              ? activeTab === 'mine'
+                ? 'No tasks assigned to you.'
+                : 'You have not assigned tasks to others.'
               : 'No tasks match the selected filter.'}
           </p>
         </div>
@@ -1088,6 +1123,18 @@ export default function MyTasks() {
                   <span className={`portal-badge portal-badge--${task.status}`}>
                     {STATUS_OPTIONS.find((s) => s.value === task.status)?.label}
                   </span>
+                  {activeTab === 'mine' &&
+                    task.creatorProfile &&
+                    task.created_by !== profile.id && (
+                      <span style={{ color: 'var(--color-gray-500)' }}>
+                        Assigned by: {formatName(task.creatorProfile)}
+                      </span>
+                    )}
+                  {activeTab === 'others' && task.assigneeProfile && (
+                    <span style={{ color: 'var(--color-gray-500)' }}>
+                      Assigned to: {formatName(task.assigneeProfile)}
+                    </span>
+                  )}
                   {task.case && (
                     <Link
                       to={`/admin/cases/${task.case.id}`}
