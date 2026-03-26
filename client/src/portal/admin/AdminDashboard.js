@@ -80,7 +80,8 @@ export default function AdminDashboard() {
             const [commentsRes, readsRes] = await Promise.all([
               supabase
                 .from('task_comments')
-                .select('id, task_id, created_at')
+                .select('id, task_id, created_at, author')
+                .neq('author', user.id)
                 .in('task_id', taskIds),
               supabase
                 .from('task_comment_reads')

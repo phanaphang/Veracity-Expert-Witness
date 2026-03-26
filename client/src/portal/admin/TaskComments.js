@@ -57,7 +57,7 @@ export default function TaskComments({ taskId, profile, onRead }) {
       toast.error('Failed to post comment.')
     } else {
       setBody('')
-      loadComments()
+      loadComments().then(() => markRead())
     }
     setPosting(false)
   }

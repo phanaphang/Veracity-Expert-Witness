@@ -801,7 +801,8 @@ export default function MyTasks() {
       const [commentsRes, readsRes] = await Promise.all([
         supabase
           .from('task_comments')
-          .select('id, task_id, created_at')
+          .select('id, task_id, created_at, author')
+          .neq('author', profile.id)
           .in('task_id', taskIds),
         supabase
           .from('task_comment_reads')
