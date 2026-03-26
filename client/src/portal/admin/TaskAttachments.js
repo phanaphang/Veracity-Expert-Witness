@@ -199,8 +199,7 @@ export default function TaskAttachments({ taskId, caseId, profile }) {
     }
   }
 
-  const canDelete = (att) =>
-    att.uploaded_by === profile.id || isAdmin
+  const canDelete = (att) => att.uploaded_by === profile.id || isAdmin
 
   return (
     <div className="task-attachments">
@@ -220,9 +219,7 @@ export default function TaskAttachments({ taskId, caseId, profile }) {
             style={{ fontSize: '0.82rem' }}
           />
           {uploading && (
-            <span
-              style={{ fontSize: '0.8rem', color: 'var(--color-accent)' }}
-            >
+            <span style={{ fontSize: '0.8rem', color: 'var(--color-accent)' }}>
               Uploading...
             </span>
           )}

@@ -1137,9 +1137,7 @@ export default function CaseTasksTab({
                   className="portal-btn-action"
                   style={{ fontSize: '0.78rem', padding: '4px 10px' }}
                   onClick={() =>
-                    setExpandedFiles(
-                      expandedFiles === task.id ? null : task.id
-                    )
+                    setExpandedFiles(expandedFiles === task.id ? null : task.id)
                   }
                 >
                   {expandedFiles === task.id ? 'Hide Files' : 'Files'}
