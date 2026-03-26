@@ -61,7 +61,13 @@ module.exports = async (req, res) => {
 
   const { taskId, caseId, trigger, automations, taskTitle, assigneeId } =
     req.body
-  if (!taskId || !caseId || !trigger || !automations || !Array.isArray(automations)) {
+  if (
+    !taskId ||
+    !caseId ||
+    !trigger ||
+    !automations ||
+    !Array.isArray(automations)
+  ) {
     return res.status(400).json({ error: 'Missing required fields' })
   }
 
@@ -88,9 +94,7 @@ module.exports = async (req, res) => {
             automations: t.automations || null,
           }))
         if (rows.length) {
-          const { error } = await supabaseAdmin
-            .from('case_tasks')
-            .insert(rows)
+          const { error } = await supabaseAdmin.from('case_tasks').insert(rows)
           if (error) throw error
           for (const row of rows) {
             await supabaseAdmin.from('case_activity_log').insert({
@@ -105,7 +109,11 @@ module.exports = async (req, res) => {
               },
             })
           }
-          results.push({ type: 'create_tasks', success: true, count: rows.length })
+          results.push({
+            type: 'create_tasks',
+            success: true,
+            count: rows.length,
+          })
         }
       } else if (automation.type === 'email_assignee' && assigneeId) {
         const { data: assignee } = await supabaseAdmin
@@ -183,18 +191,34 @@ module.exports = async (req, res) => {
 
           if (!response.ok) {
             const errorText = await response.text()
-            console.error('Paubox API error (task email):', response.status, errorText)
-            results.push({ type: 'email_assignee', success: false, error: 'Email send failed' })
+            console.error(
+              'Paubox API error (task email):',
+              response.status,
+              errorText
+            )
+            results.push({
+              type: 'email_assignee',
+              success: false,
+              error: 'Email send failed',
+            })
             continue
           }
           results.push({ type: 'email_assignee', success: true })
         } else {
-          results.push({ type: 'email_assignee', success: false, error: 'No assignee email' })
+          results.push({
+            type: 'email_assignee',
+            success: false,
+            error: 'No assignee email',
+          })
         }
       } else if (automation.type === 'create_event' && assigneeId) {
         const eventTitle = automation.title?.trim()
         if (!eventTitle) {
-          results.push({ type: 'create_event', success: false, error: 'No event title' })
+          results.push({
+            type: 'create_event',
+            success: false,
+            error: 'No event title',
+          })
           continue
         }
 
@@ -219,7 +243,11 @@ module.exports = async (req, res) => {
 
         if (error) {
           console.error('Calendar event insert error:', error.message)
-          results.push({ type: 'create_event', success: false, error: error.message })
+          results.push({
+            type: 'create_event',
+            success: false,
+            error: error.message,
+          })
           continue
         }
 
@@ -239,7 +267,11 @@ module.exports = async (req, res) => {
       }
     } catch (err) {
       console.error(`Automation error (${automation.type}):`, err.message)
-      results.push({ type: automation.type, success: false, error: err.message })
+      results.push({
+        type: automation.type,
+        success: false,
+        error: err.message,
+      })
     }
   }
 
