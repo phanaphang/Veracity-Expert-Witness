@@ -2,7 +2,6 @@ import React, { useState, useMemo } from 'react'
 import { supabase } from '../../lib/supabase'
 import { formatName } from '../../utils/formatName'
 import { useToast } from '../../contexts/ToastContext'
-import { useAuth } from '../../hooks/useAuth'
 
 const WORK_TYPE_OPTIONS = [
   { value: 'review_report', label: 'Review/Report' },
@@ -28,14 +27,12 @@ export default function CaseTimeTab({
   onTimeEntriesChange,
   profile,
 }) {
-  const { session } = useAuth()
   const toast = useToast()
   const [showForm, setShowForm] = useState(false)
   const [form, setForm] = useState(EMPTY_FORM)
   const [saving, setSaving] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
-  const [downloading, setDownloading] = useState(false)
 
   const expertRates = useMemo(() => {
     if (!caseData?.assignedExpert) return null
@@ -146,29 +143,61 @@ export default function CaseTimeTab({
     }
   }
 
-  const downloadCSV = async () => {
-    setDownloading(true)
-    try {
-      const response = await fetch(
-        `/api/time-entries-export?caseId=${caseId}`,
-        {
-          headers: { Authorization: `Bearer ${session?.access_token}` },
-        }
-      )
-      if (!response.ok) throw new Error('Download failed')
-      const blob = await response.blob()
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = `case-${caseData?.case_number || caseId}-time-entries.csv`
-      a.click()
-      URL.revokeObjectURL(url)
-      toast.success('CSV downloaded.')
-    } catch (err) {
-      toast.error('Failed to download CSV: ' + err.message)
-    } finally {
-      setDownloading(false)
+  const downloadCSV = () => {
+    const escapeCSV = (val) => {
+      if (val == null) return ''
+      const str = String(val)
+      if (str.includes(',') || str.includes('"') || str.includes('\n'))
+        return '"' + str.replace(/"/g, '""') + '"'
+      return str
     }
+    const headers = [
+      'Date',
+      'Description',
+      'Work Type',
+      'Hours',
+      'Minutes',
+      'Total Hours',
+      'Rate',
+      'Cost',
+      'Logged By',
+      'Task',
+    ]
+    const rows = timeEntries.map((entry) => {
+      const hrs = parseFloat(entry.hours) || 0
+      const mins = parseInt(entry.minutes) || 0
+      const totalHrs = hrs + mins / 60
+      const rate = expertRates ? expertRates[entry.work_type] || 0 : 0
+      const cost = totalHrs * rate
+      const loggerName = entry.logger
+        ? `${entry.logger.first_name} ${entry.logger.last_name}`
+        : ''
+      return [
+        new Date(entry.logged_at).toLocaleDateString(),
+        entry.description || '',
+        WORK_TYPE_OPTIONS.find((w) => w.value === entry.work_type)?.label ||
+          entry.work_type,
+        hrs,
+        mins,
+        totalHrs.toFixed(2),
+        rate.toFixed(2),
+        cost.toFixed(2),
+        loggerName,
+        entry.task?.title || '',
+      ]
+    })
+    const csv = [
+      headers.map(escapeCSV).join(','),
+      ...rows.map((r) => r.map(escapeCSV).join(',')),
+    ].join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `case-${caseData?.case_number || caseId}-time-entries.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success('CSV downloaded.')
   }
 
   const formatDuration = (hours, minutes) => {
@@ -231,12 +260,8 @@ export default function CaseTimeTab({
         </span>
         <div style={{ display: 'flex', gap: 8 }}>
           {timeEntries.length > 0 && (
-            <button
-              className="portal-btn-action"
-              onClick={downloadCSV}
-              disabled={downloading}
-            >
-              {downloading ? 'Downloading...' : 'Download CSV'}
+            <button className="portal-btn-action" onClick={downloadCSV}>
+              Download CSV
             </button>
           )}
           <button
