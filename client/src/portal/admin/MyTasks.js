@@ -5,6 +5,7 @@ import { useAuth } from '../../hooks/useAuth'
 import { formatName } from '../../utils/formatName'
 import { useToast } from '../../contexts/ToastContext'
 import TaskComments from './TaskComments'
+import TaskAttachments from './TaskAttachments'
 
 const PRIORITY_ORDER = { urgent: 0, high: 1, medium: 2, low: 3 }
 const PRIORITY_OPTIONS = [
@@ -742,6 +743,7 @@ export default function MyTasks() {
   const [filterStatus, setFilterStatus] = useState('')
   const [expandedTask, setExpandedTask] = useState(null)
   const [expandedAutomation, setExpandedAutomation] = useState(null)
+  const [expandedFiles, setExpandedFiles] = useState(null)
   const [showForm, setShowForm] = useState(false)
   const [editingTask, setEditingTask] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
@@ -1149,6 +1151,17 @@ export default function MyTasks() {
                   className="portal-btn-action"
                   style={{ fontSize: '0.78rem', padding: '4px 10px' }}
                   onClick={() =>
+                    setExpandedFiles(
+                      expandedFiles === task.id ? null : task.id
+                    )
+                  }
+                >
+                  {expandedFiles === task.id ? 'Hide Files' : 'Files'}
+                </button>
+                <button
+                  className="portal-btn-action"
+                  style={{ fontSize: '0.78rem', padding: '4px 10px' }}
+                  onClick={() =>
                     setExpandedAutomation(
                       expandedAutomation === task.id ? null : task.id
                     )
@@ -1174,6 +1187,13 @@ export default function MyTasks() {
             </div>
             {expandedTask === task.id && (
               <TaskComments taskId={task.id} profile={profile} />
+            )}
+            {expandedFiles === task.id && (
+              <TaskAttachments
+                taskId={task.id}
+                caseId={task.case_id}
+                profile={profile}
+              />
             )}
             {expandedAutomation === task.id && (
               <div className="task-automations-preview">

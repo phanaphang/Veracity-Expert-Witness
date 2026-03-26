@@ -3750,3 +3750,106 @@
   align-items: center;
   justify-content: center;
 }
+
+/* =============================================
+   Task Attachments
+   ============================================= */
+
+.task-attachments {
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--color-gray-200);
+  background: var(--color-gray-50);
+}
+
+.task-attachments__label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  margin-bottom: 8px;
+}
+
+.task-attachments__empty {
+  font-size: 0.8rem;
+  color: var(--color-gray-400);
+  margin: 0 0 4px;
+}
+
+.task-attachments__upload {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.task-attachments__hint {
+  font-size: 0.75rem;
+  color: var(--color-gray-400);
+}
+
+.task-attachments__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  border: 1px solid var(--color-gray-200);
+}
+
+.task-attachments__icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--color-gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
+.task-attachments__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.task-attachments__name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-navy);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-attachments__meta {
+  font-size: 0.72rem;
+  color: var(--color-gray-400);
+  margin-top: 1px;
+}
+
+.task-attachments__actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.task-attachments__btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-gray-400);
+  padding: 4px;
+  font-size: 0.72rem;
+  transition: color var(--transition);
+}
+
+.task-attachments__btn:hover {
+  color: var(--color-accent);
+}
+
+.task-attachments__btn--delete:hover {
+  color: var(--color-error);
+}

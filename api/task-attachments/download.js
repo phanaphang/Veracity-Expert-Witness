@@ -13,7 +13,7 @@ module.exports = async (req, res) => {
   const authHeader = req.headers.authorization
   if (!authHeader?.startsWith('Bearer ')) {
     console.warn(
-      `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | documents/download | missing token`
+      `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | task-attachments/download | missing token`
     )
     return res.status(401).json({ error: 'Missing authorization token' })
   }
@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
   } = await supabaseAdmin.auth.getUser(token)
   if (authError || !user) {
     console.warn(
-      `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | documents/download | invalid token`
+      `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | task-attachments/download | invalid token`
     )
     return res.status(401).json({ error: 'Invalid token' })
   }
@@ -52,7 +52,14 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Invalid file path' })
   }
 
-  // Check authorization: user owns the file or is admin
+  // Path must be {case_id}/{task_id}/{filename}
+  const pathSegments = normalizedPath.split('/')
+  if (pathSegments.length < 3) {
+    return res.status(400).json({ error: 'Invalid file path' })
+  }
+  const caseId = pathSegments[0]
+
+  // Re-query role from database
   const { data: profile } = await supabaseAdmin
     .from('profiles')
     .select('role')
@@ -60,17 +67,33 @@ module.exports = async (req, res) => {
     .single()
 
   const isAdmin = ['admin', 'staff'].includes(profile?.role)
-  const ownsFile = normalizedPath.startsWith(`${user.id}/`)
 
-  if (!isAdmin && !ownsFile) {
-    console.warn(
-      `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | documents/download | access denied for path: ${normalizedPath.split('/')[0]}`
-    )
-    return res.status(403).json({ error: 'Access denied' })
+  if (!isAdmin) {
+    // Check expert has access to this case
+    const { data: assignedCase } = await supabaseAdmin
+      .from('cases')
+      .select('id')
+      .eq('id', caseId)
+      .eq('assigned_expert', user.id)
+      .single()
+
+    const { data: invitation } = await supabaseAdmin
+      .from('case_invitations')
+      .select('id')
+      .eq('case_id', caseId)
+      .eq('expert_id', user.id)
+      .single()
+
+    if (!assignedCase && !invitation) {
+      console.warn(
+        `[AUTH FAIL] ${new Date().toISOString()} | ${ip} | task-attachments/download | access denied for case: ${caseId}`
+      )
+      return res.status(403).json({ error: 'Access denied' })
+    }
   }
 
   const { data, error } = await supabaseAdmin.storage
-    .from('expert-documents')
+    .from('task-attachments')
     .createSignedUrl(normalizedPath, 60) // 1 minute expiry
 
   if (error) {

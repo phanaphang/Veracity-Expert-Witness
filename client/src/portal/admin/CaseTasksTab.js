@@ -3,6 +3,7 @@ import { supabase } from '../../lib/supabase'
 import { formatName } from '../../utils/formatName'
 import { useToast } from '../../contexts/ToastContext'
 import TaskComments from './TaskComments'
+import TaskAttachments from './TaskAttachments'
 
 const PRIORITY_OPTIONS = [
   { value: 'urgent', label: 'Urgent' },
@@ -753,6 +754,7 @@ export default function CaseTasksTab({
   const [deleting, setDeleting] = useState(false)
   const [expandedTask, setExpandedTask] = useState(null)
   const [expandedAutomation, setExpandedAutomation] = useState(null)
+  const [expandedFiles, setExpandedFiles] = useState(null)
   const [showAutomations, setShowAutomations] = useState(false)
 
   const assigneeOptions = useMemo(() => {
@@ -1135,6 +1137,17 @@ export default function CaseTasksTab({
                   className="portal-btn-action"
                   style={{ fontSize: '0.78rem', padding: '4px 10px' }}
                   onClick={() =>
+                    setExpandedFiles(
+                      expandedFiles === task.id ? null : task.id
+                    )
+                  }
+                >
+                  {expandedFiles === task.id ? 'Hide Files' : 'Files'}
+                </button>
+                <button
+                  className="portal-btn-action"
+                  style={{ fontSize: '0.78rem', padding: '4px 10px' }}
+                  onClick={() =>
                     setExpandedAutomation(
                       expandedAutomation === task.id ? null : task.id
                     )
@@ -1160,6 +1173,13 @@ export default function CaseTasksTab({
             </div>
             {expandedTask === task.id && (
               <TaskComments taskId={task.id} profile={profile} />
+            )}
+            {expandedFiles === task.id && (
+              <TaskAttachments
+                taskId={task.id}
+                caseId={caseId}
+                profile={profile}
+              />
             )}
             {expandedAutomation === task.id && (
               <div className="task-automations-preview">
