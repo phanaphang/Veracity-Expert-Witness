@@ -211,8 +211,9 @@ module.exports = async (req, res) => {
             error: 'No assignee email',
           })
         }
-      } else if (automation.type === 'create_event' && assigneeId) {
+      } else if (automation.type === 'create_event') {
         const eventTitle = automation.title?.trim()
+        const eventExpertId = automation.expert_id || assigneeId
         if (!eventTitle) {
           results.push({
             type: 'create_event',
@@ -221,19 +222,31 @@ module.exports = async (req, res) => {
           })
           continue
         }
+        if (!eventExpertId) {
+          results.push({
+            type: 'create_event',
+            success: false,
+            error: 'No user selected',
+          })
+          continue
+        }
 
-        const offsetDays = parseInt(automation.offset_days, 10) || 0
-        const durationHours = parseFloat(automation.duration_hours) || 1
-
-        const startTime = new Date()
-        startTime.setDate(startTime.getDate() + offsetDays)
-        startTime.setHours(9, 0, 0, 0)
-
-        const endTime = new Date(startTime)
-        endTime.setHours(startTime.getHours() + durationHours)
+        let startTime, endTime
+        if (automation.start_time && automation.end_time) {
+          startTime = new Date(automation.start_time)
+          endTime = new Date(automation.end_time)
+        } else {
+          const offsetDays = parseInt(automation.offset_days, 10) || 0
+          const durationHours = parseFloat(automation.duration_hours) || 1
+          startTime = new Date()
+          startTime.setDate(startTime.getDate() + offsetDays)
+          startTime.setHours(9, 0, 0, 0)
+          endTime = new Date(startTime)
+          endTime.setHours(startTime.getHours() + durationHours)
+        }
 
         const { error } = await supabaseAdmin.from('calendar_events').insert({
-          expert_id: assigneeId,
+          expert_id: eventExpertId,
           title: eventTitle,
           start_time: startTime.toISOString(),
           end_time: endTime.toISOString(),

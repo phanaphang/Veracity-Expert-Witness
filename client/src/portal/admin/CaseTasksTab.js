@@ -42,30 +42,229 @@ const DEPTH_COLORS = [
   '#1a202c',
 ]
 
-function TaskAutomationEditor({
-  automations,
-  onChange,
-  assigneeList,
-  depth = 0,
-}) {
-  const fs = Math.max(0.7, 0.82 - depth * 0.04)
-  const fsSmall = Math.max(0.65, 0.75 - depth * 0.04)
-  const pad = Math.max(2, 4 - depth)
+function EventAutomationFields({ auto, onUpdate }) {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+
+  const sanitize = (term) => term.replace(/[%_(),.\\]/g, '')
+
+  const searchUser = async (term) => {
+    setSearchTerm(term)
+    if (term.length < 2) {
+      setSearchResults([])
+      return
+    }
+    const safe = sanitize(term)
+    if (!safe) {
+      setSearchResults([])
+      return
+    }
+    const { data } = await supabase
+      .from('profiles')
+      .select('id, first_name, last_name, email, role')
+      .or(
+        `first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`
+      )
+      .limit(10)
+    setSearchResults(data || [])
+  }
+
+  const selectUser = (user) => {
+    onUpdate({ expert_id: user.id, expert_name: formatName(user) })
+    setSearchTerm('')
+    setSearchResults([])
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <input
+        className="portal-field__input"
+        placeholder="Event title *"
+        value={auto.title || ''}
+        onChange={(e) => onUpdate({ title: e.target.value })}
+        maxLength={200}
+      />
+      <div style={{ position: 'relative' }}>
+        <label
+          className="portal-field__label"
+          style={{ fontSize: '0.78rem', marginBottom: 2 }}
+        >
+          Assign to user
+        </label>
+        {auto.expert_id ? (
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '4px 0',
+            }}
+          >
+            <span style={{ fontSize: '0.82rem', fontWeight: 500 }}>
+              {auto.expert_name || auto.expert_id}
+            </span>
+            <button
+              type="button"
+              className="task-automations__item-remove"
+              style={{ fontSize: '0.75rem' }}
+              onClick={() => onUpdate({ expert_id: '', expert_name: '' })}
+            >
+              x
+            </button>
+          </div>
+        ) : (
+          <input
+            className="portal-field__input"
+            placeholder="Search by name or email..."
+            value={searchTerm}
+            onChange={(e) => searchUser(e.target.value)}
+          />
+        )}
+        {searchResults.length > 0 && (
+          <div
+            style={{
+              border: '1px solid var(--color-gray-200)',
+              borderRadius: 'var(--radius-md, 6px)',
+              marginTop: 2,
+              position: 'absolute',
+              background: '#fff',
+              zIndex: 10,
+              width: '100%',
+              maxHeight: 200,
+              overflowY: 'auto',
+            }}
+          >
+            {searchResults.map((user) => (
+              <div
+                key={user.id}
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '6px 10px',
+                  borderBottom: '1px solid var(--color-gray-100)',
+                  cursor: 'pointer',
+                }}
+                onClick={() => selectUser(user)}
+              >
+                <div>
+                  <strong style={{ fontSize: '0.82rem' }}>
+                    {formatName(user)}
+                  </strong>
+                  <span
+                    style={{
+                      fontSize: '0.76rem',
+                      color: 'var(--color-gray-400)',
+                      marginLeft: 6,
+                    }}
+                  >
+                    {user.email}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      color: 'var(--color-gray-400)',
+                      marginLeft: 4,
+                    }}
+                  >
+                    ({user.role})
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 6 }}>
+        <div>
+          <label
+            className="portal-field__label"
+            style={{ fontSize: '0.78rem', marginBottom: 2 }}
+          >
+            Start date &amp; time
+          </label>
+          <input
+            className="portal-field__input"
+            type="datetime-local"
+            value={auto.start_time || ''}
+            onChange={(e) => onUpdate({ start_time: e.target.value })}
+          />
+        </div>
+        <div>
+          <label
+            className="portal-field__label"
+            style={{ fontSize: '0.78rem', marginBottom: 2 }}
+          >
+            End date &amp; time
+          </label>
+          <input
+            className="portal-field__input"
+            type="datetime-local"
+            value={auto.end_time || ''}
+            onChange={(e) => onUpdate({ end_time: e.target.value })}
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function TaskAutomationEditor({ automations, onChange, assigneeList }) {
+  const [path, setPath] = useState([])
+
+  const resolve = () => {
+    let node = automations
+    for (const step of path) {
+      const auto = node[step.triggerKey]?.[step.autoIdx]
+      if (!auto || auto.type !== 'create_tasks') return null
+      const task = auto.tasks?.[step.taskIdx]
+      if (!task) return null
+      node = task.automations || { on_start: [], on_complete: [] }
+    }
+    return node
+  }
+
+  const applyUpdate = (newLeaf) => {
+    if (path.length === 0) {
+      onChange(newLeaf)
+      return
+    }
+    let root = JSON.parse(JSON.stringify(automations))
+    let node = root
+    const parents = [{ node: root, step: null }]
+    for (const step of path) {
+      const next = node[step.triggerKey][step.autoIdx].tasks[step.taskIdx]
+      if (!next.automations)
+        next.automations = { on_start: [], on_complete: [] }
+      parents.push({ node: next.automations, step })
+      node = next.automations
+    }
+    Object.assign(node, newLeaf)
+    onChange(root)
+  }
+
+  const current = resolve()
+  if (!current) {
+    setPath([])
+    return null
+  }
+
+  const depth = path.length
   const numColor = DEPTH_COLORS[depth % DEPTH_COLORS.length]
   const subNumColor = DEPTH_COLORS[(depth + 1) % DEPTH_COLORS.length]
 
   const update = (triggerKey, idx, updates) => {
-    onChange({
-      ...automations,
-      [triggerKey]: automations[triggerKey].map((a, i) =>
+    applyUpdate({
+      ...current,
+      [triggerKey]: current[triggerKey].map((a, i) =>
         i === idx ? { ...a, ...updates } : a
       ),
     })
   }
   const remove = (triggerKey, idx) => {
-    onChange({
-      ...automations,
-      [triggerKey]: automations[triggerKey].filter((_, i) => i !== idx),
+    applyUpdate({
+      ...current,
+      [triggerKey]: current[triggerKey].filter((_, i) => i !== idx),
     })
   }
   const add = (triggerKey, type) => {
@@ -74,37 +273,60 @@ function TaskAutomationEditor({
         ? { type, tasks: [EMPTY_SUB_TASK] }
         : type === 'email_assignee'
           ? { type, message: '' }
-          : { type, title: '', offset_days: 0, duration_hours: 1 }
-    onChange({
-      ...automations,
-      [triggerKey]: [...(automations[triggerKey] || []), item],
+          : {
+              type,
+              title: '',
+              expert_id: '',
+              expert_name: '',
+              start_time: '',
+              end_time: '',
+            }
+    applyUpdate({
+      ...current,
+      [triggerKey]: [...(current[triggerKey] || []), item],
     })
   }
 
   return (
     <div className="task-automations">
-      {['on_start', 'on_complete'].map((triggerKey) => (
-        <div key={triggerKey} style={{ marginBottom: depth ? 6 : 12 }}>
-          <div
-            className="task-automations__trigger"
-            style={{ fontSize: `${fs}rem` }}
+      {path.length > 0 && (
+        <div
+          className="task-automations__breadcrumb"
+          style={{ borderLeftColor: numColor }}
+        >
+          <button
+            type="button"
+            className="task-automations__breadcrumb-item"
+            onClick={() => setPath([])}
           >
+            Root
+          </button>
+          {path.map((step, i) => (
+            <React.Fragment key={i}>
+              <span className="task-automations__breadcrumb-sep">&rsaquo;</span>
+              <button
+                type="button"
+                className="task-automations__breadcrumb-item"
+                style={{ color: DEPTH_COLORS[(i + 1) % DEPTH_COLORS.length] }}
+                onClick={() => setPath(path.slice(0, i + 1))}
+              >
+                {step.label}
+              </button>
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+
+      {['on_start', 'on_complete'].map((triggerKey) => (
+        <div key={triggerKey} style={{ marginBottom: 12 }}>
+          <div className="task-automations__trigger">
             {triggerKey === 'on_start' ? 'When Started' : 'When Completed'}
           </div>
-          {(automations[triggerKey] || []).map((auto, idx) => (
-            <div
-              key={idx}
-              className="task-automations__item"
-              style={{ fontSize: `${fs}rem`, padding: depth > 0 ? 8 : 10 }}
-            >
+          {(current[triggerKey] || []).map((auto, idx) => (
+            <div key={idx} className="task-automations__item">
               <span
                 className="task-automations__item-num"
-                style={{
-                  background: numColor,
-                  ...(depth > 0
-                    ? { width: 16, height: 16, fontSize: '0.6rem' }
-                    : {}),
-                }}
+                style={{ background: numColor }}
               >
                 {idx + 1}
               </span>
@@ -113,7 +335,7 @@ function TaskAutomationEditor({
                   style={{
                     fontWeight: 600,
                     marginBottom: 4,
-                    fontSize: `${fsSmall}rem`,
+                    fontSize: '0.78rem',
                   }}
                 >
                   {AUTOMATION_TYPES.find((t) => t.value === auto.type)?.label}
@@ -135,24 +357,11 @@ function TaskAutomationEditor({
                         update(triggerKey, idx, { tasks: upd })
                       }
                       return (
-                        <div
-                          key={si}
-                          className="task-automations__subtask"
-                          style={depth > 0 ? { padding: 6 } : undefined}
-                        >
+                        <div key={si} className="task-automations__subtask">
                           <div className="task-automations__subtask-header">
                             <span
                               className="task-automations__subtask-num"
-                              style={{
-                                background: subNumColor,
-                                ...(depth > 0
-                                  ? {
-                                      width: 15,
-                                      height: 15,
-                                      fontSize: '0.6rem',
-                                    }
-                                  : {}),
-                              }}
+                              style={{ background: subNumColor }}
                             >
                               {si + 1}
                             </span>
@@ -163,11 +372,7 @@ function TaskAutomationEditor({
                               onChange={(e) =>
                                 updateSub('title', e.target.value)
                               }
-                              style={{
-                                fontSize: `${fs}rem`,
-                                padding: `${pad}px 8px`,
-                                flex: 1,
-                              }}
+                              style={{ flex: 1 }}
                               maxLength={200}
                             />
                             {auto.tasks.length > 1 && (
@@ -193,24 +398,17 @@ function TaskAutomationEditor({
                             onChange={(e) =>
                               updateSub('description', e.target.value)
                             }
-                            rows={depth > 0 ? 1 : 2}
+                            rows={2}
                             maxLength={2000}
-                            style={{ fontSize: `${fsSmall}rem`, marginTop: 4 }}
+                            style={{ marginTop: 4 }}
                           />
-                          <div
-                            className="task-automations__subtask-fields"
-                            style={{ fontSize: `${fsSmall}rem` }}
-                          >
+                          <div className="task-automations__subtask-fields">
                             <select
                               className="portal-field__select"
                               value={subTask.priority || 'medium'}
                               onChange={(e) =>
                                 updateSub('priority', e.target.value)
                               }
-                              style={{
-                                fontSize: `${fsSmall}rem`,
-                                padding: `${pad}px 6px`,
-                              }}
                             >
                               {PRIORITY_OPTIONS.map((p) => (
                                 <option key={p.value} value={p.value}>
@@ -224,10 +422,6 @@ function TaskAutomationEditor({
                               onChange={(e) =>
                                 updateSub('status', e.target.value)
                               }
-                              style={{
-                                fontSize: `${fsSmall}rem`,
-                                padding: `${pad}px 6px`,
-                              }}
                             >
                               {STATUS_OPTIONS.map((s) => (
                                 <option key={s.value} value={s.value}>
@@ -241,10 +435,6 @@ function TaskAutomationEditor({
                               onChange={(e) =>
                                 updateSub('assignee', e.target.value)
                               }
-                              style={{
-                                fontSize: `${fsSmall}rem`,
-                                padding: `${pad}px 6px`,
-                              }}
                             >
                               <option value="">Unassigned</option>
                               {assigneeList.map((m) => (
@@ -260,48 +450,37 @@ function TaskAutomationEditor({
                               onChange={(e) =>
                                 updateSub('due_date', e.target.value)
                               }
-                              style={{
-                                fontSize: `${fsSmall}rem`,
-                                padding: `${pad}px 6px`,
-                              }}
                             />
                           </div>
                           <button
                             type="button"
                             className="portal-btn-action task-automations__subtask-toggle"
+                            style={{
+                              borderColor: subNumColor,
+                              color: subNumColor,
+                            }}
                             onClick={() =>
-                              updateSub('_showAutos', !subTask._showAutos)
+                              setPath([
+                                ...path,
+                                {
+                                  triggerKey,
+                                  autoIdx: idx,
+                                  taskIdx: si,
+                                  label: subTask.title || `Task ${si + 1}`,
+                                },
+                              ])
                             }
                           >
-                            {subTask._showAutos ? 'Hide' : 'Show'} Automations
-                            {subAutoCount > 0 && ` (${subAutoCount})`}
+                            Edit Automations
+                            {subAutoCount > 0 && ` (${subAutoCount})`} &rsaquo;
                           </button>
-                          {subTask._showAutos && (
-                            <div
-                              className="task-automations__nested"
-                              style={{ borderLeftColor: subNumColor }}
-                            >
-                              <TaskAutomationEditor
-                                automations={subAutos}
-                                onChange={(newAutos) =>
-                                  updateSub('automations', newAutos)
-                                }
-                                assigneeList={assigneeList}
-                                depth={depth + 1}
-                              />
-                            </div>
-                          )}
                         </div>
                       )
                     })}
                     <button
                       type="button"
                       className="portal-btn-action"
-                      style={{
-                        fontSize: `${fsSmall}rem`,
-                        padding: '2px 8px',
-                        marginTop: 2,
-                      }}
+                      style={{ padding: '2px 8px', marginTop: 2 }}
                       onClick={() =>
                         update(triggerKey, idx, {
                           tasks: [...auto.tasks, EMPTY_SUB_TASK],
@@ -323,82 +502,14 @@ function TaskAutomationEditor({
                     }
                     rows={2}
                     maxLength={500}
-                    style={{ fontSize: `${fs}rem` }}
                   />
                 )}
 
                 {auto.type === 'create_event' && (
-                  <div
-                    style={{
-                      display: 'flex',
-                      gap: 6,
-                      flexWrap: 'wrap',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <input
-                      className="portal-field__input"
-                      placeholder="Event title"
-                      value={auto.title}
-                      onChange={(e) =>
-                        update(triggerKey, idx, { title: e.target.value })
-                      }
-                      style={{
-                        fontSize: `${fs}rem`,
-                        padding: `${pad}px 8px`,
-                        flex: 1,
-                        minWidth: 100,
-                      }}
-                      maxLength={200}
-                    />
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 4,
-                        fontSize: `${fsSmall}rem`,
-                      }}
-                    >
-                      <span>in</span>
-                      <input
-                        className="portal-field__input"
-                        type="number"
-                        min="0"
-                        value={auto.offset_days}
-                        onChange={(e) =>
-                          update(triggerKey, idx, {
-                            offset_days: parseInt(e.target.value, 10) || 0,
-                          })
-                        }
-                        style={{
-                          width: 45,
-                          fontSize: `${fsSmall}rem`,
-                          padding: `${pad}px 4px`,
-                          textAlign: 'center',
-                        }}
-                      />
-                      <span>days,</span>
-                      <input
-                        className="portal-field__input"
-                        type="number"
-                        min="0.5"
-                        step="0.5"
-                        value={auto.duration_hours}
-                        onChange={(e) =>
-                          update(triggerKey, idx, {
-                            duration_hours: parseFloat(e.target.value) || 1,
-                          })
-                        }
-                        style={{
-                          width: 45,
-                          fontSize: `${fsSmall}rem`,
-                          padding: `${pad}px 4px`,
-                          textAlign: 'center',
-                        }}
-                      />
-                      <span>hrs</span>
-                    </div>
-                  </div>
+                  <EventAutomationFields
+                    auto={auto}
+                    onUpdate={(updates) => update(triggerKey, idx, updates)}
+                  />
                 )}
               </div>
               <button
@@ -417,11 +528,7 @@ function TaskAutomationEditor({
               if (e.target.value) add(triggerKey, e.target.value)
               e.target.value = ''
             }}
-            style={{
-              fontSize: `${fs}rem`,
-              padding: `${pad}px 8px`,
-              maxWidth: 180,
-            }}
+            style={{ maxWidth: 180 }}
           >
             <option value="">+ Add automation...</option>
             {AUTOMATION_TYPES.map((t) => (
@@ -440,8 +547,7 @@ function AutomationPreview({ automations, assigneeList = [], depth = 0 }) {
   if (!automations) return null
   const color = DEPTH_COLORS[depth % DEPTH_COLORS.length]
   const subColor = DEPTH_COLORS[(depth + 1) % DEPTH_COLORS.length]
-  const fs = Math.max(0.7, 0.82 - depth * 0.03)
-  const fsMeta = Math.max(0.65, fs - 0.04)
+  const indent = Math.min(depth * 12, 48)
   const hasAny =
     (automations.on_start?.length || 0) +
       (automations.on_complete?.length || 0) >
@@ -458,7 +564,12 @@ function AutomationPreview({ automations, assigneeList = [], depth = 0 }) {
     <div
       style={
         depth > 0
-          ? { marginTop: 4, paddingLeft: 10, borderLeft: `3px solid ${color}` }
+          ? {
+              marginTop: 4,
+              marginLeft: indent,
+              paddingLeft: 10,
+              borderLeft: `3px solid ${color}`,
+            }
           : undefined
       }
     >
@@ -469,7 +580,7 @@ function AutomationPreview({ automations, assigneeList = [], depth = 0 }) {
           <div key={triggerKey} style={{ marginBottom: 6 }}>
             <div
               style={{
-                fontSize: `${fs}rem`,
+                fontSize: '0.8rem',
                 fontWeight: 600,
                 color,
                 margin: '4px 0',
@@ -481,7 +592,7 @@ function AutomationPreview({ automations, assigneeList = [], depth = 0 }) {
               <div key={idx} style={{ marginBottom: 4 }}>
                 <div
                   className="task-automations-preview__item"
-                  style={{ fontSize: `${fs}rem` }}
+                  style={{ fontSize: '0.8rem' }}
                 >
                   <span
                     className="task-automations-preview__num"
@@ -500,8 +611,11 @@ function AutomationPreview({ automations, assigneeList = [], depth = 0 }) {
                   {auto.type === 'create_event' && (
                     <span>
                       Calendar event: {auto.title || '(untitled)'}
-                      {auto.offset_days ? ` in ${auto.offset_days}d` : ''},{' '}
-                      {auto.duration_hours || 1}hr
+                      {auto.expert_name && ` - ${auto.expert_name}`}
+                      {auto.start_time &&
+                        ` | ${new Date(auto.start_time).toLocaleString()}`}
+                      {auto.end_time &&
+                        ` - ${new Date(auto.end_time).toLocaleTimeString()}`}
                     </span>
                   )}
                   {auto.type === 'create_tasks' && (
@@ -529,7 +643,7 @@ function AutomationPreview({ automations, assigneeList = [], depth = 0 }) {
                               display: 'flex',
                               alignItems: 'center',
                               gap: 6,
-                              fontSize: `${Math.max(0.68, fs - 0.02)}rem`,
+                              fontSize: '0.78rem',
                               color: '#4a5568',
                               flexWrap: 'wrap',
                             }}
@@ -566,7 +680,7 @@ function AutomationPreview({ automations, assigneeList = [], depth = 0 }) {
                           <div
                             style={{
                               marginLeft: 22,
-                              fontSize: `${fsMeta}rem`,
+                              fontSize: '0.76rem',
                               color: '#718096',
                               display: 'flex',
                               flexWrap: 'wrap',
@@ -583,7 +697,7 @@ function AutomationPreview({ automations, assigneeList = [], depth = 0 }) {
                             <div
                               style={{
                                 marginLeft: 22,
-                                fontSize: `${fsMeta}rem`,
+                                fontSize: '0.76rem',
                                 color: '#718096',
                                 marginTop: 1,
                                 fontStyle: 'italic',
