@@ -3086,7 +3086,9 @@
   border-bottom: 2px solid transparent;
   margin-bottom: -2px;
   white-space: nowrap;
-  transition: color var(--transition), border-color var(--transition);
+  transition:
+    color var(--transition),
+    border-color var(--transition);
 }
 
 .case-tabs__btn:hover {

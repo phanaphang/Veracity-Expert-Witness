@@ -131,9 +131,12 @@ export default function CaseTasksTab({
         if (error) throw error
 
         const changes = []
-        if (editingTask.status !== form.status) changes.push(`status: ${form.status}`)
-        if (editingTask.priority !== form.priority) changes.push(`priority: ${form.priority}`)
-        if (editingTask.title !== form.title.trim()) changes.push('title updated')
+        if (editingTask.status !== form.status)
+          changes.push(`status: ${form.status}`)
+        if (editingTask.priority !== form.priority)
+          changes.push(`priority: ${form.priority}`)
+        if (editingTask.title !== form.title.trim())
+          changes.push('title updated')
 
         await logActivity('task_updated', {
           task_title: form.title.trim(),
@@ -249,24 +252,19 @@ export default function CaseTasksTab({
                 <div className="case-task-item__desc">{task.description}</div>
               )}
               <div className="case-task-item__meta">
-                <span
-                  className={`portal-badge portal-badge--${task.priority}`}
-                >
+                <span className={`portal-badge portal-badge--${task.priority}`}>
                   {task.priority}
                 </span>
-                <span
-                  className={`portal-badge portal-badge--${task.status}`}
-                >
+                <span className={`portal-badge portal-badge--${task.status}`}>
                   {STATUS_OPTIONS.find((s) => s.value === task.status)?.label}
                 </span>
                 {task.assigneeProfile && (
-                  <span>
-                    {formatName(task.assigneeProfile)}
-                  </span>
+                  <span>{formatName(task.assigneeProfile)}</span>
                 )}
                 {task.due_date && (
                   <span>
-                    Due: {new Date(task.due_date + 'T00:00:00').toLocaleDateString()}
+                    Due:{' '}
+                    {new Date(task.due_date + 'T00:00:00').toLocaleDateString()}
                   </span>
                 )}
               </div>
@@ -359,7 +357,13 @@ export default function CaseTasksTab({
                   maxLength={2000}
                 />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: 12,
+                }}
+              >
                 <div>
                   <label className="portal-field__label">Priority</label>
                   <select
@@ -393,7 +397,13 @@ export default function CaseTasksTab({
                   </select>
                 </div>
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: 12,
+                }}
+              >
                 <div>
                   <label className="portal-field__label">Assignee</label>
                   <select

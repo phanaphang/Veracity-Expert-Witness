@@ -36,8 +36,7 @@ function formatAction(entry) {
       return (
         <>
           <span className="case-timeline__actor">{actor}</span> changed phase
-          from{' '}
-          <strong>{PHASE_LABELS[d.from] || d.from}</strong> to{' '}
+          from <strong>{PHASE_LABELS[d.from] || d.from}</strong> to{' '}
           <strong>{PHASE_LABELS[d.to] || d.to}</strong>
         </>
       )
@@ -161,9 +160,7 @@ export default function CaseActivityTab({ activityLog }) {
             <div
               className={`case-timeline__dot ${getDotClass(entry.action)}`}
             />
-            <div className="case-timeline__content">
-              {formatAction(entry)}
-            </div>
+            <div className="case-timeline__content">{formatAction(entry)}</div>
             <div
               className="case-timeline__time"
               title={new Date(entry.created_at).toLocaleString()}

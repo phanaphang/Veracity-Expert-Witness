@@ -225,9 +225,7 @@ export default function CaseDetail() {
         .order('logged_at', { ascending: false }),
       supabase
         .from('case_activity_log')
-        .select(
-          '*, actorProfile:actor(first_name, last_name, email, role)'
-        )
+        .select('*, actorProfile:actor(first_name, last_name, email, role)')
         .eq('case_id', id)
         .order('created_at', { ascending: false })
         .limit(200),
@@ -315,10 +313,7 @@ export default function CaseDetail() {
     if (newPhase === 'closed') updates.status = 'closed'
     else if (caseData.status === 'closed') updates.status = 'open'
 
-    const { error } = await supabase
-      .from('cases')
-      .update(updates)
-      .eq('id', id)
+    const { error } = await supabase.from('cases').update(updates).eq('id', id)
     if (error) {
       toast.error('Failed to update phase')
       return
@@ -454,7 +449,6 @@ export default function CaseDetail() {
           )}
         </div>
       </div>
-
       <div
         style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 24 }}
       >
@@ -470,7 +464,6 @@ export default function CaseDetail() {
           </span>
         ))}
       </div>
-
       {/* Phase Indicator */}
       <div className="case-phase-indicator">
         {PHASES.map((phase, idx) => {
@@ -496,7 +489,6 @@ export default function CaseDetail() {
           )
         })}
       </div>
-
       {/* Phase Selector */}
       {(isAdmin || profile?.role === 'staff') && (
         <div style={{ marginBottom: 24 }}>
@@ -515,7 +507,6 @@ export default function CaseDetail() {
           </select>
         </div>
       )}
-
       {/* Tab Bar */}
       <div className="case-tabs">
         {['details', 'tasks', 'time', 'activity'].map((tab) => (
@@ -531,937 +522,985 @@ export default function CaseDetail() {
           </button>
         ))}
       </div>
-
       {/* Details Tab */}
-      {activeTab !== 'details' ? null : (<>
-      <div className="portal-card">
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <h2 className="portal-card__title" style={{ margin: 0 }}>
-            Case Details
-          </h2>
-          {(isAdmin || profile?.role === 'staff') &&
-            (detailsEditing ? (
-              <button
-                className="btn btn--primary"
-                style={{ padding: '6px 16px', fontSize: '0.85rem' }}
-                onClick={saveDetails}
-              >
-                Save
-              </button>
-            ) : (
-              <button
-                className="portal-btn-action"
-                style={{ padding: '6px 16px', fontSize: '0.85rem' }}
-                onClick={() => setDetailsEditing(true)}
-              >
-                Edit
-              </button>
-            ))}
-        </div>
-        <div style={{ marginTop: 12, marginBottom: 12 }}>
-          <strong>Description:</strong>
-          <textarea
-            className="portal-field__input"
-            style={{
-              width: '100%',
-              minHeight: 80,
-              resize: 'vertical',
-              lineHeight: 1.6,
-              marginTop: 4,
-              background: detailsEditing
-                ? '#fff'
-                : 'var(--color-gray-50, #f7fafc)',
-              color: 'var(--color-gray-600)',
-            }}
-            value={descValue}
-            onChange={(e) => setDescValue(e.target.value)}
-            readOnly={!detailsEditing}
-            placeholder={
-              detailsEditing ? 'Enter description...' : 'No description'
-            }
-          />
-        </div>
-        <div style={{ marginBottom: 12 }}>
-          <strong>Client:</strong>
-          <input
-            className="portal-field__input"
-            style={{
-              marginTop: 4,
-              background: detailsEditing
-                ? '#fff'
-                : 'var(--color-gray-50, #f7fafc)',
-            }}
-            value={clientValue}
-            onChange={(e) => setClientValue(e.target.value)}
-            readOnly={!detailsEditing}
-            placeholder={
-              detailsEditing ? 'Enter client name...' : 'No client specified'
-            }
-          />
-        </div>
-        <div className="portal-list-item__row" style={{ marginBottom: 12 }}>
-          <div>
-            <strong>Type:</strong>
-            <input
-              className="portal-field__input"
-              style={{
-                marginTop: 4,
-                background: detailsEditing
-                  ? '#fff'
-                  : 'var(--color-gray-50, #f7fafc)',
-              }}
-              value={caseTypeValue}
-              onChange={(e) => setCaseTypeValue(e.target.value)}
-              readOnly={!detailsEditing}
-              placeholder={
-                detailsEditing ? 'Enter case type...' : 'No type specified'
-              }
-            />
-          </div>
-          <div>
-            <strong>Jurisdiction:</strong>
-            <input
-              className="portal-field__input"
-              style={{
-                marginTop: 4,
-                background: detailsEditing
-                  ? '#fff'
-                  : 'var(--color-gray-50, #f7fafc)',
-              }}
-              value={jurisdictionValue}
-              onChange={(e) => setJurisdictionValue(e.target.value)}
-              readOnly={!detailsEditing}
-              placeholder={
-                detailsEditing
-                  ? 'Enter jurisdiction...'
-                  : 'No jurisdiction specified'
-              }
-            />
-          </div>
-        </div>
-        <div style={{ marginTop: 12 }}>
-          <strong>Case Manager:</strong>{' '}
-          {isAdmin ? (
-            <select
-              className="portal-field__select"
-              style={{ display: 'inline-block', width: 'auto', marginLeft: 8 }}
-              value={caseData.case_manager || ''}
-              onChange={(e) => {
-                const value = e.target.value || null
-                const selected = managers.find((m) => m.id === value)
-                setManagerConfirmTarget({ id: value, profile: selected })
-              }}
-            >
-              <option value="">Unassigned</option>
-              {managers.map((m) => (
-                <option key={m.id} value={m.id}>
-                  {formatName(m)} ({m.role})
-                </option>
-              ))}
-            </select>
-          ) : (
-            <span>
-              {caseData.manager
-                ? `${formatName(caseData.manager)} (${caseData.manager.role})`
-                : 'Unassigned'}
-            </span>
-          )}
-        </div>
-        <div style={{ marginTop: 12 }}>
-          <strong>Assigned Expert:</strong>{' '}
-          {caseData.assignedExpert ? (
-            <span>
-              {formatName(caseData.assignedExpert)}
-              <Link
-                to={`/admin/experts/${caseData.assignedExpert.id}?from=case&caseId=${id}`}
-                style={{
-                  color: 'var(--color-accent)',
-                  fontSize: '0.8rem',
-                  marginLeft: 8,
-                }}
-              >
-                View Profile
-              </Link>
-              {(isAdmin || profile?.role === 'staff') && (
-                <button
-                  className="portal-btn-action"
-                  style={{
-                    marginLeft: 8,
-                    padding: '4px 10px',
-                    fontSize: '0.8rem',
-                  }}
-                  onClick={() => setRemoveExpertConfirm(true)}
-                >
-                  Remove
-                </button>
-              )}
-            </span>
-          ) : isAdmin || profile?.role === 'staff' ? (
+      {activeTab !== 'details' ? null : (
+        <>
+          <div className="portal-card">
             <div
               style={{
-                display: 'inline-block',
-                verticalAlign: 'middle',
-                marginLeft: 8,
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
               }}
             >
+              <h2 className="portal-card__title" style={{ margin: 0 }}>
+                Case Details
+              </h2>
+              {(isAdmin || profile?.role === 'staff') &&
+                (detailsEditing ? (
+                  <button
+                    className="btn btn--primary"
+                    style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                    onClick={saveDetails}
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <button
+                    className="portal-btn-action"
+                    style={{ padding: '6px 16px', fontSize: '0.85rem' }}
+                    onClick={() => setDetailsEditing(true)}
+                  >
+                    Edit
+                  </button>
+                ))}
+            </div>
+            <div style={{ marginTop: 12, marginBottom: 12 }}>
+              <strong>Description:</strong>
+              <textarea
+                className="portal-field__input"
+                style={{
+                  width: '100%',
+                  minHeight: 80,
+                  resize: 'vertical',
+                  lineHeight: 1.6,
+                  marginTop: 4,
+                  background: detailsEditing
+                    ? '#fff'
+                    : 'var(--color-gray-50, #f7fafc)',
+                  color: 'var(--color-gray-600)',
+                }}
+                value={descValue}
+                onChange={(e) => setDescValue(e.target.value)}
+                readOnly={!detailsEditing}
+                placeholder={
+                  detailsEditing ? 'Enter description...' : 'No description'
+                }
+              />
+            </div>
+            <div style={{ marginBottom: 12 }}>
+              <strong>Client:</strong>
               <input
                 className="portal-field__input"
-                style={{ width: 260, display: 'inline-block' }}
-                placeholder="Search experts by name or email..."
-                value={assignExpertTerm}
-                onChange={(e) => searchAssignExpert(e.target.value)}
+                style={{
+                  marginTop: 4,
+                  background: detailsEditing
+                    ? '#fff'
+                    : 'var(--color-gray-50, #f7fafc)',
+                }}
+                value={clientValue}
+                onChange={(e) => setClientValue(e.target.value)}
+                readOnly={!detailsEditing}
+                placeholder={
+                  detailsEditing
+                    ? 'Enter client name...'
+                    : 'No client specified'
+                }
               />
-              {assignExpertResults.length > 0 && (
-                <div
-                  style={{
-                    border: '1px solid var(--color-gray-200)',
-                    borderRadius: 'var(--radius-md)',
-                    marginTop: 4,
-                    position: 'absolute',
-                    background: '#fff',
-                    zIndex: 10,
-                    width: 360,
-                  }}
-                >
-                  {assignExpertResults.map((exp) => (
-                    <div
-                      key={exp.id}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        padding: '8px 12px',
-                        borderBottom: '1px solid var(--color-gray-100)',
-                      }}
-                    >
-                      <div>
-                        <strong>{formatName(exp)}</strong>
-                        <span
-                          style={{
-                            fontSize: '0.8rem',
-                            color: 'var(--color-gray-400)',
-                            marginLeft: 8,
-                          }}
-                        >
-                          {exp.email}
-                        </span>
-                      </div>
-                      <button
-                        className="btn btn--primary"
-                        onClick={() =>
-                          setAssignConfirmTarget({
-                            type: 'search',
-                            expertId: exp.id,
-                            name: formatName(exp),
-                          })
-                        }
-                        style={{ padding: '4px 12px', fontSize: '0.8rem' }}
-                      >
-                        Assign
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
             </div>
-          ) : (
-            <span>Unassigned</span>
-          )}
-        </div>
-        <p
-          style={{
-            fontSize: '0.8rem',
-            color: 'var(--color-gray-400)',
-            marginTop: 8,
-          }}
-        >
-          Created: {new Date(caseData.created_at).toLocaleDateString()}
-        </p>
-        <div style={{ marginTop: 16 }}>
-          <strong>Additional Notes:</strong>
-          <textarea
-            className="portal-field__input"
-            style={{
-              width: '100%',
-              minHeight: 100,
-              resize: 'vertical',
-              marginTop: 4,
-              background: detailsEditing
-                ? '#fff'
-                : 'var(--color-gray-50, #f7fafc)',
-              color: 'var(--color-gray-600)',
-            }}
-            value={notesValue}
-            onChange={(e) => setNotesValue(e.target.value)}
-            readOnly={!detailsEditing}
-            placeholder={
-              detailsEditing
-                ? 'Enter additional notes...'
-                : 'No additional notes'
-            }
-          />
-        </div>
-        <div style={{ marginTop: 16 }}>
-          <strong>Specialties & Subspecialties:</strong>
-          {detailsEditing ? (
-            (() => {
-              const parents = allSpecialties.filter((s) => !s.parent_id)
-              const hasSubs = allSpecialties.some((s) => s.parent_id)
-              if (!hasSubs) return null
-              return (
-                <div
+            <div className="portal-list-item__row" style={{ marginBottom: 12 }}>
+              <div>
+                <strong>Type:</strong>
+                <input
+                  className="portal-field__input"
                   style={{
-                    border: '1px solid var(--color-gray-200)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: '10px 14px',
-                    marginTop: 6,
+                    marginTop: 4,
+                    background: detailsEditing
+                      ? '#fff'
+                      : 'var(--color-gray-50, #f7fafc)',
+                  }}
+                  value={caseTypeValue}
+                  onChange={(e) => setCaseTypeValue(e.target.value)}
+                  readOnly={!detailsEditing}
+                  placeholder={
+                    detailsEditing ? 'Enter case type...' : 'No type specified'
+                  }
+                />
+              </div>
+              <div>
+                <strong>Jurisdiction:</strong>
+                <input
+                  className="portal-field__input"
+                  style={{
+                    marginTop: 4,
+                    background: detailsEditing
+                      ? '#fff'
+                      : 'var(--color-gray-50, #f7fafc)',
+                  }}
+                  value={jurisdictionValue}
+                  onChange={(e) => setJurisdictionValue(e.target.value)}
+                  readOnly={!detailsEditing}
+                  placeholder={
+                    detailsEditing
+                      ? 'Enter jurisdiction...'
+                      : 'No jurisdiction specified'
+                  }
+                />
+              </div>
+            </div>
+            <div style={{ marginTop: 12 }}>
+              <strong>Case Manager:</strong>{' '}
+              {isAdmin ? (
+                <select
+                  className="portal-field__select"
+                  style={{
+                    display: 'inline-block',
+                    width: 'auto',
+                    marginLeft: 8,
+                  }}
+                  value={caseData.case_manager || ''}
+                  onChange={(e) => {
+                    const value = e.target.value || null
+                    const selected = managers.find((m) => m.id === value)
+                    setManagerConfirmTarget({ id: value, profile: selected })
                   }}
                 >
-                  <p
-                    style={{
-                      fontSize: '0.78rem',
-                      color: 'var(--color-gray-500)',
-                      margin: '0 0 8px',
-                    }}
-                  >
-                    Select a specialty to expand its subspecialties, then choose
-                    the ones that apply.
-                  </p>
-                  {parents.map((parent) => {
-                    const subs = allSpecialties.filter(
-                      (s) => s.parent_id === parent.id
-                    )
-                    if (subs.length === 0) return null
-                    const isExpanded = expandedParents.has(parent.id)
-                    return (
-                      <div
-                        key={parent.id}
-                        style={{
-                          marginBottom: 8,
-                          borderBottom: '1px solid var(--color-gray-100)',
-                          paddingBottom: 8,
-                        }}
-                      >
-                        <label
-                          className="portal-checkbox"
-                          style={{
-                            fontWeight: 700,
-                            fontSize: '0.9rem',
-                            color: 'var(--color-navy)',
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isExpanded}
-                            onChange={() => toggleParent(parent.id)}
-                          />
-                          {parent.name}
-                        </label>
-                        {isExpanded && (
-                          <div
-                            className="portal-checkbox-group"
-                            style={{ marginTop: 6, marginLeft: 24 }}
-                          >
-                            {subs.map((sub) => (
-                              <label key={sub.id} className="portal-checkbox">
-                                <input
-                                  type="checkbox"
-                                  checked={editingSpecialties.includes(sub.id)}
-                                  onChange={() => toggleSpecialty(sub.id)}
-                                />
-                                {sub.name}
-                              </label>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )
-                  })}
-                  {editingSpecialties.length > 0 && (
-                    <p
-                      style={{
-                        fontSize: '0.78rem',
-                        color: 'var(--color-accent)',
-                        margin: '4px 0 0',
-                        fontWeight: 500,
-                      }}
-                    >
-                      {editingSpecialties.length} subspecialt
-                      {editingSpecialties.length === 1 ? 'y' : 'ies'} selected
-                    </p>
-                  )}
-                  <div
-                    style={{
-                      borderTop: '1px solid var(--color-gray-100)',
-                      paddingTop: 10,
-                      marginTop: 10,
-                    }}
-                  >
-                    {editingTags.length > 0 && (
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexWrap: 'wrap',
-                          gap: 6,
-                          marginBottom: 8,
-                        }}
-                      >
-                        {editingTags.map((tag) => (
-                          <span
-                            key={tag}
-                            style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: 4,
-                              background: '#e0e7ff',
-                              color: '#3730a3',
-                              borderRadius: 999,
-                              padding: '3px 10px',
-                              fontSize: '0.8rem',
-                              fontWeight: 500,
-                            }}
-                          >
-                            {tag}
-                            <button
-                              type="button"
-                              onClick={() => removeTag(tag)}
-                              style={{
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                color: '#3730a3',
-                                fontSize: '1rem',
-                                lineHeight: 1,
-                                padding: 0,
-                                marginLeft: 2,
-                              }}
-                            >
-                              ×
-                            </button>
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                    <input
-                      className="portal-field__input"
-                      value={tagInput}
-                      onChange={(e) => setTagInput(sanitizeTag(e.target.value))}
-                      onKeyDown={handleTagKeyDown}
-                      onBlur={() => tagInput.trim() && addTag(tagInput)}
-                      placeholder="Other Subspecialty"
-                      style={{ marginBottom: 0 }}
-                    />
-                    <p
-                      style={{
-                        fontSize: '0.75rem',
-                        color: 'var(--color-gray-400)',
-                        marginTop: 4,
-                        marginBottom: 0,
-                      }}
-                    >
-                      Press Enter to add. For subspecialties not in the list
-                      above.
-                    </p>
-                  </div>
-                </div>
-              )
-            })()
-          ) : (
-            <div style={{ marginTop: 6 }}>
-              {caseSpecialties.length > 0 ||
-              caseData.specialty_tags?.length > 0 ? (
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-                  {caseSpecialties.map((cs) => (
-                    <span
-                      key={cs.specialty_id}
-                      className="portal-badge portal-badge--open"
-                    >
-                      {cs.specialties?.name}
-                    </span>
+                  <option value="">Unassigned</option>
+                  {managers.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {formatName(m)} ({m.role})
+                    </option>
                   ))}
-                  {caseData.specialty_tags?.map((tag) => (
-                    <span
-                      key={tag}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        background: '#e0e7ff',
-                        color: '#3730a3',
-                        borderRadius: 999,
-                        padding: '3px 10px',
-                        fontSize: '0.8rem',
-                        fontWeight: 500,
-                      }}
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+                </select>
               ) : (
-                <span
-                  style={{
-                    color: 'var(--color-gray-400)',
-                    fontSize: '0.85rem',
-                  }}
-                >
-                  None specified
+                <span>
+                  {caseData.manager
+                    ? `${formatName(caseData.manager)} (${caseData.manager.role})`
+                    : 'Unassigned'}
                 </span>
               )}
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Invite Experts */}
-      <div className="portal-card">
-        <h2 className="portal-card__title">Invite Experts</h2>
-        <div className="portal-field">
-          <input
-            className="portal-field__input"
-            placeholder="Search experts by name or email..."
-            value={searchTerm}
-            onChange={(e) => searchExperts(e.target.value)}
-          />
-        </div>
-        {experts.length > 0 && (
-          <div
-            style={{
-              border: '1px solid var(--color-gray-200)',
-              borderRadius: 'var(--radius-md)',
-              marginTop: 8,
-            }}
-          >
-            {experts.map((exp) => (
-              <div
-                key={exp.id}
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '10px 14px',
-                  borderBottom: '1px solid var(--color-gray-100)',
-                }}
-              >
-                <div>
-                  <strong>
-                    {exp.first_name
-                      ? `${exp.first_name} ${exp.last_name || ''}`.trim()
-                      : exp.email}
-                  </strong>
-                  <span
+            <div style={{ marginTop: 12 }}>
+              <strong>Assigned Expert:</strong>{' '}
+              {caseData.assignedExpert ? (
+                <span>
+                  {formatName(caseData.assignedExpert)}
+                  <Link
+                    to={`/admin/experts/${caseData.assignedExpert.id}?from=case&caseId=${id}`}
                     style={{
+                      color: 'var(--color-accent)',
                       fontSize: '0.8rem',
-                      color: 'var(--color-gray-400)',
                       marginLeft: 8,
                     }}
                   >
-                    {exp.email}
-                  </span>
-                </div>
-                <button
-                  className="btn btn--primary"
-                  onClick={() => inviteExpert(exp.id)}
-                  style={{ padding: '6px 14px', fontSize: '0.8rem' }}
-                >
-                  Invite
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Invited Experts */}
-      <div className="portal-card">
-        {(() => {
-          const filteredInvitations = invitations.filter(
-            (inv) => inv.profiles?.id !== caseData.assignedExpert?.id
-          )
-          return (
-            <>
-              <h2 className="portal-card__title">
-                Invited Experts ({filteredInvitations.length})
-              </h2>
-              {filteredInvitations.length === 0 ? (
-                <p
+                    View Profile
+                  </Link>
+                  {(isAdmin || profile?.role === 'staff') && (
+                    <button
+                      className="portal-btn-action"
+                      style={{
+                        marginLeft: 8,
+                        padding: '4px 10px',
+                        fontSize: '0.8rem',
+                      }}
+                      onClick={() => setRemoveExpertConfirm(true)}
+                    >
+                      Remove
+                    </button>
+                  )}
+                </span>
+              ) : isAdmin || profile?.role === 'staff' ? (
+                <div
                   style={{
-                    color: 'var(--color-gray-400)',
-                    fontSize: '0.85rem',
+                    display: 'inline-block',
+                    verticalAlign: 'middle',
+                    marginLeft: 8,
                   }}
                 >
-                  No experts invited yet
-                </p>
-              ) : (
-                <div className="portal-table-wrap">
-                  <table className="portal-table">
-                    <thead>
-                      <tr>
-                        <th>Expert</th>
-                        <th>Status</th>
-                        <th>Invited</th>
-                        <th>Responded</th>
-                        <th></th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredInvitations.map((inv) => (
-                        <tr key={inv.id}>
-                          <td>
-                            {inv.profiles?.first_name
-                              ? `${inv.profiles.first_name} ${inv.profiles.last_name || ''}`.trim()
-                              : inv.profiles?.email || '—'}
-                          </td>
-                          <td>
+                  <input
+                    className="portal-field__input"
+                    style={{ width: 260, display: 'inline-block' }}
+                    placeholder="Search experts by name or email..."
+                    value={assignExpertTerm}
+                    onChange={(e) => searchAssignExpert(e.target.value)}
+                  />
+                  {assignExpertResults.length > 0 && (
+                    <div
+                      style={{
+                        border: '1px solid var(--color-gray-200)',
+                        borderRadius: 'var(--radius-md)',
+                        marginTop: 4,
+                        position: 'absolute',
+                        background: '#fff',
+                        zIndex: 10,
+                        width: 360,
+                      }}
+                    >
+                      {assignExpertResults.map((exp) => (
+                        <div
+                          key={exp.id}
+                          style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            padding: '8px 12px',
+                            borderBottom: '1px solid var(--color-gray-100)',
+                          }}
+                        >
+                          <div>
+                            <strong>{formatName(exp)}</strong>
                             <span
-                              className={`portal-badge portal-badge--${inv.status}`}
-                            >
-                              {inv.status === 'accepted'
-                                ? 'interested'
-                                : inv.status?.replace('_', ' ')}
-                            </span>
-                          </td>
-                          <td>
-                            {new Date(inv.invited_at).toLocaleDateString()}
-                          </td>
-                          <td>
-                            {inv.responded_at
-                              ? new Date(inv.responded_at).toLocaleDateString()
-                              : '—'}
-                          </td>
-                          <td
-                            style={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              gap: 8,
-                            }}
-                          >
-                            <Link
-                              to={`/admin/experts/${inv.expert_id}?from=case&caseId=${id}`}
                               style={{
-                                color: 'var(--color-accent)',
-                                fontSize: '0.85rem',
+                                fontSize: '0.8rem',
+                                color: 'var(--color-gray-400)',
+                                marginLeft: 8,
                               }}
                             >
-                              View Profile
-                            </Link>
-                            {(isAdmin || profile?.role === 'staff') && (
-                              <button
-                                className="btn btn--primary"
-                                style={{
-                                  padding: '4px 12px',
-                                  fontSize: '0.8rem',
-                                  marginLeft: 'auto',
-                                }}
-                                onClick={() =>
-                                  setAssignConfirmTarget({
-                                    type: 'invited',
-                                    expertId: inv.expert_id,
-                                    name: inv.profiles?.first_name
-                                      ? `${inv.profiles.first_name} ${inv.profiles.last_name || ''}`.trim()
-                                      : inv.profiles?.email || 'this expert',
-                                  })
-                                }
-                              >
-                                Assign
-                              </button>
-                            )}
-                          </td>
-                        </tr>
+                              {exp.email}
+                            </span>
+                          </div>
+                          <button
+                            className="btn btn--primary"
+                            onClick={() =>
+                              setAssignConfirmTarget({
+                                type: 'search',
+                                expertId: exp.id,
+                                name: formatName(exp),
+                              })
+                            }
+                            style={{ padding: '4px 12px', fontSize: '0.8rem' }}
+                          >
+                            Assign
+                          </button>
+                        </div>
                       ))}
-                    </tbody>
-                  </table>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <span>Unassigned</span>
+              )}
+            </div>
+            <p
+              style={{
+                fontSize: '0.8rem',
+                color: 'var(--color-gray-400)',
+                marginTop: 8,
+              }}
+            >
+              Created: {new Date(caseData.created_at).toLocaleDateString()}
+            </p>
+            <div style={{ marginTop: 16 }}>
+              <strong>Additional Notes:</strong>
+              <textarea
+                className="portal-field__input"
+                style={{
+                  width: '100%',
+                  minHeight: 100,
+                  resize: 'vertical',
+                  marginTop: 4,
+                  background: detailsEditing
+                    ? '#fff'
+                    : 'var(--color-gray-50, #f7fafc)',
+                  color: 'var(--color-gray-600)',
+                }}
+                value={notesValue}
+                onChange={(e) => setNotesValue(e.target.value)}
+                readOnly={!detailsEditing}
+                placeholder={
+                  detailsEditing
+                    ? 'Enter additional notes...'
+                    : 'No additional notes'
+                }
+              />
+            </div>
+            <div style={{ marginTop: 16 }}>
+              <strong>Specialties & Subspecialties:</strong>
+              {detailsEditing ? (
+                (() => {
+                  const parents = allSpecialties.filter((s) => !s.parent_id)
+                  const hasSubs = allSpecialties.some((s) => s.parent_id)
+                  if (!hasSubs) return null
+                  return (
+                    <div
+                      style={{
+                        border: '1px solid var(--color-gray-200)',
+                        borderRadius: 'var(--radius-md)',
+                        padding: '10px 14px',
+                        marginTop: 6,
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontSize: '0.78rem',
+                          color: 'var(--color-gray-500)',
+                          margin: '0 0 8px',
+                        }}
+                      >
+                        Select a specialty to expand its subspecialties, then
+                        choose the ones that apply.
+                      </p>
+                      {parents.map((parent) => {
+                        const subs = allSpecialties.filter(
+                          (s) => s.parent_id === parent.id
+                        )
+                        if (subs.length === 0) return null
+                        const isExpanded = expandedParents.has(parent.id)
+                        return (
+                          <div
+                            key={parent.id}
+                            style={{
+                              marginBottom: 8,
+                              borderBottom: '1px solid var(--color-gray-100)',
+                              paddingBottom: 8,
+                            }}
+                          >
+                            <label
+                              className="portal-checkbox"
+                              style={{
+                                fontWeight: 700,
+                                fontSize: '0.9rem',
+                                color: 'var(--color-navy)',
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isExpanded}
+                                onChange={() => toggleParent(parent.id)}
+                              />
+                              {parent.name}
+                            </label>
+                            {isExpanded && (
+                              <div
+                                className="portal-checkbox-group"
+                                style={{ marginTop: 6, marginLeft: 24 }}
+                              >
+                                {subs.map((sub) => (
+                                  <label
+                                    key={sub.id}
+                                    className="portal-checkbox"
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      checked={editingSpecialties.includes(
+                                        sub.id
+                                      )}
+                                      onChange={() => toggleSpecialty(sub.id)}
+                                    />
+                                    {sub.name}
+                                  </label>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                      {editingSpecialties.length > 0 && (
+                        <p
+                          style={{
+                            fontSize: '0.78rem',
+                            color: 'var(--color-accent)',
+                            margin: '4px 0 0',
+                            fontWeight: 500,
+                          }}
+                        >
+                          {editingSpecialties.length} subspecialt
+                          {editingSpecialties.length === 1 ? 'y' : 'ies'}{' '}
+                          selected
+                        </p>
+                      )}
+                      <div
+                        style={{
+                          borderTop: '1px solid var(--color-gray-100)',
+                          paddingTop: 10,
+                          marginTop: 10,
+                        }}
+                      >
+                        {editingTags.length > 0 && (
+                          <div
+                            style={{
+                              display: 'flex',
+                              flexWrap: 'wrap',
+                              gap: 6,
+                              marginBottom: 8,
+                            }}
+                          >
+                            {editingTags.map((tag) => (
+                              <span
+                                key={tag}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: 4,
+                                  background: '#e0e7ff',
+                                  color: '#3730a3',
+                                  borderRadius: 999,
+                                  padding: '3px 10px',
+                                  fontSize: '0.8rem',
+                                  fontWeight: 500,
+                                }}
+                              >
+                                {tag}
+                                <button
+                                  type="button"
+                                  onClick={() => removeTag(tag)}
+                                  style={{
+                                    background: 'none',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: '#3730a3',
+                                    fontSize: '1rem',
+                                    lineHeight: 1,
+                                    padding: 0,
+                                    marginLeft: 2,
+                                  }}
+                                >
+                                  ×
+                                </button>
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        <input
+                          className="portal-field__input"
+                          value={tagInput}
+                          onChange={(e) =>
+                            setTagInput(sanitizeTag(e.target.value))
+                          }
+                          onKeyDown={handleTagKeyDown}
+                          onBlur={() => tagInput.trim() && addTag(tagInput)}
+                          placeholder="Other Subspecialty"
+                          style={{ marginBottom: 0 }}
+                        />
+                        <p
+                          style={{
+                            fontSize: '0.75rem',
+                            color: 'var(--color-gray-400)',
+                            marginTop: 4,
+                            marginBottom: 0,
+                          }}
+                        >
+                          Press Enter to add. For subspecialties not in the list
+                          above.
+                        </p>
+                      </div>
+                    </div>
+                  )
+                })()
+              ) : (
+                <div style={{ marginTop: 6 }}>
+                  {caseSpecialties.length > 0 ||
+                  caseData.specialty_tags?.length > 0 ? (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {caseSpecialties.map((cs) => (
+                        <span
+                          key={cs.specialty_id}
+                          className="portal-badge portal-badge--open"
+                        >
+                          {cs.specialties?.name}
+                        </span>
+                      ))}
+                      {caseData.specialty_tags?.map((tag) => (
+                        <span
+                          key={tag}
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            background: '#e0e7ff',
+                            color: '#3730a3',
+                            borderRadius: 999,
+                            padding: '3px 10px',
+                            fontSize: '0.8rem',
+                            fontWeight: 500,
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                    <span
+                      style={{
+                        color: 'var(--color-gray-400)',
+                        fontSize: '0.85rem',
+                      }}
+                    >
+                      None specified
+                    </span>
+                  )}
                 </div>
               )}
-            </>
-          )
-        })()}
-      </div>
-
-      {assignConfirmTarget && (
-        <div
-          className="portal-modal-overlay"
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
-        >
-          <div
-            className="portal-card"
-            style={{ maxWidth: 440, width: '90%', padding: 24 }}
-          >
-            <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>
-              Assign Expert
-            </h3>
-            <p
-              style={{
-                margin: '0 0 16px',
-                fontSize: '0.9rem',
-                color: 'var(--color-gray-500)',
-              }}
-            >
-              Are you sure you want to assign{' '}
-              <strong>{assignConfirmTarget.name}</strong> as the assigned expert
-              for this case?
-            </p>
-            <div
-              style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
-            >
-              <button
-                className="btn btn--secondary"
-                onClick={() => setAssignConfirmTarget(null)}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn btn--primary"
-                onClick={async () => {
-                  await assignExpert(assignConfirmTarget.expertId)
-                  setAssignConfirmTarget(null)
-                }}
-              >
-                Assign Expert
-              </button>
             </div>
           </div>
-        </div>
-      )}
 
-      {statusConfirmTarget && (
-        <div
-          className="portal-modal-overlay"
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
-        >
-          <div
-            className="portal-card"
-            style={{ maxWidth: 440, width: '90%', padding: 24 }}
-          >
-            <h3
-              style={{
-                margin: '0 0 8px',
-                color:
-                  statusConfirmTarget === 'closed'
-                    ? 'var(--color-error, #e53e3e)'
-                    : 'var(--color-gray-800)',
-              }}
-            >
-              {statusConfirmTarget === 'closed' ? 'Close Case' : 'Reopen Case'}
-            </h3>
-            <p
-              style={{
-                margin: '0 0 16px',
-                fontSize: '0.9rem',
-                color: 'var(--color-gray-500)',
-              }}
-            >
-              Are you sure you want to{' '}
-              {statusConfirmTarget === 'closed' ? 'close' : 'reopen'} this case?
-            </p>
-            <div
-              style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
-            >
-              <button
-                className="btn btn--secondary"
-                onClick={() => setStatusConfirmTarget(null)}
-              >
-                Cancel
-              </button>
-              <button
-                className={
-                  statusConfirmTarget === 'closed' ? 'btn' : 'btn btn--primary'
-                }
-                style={
-                  statusConfirmTarget === 'closed'
-                    ? {
-                        background: 'var(--color-error, #e53e3e)',
-                        color: '#fff',
-                        border: 'none',
-                      }
-                    : {}
-                }
-                onClick={async () => {
-                  await updateStatus(statusConfirmTarget)
-                  setStatusConfirmTarget(null)
-                }}
-              >
-                {statusConfirmTarget === 'closed'
-                  ? 'Close Case'
-                  : 'Reopen Case'}
-              </button>
+          {/* Invite Experts */}
+          <div className="portal-card">
+            <h2 className="portal-card__title">Invite Experts</h2>
+            <div className="portal-field">
+              <input
+                className="portal-field__input"
+                placeholder="Search experts by name or email..."
+                value={searchTerm}
+                onChange={(e) => searchExperts(e.target.value)}
+              />
             </div>
-          </div>
-        </div>
-      )}
-
-      {removeExpertConfirm && caseData.assignedExpert && (
-        <div
-          className="portal-modal-overlay"
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
-        >
-          <div
-            className="portal-card"
-            style={{ maxWidth: 440, width: '90%', padding: 24 }}
-          >
-            <h3
-              style={{
-                margin: '0 0 8px',
-                color: 'var(--color-error, #e53e3e)',
-              }}
-            >
-              Remove Assigned Expert
-            </h3>
-            <p
-              style={{
-                margin: '0 0 16px',
-                fontSize: '0.9rem',
-                color: 'var(--color-gray-500)',
-              }}
-            >
-              Are you sure you want to remove{' '}
-              <strong>{formatName(caseData.assignedExpert)}</strong> as the
-              assigned expert? They will be returned to the Invited Experts
-              list.
-            </p>
-            <div
-              style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
-            >
-              <button
-                className="btn btn--secondary"
-                onClick={() => setRemoveExpertConfirm(false)}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn"
+            {experts.length > 0 && (
+              <div
                 style={{
-                  background: 'var(--color-error, #e53e3e)',
-                  color: '#fff',
-                  border: 'none',
-                }}
-                onClick={async () => {
-                  setRemoveExpertConfirm(false)
-                  await removeAssignedExpert()
+                  border: '1px solid var(--color-gray-200)',
+                  borderRadius: 'var(--radius-md)',
+                  marginTop: 8,
                 }}
               >
-                Remove Expert
-              </button>
-            </div>
+                {experts.map((exp) => (
+                  <div
+                    key={exp.id}
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      padding: '10px 14px',
+                      borderBottom: '1px solid var(--color-gray-100)',
+                    }}
+                  >
+                    <div>
+                      <strong>
+                        {exp.first_name
+                          ? `${exp.first_name} ${exp.last_name || ''}`.trim()
+                          : exp.email}
+                      </strong>
+                      <span
+                        style={{
+                          fontSize: '0.8rem',
+                          color: 'var(--color-gray-400)',
+                          marginLeft: 8,
+                        }}
+                      >
+                        {exp.email}
+                      </span>
+                    </div>
+                    <button
+                      className="btn btn--primary"
+                      onClick={() => inviteExpert(exp.id)}
+                      style={{ padding: '6px 14px', fontSize: '0.8rem' }}
+                    >
+                      Invite
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
-      )}
 
-      {managerConfirmTarget && (
-        <div
-          className="portal-modal-overlay"
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.5)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 1000,
-          }}
-        >
-          <div
-            className="portal-card"
-            style={{ maxWidth: 440, width: '90%', padding: 24 }}
-          >
-            <h3 style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}>
-              {managerConfirmTarget.id
-                ? 'Assign Case Manager'
-                : 'Remove Case Manager'}
-            </h3>
-            <p
+          {/* Invited Experts */}
+          <div className="portal-card">
+            {(() => {
+              const filteredInvitations = invitations.filter(
+                (inv) => inv.profiles?.id !== caseData.assignedExpert?.id
+              )
+              return (
+                <>
+                  <h2 className="portal-card__title">
+                    Invited Experts ({filteredInvitations.length})
+                  </h2>
+                  {filteredInvitations.length === 0 ? (
+                    <p
+                      style={{
+                        color: 'var(--color-gray-400)',
+                        fontSize: '0.85rem',
+                      }}
+                    >
+                      No experts invited yet
+                    </p>
+                  ) : (
+                    <div className="portal-table-wrap">
+                      <table className="portal-table">
+                        <thead>
+                          <tr>
+                            <th>Expert</th>
+                            <th>Status</th>
+                            <th>Invited</th>
+                            <th>Responded</th>
+                            <th></th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredInvitations.map((inv) => (
+                            <tr key={inv.id}>
+                              <td>
+                                {inv.profiles?.first_name
+                                  ? `${inv.profiles.first_name} ${inv.profiles.last_name || ''}`.trim()
+                                  : inv.profiles?.email || '—'}
+                              </td>
+                              <td>
+                                <span
+                                  className={`portal-badge portal-badge--${inv.status}`}
+                                >
+                                  {inv.status === 'accepted'
+                                    ? 'interested'
+                                    : inv.status?.replace('_', ' ')}
+                                </span>
+                              </td>
+                              <td>
+                                {new Date(inv.invited_at).toLocaleDateString()}
+                              </td>
+                              <td>
+                                {inv.responded_at
+                                  ? new Date(
+                                      inv.responded_at
+                                    ).toLocaleDateString()
+                                  : '—'}
+                              </td>
+                              <td
+                                style={{
+                                  display: 'flex',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  gap: 8,
+                                }}
+                              >
+                                <Link
+                                  to={`/admin/experts/${inv.expert_id}?from=case&caseId=${id}`}
+                                  style={{
+                                    color: 'var(--color-accent)',
+                                    fontSize: '0.85rem',
+                                  }}
+                                >
+                                  View Profile
+                                </Link>
+                                {(isAdmin || profile?.role === 'staff') && (
+                                  <button
+                                    className="btn btn--primary"
+                                    style={{
+                                      padding: '4px 12px',
+                                      fontSize: '0.8rem',
+                                      marginLeft: 'auto',
+                                    }}
+                                    onClick={() =>
+                                      setAssignConfirmTarget({
+                                        type: 'invited',
+                                        expertId: inv.expert_id,
+                                        name: inv.profiles?.first_name
+                                          ? `${inv.profiles.first_name} ${inv.profiles.last_name || ''}`.trim()
+                                          : inv.profiles?.email ||
+                                            'this expert',
+                                      })
+                                    }
+                                  >
+                                    Assign
+                                  </button>
+                                )}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </>
+              )
+            })()}
+          </div>
+
+          {assignConfirmTarget && (
+            <div
+              className="portal-modal-overlay"
               style={{
-                margin: '0 0 16px',
-                fontSize: '0.9rem',
-                color: 'var(--color-gray-500)',
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(0,0,0,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1000,
               }}
             >
-              {managerConfirmTarget.id ? (
-                <>
+              <div
+                className="portal-card"
+                style={{ maxWidth: 440, width: '90%', padding: 24 }}
+              >
+                <h3
+                  style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}
+                >
+                  Assign Expert
+                </h3>
+                <p
+                  style={{
+                    margin: '0 0 16px',
+                    fontSize: '0.9rem',
+                    color: 'var(--color-gray-500)',
+                  }}
+                >
                   Are you sure you want to assign{' '}
-                  <strong>{formatName(managerConfirmTarget.profile)}</strong> as
-                  the case manager?
-                </>
-              ) : (
-                <>Are you sure you want to remove the current case manager?</>
-              )}
-            </p>
-            <div
-              style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}
-            >
-              <button
-                className="btn btn--secondary"
-                onClick={() => setManagerConfirmTarget(null)}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn btn--primary"
-                onClick={async () => {
-                  const value = managerConfirmTarget.id
-                  await supabase
-                    .from('cases')
-                    .update({ case_manager: value })
-                    .eq('id', id)
-                  setCaseData((prev) => ({ ...prev, case_manager: value }))
-                  if (value) {
-                    fetch('/api/notify-case-manager', {
-                      method: 'POST',
-                      headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${session?.access_token}`,
-                      },
-                      body: JSON.stringify({
-                        caseManagerId: value,
-                        caseTitle: caseData.title,
-                        caseId: id,
-                      }),
-                    }).catch(() => {})
-                  }
-                  setManagerConfirmTarget(null)
-                  await loadCase()
-                }}
-              >
-                {managerConfirmTarget.id ? 'Assign Manager' : 'Remove Manager'}
-              </button>
+                  <strong>{assignConfirmTarget.name}</strong> as the assigned
+                  expert for this case?
+                </p>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: 8,
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <button
+                    className="btn btn--secondary"
+                    onClick={() => setAssignConfirmTarget(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn--primary"
+                    onClick={async () => {
+                      await assignExpert(assignConfirmTarget.expertId)
+                      setAssignConfirmTarget(null)
+                    }}
+                  >
+                    Assign Expert
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
-      </>)} {/* end Details tab */}
+          )}
 
+          {statusConfirmTarget && (
+            <div
+              className="portal-modal-overlay"
+              style={{
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(0,0,0,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1000,
+              }}
+            >
+              <div
+                className="portal-card"
+                style={{ maxWidth: 440, width: '90%', padding: 24 }}
+              >
+                <h3
+                  style={{
+                    margin: '0 0 8px',
+                    color:
+                      statusConfirmTarget === 'closed'
+                        ? 'var(--color-error, #e53e3e)'
+                        : 'var(--color-gray-800)',
+                  }}
+                >
+                  {statusConfirmTarget === 'closed'
+                    ? 'Close Case'
+                    : 'Reopen Case'}
+                </h3>
+                <p
+                  style={{
+                    margin: '0 0 16px',
+                    fontSize: '0.9rem',
+                    color: 'var(--color-gray-500)',
+                  }}
+                >
+                  Are you sure you want to{' '}
+                  {statusConfirmTarget === 'closed' ? 'close' : 'reopen'} this
+                  case?
+                </p>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: 8,
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <button
+                    className="btn btn--secondary"
+                    onClick={() => setStatusConfirmTarget(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className={
+                      statusConfirmTarget === 'closed'
+                        ? 'btn'
+                        : 'btn btn--primary'
+                    }
+                    style={
+                      statusConfirmTarget === 'closed'
+                        ? {
+                            background: 'var(--color-error, #e53e3e)',
+                            color: '#fff',
+                            border: 'none',
+                          }
+                        : {}
+                    }
+                    onClick={async () => {
+                      await updateStatus(statusConfirmTarget)
+                      setStatusConfirmTarget(null)
+                    }}
+                  >
+                    {statusConfirmTarget === 'closed'
+                      ? 'Close Case'
+                      : 'Reopen Case'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {removeExpertConfirm && caseData.assignedExpert && (
+            <div
+              className="portal-modal-overlay"
+              style={{
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(0,0,0,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1000,
+              }}
+            >
+              <div
+                className="portal-card"
+                style={{ maxWidth: 440, width: '90%', padding: 24 }}
+              >
+                <h3
+                  style={{
+                    margin: '0 0 8px',
+                    color: 'var(--color-error, #e53e3e)',
+                  }}
+                >
+                  Remove Assigned Expert
+                </h3>
+                <p
+                  style={{
+                    margin: '0 0 16px',
+                    fontSize: '0.9rem',
+                    color: 'var(--color-gray-500)',
+                  }}
+                >
+                  Are you sure you want to remove{' '}
+                  <strong>{formatName(caseData.assignedExpert)}</strong> as the
+                  assigned expert? They will be returned to the Invited Experts
+                  list.
+                </p>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: 8,
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <button
+                    className="btn btn--secondary"
+                    onClick={() => setRemoveExpertConfirm(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn"
+                    style={{
+                      background: 'var(--color-error, #e53e3e)',
+                      color: '#fff',
+                      border: 'none',
+                    }}
+                    onClick={async () => {
+                      setRemoveExpertConfirm(false)
+                      await removeAssignedExpert()
+                    }}
+                  >
+                    Remove Expert
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {managerConfirmTarget && (
+            <div
+              className="portal-modal-overlay"
+              style={{
+                position: 'fixed',
+                inset: 0,
+                background: 'rgba(0,0,0,0.5)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: 1000,
+              }}
+            >
+              <div
+                className="portal-card"
+                style={{ maxWidth: 440, width: '90%', padding: 24 }}
+              >
+                <h3
+                  style={{ margin: '0 0 8px', color: 'var(--color-gray-800)' }}
+                >
+                  {managerConfirmTarget.id
+                    ? 'Assign Case Manager'
+                    : 'Remove Case Manager'}
+                </h3>
+                <p
+                  style={{
+                    margin: '0 0 16px',
+                    fontSize: '0.9rem',
+                    color: 'var(--color-gray-500)',
+                  }}
+                >
+                  {managerConfirmTarget.id ? (
+                    <>
+                      Are you sure you want to assign{' '}
+                      <strong>
+                        {formatName(managerConfirmTarget.profile)}
+                      </strong>{' '}
+                      as the case manager?
+                    </>
+                  ) : (
+                    <>
+                      Are you sure you want to remove the current case manager?
+                    </>
+                  )}
+                </p>
+                <div
+                  style={{
+                    display: 'flex',
+                    gap: 8,
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <button
+                    className="btn btn--secondary"
+                    onClick={() => setManagerConfirmTarget(null)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn--primary"
+                    onClick={async () => {
+                      const value = managerConfirmTarget.id
+                      await supabase
+                        .from('cases')
+                        .update({ case_manager: value })
+                        .eq('id', id)
+                      setCaseData((prev) => ({ ...prev, case_manager: value }))
+                      if (value) {
+                        fetch('/api/notify-case-manager', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: `Bearer ${session?.access_token}`,
+                          },
+                          body: JSON.stringify({
+                            caseManagerId: value,
+                            caseTitle: caseData.title,
+                            caseId: id,
+                          }),
+                        }).catch(() => {})
+                      }
+                      setManagerConfirmTarget(null)
+                      await loadCase()
+                    }}
+                  >
+                    {managerConfirmTarget.id
+                      ? 'Assign Manager'
+                      : 'Remove Manager'}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+        </>
+      )}{' '}
+      {/* end Details tab */}
       {UnsavedModal}
-
       {/* Tasks Tab */}
       {activeTab === 'tasks' && (
         <CaseTasksTab
@@ -1473,7 +1512,6 @@ export default function CaseDetail() {
           caseData={caseData}
         />
       )}
-
       {/* Time & Billing Tab */}
       {activeTab === 'time' && (
         <CaseTimeTab
@@ -1485,7 +1523,6 @@ export default function CaseDetail() {
           profile={profile}
         />
       )}
-
       {/* Activity Tab */}
       {activeTab === 'activity' && (
         <CaseActivityTab activityLog={activityLog} />

@@ -40,9 +40,11 @@ export default function CaseTimeTab({
   const expertRates = useMemo(() => {
     if (!caseData?.assignedExpert) return null
     return {
-      review_report: parseFloat(caseData.assignedExpert.rate_review_report) || 0,
+      review_report:
+        parseFloat(caseData.assignedExpert.rate_review_report) || 0,
       deposition: parseFloat(caseData.assignedExpert.rate_deposition) || 0,
-      trial_testimony: parseFloat(caseData.assignedExpert.rate_trial_testimony) || 0,
+      trial_testimony:
+        parseFloat(caseData.assignedExpert.rate_trial_testimony) || 0,
     }
   }, [caseData])
 
@@ -51,7 +53,8 @@ export default function CaseTimeTab({
     let totalMinutes = 0
 
     timeEntries.forEach((entry) => {
-      const mins = (parseFloat(entry.hours) || 0) * 60 + (parseInt(entry.minutes) || 0)
+      const mins =
+        (parseFloat(entry.hours) || 0) * 60 + (parseInt(entry.minutes) || 0)
       totalMinutes += mins
       if (byType[entry.work_type] !== undefined) {
         byType[entry.work_type] += mins
@@ -176,7 +179,8 @@ export default function CaseTimeTab({
 
   const getEntryCost = (entry) => {
     if (!expertRates) return null
-    const totalHrs = (parseFloat(entry.hours) || 0) + (parseInt(entry.minutes) || 0) / 60
+    const totalHrs =
+      (parseFloat(entry.hours) || 0) + (parseInt(entry.minutes) || 0) / 60
     const rate = expertRates[entry.work_type] || 0
     return totalHrs * rate
   }
@@ -235,7 +239,10 @@ export default function CaseTimeTab({
               {downloading ? 'Downloading...' : 'Download CSV'}
             </button>
           )}
-          <button className="btn btn--primary" onClick={() => setShowForm(true)}>
+          <button
+            className="btn btn--primary"
+            onClick={() => setShowForm(true)}
+          >
             Log Time
           </button>
         </div>
@@ -268,9 +275,7 @@ export default function CaseTimeTab({
                 const cost = getEntryCost(entry)
                 return (
                   <tr key={entry.id}>
-                    <td>
-                      {new Date(entry.logged_at).toLocaleDateString()}
-                    </td>
+                    <td>{new Date(entry.logged_at).toLocaleDateString()}</td>
                     <td>{entry.description || '-'}</td>
                     <td>
                       {WORK_TYPE_OPTIONS.find(
@@ -278,9 +283,7 @@ export default function CaseTimeTab({
                       )?.label || entry.work_type}
                     </td>
                     <td>{formatDuration(entry.hours, entry.minutes)}</td>
-                    <td>
-                      {entry.logger ? formatName(entry.logger) : '-'}
-                    </td>
+                    <td>{entry.logger ? formatName(entry.logger) : '-'}</td>
                     <td>{entry.task?.title || '-'}</td>
                     <td>{cost !== null ? `$${cost.toFixed(2)}` : 'N/A'}</td>
                     <td>
@@ -325,7 +328,13 @@ export default function CaseTimeTab({
           >
             <h3 style={{ marginBottom: 16 }}>Log Time</h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1fr 1fr',
+                  gap: 12,
+                }}
+              >
                 <div>
                   <label className="portal-field__label">Hours</label>
                   <input
@@ -461,8 +470,7 @@ export default function CaseTimeTab({
               <strong>
                 {formatDuration(deleteTarget.hours, deleteTarget.minutes)}
               </strong>{' '}
-              logged on{' '}
-              {new Date(deleteTarget.logged_at).toLocaleDateString()}?
+              logged on {new Date(deleteTarget.logged_at).toLocaleDateString()}?
             </p>
             <div
               style={{

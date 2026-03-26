@@ -47,7 +47,9 @@ export default function ExpertCaseDetail() {
         const [caseRes, taskRes, timeRes, actRes] = await Promise.all([
           supabase
             .from('cases')
-            .select('case_number, title, description, status, case_phase, specialties(name)')
+            .select(
+              'case_number, title, description, status, case_phase, specialties(name)'
+            )
             .eq('id', id)
             .single(),
           supabase
@@ -302,7 +304,9 @@ export default function ExpertCaseDetail() {
                     {task.due_date && (
                       <span>
                         Due:{' '}
-                        {new Date(task.due_date + 'T00:00:00').toLocaleDateString()}
+                        {new Date(
+                          task.due_date + 'T00:00:00'
+                        ).toLocaleDateString()}
                       </span>
                     )}
                   </div>
