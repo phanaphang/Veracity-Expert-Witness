@@ -751,6 +751,7 @@ export default function CaseTasksTab({
   const [saving, setSaving] = useState(false)
   const [filterStatus, setFilterStatus] = useState('')
   const [deleteTarget, setDeleteTarget] = useState(null)
+  const [completeTarget, setCompleteTarget] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [expandedTask, setExpandedTask] = useState(null)
   const [expandedAutomation, setExpandedAutomation] = useState(null)
@@ -1102,7 +1103,11 @@ export default function CaseTasksTab({
                 <button
                   className="portal-btn-action"
                   style={{ fontSize: '0.78rem', padding: '4px 10px' }}
-                  onClick={() => handleStatusToggle(task)}
+                  onClick={() =>
+                    task.status === 'in_progress'
+                      ? setCompleteTarget(task)
+                      : handleStatusToggle(task)
+                  }
                   title={
                     task.status === 'to_do'
                       ? 'Start'
@@ -1385,6 +1390,56 @@ export default function CaseTasksTab({
                 disabled={saving}
               >
                 {saving ? 'Saving...' : editingTask ? 'Update' : 'Create'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Complete Confirmation Modal */}
+      {completeTarget && (
+        <div
+          className="portal-modal-overlay"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <div
+            className="portal-card"
+            style={{ maxWidth: 440, width: '90%', padding: 24 }}
+          >
+            <h3 style={{ marginBottom: 12 }}>Complete Task</h3>
+            <p>
+              Mark <strong>{completeTarget.title}</strong> as complete?
+            </p>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 8,
+                marginTop: 20,
+              }}
+            >
+              <button
+                className="portal-btn-action"
+                onClick={() => setCompleteTarget(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="btn btn--primary"
+                onClick={() => {
+                  handleStatusToggle(completeTarget)
+                  setCompleteTarget(null)
+                }}
+              >
+                Complete
               </button>
             </div>
           </div>
