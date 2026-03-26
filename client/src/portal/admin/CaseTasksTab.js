@@ -660,7 +660,7 @@ function AutomationPreview({ automations, assigneeList = [], depth = 0 }) {
                             >
                               {ti + 1}
                             </span>
-                            <span style={{ fontWeight: 600 }}>{t.title}</span>
+                            <span style={{ fontWeight: 600, fontSize: '1.1rem' }}>{t.title}</span>
                             <span
                               className={`portal-badge portal-badge--${t.priority || 'medium'}`}
                               style={{ fontSize: '0.65rem' }}
