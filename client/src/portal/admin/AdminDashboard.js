@@ -13,6 +13,7 @@ export default function AdminDashboard() {
     openCases: 0,
     unreadMessages: 0,
     myTasks: 0,
+    unreadComments: 0,
   })
 
   useEffect(() => {
@@ -51,25 +52,55 @@ export default function AdminDashboard() {
         )
       }
       Promise.all(queries)
-        .then((results) => {
-          if (isStaff) {
-            setStats({
-              totalExperts: 0,
-              pendingProfiles: 0,
-              openCases: 0,
-              unreadMessages: results[0].count || 0,
-              myTasks: results[1].count || 0,
+        .then(async (results) => {
+          const base = isStaff
+            ? {
+                totalExperts: 0,
+                pendingProfiles: 0,
+                openCases: 0,
+                unreadMessages: results[0].count || 0,
+                myTasks: results[1].count || 0,
+              }
+            : {
+                totalExperts: results[0].count || 0,
+                pendingProfiles: results[1].count || 0,
+                openCases: results[2].count || 0,
+                unreadMessages: results[3].count || 0,
+                myTasks: results[4].count || 0,
+              }
+
+          // Count unread comments on user's tasks
+          let unreadComments = 0
+          const { data: myTasks } = await supabase
+            .from('case_tasks')
+            .select('id')
+            .eq('assignee', user.id)
+          if (myTasks?.length) {
+            const taskIds = myTasks.map((t) => t.id)
+            const [commentsRes, readsRes] = await Promise.all([
+              supabase
+                .from('task_comments')
+                .select('id, task_id, created_at')
+                .in('task_id', taskIds),
+              supabase
+                .from('task_comment_reads')
+                .select('task_id, last_read_at')
+                .eq('user_id', user.id)
+                .in('task_id', taskIds),
+            ])
+            const readMap = {}
+            ;(readsRes.data || []).forEach((r) => {
+              readMap[r.task_id] = r.last_read_at
             })
-          } else {
-            const [experts, pending, cases, msgs, taskCount] = results
-            setStats({
-              totalExperts: experts.count || 0,
-              pendingProfiles: pending.count || 0,
-              openCases: cases.count || 0,
-              unreadMessages: msgs.count || 0,
-              myTasks: taskCount.count || 0,
+            ;(commentsRes.data || []).forEach((c) => {
+              const lastRead = readMap[c.task_id]
+              if (!lastRead || new Date(c.created_at) > new Date(lastRead)) {
+                unreadComments++
+              }
             })
           }
+
+          setStats({ ...base, unreadComments })
         })
         .catch(() => {})
         .finally(() => setLoading(false))
@@ -249,6 +280,23 @@ export default function AdminDashboard() {
                 }}
               >
                 {stats.myTasks} active
+              </span>
+            )}
+            {!loading && stats.unreadComments > 0 && (
+              <span
+                style={{
+                  background: 'var(--color-accent)',
+                  color: '#fff',
+                  fontSize: '0.65rem',
+                  fontWeight: 700,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  whiteSpace: 'nowrap',
+                  marginLeft: 4,
+                }}
+              >
+                {stats.unreadComments} unread comment
+                {stats.unreadComments !== 1 ? 's' : ''}
               </span>
             )}
           </div>

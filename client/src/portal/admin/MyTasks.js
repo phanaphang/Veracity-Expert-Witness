@@ -744,6 +744,7 @@ export default function MyTasks() {
   const toast = useToast()
   const [tasks, setTasks] = useState([])
   const [assignedByMe, setAssignedByMe] = useState([])
+  const [unreadCounts, setUnreadCounts] = useState({})
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('mine')
   const [filterStatus, setFilterStatus] = useState('')
@@ -789,9 +790,38 @@ export default function MyTasks() {
         .not('assignee', 'is', null)
         .order('created_at', { ascending: false }),
     ])
+    const allTasks = [...(myRes.data || []), ...(otherRes.data || [])]
     if (myRes.data) setTasks(sortTasks(myRes.data))
     if (otherRes.data) setAssignedByMe(sortTasks(otherRes.data))
     setLoading(false)
+
+    // Load unread comment counts
+    if (allTasks.length > 0) {
+      const taskIds = allTasks.map((t) => t.id)
+      const [commentsRes, readsRes] = await Promise.all([
+        supabase
+          .from('task_comments')
+          .select('id, task_id, created_at')
+          .in('task_id', taskIds),
+        supabase
+          .from('task_comment_reads')
+          .select('task_id, last_read_at')
+          .eq('user_id', profile.id)
+          .in('task_id', taskIds),
+      ])
+      const readMap = {}
+      ;(readsRes.data || []).forEach((r) => {
+        readMap[r.task_id] = r.last_read_at
+      })
+      const counts = {}
+      ;(commentsRes.data || []).forEach((c) => {
+        const lastRead = readMap[c.task_id]
+        if (!lastRead || new Date(c.created_at) > new Date(lastRead)) {
+          counts[c.task_id] = (counts[c.task_id] || 0) + 1
+        }
+      })
+      setUnreadCounts(counts)
+    }
   }, [profile])
 
   const loadManagers = useCallback(async () => {
@@ -1204,6 +1234,21 @@ export default function MyTasks() {
                   }
                 >
                   {expandedTask === task.id ? 'Hide Comments' : 'Comments'}
+                  {!expandedTask && unreadCounts[task.id] > 0 && (
+                    <span
+                      style={{
+                        background: '#ef4444',
+                        color: '#fff',
+                        fontSize: '0.6rem',
+                        fontWeight: 700,
+                        padding: '1px 5px',
+                        borderRadius: 999,
+                        marginLeft: 4,
+                      }}
+                    >
+                      {unreadCounts[task.id]}
+                    </span>
+                  )}
                 </button>
                 <button
                   className="portal-btn-action"
@@ -1242,7 +1287,17 @@ export default function MyTasks() {
               </div>
             </div>
             {expandedTask === task.id && (
-              <TaskComments taskId={task.id} profile={profile} />
+              <TaskComments
+                taskId={task.id}
+                profile={profile}
+                onRead={(tid) =>
+                  setUnreadCounts((prev) => {
+                    const next = { ...prev }
+                    delete next[tid]
+                    return next
+                  })
+                }
+              />
             )}
             {expandedFiles === task.id && (
               <TaskAttachments

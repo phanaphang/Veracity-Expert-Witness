@@ -14,11 +14,19 @@ function timeAgo(dateStr) {
   return `${days}d ago`
 }
 
-export default function TaskComments({ taskId, profile }) {
+export default function TaskComments({ taskId, profile, onRead }) {
   const toast = useToast()
   const [comments, setComments] = useState([])
   const [body, setBody] = useState('')
   const [posting, setPosting] = useState(false)
+
+  const markRead = useCallback(async () => {
+    await supabase.from('task_comment_reads').upsert(
+      { user_id: profile.id, task_id: taskId, last_read_at: new Date().toISOString() },
+      { onConflict: 'user_id,task_id' }
+    )
+    if (onRead) onRead(taskId)
+  }, [taskId, profile.id, onRead])
 
   const loadComments = useCallback(async () => {
     const { data } = await supabase
@@ -30,8 +38,8 @@ export default function TaskComments({ taskId, profile }) {
   }, [taskId])
 
   useEffect(() => {
-    loadComments()
-  }, [loadComments])
+    loadComments().then(() => markRead())
+  }, [loadComments, markRead])
 
   const handlePost = async () => {
     if (!body.trim()) return
