@@ -6,6 +6,7 @@ import { formatName } from '../../utils/formatName'
 import { useToast } from '../../contexts/ToastContext'
 import TaskComments from './TaskComments'
 import TaskAttachments from './TaskAttachments'
+import TaskCollaborators from './TaskCollaborators'
 
 const PRIORITY_ORDER = { urgent: 0, high: 1, medium: 2, low: 3 }
 const PRIORITY_OPTIONS = [
@@ -737,6 +738,7 @@ const EMPTY_FORM = {
   priority: 'medium',
   status: 'to_do',
   automations: { on_start: [], on_complete: [] },
+  collaborators: [],
 }
 
 export default function MyTasks() {
@@ -744,6 +746,8 @@ export default function MyTasks() {
   const toast = useToast()
   const [tasks, setTasks] = useState([])
   const [assignedByMe, setAssignedByMe] = useState([])
+  const [collaborating, setCollaborating] = useState([])
+  const [collabMap, setCollabMap] = useState({})
   const [unreadCounts, setUnreadCounts] = useState({})
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('mine')
@@ -760,6 +764,8 @@ export default function MyTasks() {
   const [deleting, setDeleting] = useState(false)
   const [managers, setManagers] = useState([])
   const [showAutomations, setShowAutomations] = useState(false)
+  const [collabSearch, setCollabSearch] = useState('')
+  const [collabResults, setCollabResults] = useState([])
 
   const sortTasks = (list) =>
     [...list].sort((a, b) => {
@@ -774,9 +780,9 @@ export default function MyTasks() {
   const loadTasks = useCallback(async () => {
     if (!profile) return
     const select =
-      '*, case:case_id(id, title), assigneeProfile:assignee(id, first_name, last_name, email, role), creatorProfile:created_by(id, first_name, last_name, email, role)'
+      '*, case:case_id(id, title), project:project_id(id, title), assigneeProfile:assignee(id, first_name, last_name, email, role), creatorProfile:created_by(id, first_name, last_name, email, role)'
 
-    const [myRes, otherRes] = await Promise.all([
+    const [myRes, otherRes, collabIdsRes] = await Promise.all([
       supabase
         .from('case_tasks')
         .select(select)
@@ -789,11 +795,49 @@ export default function MyTasks() {
         .neq('assignee', profile.id)
         .not('assignee', 'is', null)
         .order('created_at', { ascending: false }),
+      supabase
+        .from('task_collaborators')
+        .select('task_id')
+        .eq('user_id', profile.id),
     ])
-    const allTasks = [...(myRes.data || []), ...(otherRes.data || [])]
     if (myRes.data) setTasks(sortTasks(myRes.data))
     if (otherRes.data) setAssignedByMe(sortTasks(otherRes.data))
+
+    // Load collaborating tasks
+    const collabTaskIds = (collabIdsRes.data || []).map((c) => c.task_id)
+    let collabTasks = []
+    if (collabTaskIds.length > 0) {
+      const { data } = await supabase
+        .from('case_tasks')
+        .select(select)
+        .in('id', collabTaskIds)
+        .order('created_at', { ascending: false })
+      collabTasks = data || []
+    }
+    setCollaborating(sortTasks(collabTasks))
     setLoading(false)
+
+    // Bulk-load collaborators for all tasks
+    const allTasks = [
+      ...(myRes.data || []),
+      ...(otherRes.data || []),
+      ...collabTasks,
+    ]
+    const allTaskIds = allTasks.map((t) => t.id)
+    if (allTaskIds.length > 0) {
+      const { data: collabData } = await supabase
+        .from('task_collaborators')
+        .select(
+          'task_id, user_id, profile:user_id(id, first_name, last_name, email, role)'
+        )
+        .in('task_id', allTaskIds)
+      const map = {}
+      ;(collabData || []).forEach((c) => {
+        if (!map[c.task_id]) map[c.task_id] = []
+        map[c.task_id].push(c)
+      })
+      setCollabMap(map)
+    }
 
     // Load unread comment counts
     if (allTasks.length > 0) {
@@ -838,18 +882,31 @@ export default function MyTasks() {
     loadManagers()
   }, [loadTasks, loadManagers])
 
-  const logActivity = async (caseId, action, details) => {
-    await supabase.from('case_activity_log').insert({
-      case_id: caseId,
-      actor: profile.id,
-      action,
-      details,
-    })
+  const logActivity = async (task, action, details) => {
+    if (task.case_id) {
+      await supabase.from('case_activity_log').insert({
+        case_id: task.case_id,
+        actor: profile.id,
+        action,
+        details,
+      })
+    } else if (task.project_id) {
+      await supabase.from('project_activity_log').insert({
+        project_id: task.project_id,
+        actor: profile.id,
+        action,
+        details,
+      })
+    }
   }
 
   const openEdit = (task) => {
     setEditingTask(task)
     const automations = task.automations || { on_start: [], on_complete: [] }
+    const existing = (collabMap[task.id] || []).map((c) => ({
+      id: c.user_id,
+      ...(c.profile || {}),
+    }))
     setForm({
       title: task.title,
       description: task.description || '',
@@ -858,6 +915,7 @@ export default function MyTasks() {
       priority: task.priority,
       status: task.status,
       automations,
+      collaborators: existing,
     })
     setShowAutomations(
       (automations.on_start?.length || 0) +
@@ -872,6 +930,53 @@ export default function MyTasks() {
     setEditingTask(null)
     setForm(EMPTY_FORM)
     setShowAutomations(false)
+    setCollabSearch('')
+    setCollabResults([])
+  }
+
+  const sanitizeCollab = (term) => term.replace(/[%_(),.\\]/g, '')
+
+  const searchCollab = async (term) => {
+    setCollabSearch(term)
+    if (term.length < 2) {
+      setCollabResults([])
+      return
+    }
+    const safe = sanitizeCollab(term)
+    if (!safe) {
+      setCollabResults([])
+      return
+    }
+    const { data } = await supabase
+      .from('profiles')
+      .select('id, first_name, last_name, email, role')
+      .in('role', ['admin', 'staff'])
+      .or(
+        `first_name.ilike.%${safe}%,last_name.ilike.%${safe}%,email.ilike.%${safe}%`
+      )
+      .limit(10)
+    const excludeIds = new Set([
+      ...(form.collaborators || []).map((c) => c.id),
+      form.assignee,
+      profile?.id,
+    ])
+    setCollabResults((data || []).filter((u) => !excludeIds.has(u.id)))
+  }
+
+  const addFormCollab = (user) => {
+    setForm((f) => ({
+      ...f,
+      collaborators: [...(f.collaborators || []), user],
+    }))
+    setCollabSearch('')
+    setCollabResults([])
+  }
+
+  const removeFormCollab = (userId) => {
+    setForm((f) => ({
+      ...f,
+      collaborators: (f.collaborators || []).filter((c) => c.id !== userId),
+    }))
   }
 
   const fireAutomations = async (task, trigger) => {
@@ -889,7 +994,8 @@ export default function MyTasks() {
         },
         body: JSON.stringify({
           taskId: task.id,
-          caseId: task.case_id,
+          caseId: task.case_id || null,
+          projectId: task.project_id || null,
           trigger,
           automations: autos,
           taskTitle: task.title,
@@ -967,7 +1073,7 @@ export default function MyTasks() {
         changes.push(`priority: ${form.priority}`)
       if (editingTask.title !== form.title.trim()) changes.push('title updated')
 
-      await logActivity(editingTask.case_id, 'task_updated', {
+      await logActivity(editingTask, 'task_updated', {
         task_title: form.title.trim(),
         changes: changes.join(', ') || 'details updated',
       })
@@ -987,6 +1093,27 @@ export default function MyTasks() {
             automations: payload.automations,
           }
           fireAutomations(savedTask, trigger)
+        }
+      }
+
+      // Sync collaborators
+      if (editingTask) {
+        const taskId = editingTask.id
+        const oldIds = (collabMap[taskId] || []).map((c) => c.user_id)
+        const newIds = (form.collaborators || []).map((c) => c.id)
+        const toAdd = newIds.filter((id) => !oldIds.includes(id))
+        const toRemove = oldIds.filter((id) => !newIds.includes(id))
+        if (toRemove.length) {
+          await supabase
+            .from('task_collaborators')
+            .delete()
+            .eq('task_id', taskId)
+            .in('user_id', toRemove)
+        }
+        if (toAdd.length) {
+          await supabase
+            .from('task_collaborators')
+            .insert(toAdd.map((uid) => ({ task_id: taskId, user_id: uid })))
         }
       }
 
@@ -1014,7 +1141,7 @@ export default function MyTasks() {
       toast.error('Failed to update task status.')
       return
     }
-    await logActivity(task.case_id, 'task_updated', {
+    await logActivity(task, 'task_updated', {
       task_title: task.title,
       changes: `status: ${nextStatus}`,
     })
@@ -1039,7 +1166,7 @@ export default function MyTasks() {
         .delete()
         .eq('id', deleteTarget.id)
       if (error) throw error
-      await logActivity(deleteTarget.case_id, 'task_deleted', {
+      await logActivity(deleteTarget, 'task_deleted', {
         task_title: deleteTarget.title,
       })
       toast.success('Task deleted.')
@@ -1052,7 +1179,12 @@ export default function MyTasks() {
     }
   }
 
-  const activeTasks = activeTab === 'mine' ? tasks : assignedByMe
+  const activeTasks =
+    activeTab === 'mine'
+      ? tasks
+      : activeTab === 'others'
+        ? assignedByMe
+        : collaborating
 
   const filtered = filterStatus
     ? activeTasks.filter((t) => t.status === filterStatus)
@@ -1106,6 +1238,15 @@ export default function MyTasks() {
         >
           Assigned to Others ({assignedByMe.length})
         </button>
+        <button
+          className={`case-tabs__btn${activeTab === 'collaborating' ? ' case-tabs__btn--active' : ''}`}
+          onClick={() => {
+            setActiveTab('collaborating')
+            setFilterStatus('')
+          }}
+        >
+          Collaborating ({collaborating.length})
+        </button>
       </div>
 
       <div className="case-tab-header">
@@ -1135,7 +1276,9 @@ export default function MyTasks() {
             {activeTasks.length === 0
               ? activeTab === 'mine'
                 ? 'No tasks assigned to you.'
-                : 'You have not assigned tasks to others.'
+                : activeTab === 'others'
+                  ? 'You have not assigned tasks to others.'
+                  : 'You are not a collaborator on any tasks.'
               : 'No tasks match the selected filter.'}
           </p>
         </div>
@@ -1172,6 +1315,11 @@ export default function MyTasks() {
                       Assigned to: {formatName(task.assigneeProfile)}
                     </span>
                   )}
+                  {activeTab === 'collaborating' && task.assigneeProfile && (
+                    <span style={{ color: 'var(--color-gray-500)' }}>
+                      Assignee: {formatName(task.assigneeProfile)}
+                    </span>
+                  )}
                   {task.case && (
                     <Link
                       to={`/admin/cases/${task.case.id}`}
@@ -1181,6 +1329,17 @@ export default function MyTasks() {
                       }}
                     >
                       {task.case.title}
+                    </Link>
+                  )}
+                  {task.project && (
+                    <Link
+                      to={`/admin/projects/${task.project.id}`}
+                      style={{
+                        color: 'var(--color-accent)',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {task.project.title}
                     </Link>
                   )}
                   {task.due_date && (
@@ -1203,6 +1362,13 @@ export default function MyTasks() {
                     </span>
                   )}
                 </div>
+                <TaskCollaborators
+                  taskId={task.id}
+                  collaborators={collabMap[task.id] || []}
+                  onUpdate={loadTasks}
+                  profile={profile}
+                  task={task}
+                />
               </div>
               <div className="case-task-item__actions">
                 <button
@@ -1304,6 +1470,7 @@ export default function MyTasks() {
               <TaskAttachments
                 taskId={task.id}
                 caseId={task.case_id}
+                projectId={task.project_id}
                 profile={profile}
               />
             )}
@@ -1457,6 +1624,73 @@ export default function MyTasks() {
                       setForm((f) => ({ ...f, due_date: e.target.value }))
                     }
                   />
+                </div>
+              </div>
+
+              {/* Collaborators */}
+              <div style={{ marginTop: 8 }}>
+                <label className="portal-field__label">Collaborators</label>
+                <div className="task-collaborators" style={{ marginTop: 4 }}>
+                  {(form.collaborators || []).map((c) => (
+                    <span key={c.id} className="task-collaborators__chip">
+                      {formatName(c)}
+                      <button
+                        type="button"
+                        className="task-collaborators__chip-remove"
+                        onClick={() => removeFormCollab(c.id)}
+                      >
+                        x
+                      </button>
+                    </span>
+                  ))}
+                </div>
+                <div style={{ position: 'relative', marginTop: 4 }}>
+                  <input
+                    className="portal-field__input"
+                    placeholder="Search to add collaborators..."
+                    value={collabSearch}
+                    onChange={(e) => searchCollab(e.target.value)}
+                    style={{ fontSize: '0.82rem' }}
+                  />
+                  {collabResults.length > 0 && (
+                    <div
+                      style={{
+                        border: '1px solid var(--color-gray-200)',
+                        borderRadius: 'var(--radius-md, 6px)',
+                        marginTop: 2,
+                        position: 'absolute',
+                        background: '#fff',
+                        zIndex: 10,
+                        width: '100%',
+                        maxHeight: 180,
+                        overflowY: 'auto',
+                      }}
+                    >
+                      {collabResults.map((user) => (
+                        <div
+                          key={user.id}
+                          style={{
+                            padding: '6px 10px',
+                            borderBottom: '1px solid var(--color-gray-100)',
+                            cursor: 'pointer',
+                            fontSize: '0.82rem',
+                          }}
+                          onClick={() => addFormCollab(user)}
+                        >
+                          <strong>{formatName(user)}</strong>
+                          <span
+                            style={{
+                              fontSize: '0.76rem',
+                              color: 'var(--color-gray-400)',
+                              marginLeft: 6,
+                            }}
+                          >
+                            {user.email}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
 

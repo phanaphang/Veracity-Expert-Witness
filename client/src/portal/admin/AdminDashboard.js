@@ -258,6 +258,24 @@ export default function AdminDashboard() {
           </p>
         </Link>
         <Link
+          to="/admin/projects"
+          className="portal-card portal-card--clickable"
+          style={{ textDecoration: 'none' }}
+        >
+          <h3 className="portal-card__title" style={{ marginBottom: 0 }}>
+            Projects
+          </h3>
+          <p
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-gray-500)',
+              marginTop: 8,
+            }}
+          >
+            Manage internal projects and administrative tasks
+          </p>
+        </Link>
+        <Link
           to="/admin/tasks"
           className="portal-card portal-card--clickable"
           style={{ textDecoration: 'none' }}

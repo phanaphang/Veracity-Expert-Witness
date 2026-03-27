@@ -184,6 +184,9 @@ const AdminMessages = lazy(() => import('./portal/admin/AdminMessages'))
 const AdminProfile = lazy(() => import('./portal/admin/AdminProfile'))
 const MyTasks = lazy(() => import('./portal/admin/MyTasks'))
 const TeamTasks = lazy(() => import('./portal/admin/TeamTasks'))
+const ProjectList = lazy(() => import('./portal/admin/ProjectList'))
+const ProjectCreate = lazy(() => import('./portal/admin/ProjectCreate'))
+const ProjectDetail = lazy(() => import('./portal/admin/ProjectDetail'))
 const TrainingReport = lazy(() => import('./portal/admin/TrainingReport'))
 
 function RouteErrorPage() {
@@ -807,6 +810,36 @@ const router = createBrowserRouter([
           <ProtectedRoute requiredRole="admin">
             <AdminLayout>
               <CaseDetail />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/projects',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <ProjectList />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/projects/new',
+        element: (
+          <ProtectedRoute requiredRole="admin-only">
+            <AdminLayout>
+              <ProjectCreate />
+            </AdminLayout>
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/admin/projects/:id',
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <AdminLayout>
+              <ProjectDetail />
             </AdminLayout>
           </ProtectedRoute>
         ),

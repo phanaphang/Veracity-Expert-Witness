@@ -72,7 +72,7 @@ function getFileIcon(mimeType) {
   )
 }
 
-export default function TaskAttachments({ taskId, caseId, profile }) {
+export default function TaskAttachments({ taskId, caseId, projectId, profile }) {
   const toast = useToast()
   const [attachments, setAttachments] = useState([])
   const [uploading, setUploading] = useState(false)
@@ -117,7 +117,8 @@ export default function TaskAttachments({ taskId, caseId, profile }) {
 
     setUploading(true)
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 100)
-    const filePath = `${caseId}/${taskId}/${Date.now()}_${safeName}`
+    const parentId = caseId || projectId
+    const filePath = `${parentId}/${taskId}/${Date.now()}_${safeName}`
 
     const { error: uploadError } = await supabase.storage
       .from('task-attachments')

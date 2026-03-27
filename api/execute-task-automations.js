@@ -59,11 +59,18 @@ module.exports = async (req, res) => {
       .json({ error: 'Too many requests. Please try again later.' })
   }
 
-  const { taskId, caseId, trigger, automations, taskTitle, assigneeId } =
-    req.body
+  const {
+    taskId,
+    caseId,
+    projectId,
+    trigger,
+    automations,
+    taskTitle,
+    assigneeId,
+  } = req.body
   if (
     !taskId ||
-    !caseId ||
+    (!caseId && !projectId) ||
     !trigger ||
     !automations ||
     !Array.isArray(automations)
@@ -83,7 +90,8 @@ module.exports = async (req, res) => {
         const rows = automation.tasks
           .filter((t) => t.title?.trim())
           .map((t) => ({
-            case_id: caseId,
+            case_id: caseId || null,
+            project_id: projectId || null,
             title: t.title.trim(),
             description: t.description?.trim() || '',
             priority: t.priority || 'medium',
@@ -96,9 +104,15 @@ module.exports = async (req, res) => {
         if (rows.length) {
           const { error } = await supabaseAdmin.from('case_tasks').insert(rows)
           if (error) throw error
+          const activityTable = caseId
+            ? 'case_activity_log'
+            : 'project_activity_log'
+          const activityParent = caseId
+            ? { case_id: caseId }
+            : { project_id: projectId }
           for (const row of rows) {
-            await supabaseAdmin.from('case_activity_log').insert({
-              case_id: caseId,
+            await supabaseAdmin.from(activityTable).insert({
+              ...activityParent,
               actor: user.id,
               action: 'task_auto_created',
               details: {
@@ -251,7 +265,7 @@ module.exports = async (req, res) => {
           start_time: startTime.toISOString(),
           end_time: endTime.toISOString(),
           notes: `Auto-created when task "${taskTitle || 'Untitled'}" was ${triggerLabel}.`,
-          case_id: caseId,
+          case_id: caseId || null,
         })
 
         if (error) {
@@ -264,8 +278,14 @@ module.exports = async (req, res) => {
           continue
         }
 
-        await supabaseAdmin.from('case_activity_log').insert({
-          case_id: caseId,
+        const eventActivityTable = caseId
+          ? 'case_activity_log'
+          : 'project_activity_log'
+        const eventActivityParent = caseId
+          ? { case_id: caseId }
+          : { project_id: projectId }
+        await supabaseAdmin.from(eventActivityTable).insert({
+          ...eventActivityParent,
           actor: user.id,
           action: 'automation_executed',
           details: {
