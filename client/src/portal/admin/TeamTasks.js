@@ -1281,6 +1281,11 @@ export default function TeamTasks() {
                             ?.label
                         }
                       </span>
+                      {task.creatorProfile && (
+                        <span style={{ color: 'var(--color-gray-500)' }}>
+                          Created by: {formatName(task.creatorProfile)}
+                        </span>
+                      )}
                       {task.case && (
                         <Link
                           to={`/admin/cases/${task.case.id}`}

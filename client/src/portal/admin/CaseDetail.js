@@ -212,7 +212,7 @@ export default function CaseDetail() {
       supabase
         .from('case_tasks')
         .select(
-          '*, assigneeProfile:assignee(first_name, last_name, email, role), creator:created_by(first_name, last_name, email, role)'
+          '*, assigneeProfile:assignee(first_name, last_name, email, role), creatorProfile:created_by(first_name, last_name, email, role)'
         )
         .eq('case_id', id)
         .order('created_at', { ascending: false }),

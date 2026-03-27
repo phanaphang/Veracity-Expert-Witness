@@ -1214,6 +1214,11 @@ export default function CaseTasksTab({
                   <span className={`portal-badge portal-badge--${task.status}`}>
                     {STATUS_OPTIONS.find((s) => s.value === task.status)?.label}
                   </span>
+                  {task.creatorProfile && (
+                    <span style={{ color: 'var(--color-gray-500)' }}>
+                      Created by: {formatName(task.creatorProfile)}
+                    </span>
+                  )}
                   {task.assigneeProfile && (
                     <span>{formatName(task.assigneeProfile)}</span>
                   )}

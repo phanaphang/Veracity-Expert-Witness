@@ -1320,6 +1320,11 @@ export default function MyTasks() {
                       Assignee: {formatName(task.assigneeProfile)}
                     </span>
                   )}
+                  {activeTab === 'collaborating' && task.creatorProfile && (
+                    <span style={{ color: 'var(--color-gray-500)' }}>
+                      Created by: {formatName(task.creatorProfile)}
+                    </span>
+                  )}
                   {task.case && (
                     <Link
                       to={`/admin/cases/${task.case.id}`}
