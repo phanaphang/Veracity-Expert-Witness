@@ -86,14 +86,20 @@ export default function AdminDashboard() {
           }
           base.myTasks = (base.myTasks || 0) + collabActive
 
-          // Count unread comments on user's tasks
+          // Count unread comments on all relevant tasks
           let unreadComments = 0
-          const { data: myTasks } = await supabase
-            .from('case_tasks')
-            .select('id')
-            .eq('assignee', user.id)
+          const [assignedRes, createdRes] = await Promise.all([
+            supabase.from('case_tasks').select('id').eq('assignee', user.id),
+            supabase
+              .from('case_tasks')
+              .select('id')
+              .eq('created_by', user.id)
+              .neq('assignee', user.id)
+              .not('assignee', 'is', null),
+          ])
           const allTaskIds = [
-            ...(myTasks || []).map((t) => t.id),
+            ...(assignedRes.data || []).map((t) => t.id),
+            ...(createdRes.data || []).map((t) => t.id),
             ...collabTaskIds,
           ]
           if (allTaskIds.length) {
