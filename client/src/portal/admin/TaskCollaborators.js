@@ -97,9 +97,7 @@ export default function TaskCollaborators({
         </span>
       ))}
       {!collaborators.length && (
-        <span
-          style={{ fontSize: '0.76rem', color: 'var(--color-gray-400)' }}
-        >
+        <span style={{ fontSize: '0.76rem', color: 'var(--color-gray-400)' }}>
           None
         </span>
       )}

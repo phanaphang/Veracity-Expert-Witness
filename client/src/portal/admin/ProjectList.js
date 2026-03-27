@@ -75,10 +75,7 @@ export default function ProjectList() {
   )
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
-  const paginated = filtered.slice(
-    (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE
-  )
+  const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
 
   useEffect(() => {
     setPage(1)
@@ -278,8 +275,8 @@ export default function ProjectList() {
               }}
             >
               Are you sure you want to permanently delete{' '}
-              <strong>{deleteTarget.title}</strong>? This will remove the project
-              and all associated tasks. This action cannot be undone.
+              <strong>{deleteTarget.title}</strong>? This will remove the
+              project and all associated tasks. This action cannot be undone.
             </p>
             <div
               style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}

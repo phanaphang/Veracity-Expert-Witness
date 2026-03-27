@@ -38,9 +38,7 @@ export default function ProjectDetail() {
     const [projRes, tasksRes, activityRes, membersRes] = await Promise.all([
       supabase
         .from('projects')
-        .select(
-          '*, ownerProfile:owner(id, first_name, last_name, email, role)'
-        )
+        .select('*, ownerProfile:owner(id, first_name, last_name, email, role)')
         .eq('id', id)
         .single(),
       supabase
@@ -58,7 +56,9 @@ export default function ProjectDetail() {
         .limit(100),
       supabase
         .from('project_members')
-        .select('*, memberProfile:user_id(id, first_name, last_name, email, role)')
+        .select(
+          '*, memberProfile:user_id(id, first_name, last_name, email, role)'
+        )
         .eq('project_id', id),
     ])
 
@@ -356,12 +356,20 @@ export default function ProjectDetail() {
                     placeholder="No description"
                   />
                 </div>
-                <div className="portal-list-item__row" style={{ marginBottom: 12 }}>
+                <div
+                  className="portal-list-item__row"
+                  style={{ marginBottom: 12 }}
+                >
                   <div>
                     <strong>Status:</strong>
                     <div style={{ marginTop: 4 }}>
-                      <span className={`portal-badge portal-badge--${project.status}`}>
-                        {STATUS_OPTIONS.find((s) => s.value === project.status)?.label}
+                      <span
+                        className={`portal-badge portal-badge--${project.status}`}
+                      >
+                        {
+                          STATUS_OPTIONS.find((s) => s.value === project.status)
+                            ?.label
+                        }
                       </span>
                     </div>
                   </div>
@@ -400,9 +408,7 @@ export default function ProjectDetail() {
 
           {/* Members Section */}
           <div className="portal-card" style={{ marginTop: 16 }}>
-            <h2 className="portal-card__title">
-              Members ({members.length})
-            </h2>
+            <h2 className="portal-card__title">Members ({members.length})</h2>
             {members.length === 0 && (
               <p
                 style={{

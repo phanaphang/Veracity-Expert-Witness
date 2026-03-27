@@ -72,7 +72,12 @@ function getFileIcon(mimeType) {
   )
 }
 
-export default function TaskAttachments({ taskId, caseId, projectId, profile }) {
+export default function TaskAttachments({
+  taskId,
+  caseId,
+  projectId,
+  profile,
+}) {
   const toast = useToast()
   const [attachments, setAttachments] = useState([])
   const [uploading, setUploading] = useState(false)
