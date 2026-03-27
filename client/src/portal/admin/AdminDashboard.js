@@ -69,14 +69,35 @@ export default function AdminDashboard() {
                 myTasks: results[4].count || 0,
               }
 
+          // Count collaborating tasks and add to myTasks total
+          const { data: collabRows } = await supabase
+            .from('task_collaborators')
+            .select('task_id')
+            .eq('user_id', user.id)
+          const collabTaskIds = (collabRows || []).map((r) => r.task_id)
+          let collabActive = 0
+          if (collabTaskIds.length) {
+            const { count } = await supabase
+              .from('case_tasks')
+              .select('*', { count: 'exact', head: true })
+              .in('id', collabTaskIds)
+              .neq('status', 'done')
+            collabActive = count || 0
+          }
+          base.myTasks = (base.myTasks || 0) + collabActive
+
           // Count unread comments on user's tasks
           let unreadComments = 0
           const { data: myTasks } = await supabase
             .from('case_tasks')
             .select('id')
             .eq('assignee', user.id)
-          if (myTasks?.length) {
-            const taskIds = myTasks.map((t) => t.id)
+          const allTaskIds = [
+            ...(myTasks || []).map((t) => t.id),
+            ...collabTaskIds,
+          ]
+          if (allTaskIds.length) {
+            const taskIds = [...new Set(allTaskIds)]
             const [commentsRes, readsRes] = await Promise.all([
               supabase
                 .from('task_comments')
