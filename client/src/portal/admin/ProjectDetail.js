@@ -239,7 +239,11 @@ export default function ProjectDetail() {
       </div>
 
       {activeTab === 'details' && (
-        <div role="tabpanel" id="tabpanel-details" aria-labelledby="tab-details">
+        <div
+          role="tabpanel"
+          id="tabpanel-details"
+          aria-labelledby="tab-details"
+        >
           <div className="portal-card">
             <div
               style={{
@@ -508,7 +512,9 @@ export default function ProjectDetail() {
                           cursor: 'pointer',
                         }}
                         onClick={() => addMember(user)}
-                        onKeyDown={(e) => { if (e.key === 'Enter') addMember(user) }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') addMember(user)
+                        }}
                       >
                         <div>
                           <strong style={{ fontSize: '0.85rem' }}>
@@ -547,65 +553,69 @@ export default function ProjectDetail() {
       )}
 
       {activeTab === 'activity' && (
-        <div role="tabpanel" id="tabpanel-activity" aria-labelledby="tab-activity">
-        <div className="portal-card">
-          <h2 className="portal-card__title">Activity</h2>
-          {activityLog.length === 0 ? (
-            <p
-              style={{
-                fontSize: '0.85rem',
-                color: 'var(--color-gray-500)',
-                margin: '8px 0',
-              }}
-            >
-              No activity yet.
-            </p>
-          ) : (
-            <div className="case-activity">
-              {activityLog.map((entry) => (
-                <div key={entry.id} className="case-activity__item">
-                  <div className="case-activity__dot" />
-                  <div className="case-activity__content">
-                    <span className="case-activity__actor">
-                      {entry.actorProfile
-                        ? formatName(entry.actorProfile)
-                        : 'System'}
-                    </span>
-                    <span className="case-activity__action">
-                      {' '}
-                      {entry.action.replace(/_/g, ' ')}
-                    </span>
-                    {entry.details?.task_title && (
-                      <span className="case-activity__detail">
-                        {' '}
-                        - {entry.details.task_title}
+        <div
+          role="tabpanel"
+          id="tabpanel-activity"
+          aria-labelledby="tab-activity"
+        >
+          <div className="portal-card">
+            <h2 className="portal-card__title">Activity</h2>
+            {activityLog.length === 0 ? (
+              <p
+                style={{
+                  fontSize: '0.85rem',
+                  color: 'var(--color-gray-500)',
+                  margin: '8px 0',
+                }}
+              >
+                No activity yet.
+              </p>
+            ) : (
+              <div className="case-activity">
+                {activityLog.map((entry) => (
+                  <div key={entry.id} className="case-activity__item">
+                    <div className="case-activity__dot" />
+                    <div className="case-activity__content">
+                      <span className="case-activity__actor">
+                        {entry.actorProfile
+                          ? formatName(entry.actorProfile)
+                          : 'System'}
                       </span>
-                    )}
-                    {entry.details?.changes && (
-                      <span
-                        className="case-activity__detail"
-                        style={{ color: 'var(--color-gray-400)' }}
+                      <span className="case-activity__action">
+                        {' '}
+                        {entry.action.replace(/_/g, ' ')}
+                      </span>
+                      {entry.details?.task_title && (
+                        <span className="case-activity__detail">
+                          {' '}
+                          - {entry.details.task_title}
+                        </span>
+                      )}
+                      {entry.details?.changes && (
+                        <span
+                          className="case-activity__detail"
+                          style={{ color: 'var(--color-gray-400)' }}
+                        >
+                          {' '}
+                          ({entry.details.changes})
+                        </span>
+                      )}
+                      <div
+                        className="case-activity__time"
+                        style={{
+                          fontSize: '0.75rem',
+                          color: 'var(--color-gray-400)',
+                          marginTop: 2,
+                        }}
                       >
-                        {' '}
-                        ({entry.details.changes})
-                      </span>
-                    )}
-                    <div
-                      className="case-activity__time"
-                      style={{
-                        fontSize: '0.75rem',
-                        color: 'var(--color-gray-400)',
-                        marginTop: 2,
-                      }}
-                    >
-                      {new Date(entry.created_at).toLocaleString()}
+                        {new Date(entry.created_at).toLocaleString()}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       )}
 

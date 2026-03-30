@@ -120,9 +120,7 @@ export default function ProjectList() {
         )}
       </div>
 
-      <div
-        className="portal-search-bar project-filters"
-      >
+      <div className="portal-search-bar project-filters">
         <input
           className="portal-field__input"
           placeholder="Search by title..."
@@ -157,106 +155,112 @@ export default function ProjectList() {
         </div>
       ) : (
         <>
-        <div className="portal-table-wrap project-table-desktop">
-          <table className="portal-table" aria-label="Projects list">
-            <thead>
-              <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Status</th>
-                <th scope="col">Tasks</th>
-                <th scope="col">Owner</th>
-                <th scope="col">Created</th>
-                <th scope="col" aria-label="Actions"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {paginated.map((p) => (
-                <tr key={p.id}>
-                  <td>
-                    <strong>{highlight(p.title, searchTerm)}</strong>
-                  </td>
-                  <td>
-                    <span className={`portal-badge portal-badge--${p.status}`}>
-                      {STATUS_LABELS[p.status] || p.status}
-                    </span>
-                  </td>
-                  <td>{p.case_tasks?.[0]?.count || 0}</td>
-                  <td>{p.ownerProfile ? formatName(p.ownerProfile) : '--'}</td>
-                  <td>{new Date(p.created_at).toLocaleDateString()}</td>
-                  <td style={{ display: 'flex', gap: 8 }}>
-                    <Link
-                      to={`/admin/projects/${p.id}`}
-                      className="portal-btn-action"
-                      aria-label={`View ${p.title}`}
-                    >
-                      View
-                    </Link>
-                    {isAdmin && (
-                      <button
-                        className="portal-btn-action"
-                        style={{
-                          color: 'var(--color-error, #e53e3e)',
-                          border: '1px solid var(--color-error, #e53e3e)',
-                          background: 'none',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => setDeleteTarget(p)}
-                        aria-label={`Delete ${p.title}`}
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </td>
+          <div className="portal-table-wrap project-table-desktop">
+            <table className="portal-table" aria-label="Projects list">
+              <thead>
+                <tr>
+                  <th scope="col">Title</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Tasks</th>
+                  <th scope="col">Owner</th>
+                  <th scope="col">Created</th>
+                  <th scope="col" aria-label="Actions"></th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {paginated.map((p) => (
+                  <tr key={p.id}>
+                    <td>
+                      <strong>{highlight(p.title, searchTerm)}</strong>
+                    </td>
+                    <td>
+                      <span
+                        className={`portal-badge portal-badge--${p.status}`}
+                      >
+                        {STATUS_LABELS[p.status] || p.status}
+                      </span>
+                    </td>
+                    <td>{p.case_tasks?.[0]?.count || 0}</td>
+                    <td>
+                      {p.ownerProfile ? formatName(p.ownerProfile) : '--'}
+                    </td>
+                    <td>{new Date(p.created_at).toLocaleDateString()}</td>
+                    <td style={{ display: 'flex', gap: 8 }}>
+                      <Link
+                        to={`/admin/projects/${p.id}`}
+                        className="portal-btn-action"
+                        aria-label={`View ${p.title}`}
+                      >
+                        View
+                      </Link>
+                      {isAdmin && (
+                        <button
+                          className="portal-btn-action"
+                          style={{
+                            color: 'var(--color-error, #e53e3e)',
+                            border: '1px solid var(--color-error, #e53e3e)',
+                            background: 'none',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => setDeleteTarget(p)}
+                          aria-label={`Delete ${p.title}`}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-        {/* Mobile cards */}
-        <div className="project-cards-mobile">
-          {paginated.map((p) => (
-            <div key={p.id} className="project-mobile-card">
-              <div className="project-mobile-card__header">
-                <strong className="project-mobile-card__title">
-                  {highlight(p.title, searchTerm)}
-                </strong>
-                <span className={`portal-badge portal-badge--${p.status}`}>
-                  {STATUS_LABELS[p.status] || p.status}
-                </span>
-              </div>
-              <div className="project-mobile-card__meta">
-                <span>Owner: {p.ownerProfile ? formatName(p.ownerProfile) : '--'}</span>
-                <span>Tasks: {p.case_tasks?.[0]?.count || 0}</span>
-                <span>{new Date(p.created_at).toLocaleDateString()}</span>
-              </div>
-              <div className="project-mobile-card__actions">
-                <Link
-                  to={`/admin/projects/${p.id}`}
-                  className="portal-btn-action"
-                  aria-label={`View ${p.title}`}
-                >
-                  View
-                </Link>
-                {isAdmin && (
-                  <button
+          {/* Mobile cards */}
+          <div className="project-cards-mobile">
+            {paginated.map((p) => (
+              <div key={p.id} className="project-mobile-card">
+                <div className="project-mobile-card__header">
+                  <strong className="project-mobile-card__title">
+                    {highlight(p.title, searchTerm)}
+                  </strong>
+                  <span className={`portal-badge portal-badge--${p.status}`}>
+                    {STATUS_LABELS[p.status] || p.status}
+                  </span>
+                </div>
+                <div className="project-mobile-card__meta">
+                  <span>
+                    Owner: {p.ownerProfile ? formatName(p.ownerProfile) : '--'}
+                  </span>
+                  <span>Tasks: {p.case_tasks?.[0]?.count || 0}</span>
+                  <span>{new Date(p.created_at).toLocaleDateString()}</span>
+                </div>
+                <div className="project-mobile-card__actions">
+                  <Link
+                    to={`/admin/projects/${p.id}`}
                     className="portal-btn-action"
-                    style={{
-                      color: 'var(--color-error, #e53e3e)',
-                      border: '1px solid var(--color-error, #e53e3e)',
-                      background: 'none',
-                      cursor: 'pointer',
-                    }}
-                    onClick={() => setDeleteTarget(p)}
-                    aria-label={`Delete ${p.title}`}
+                    aria-label={`View ${p.title}`}
                   >
-                    Delete
-                  </button>
-                )}
+                    View
+                  </Link>
+                  {isAdmin && (
+                    <button
+                      className="portal-btn-action"
+                      style={{
+                        color: 'var(--color-error, #e53e3e)',
+                        border: '1px solid var(--color-error, #e53e3e)',
+                        background: 'none',
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => setDeleteTarget(p)}
+                      aria-label={`Delete ${p.title}`}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
         </>
       )}
 

@@ -1634,7 +1634,9 @@ export default function CaseTasksTab({
             className="portal-card"
             style={{ maxWidth: 440, width: '90%', padding: 24 }}
           >
-            <h3 id="complete-task-title" style={{ marginBottom: 12 }}>Complete Task</h3>
+            <h3 id="complete-task-title" style={{ marginBottom: 12 }}>
+              Complete Task
+            </h3>
             <p>
               Mark <strong>{completeTarget.title}</strong> as complete?
             </p>
@@ -1687,7 +1689,9 @@ export default function CaseTasksTab({
             className="portal-card"
             style={{ maxWidth: 440, width: '90%', padding: 24 }}
           >
-            <h3 id="delete-task-title" style={{ marginBottom: 12 }}>Delete Task</h3>
+            <h3 id="delete-task-title" style={{ marginBottom: 12 }}>
+              Delete Task
+            </h3>
             <p>
               Are you sure you want to delete{' '}
               <strong>{deleteTarget.title}</strong>?
