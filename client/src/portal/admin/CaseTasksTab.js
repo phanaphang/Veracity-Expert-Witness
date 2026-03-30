@@ -1168,6 +1168,7 @@ export default function CaseTasksTab({
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
             style={{ minWidth: 140 }}
+            aria-label="Filter tasks by status"
           >
             <option value="">All Tasks</option>
             {STATUS_OPTIONS.map((s) => (
@@ -1253,13 +1254,7 @@ export default function CaseTasksTab({
                       ? setCompleteTarget(task)
                       : handleStatusToggle(task)
                   }
-                  title={
-                    task.status === 'to_do'
-                      ? 'Start'
-                      : task.status === 'in_progress'
-                        ? 'Complete'
-                        : 'Reopen'
-                  }
+                  aria-label={`${task.status === 'to_do' ? 'Start' : task.status === 'in_progress' ? 'Complete' : 'Reopen'} ${task.title}`}
                 >
                   {task.status === 'to_do'
                     ? 'Start'
@@ -1271,6 +1266,7 @@ export default function CaseTasksTab({
                   className="portal-btn-action"
                   style={{ fontSize: '0.78rem', padding: '4px 10px' }}
                   onClick={() => openEdit(task)}
+                  aria-label={`Edit ${task.title}`}
                 >
                   Edit
                 </button>
@@ -1280,8 +1276,10 @@ export default function CaseTasksTab({
                   onClick={() =>
                     setExpandedTask(expandedTask === task.id ? null : task.id)
                   }
+                  aria-expanded={expandedTask === task.id}
+                  aria-label={`Comments for ${task.title}`}
                 >
-                  {expandedTask === task.id ? 'Hide Comments' : 'Comments'}
+                  Comments
                 </button>
                 <button
                   className="portal-btn-action"
@@ -1289,8 +1287,10 @@ export default function CaseTasksTab({
                   onClick={() =>
                     setExpandedFiles(expandedFiles === task.id ? null : task.id)
                   }
+                  aria-expanded={expandedFiles === task.id}
+                  aria-label={`Files for ${task.title}`}
                 >
-                  {expandedFiles === task.id ? 'Hide Files' : 'Files'}
+                  Files
                 </button>
                 <button
                   className="portal-btn-action"
@@ -1300,10 +1300,10 @@ export default function CaseTasksTab({
                       expandedAutomation === task.id ? null : task.id
                     )
                   }
+                  aria-expanded={expandedAutomation === task.id}
+                  aria-label={`Automations for ${task.title}`}
                 >
-                  {expandedAutomation === task.id
-                    ? 'Hide Automations'
-                    : 'Automations'}
+                  Automations
                 </button>
                 <button
                   className="portal-btn-action"
@@ -1314,6 +1314,7 @@ export default function CaseTasksTab({
                     borderColor: 'var(--color-error)',
                   }}
                   onClick={() => setDeleteTarget(task)}
+                  aria-label={`Delete ${task.title}`}
                 >
                   Delete
                 </button>
@@ -1361,6 +1362,9 @@ export default function CaseTasksTab({
       {showForm && (
         <div
           className="portal-modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="task-form-title"
           style={{
             position: 'fixed',
             inset: 0,
@@ -1381,7 +1385,7 @@ export default function CaseTasksTab({
               overflowY: 'auto',
             }}
           >
-            <h3 style={{ marginBottom: 16 }}>
+            <h3 id="task-form-title" style={{ marginBottom: 16 }}>
               {editingTask ? 'Edit Task' : 'Add Task'}
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
@@ -1613,6 +1617,9 @@ export default function CaseTasksTab({
       {completeTarget && (
         <div
           className="portal-modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="complete-task-title"
           style={{
             position: 'fixed',
             inset: 0,
@@ -1627,7 +1634,7 @@ export default function CaseTasksTab({
             className="portal-card"
             style={{ maxWidth: 440, width: '90%', padding: 24 }}
           >
-            <h3 style={{ marginBottom: 12 }}>Complete Task</h3>
+            <h3 id="complete-task-title" style={{ marginBottom: 12 }}>Complete Task</h3>
             <p>
               Mark <strong>{completeTarget.title}</strong> as complete?
             </p>
@@ -1663,6 +1670,9 @@ export default function CaseTasksTab({
       {deleteTarget && (
         <div
           className="portal-modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-task-title"
           style={{
             position: 'fixed',
             inset: 0,
@@ -1677,7 +1687,7 @@ export default function CaseTasksTab({
             className="portal-card"
             style={{ maxWidth: 440, width: '90%', padding: 24 }}
           >
-            <h3 style={{ marginBottom: 12 }}>Delete Task</h3>
+            <h3 id="delete-task-title" style={{ marginBottom: 12 }}>Delete Task</h3>
             <p>
               Are you sure you want to delete{' '}
               <strong>{deleteTarget.title}</strong>?

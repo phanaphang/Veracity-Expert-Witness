@@ -220,10 +220,14 @@ export default function ProjectDetail() {
         </span>
       </div>
 
-      <div className="case-tabs">
+      <div className="case-tabs" role="tablist" aria-label="Project sections">
         {['details', 'tasks', 'activity'].map((tab) => (
           <button
             key={tab}
+            role="tab"
+            aria-selected={activeTab === tab}
+            aria-controls={`tabpanel-${tab}`}
+            id={`tab-${tab}`}
             className={`case-tabs__btn${activeTab === tab ? ' case-tabs__btn--active' : ''}`}
             onClick={() => setActiveTab(tab)}
           >
@@ -235,7 +239,7 @@ export default function ProjectDetail() {
       </div>
 
       {activeTab === 'details' && (
-        <>
+        <div role="tabpanel" id="tabpanel-details" aria-labelledby="tab-details">
           <div className="portal-card">
             <div
               style={{
@@ -270,6 +274,7 @@ export default function ProjectDetail() {
                     className="portal-btn-action"
                     onClick={startEditing}
                     style={{ padding: '6px 14px', fontSize: '0.82rem' }}
+                    aria-label="Edit project details"
                   >
                     Edit
                   </button>
@@ -456,6 +461,7 @@ export default function ProjectDetail() {
                       padding: '4px 10px',
                     }}
                     onClick={() => removeMember(m.user_id)}
+                    aria-label={`Remove ${m.memberProfile ? formatName(m.memberProfile) : 'member'}`}
                   >
                     Remove
                   </button>
@@ -468,11 +474,14 @@ export default function ProjectDetail() {
                 <input
                   className="portal-field__input"
                   placeholder="Search to add a member..."
+                  aria-label="Search to add a project member"
                   value={addMemberTerm}
                   onChange={(e) => searchMember(e.target.value)}
                 />
                 {addMemberResults.length > 0 && (
                   <div
+                    role="listbox"
+                    aria-label="Member search results"
                     style={{
                       border: '1px solid var(--color-gray-200)',
                       borderRadius: 'var(--radius-md, 6px)',
@@ -488,6 +497,8 @@ export default function ProjectDetail() {
                     {addMemberResults.map((user) => (
                       <div
                         key={user.id}
+                        role="option"
+                        tabIndex={0}
                         style={{
                           display: 'flex',
                           justifyContent: 'space-between',
@@ -497,6 +508,7 @@ export default function ProjectDetail() {
                           cursor: 'pointer',
                         }}
                         onClick={() => addMember(user)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') addMember(user) }}
                       >
                         <div>
                           <strong style={{ fontSize: '0.85rem' }}>
@@ -519,20 +531,23 @@ export default function ProjectDetail() {
               </div>
             )}
           </div>
-        </>
+        </div>
       )}
 
       {activeTab === 'tasks' && (
-        <CaseTasksTab
-          projectId={id}
-          tasks={tasks}
-          onTasksChange={loadProjectData}
-          profile={profile}
-          managers={staffMembers}
-        />
+        <div role="tabpanel" id="tabpanel-tasks" aria-labelledby="tab-tasks">
+          <CaseTasksTab
+            projectId={id}
+            tasks={tasks}
+            onTasksChange={loadProjectData}
+            profile={profile}
+            managers={staffMembers}
+          />
+        </div>
       )}
 
       {activeTab === 'activity' && (
+        <div role="tabpanel" id="tabpanel-activity" aria-labelledby="tab-activity">
         <div className="portal-card">
           <h2 className="portal-card__title">Activity</h2>
           {activityLog.length === 0 ? (
@@ -590,6 +605,7 @@ export default function ProjectDetail() {
               ))}
             </div>
           )}
+        </div>
         </div>
       )}
 
